@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'PoliFemo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -64,13 +64,16 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         floatingActionButton: Padding(
-          padding: const EdgeInsets.fromLTRB(50, 50, 5, 5),
+          padding: const EdgeInsets.fromLTRB(0, 50, 5, 5),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               FloatingActionButton(
                 onPressed: _decrementCounter,
                 child: const Icon(Icons.navigate_before),
+              ),
+              SizedBox(
+                width: 20,
               ),
               FloatingActionButton(
                 onPressed: _incrementCounter,
