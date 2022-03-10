@@ -1,4 +1,4 @@
-package com.example.polifemo
+package org.polinetwork.polifemo
 
 import io.flutter.embedding.android.FlutterActivity
 
