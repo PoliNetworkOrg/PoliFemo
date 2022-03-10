@@ -41,15 +41,9 @@ jobs:
       - name: Build APPBUNDLE
         run: flutter build appbundle --release
 
-      - name: Set current date as env variable
-        run: echo "NOW::$(date +'%Y%m%dT%H%M%S')" >> $GITHUB_ENV
-        
-      - name: Echo current date
-        run: echo $NOW
-
       - name: Create Github Release
         uses: ncipollo/release-action@v1
         with:
           artifacts: "build/app/outputs/apk/release/*.apk,build/app/outputs/bundle/release/*.aab"
           token: ${{ secrets.RELEASES_TOKEN }}
-          tag: $NOW
+          tag: $(date +'%Y%m%dT%H%M%S')
