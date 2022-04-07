@@ -16,7 +16,11 @@ Una volta clonata la repo la prima cosa da fare è installare le dependencies co
 ```sh
 yarn
 ```
-per la prima installazione ci vorrà una vita perché le dev dependencies di react native sono più
+che a sua volta si installa con 
+```sh
+npm install --global yarn
+```
+per la prima installazione delle dipendenze ci vorrà una vita perché le dev dependencies di react native sono più
 pesanti di tua mamma, ma solo la prima volta
 
 Poi c'è anche un bug in vscode alla prima installazione, a quanto pare bisogna chiudere e riaprire 
