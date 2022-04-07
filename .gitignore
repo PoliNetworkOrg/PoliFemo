@@ -17,4 +17,5 @@ android/
 ios/
 build/
 .packages
+yarn.lock
 
