@@ -16,4 +16,5 @@ web-build/
 android/
 ios/
 build/
+.packages
 
