@@ -12,7 +12,7 @@ web-build/
 
 # macOS
 .DS_Store
-.dart_tools/
+.dart_tool/
 android/
 ios/
 build/
