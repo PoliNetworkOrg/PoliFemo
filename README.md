@@ -44,7 +44,7 @@ va ancora impostato, comunque serve st'estenzione [React Native Tools](https://m
 Consigliato dare un'occhiata alla [demo di autenticazione con expo](https://github.com/toto04/poliauth-expo-demo)
 per vedere come può essere strutturata un'app
 
-Molte risorse utili sono linkate nei commenti in [App.tsx](App.tsx)
+Molte risorse utili sono linkate nei commenti in [App.tsx](App/App.tsx)
 
 In generale è sono scritte molto bene le documentazioni di 
 - [React](https://it.reactjs.org/docs/getting-started.html)
