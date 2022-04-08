@@ -44,3 +44,5 @@ if ($n > 0) {
 
 $json_string = json_encode($r, JSON_PRETTY_PRINT);
 print_r($json_string);
+
+?>
