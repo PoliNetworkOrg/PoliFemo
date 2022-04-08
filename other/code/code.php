@@ -1,11 +1,13 @@
 <?php
 
+//https://polinetworklink.altervista.org/code.php?mode=code&code=XXXXXXX
+
 $mode = $_REQUEST["mode"];
 
 if (!($mode == "code")) {
 	echo "Mode parameter not allowed!";
 	return;
-}
+}	
 
 $code = $_REQUEST["code"];
 if (!$code) {
