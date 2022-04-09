@@ -1,5 +1,6 @@
 {
     "recommendations": [
-        "msjsdiag.vscode-react-native"
+        "msjsdiag.vscode-react-native",
+        "esbenp.prettier-vscode"
     ]
 }
