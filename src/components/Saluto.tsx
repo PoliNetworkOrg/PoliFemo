@@ -15,7 +15,7 @@ export const Saluto: FC<{ nome?: string }> = props => {
                 fontSize: 24,
             }}
         >
-            {props.nome ? `Ciao ${props.nome}!` : "Nessuno da salutare 🥺"}
+            {props.nome ? `👋 Ciao ${props.nome}!` : "Nessuno da salutare 🥺"}
         </Text>
     )
 }

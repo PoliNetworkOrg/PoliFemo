@@ -2,7 +2,7 @@ import React, { FC, useState } from "react"
 import { Pressable, StyleSheet, Text, View } from "react-native"
 import { Saluto } from "../components/Saluto"
 
-const nomi = ["Tommaso", "Giovanni", "Andrea", "Francesco", "Simone", "Lorenzo"]
+const nomi = ["Tommaso", "Giovanni", "Andrea", "Francesco", "Simone", "Lorenzo", "Vincenzo"]
 
 export const SalutoConBottone: FC = () => {
     // le variabili nella UI possono essere gestite con lo stato di react
@@ -19,7 +19,8 @@ export const SalutoConBottone: FC = () => {
             <Pressable
                 onPress={() => {
                     // chiamata quando viene premuto il bottone, aggiorna lo state
-                    setNome(nomi[Math.floor(Math.random() * nomi.length)])
+                    var nomiSenzaIlNomeGiaInUso = nomi.filter(v => v !== nome); //di modo che il nome già in uso non venga scelto
+                    setNome(nomiSenzaIlNomeGiaInUso[Math.floor(Math.random() * nomiSenzaIlNomeGiaInUso.length)])
                 }}
             >
                 <Text
