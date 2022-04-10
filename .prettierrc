@@ -2,5 +2,6 @@
     "tabWidth": 4,
     "useTabs": false,
     "arrowParens": "avoid",
-    "semi": false
+    "semi": false,
+	"endOfLine" : "auto"
 }
