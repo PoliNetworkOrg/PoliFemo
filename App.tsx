@@ -1,7 +1,7 @@
+import { StatusBar } from "expo-status-bar"
 import React, { useEffect } from "react" // react deve essere importato in tutti i file che usano JSX
-import { StatusBar, View } from "react-native"
-import { Card } from "./src/components/Card"
-import { SalutoConBottone } from "./src/pages/SalutoConBottone"
+import { View, SafeAreaView } from "react-native"
+import { CardSection } from "./src/components/CardSection"
 
 export default function App() {
     useEffect(() => {
@@ -22,11 +22,20 @@ export default function App() {
         // solo alla prima renderizzazione
     }, [])
 
+    const cards: { titolo: string; sottotitolo: string }[] = []
+    for (let i = 0; i < 20; i++) {
+        cards.push({
+            titolo: `Titolo ${i}`,
+            sottotitolo: `Sottotitolo ${i}`,
+        })
+    }
+
     return (
         <View style={{ flex: 1 }}>
-            <SalutoConBottone />
-            <Card titolo="titolo" sottotitolo="sottotitolo" />
-            <StatusBar />
+            <SafeAreaView style={{ flex: 1 }}>
+                <CardSection titolo="Titolo" cards={cards} numColumns={3} />
+                <StatusBar style="auto" />
+            </SafeAreaView>
         </View>
     )
 }

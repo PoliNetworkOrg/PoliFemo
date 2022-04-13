@@ -9,8 +9,18 @@ export const Card: FC<{ titolo?: string; sottotitolo?: string }> = props => {
     // avvolte da delle parentesi graffe (in questo caso, l'espressione è il ternary operator che
     // restituisce una stringa eventualmente concatenata al nome)
     return (
-        <View style={{ borderRadius: 15, borderWidth: 2, padding: 8 }}>
-            <Text style={{ fontSize: 24 }}>{props.titolo}</Text>
+        <View
+            style={{
+                borderRadius: 8,
+                borderWidth: 2,
+                padding: 8,
+                flex: 1,
+                margin: 4,
+            }}
+        >
+            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                {props.titolo}
+            </Text>
             <Text>{props.sottotitolo}</Text>
         </View>
     )
