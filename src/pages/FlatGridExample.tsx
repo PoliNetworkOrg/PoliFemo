@@ -2,7 +2,7 @@ import React, { FC } from "react"
 import { StyleSheet, View } from "react-native"
 import { FlatGrid } from "react-native-super-grid"
 
-export const FlatGridExample: FC<{ views: Array<any> }> = props => {
+export const FlatGridExample: FC<{ views: JSX.Element[] }> = props => {
     return (
         <FlatGrid
             itemDimension={130}
