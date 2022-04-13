@@ -1,5 +1,6 @@
 import React, { useEffect } from "react" // react deve essere importato in tutti i file che usano JSX
 import { StatusBar, View } from "react-native"
+import { Card } from "./src/components/Card"
 import { SalutoConBottone } from "./src/pages/SalutoConBottone"
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
     return (
         <View style={{ flex: 1 }}>
             <SalutoConBottone />
+            <Card titolo="titolo" sottotitolo="sottotitolo" />
             <StatusBar />
         </View>
     )
