@@ -11,6 +11,7 @@ export const CardSection: FC<{
     titolo?: string
     cards: Omit<ComponentProps<typeof Card>, "children">[]
     numColumns?: number
+    renderItem?: any
 }> = props => {
     // all'interno dei tag Text può essere passato del testo interpolato con delle espressioni
     // avvolte da delle parentesi graffe (in questo caso, l'espressione è il ternary operator che
@@ -28,10 +29,7 @@ export const CardSection: FC<{
             <Grid
                 data={props.cards}
                 numColumns={props.numColumns}
-                renderItem={({ item, index }) => {
-                    if (index === 13) return <SalutoConBottone key="saluto" />
-                    else return <Card {...item} key={"card" + index} />
-                }}
+                renderItem={props.renderItem}
             />
         </View>
     )
