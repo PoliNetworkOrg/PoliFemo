@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     buttonCircle: {
         width: 40,
         height: 40,
-        backgroundColor: "rgba(0, 0, 0, .2)",
+        backgroundColor: "rgba(0, 0, 0, .8)",
         borderRadius: 20,
         justifyContent: "center",
         alignItems: "center",
@@ -44,7 +44,7 @@ export default class App extends React.Component {
             <View style={styles.buttonCircle}>
                 <Icon
                     name="md-arrow-round-forward"
-                    color="rgba(255, 255, 255, .9)"
+                    color="rgba(1, 1, 255, .9)"
                     size={24}
                 />
             </View>
@@ -55,7 +55,7 @@ export default class App extends React.Component {
             <View style={styles.buttonCircle}>
                 <Icon
                     name="md-checkmark"
-                    color="rgba(255, 255, 255, .9)"
+                    color="rgba(1, 255, 1, .9)"
                     size={24}
                 />
             </View>
@@ -69,6 +69,9 @@ export default class App extends React.Component {
             return (
                 <AppIntroSlider
                     renderItem={this._renderItem}
+                    bottomButton
+                    showSkipButton
+                    showPrevButton
                     data={slides}
                     onDone={() => {
                         this.ShowRealApp = true
