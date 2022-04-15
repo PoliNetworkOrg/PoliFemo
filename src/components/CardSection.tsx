@@ -1,5 +1,5 @@
 import React, { FC, ComponentProps } from "react"
-import { ScrollView, Text, View } from "react-native"
+import { Text, View } from "react-native"
 import { Card } from "./Card"
 import { Grid } from "./Grid"
 
