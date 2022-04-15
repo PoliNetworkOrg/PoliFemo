@@ -1,13 +1,13 @@
 import React from "react"
 import { NavigationContainer } from "@react-navigation/native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { ScrollView, View } from "react-native"
 import Icon from "react-native-vector-icons/AntDesign"
 import { ColorfulTabBar as TabBar } from "react-navigation-tabbar-collection"
 import { SalutoConBottone } from "./src/pages/SalutoConBottone"
 import { CardSection } from "./src/components/CardSection"
 import { DemoScreen } from "./src/pages/DemoScreen"
 import { Card } from "./src/components/Card"
+import { Menu } from "./src/pages/Menu"
 
 const Tab = createBottomTabNavigator()
 
@@ -19,21 +19,6 @@ for (let i = 0; i < 20; i++) {
     })
 }
 
-const Griglia = ({ route }) => (
-    <ScrollView>
-        <CardSection
-            numColumns={3}
-            titolo={route.name}
-            cards={cards}
-            renderItem={({ item, index }) => {
-                if (index % 5 == 0)
-                    return <SalutoConBottone key={`saluto ${index}`} />
-                else return <Card {...item} key={"card" + index} />
-            }}
-        ></CardSection>
-    </ScrollView>
-)
-
 const pagesInfo = [
     {
         name: "Home",
@@ -44,7 +29,18 @@ const pagesInfo = [
     {
         name: "Share",
         icon: "sharealt",
-        component: Griglia,
+        component: () => (
+            <CardSection
+                numColumns={3}
+                titolo="Share"
+                cards={cards}
+                renderItem={({ item, index }) => {
+                    if (index % 5 == 0)
+                        return <SalutoConBottone key={`saluto ${index}`} />
+                    else return <Card {...item} key={"card" + index} />
+                }}
+            ></CardSection>
+        ),
         color: "info",
     },
     {
@@ -61,9 +57,9 @@ const pagesInfo = [
         color: "danger",
     },
     {
-        name: "Settings",
-        icon: "setting",
-        component: () => <SalutoConBottone />,
+        name: "Menu",
+        icon: "ellipsis1",
+        component: () => <Menu />,
         color: "success",
     },
 ]

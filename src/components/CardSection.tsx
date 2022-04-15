@@ -1,6 +1,5 @@
 import React, { FC, ComponentProps } from "react"
-import { Text, View } from "react-native"
-import { SalutoConBottone } from "../pages/SalutoConBottone"
+import { ScrollView, Text, View } from "react-native"
 import { Card } from "./Card"
 import { Grid } from "./Grid"
 
@@ -17,7 +16,7 @@ export const CardSection: FC<{
     // avvolte da delle parentesi graffe (in questo caso, l'espressione è il ternary operator che
     // restituisce una stringa eventualmente concatenata al nome)
     return (
-        <View style={{}}>
+        <View>
             <Text
                 style={{
                     fontSize: 48,
@@ -26,10 +25,17 @@ export const CardSection: FC<{
             >
                 {props.titolo}
             </Text>
+
             <Grid
                 data={props.cards}
                 numColumns={props.numColumns}
-                renderItem={props.renderItem}
+                renderItem={
+                    props.renderItem == null
+                        ? ({ item, index }) => {
+                              return <Card {...item} key={"card" + index} />
+                          }
+                        : props.renderItem
+                }
             />
         </View>
     )
