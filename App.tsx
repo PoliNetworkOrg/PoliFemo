@@ -63,7 +63,7 @@ export default class App extends React.Component {
     }
 
     render() {
-        if (this.ShowRealApp != undefined && this.ShowRealApp == true) {
+        if (this.ShowRealApp == true) {
             return <AppClassic />
         } else {
             return (
@@ -71,9 +71,8 @@ export default class App extends React.Component {
                     renderItem={this._renderItem}
                     data={slides}
                     onDone={() => {
-                        console.log("ciao5")
                         this.ShowRealApp = true
-                        console.log(this.ShowRealApp)
+                        this.forceUpdate()
                     }}
                 />
             )
