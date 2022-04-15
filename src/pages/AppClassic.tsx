@@ -22,14 +22,14 @@ const AppClassic = () => {
 
     const pagesInfo = [
         {
-            name: "Home",
-            icon: "home",
+            name: "News",
+            icon: "notification",
             component: () => <SalutoConBottone />,
             color: "primary",
         },
         {
-            name: "Share",
-            icon: "sharealt",
+            name: "Aule",
+            icon: "enviromento",
             component: () => (
                 <CardSection
                     numColumns={3}
