@@ -69,7 +69,6 @@ for (let i = 0; i < pagesInfo.length; i++) {
     pages.push(
         <Tab.Screen
             name={pagesInfo[i].name}
-            children={pagesInfo[i].component}
             options={{
                 title: pagesInfo[i].name,
                 icon: ({ focused, color, size }) => (
@@ -77,7 +76,9 @@ for (let i = 0; i < pagesInfo.length; i++) {
                 ),
                 color: pagesInfo[i].color,
             }}
-        ></Tab.Screen>
+        >
+            {pagesInfo[i].component}
+        </Tab.Screen>
     )
 }
 
