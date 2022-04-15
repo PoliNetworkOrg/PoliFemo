@@ -37,3 +37,7 @@ Animated Icons
 Menu
 
 -   https://github.com/geremih/react-native-circular-action-menu
+
+Intro
+
+-   https://github.com/jacse/react-native-app-intro-slider
