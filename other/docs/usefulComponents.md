@@ -19,3 +19,21 @@ Voice Recogniser
 Shop per feature
 
 -   https://github.com/raghiii/react-native-vertical-distribution
+
+Swipe for PoliTinder
+
+-   https://github.com/zehfernandes/react-native-3dcube-navigation
+
+Transition
+
+-   https://github.com/catalinmiron/react-native-nav-transition
+
+SideBar
+
+Animated Icons
+
+-   https://github.com/prscX/react-native-iconic
+
+Menu
+
+-   https://github.com/geremih/react-native-circular-action-menu
