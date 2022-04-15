@@ -8,6 +8,7 @@ import { CardSection } from "./src/components/CardSection"
 import { DemoScreen } from "./src/pages/DemoScreen"
 import { Card } from "./src/components/Card"
 import { Menu } from "./src/pages/Menu"
+import { Article } from "./src/pages/Article"
 
 const Tab = createBottomTabNavigator()
 
@@ -47,7 +48,15 @@ const App = () => {
         {
             name: "API",
             icon: "API",
-            component: () => <DemoScreen name="API"></DemoScreen>,
+            component: () => (
+                <Article
+                    titolo="Titolo articolo"
+                    imageURL={[
+                        "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg",
+                        "https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg",
+                    ]}
+                />
+            ),
             color: "warning",
             props: { name: "API" },
         },

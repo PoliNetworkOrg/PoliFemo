@@ -1,10 +1,18 @@
 import React, { FC } from "react"
 import { StyleSheet, Text, View } from "react-native"
+import { ImageChange } from "../components/ImageChange"
 
-export const Article: FC<{ name?: string }> = props => {
+export const Article: FC<{
+    titolo?: string
+    corpo?: string
+    imageURL?: string[]
+}> = props => {
     return (
         <View style={styles.screen}>
-            <Text>{props.name}</Text>
+            <Text>{props.titolo}</Text>
+            <Text>
+                <ImageChange imageURL={props.imageURL} />
+            </Text>
         </View>
     )
 }
