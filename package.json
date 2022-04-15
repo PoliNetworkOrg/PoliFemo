@@ -10,13 +10,28 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@ant-design/icons-react-native": "^2.3.2",
+    "@fortawesome/fontawesome-svg-core": "^6.1.1",
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "@fortawesome/react-native-fontawesome": "^0.2.7",
+    "@react-navigation/bottom-tabs": "^6.3.1",
+    "@react-navigation/native": "^6.0.10",
+    "@types/react-native-vector-icons": "^6.4.10",
     "expo": "~44.0.0",
     "expo-status-bar": "~1.2.0",
     "expo-updates": "~0.11.6",
-    "react": "17.0.1",
+    "react": "^18.0.0",
     "react-dom": "17.0.1",
-    "react-native": "0.64.3",
-    "react-native-web": "0.17.1"
+    "react-native": "^0.68.1",
+    "react-native-bubble-tabbar": "^0.1.0",
+    "react-native-safe-area-context": "3.3.2",
+    "react-native-safe-area-view": "^1.1.1",
+    "react-native-svg": "12.1.1",
+    "react-native-vector-icons": "^9.1.0",
+    "react-native-web": "0.17.1",
+    "react-navigation-tabbar-collection": "^1.0.0",
+    "rn-slick-bottom-tabs": "^1.1.1",
+    "styled-components": "^5.3.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
