@@ -1,20 +1,24 @@
 import React from "react"
-import Icon from "react-native-vector-icons/Ionicons"
 import { StyleSheet, View, Text, Image } from "react-native"
 import AppIntroSlider from "react-native-app-intro-slider"
 import AppClassic from "./src/pages/AppClassic"
+import Icon from "react-native-vector-icons/Ionicons"
 
 const styles = StyleSheet.create({
     buttonCircle: {
         width: 40,
         height: 40,
+
         backgroundColor: "rgba(0, 0, 0, .8)",
+
         borderRadius: 20,
         justifyContent: "center",
         alignItems: "center",
     },
     slide: {
         display: "flex",
+        width: "100%",
+        height: "100%",
     },
     title: {
         display: "flex",
@@ -43,7 +47,7 @@ export default class App extends React.Component {
         return (
             <View style={styles.buttonCircle}>
                 <Icon
-                    name="md-arrow-round-forward"
+                    name="arrow-forward"
                     color="rgba(1, 1, 255, .9)"
                     size={24}
                 />
@@ -69,10 +73,17 @@ export default class App extends React.Component {
             return (
                 <AppIntroSlider
                     renderItem={this._renderItem}
-                    bottomButton
                     showSkipButton
                     showPrevButton
                     data={slides}
+                    bottomButton={false}
+                    activeDotStyle={{
+                        backgroundColor: "rgba(100, 200, 150, .9)",
+                    }}
+                    doneLabel={"Done"}
+                    nextLabel={"Next"}
+                    renderDoneButton={this._renderDoneButton}
+                    renderNextButton={this._renderNextButton}
                     onDone={() => {
                         this.ShowRealApp = true
                         this.forceUpdate()

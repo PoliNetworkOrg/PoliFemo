@@ -24,6 +24,12 @@ const menuItems = [
         imageURL:
             "https://previews.123rf.com/images/tribalium123/tribalium1231208/tribalium123120800011/14836390-zeitung-icon.jpg?fj=1",
     },
+    {
+        titolo: "PoliFemo",
+        sottotitolo: "Il tuo assistente personale!",
+        imageURL:
+            "https://media.istockphoto.com/vectors/cyclops-polyphemus-vector-id516139946",
+    },
 ]
 
 const cards = []
