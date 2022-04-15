@@ -45,8 +45,8 @@ const AppClassic = () => {
             color: "info",
         },
         {
-            name: "API",
-            icon: "API",
+            name: "Article",
+            icon: "paperclip",
             component: () => (
                 <Article
                     titolo="Titolo articolo"
@@ -58,7 +58,6 @@ const AppClassic = () => {
                 />
             ),
             color: "warning",
-            props: { name: "API" },
         },
         {
             name: "Menu",
