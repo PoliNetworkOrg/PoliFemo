@@ -1,106 +1,106 @@
 import React from "react"
-import { NavigationContainer } from "@react-navigation/native"
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import Icon from "react-native-vector-icons/AntDesign"
-import { ColorfulTabBar as TabBar } from "react-navigation-tabbar-collection"
-import { SalutoConBottone } from "./src/pages/SalutoConBottone"
-import { CardSection } from "./src/components/CardSection"
-import { Card } from "./src/components/Card"
-import { Menu } from "./src/pages/Menu"
-import { Article } from "./src/pages/Article"
+import Icon from "react-native-vector-icons/Ionicons"
+import { StyleSheet, View, Text, Image } from "react-native"
+import AppIntroSlider from "react-native-app-intro-slider"
+import AppClassic from "./src/pages/AppClassic"
 
-const Tab = createBottomTabNavigator()
+const styles = StyleSheet.create({
+    buttonCircle: {
+        width: 40,
+        height: 40,
+        backgroundColor: "rgba(0, 0, 0, .2)",
+        borderRadius: 20,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    slide: {
+        display: "flex",
+    },
+    title: {
+        display: "flex",
+    },
+    text: {
+        display: "flex",
+    },
+    //[...]
+})
 
-const App = () => {
-    const cards: { titolo: string; sottotitolo: string }[] = []
-    for (let i = 0; i < 20; i++) {
-        cards.push({
-            titolo: `Titolo ${i}`,
-            sottotitolo: `Sottotitolo ${i}`,
-        })
+// slides = [...]
+
+export default class App extends React.Component {
+    ShowRealApp: boolean = false
+
+    _renderItem = ({ item }) => {
+        return (
+            <View style={styles.slide}>
+                <Text style={styles.title}>{item.title}</Text>
+                <Image source={item.image} />
+                <Text style={styles.text}>{item.text}</Text>
+            </View>
+        )
     }
-
-    const pagesInfo = [
-        {
-            name: "Home",
-            icon: "home",
-            component: () => <SalutoConBottone />,
-            color: "primary",
-        },
-        {
-            name: "Share",
-            icon: "sharealt",
-            component: () => (
-                <CardSection
-                    numColumns={3}
-                    titolo="Share"
-                    cards={cards}
-                    renderItem={({ item, index }) => {
-                        if (index % 5 == 0)
-                            return <SalutoConBottone key={`saluto ${index}`} />
-                        else return <Card {...item} key={"card" + index} />
-                    }}
-                ></CardSection>
-            ),
-            color: "info",
-        },
-        {
-            name: "API",
-            icon: "API",
-            component: () => (
-                <Article
-                    titolo="Titolo articolo"
-                    corpo="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-                    imageURL={[
-                        "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg",
-                        "https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg",
-                    ]}
+    _renderNextButton = () => {
+        return (
+            <View style={styles.buttonCircle}>
+                <Icon
+                    name="md-arrow-round-forward"
+                    color="rgba(255, 255, 255, .9)"
+                    size={24}
                 />
-            ),
-            color: "warning",
-            props: { name: "API" },
-        },
-        {
-            name: "Menu",
-            icon: "ellipsis1",
-            component: () => <Menu />,
-            color: "success",
-        },
-    ]
-
-    const pages = []
-    for (let i = 0; i < pagesInfo.length; i++) {
-        pages.push(
-            <Tab.Screen
-                name={pagesInfo[i].name}
-                options={{
-                    title: pagesInfo[i].name,
-                    icon: ({ focused, color, size }) => (
-                        <Icon
-                            name={pagesInfo[i].icon}
-                            size={size}
-                            color={color}
-                        />
-                    ),
-                    color: pagesInfo[i].color,
-                }}
-            >
-                {pagesInfo[i].component}
-            </Tab.Screen>
+            </View>
+        )
+    }
+    _renderDoneButton = () => {
+        return (
+            <View style={styles.buttonCircle}>
+                <Icon
+                    name="md-checkmark"
+                    color="rgba(255, 255, 255, .9)"
+                    size={24}
+                />
+            </View>
         )
     }
 
-    return (
-        <NavigationContainer>
-            <Tab.Navigator
-                //initialRouteName="Name"
-                screenOptions={{ headerShown: false }}
-                tabBar={props => <TabBar {...props} />}
-            >
-                {pages}
-            </Tab.Navigator>
-        </NavigationContainer>
-    )
+    render() {
+        if (this.ShowRealApp != undefined && this.ShowRealApp == true) {
+            return <AppClassic />
+        } else {
+            return (
+                <AppIntroSlider
+                    renderItem={this._renderItem}
+                    data={slides}
+                    onDone={() => {
+                        console.log("ciao5")
+                        this.ShowRealApp = true
+                        console.log(this.ShowRealApp)
+                    }}
+                />
+            )
+        }
+    }
 }
 
-export default App
+const slides = [
+    {
+        key: "one",
+        title: "Title 1",
+        text: "Description.\nSay something cool",
+        image: "https://thumbs.dreamstime.com/z/jour-de-terre-d-environnement-dans-les-mains-des-arbres-cultivant-jeunes-plantes-bokeh-verdissent-la-main-femelle-fond-tenant-l-130247647.jpg",
+        backgroundColor: "#59b2ab",
+    },
+    {
+        key: "two",
+        title: "Title 2",
+        text: "Other cool stuff",
+        image: "https://thumbs.dreamstime.com/z/jour-de-terre-d-environnement-dans-les-mains-des-arbres-cultivant-jeunes-plantes-bokeh-verdissent-la-main-femelle-fond-tenant-l-130247647.jpg",
+        backgroundColor: "#febe29",
+    },
+    {
+        key: "three",
+        title: "Rocket guy",
+        text: "I'm already out of descriptions\n\nLorem ipsum bla bla bla",
+        image: "https://thumbs.dreamstime.com/z/jour-de-terre-d-environnement-dans-les-mains-des-arbres-cultivant-jeunes-plantes-bokeh-verdissent-la-main-femelle-fond-tenant-l-130247647.jpg",
+        backgroundColor: "#22bcb5",
+    },
+]
