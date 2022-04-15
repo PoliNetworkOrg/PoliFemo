@@ -37,7 +37,7 @@ export const Menu: FC = () => {
             <CardSection
                 titolo="Menu"
                 cards={cards}
-                numColumns={2}
+                numColumns={1}
             ></CardSection>
         </View>
     )
