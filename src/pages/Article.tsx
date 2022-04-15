@@ -13,6 +13,7 @@ export const Article: FC<{
             <Text>
                 <ImageChange imageURL={props.imageURL} />
             </Text>
+            <Text>{props.corpo}</Text>
         </View>
     )
 }
