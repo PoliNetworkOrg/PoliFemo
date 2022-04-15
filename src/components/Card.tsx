@@ -18,6 +18,7 @@ export const Card: FC<{
         props.imageURL == null ? (
             <Text></Text>
         ) : (
+            // eslint-disable-next-line no-extra-parens
             <Image
                 style={styles.tinyLogo}
                 source={{

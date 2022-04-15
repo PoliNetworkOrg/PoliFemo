@@ -24,6 +24,7 @@
     "react": "^18.0.0",
     "react-dom": "17.0.1",
     "react-native": "^0.68.1",
+    "react-native-app-intro-slider": "^4.0.4",
     "react-native-bubble-tabbar": "^0.1.0",
     "react-native-imaged-card-view": "^0.0.11",
     "react-native-safe-area-context": "3.3.2",

@@ -5656,6 +5656,11 @@ react-native-animation-hooks@^1.0.1:
   resolved "https://registry.yarnpkg.com/react-native-animation-hooks/-/react-native-animation-hooks-1.0.1.tgz#fcda58867d708084cc63c6fcd001f5375a40f45b"
   integrity sha512-s1o71m9sPpEYwFpHTdBouO50jzvyxIVB4MmNwfVGgPWkdL02zKOzyXcNuPJmoCuLIstUj5TBEwtnGk1WMFJx5A==
 
+react-native-app-intro-slider@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-app-intro-slider/-/react-native-app-intro-slider-4.0.4.tgz#fa5cda7057db62c448ac975ffd2ba0cff94cc8d8"
+  integrity sha512-Zkjaol6X3BbZkHUpVDj2LjdidpS6rCgKi0fx80xgGKa0pHxBRd4swWTv2bHnnvu5k1/HXwYk0mY2TbK+2jHl5w==
+
 react-native-bubble-tabbar@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/react-native-bubble-tabbar/-/react-native-bubble-tabbar-0.1.0.tgz#eb8dfa245725a062cd00e23dcf2e7b9dd26dfaba"
