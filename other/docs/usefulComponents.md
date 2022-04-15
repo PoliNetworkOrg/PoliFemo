@@ -22,7 +22,7 @@ Shop per feature
 
 Swipe for PoliTinder
 
--   https://github.com/zehfernandes/react-native-3dcube-navigation
+-   https://github.com/meteor-factory/react-native-tinder-swipe-cards
 
 Transition
 
