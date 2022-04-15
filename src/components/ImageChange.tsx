@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useState } from "react"
-import { Text, Image } from "react-native"
-import Icon from "react-native-vector-icons/AntDesign"
+import { Image } from "react-native"
 
 const [nome, setNome] = useState<string>()
 

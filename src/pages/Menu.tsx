@@ -1,11 +1,6 @@
 import React, { FC } from "react"
 import { View } from "react-native"
 import { CardSection } from "../components/CardSection"
-import { SalutoConBottone } from "./SalutoConBottone"
-import Icon from "react-native-vector-icons/AntDesign"
-
-import Tab from "./../variables/tabNavigator"
-import pages from "../variables/pages"
 
 const menuItems = [
     {
@@ -15,7 +10,6 @@ const menuItems = [
             "https://www.iconpacks.net/icons/1/free-heart-icon-431-thumb.png",
         onClick: () => {
             console.log("ciao2")
-            console.log(pages.length)
         },
     },
     {
