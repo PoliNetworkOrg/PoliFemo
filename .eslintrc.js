@@ -2,34 +2,35 @@
 /* eslint-disable prettier/prettier */
 // eslint-disable-next-line no-undef
 module.exports = {
-	env: {
-		browser: true,
-		es2021: true,
-	},
-	extends: [
-		"eslint:recommended",
-		"plugin:react/recommended",
-		"plugin:@typescript-eslint/recommended",
-		"plugin:prettier/recommended",
-	],
-	parser: "@typescript-eslint/parser",
-	parserOptions: {
-		ecmaFeatures: {
-			jsx: true,
-		},
-		ecmaVersion: "latest",
-		sourceType: "module",
-	},
-	plugins: ["react", "@typescript-eslint", "prettier"],
-	rules: {
-		"no-extra-parens": [
-			"error",
-			"all",
-			{ ignoreJSX: "single-line", returnAssign: false },
-		],
-		indent: ["error", 4],
-		"linebreak-style": ["error", "unix"],
-		quotes: ["error", "double"],
-		semi: ["error", "never"],
-	},
+    settings: {
+        react: {
+            version: "detect",
+        },
+    },
+    env: {
+        browser: true,
+        es2021: true,
+    },
+    extends: [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended",
+    ],
+    parser: "@typescript-eslint/parser",
+    parserOptions: {
+        ecmaFeatures: {
+            jsx: true,
+        },
+        ecmaVersion: "latest",
+        sourceType: "module",
+    },
+    plugins: ["react", "@typescript-eslint", "prettier"],
+    rules: {
+        "no-extra-parens": ["error", "all", { ignoreJSX: "multi-line" }],
+        indent: ["error", 4],
+        "linebreak-style": ["error", "unix"],
+        quotes: ["error", "double"],
+        semi: ["error", "never"],
+    },
 }
