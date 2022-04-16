@@ -2,8 +2,8 @@ import React, { useState } from "react"
 import { StyleSheet, View, Text, Image } from "react-native"
 import AppIntroSlider from "react-native-app-intro-slider"
 import AppClassic from "./src/pages/AppClassic"
-import Icon from "react-native-vector-icons/Ionicons"
-import IconA from "react-native-vector-icons/MaterialIcons"
+import IIcon from "react-native-vector-icons/Ionicons"
+import MIcon from "react-native-vector-icons/MaterialIcons"
 
 const styles = StyleSheet.create({
     buttonCircle: {
@@ -57,7 +57,7 @@ export default function App() {
                 nextLabel={"Next"}
                 renderDoneButton={() => (
                     <View style={styles.buttonCircle}>
-                        <Icon
+                        <IIcon
                             name="md-checkmark"
                             color="rgba(1, 255, 1, .9)"
                             size={24}
@@ -66,7 +66,7 @@ export default function App() {
                 )}
                 renderNextButton={() => (
                     <View style={styles.buttonCircle}>
-                        <Icon
+                        <IIcon
                             name="arrow-forward"
                             color="rgba(255, 255, 255, .9)"
                             size={24}
@@ -75,7 +75,7 @@ export default function App() {
                 )}
                 renderPrevButton={() => (
                     <View style={styles.buttonCircle}>
-                        <Icon
+                        <IIcon
                             name="arrow-back"
                             color="rgba(255, 255, 255, .9)"
                             size={24}
@@ -84,7 +84,7 @@ export default function App() {
                 )}
                 renderSkipButton={() => (
                     <View style={styles.buttonCircle}>
-                        <IconA
+                        <MIcon
                             name="last-page"
                             color="rgba(220, 150, 220, .9)"
                             size={24}
