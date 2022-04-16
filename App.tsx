@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { StyleSheet, View, Text, Image } from "react-native"
 import AppIntroSlider from "react-native-app-intro-slider"
 import AppClassic from "./src/pages/AppClassic"
@@ -26,72 +26,52 @@ const styles = StyleSheet.create({
     text: {
         display: "flex",
     },
-    //[...]
 })
 
-// slides = [...]
+export default function App() {
+    const [realApp, setRealApp] = useState(false)
 
-export default class App extends React.Component {
-    ShowRealApp: boolean = false
-
-    _renderItem = ({ item }) => {
+    if (realApp) return <AppClassic />
+    else
         return (
-            <View style={styles.slide}>
-                <Text style={styles.title}>{item.title}</Text>
-                <Image source={item.image} />
-                <Text style={styles.text}>{item.text}</Text>
-            </View>
+            <AppIntroSlider
+                renderItem={({ item }) => (
+                    <View style={styles.slide}>
+                        <Text style={styles.title}>{item.title}</Text>
+                        <Image source={{ uri: item.image }} />
+                        <Text style={styles.text}>{item.text}</Text>
+                    </View>
+                )}
+                showSkipButton
+                showPrevButton
+                data={slides}
+                bottomButton={false}
+                activeDotStyle={{
+                    backgroundColor: "rgba(100, 200, 150, .9)",
+                }}
+                doneLabel={"Done"}
+                nextLabel={"Next"}
+                renderDoneButton={() => (
+                    <View style={styles.buttonCircle}>
+                        <Icon
+                            name="md-checkmark"
+                            color="rgba(1, 255, 1, .9)"
+                            size={24}
+                        />
+                    </View>
+                )}
+                renderNextButton={() => (
+                    <View style={styles.buttonCircle}>
+                        <Icon
+                            name="arrow-forward"
+                            color="rgba(1, 1, 255, .9)"
+                            size={24}
+                        />
+                    </View>
+                )}
+                onDone={() => setRealApp(true)}
+            />
         )
-    }
-    _renderNextButton = () => {
-        return (
-            <View style={styles.buttonCircle}>
-                <Icon
-                    name="arrow-forward"
-                    color="rgba(1, 1, 255, .9)"
-                    size={24}
-                />
-            </View>
-        )
-    }
-    _renderDoneButton = () => {
-        return (
-            <View style={styles.buttonCircle}>
-                <Icon
-                    name="md-checkmark"
-                    color="rgba(1, 255, 1, .9)"
-                    size={24}
-                />
-            </View>
-        )
-    }
-
-    render() {
-        if (this.ShowRealApp == true) {
-            return <AppClassic />
-        } else {
-            return (
-                <AppIntroSlider
-                    renderItem={this._renderItem}
-                    showSkipButton
-                    showPrevButton
-                    data={slides}
-                    bottomButton={false}
-                    activeDotStyle={{
-                        backgroundColor: "rgba(100, 200, 150, .9)",
-                    }}
-                    doneLabel={"Done"}
-                    nextLabel={"Next"}
-                    renderDoneButton={this._renderDoneButton}
-                    renderNextButton={this._renderNextButton}
-                    onDone={() => {
-                        this.ShowRealApp = true
-                        this.forceUpdate()
-                    }}
-                />
-            )
-        }
-    }
 }
 
 const slides = [
