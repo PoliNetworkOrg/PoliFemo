@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Image } from "react-native"
 import AppIntroSlider from "react-native-app-intro-slider"
 import AppClassic from "./src/pages/AppClassic"
 import Icon from "react-native-vector-icons/Ionicons"
+import IconA from "react-native-vector-icons/MaterialIcons"
 
 const styles = StyleSheet.create({
     buttonCircle: {
@@ -22,9 +23,12 @@ const styles = StyleSheet.create({
     },
     title: {
         display: "flex",
+        textAlign: "center",
     },
     text: {
         display: "flex",
+        textAlign: "center",
+        justifyContent: "center",
     },
 })
 
@@ -64,7 +68,25 @@ export default function App() {
                     <View style={styles.buttonCircle}>
                         <Icon
                             name="arrow-forward"
-                            color="rgba(1, 1, 255, .9)"
+                            color="rgba(255, 255, 255, .9)"
+                            size={24}
+                        />
+                    </View>
+                )}
+                renderPrevButton={() => (
+                    <View style={styles.buttonCircle}>
+                        <Icon
+                            name="arrow-back"
+                            color="rgba(255, 255, 255, .9)"
+                            size={24}
+                        />
+                    </View>
+                )}
+                renderSkipButton={() => (
+                    <View style={styles.buttonCircle}>
+                        <IconA
+                            name="last-page"
+                            color="rgba(220, 150, 220, .9)"
                             size={24}
                         />
                     </View>

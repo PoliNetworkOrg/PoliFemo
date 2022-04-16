@@ -41,3 +41,7 @@ Menu
 Intro
 
 -   https://github.com/jacse/react-native-app-intro-slider
+
+Installed Icon Pack
+
+-   https://github.com/oblador/react-native-vector-icons
