@@ -1,5 +1,6 @@
 import React, { FC } from "react"
 import { View } from "react-native"
+import { CardProps } from "../components/Card"
 import { CardSection } from "../components/CardSection"
 
 const menuItems = [
@@ -32,7 +33,7 @@ const menuItems = [
     },
 ]
 
-const cards = []
+const cards: CardProps[] = []
 for (let i = 0; i < menuItems.length; i++) {
     cards.push(menuItems[i])
 }
@@ -40,11 +41,7 @@ for (let i = 0; i < menuItems.length; i++) {
 export const Menu: FC = () => {
     return (
         <View>
-            <CardSection
-                titolo="Menu"
-                cards={cards}
-                numColumns={1}
-            ></CardSection>
+            <CardSection title="Menu" cards={cards} numColumns={1} />
         </View>
     )
 }

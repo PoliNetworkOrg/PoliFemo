@@ -1,16 +1,16 @@
-import React, { FC, ComponentProps } from "react"
+import React, { FC } from "react"
 import { Text, View } from "react-native"
-import { Card } from "./Card"
+import { Card, CardProps } from "./Card"
 import { Grid } from "./Grid"
 
 // I componenti sono delle funzioni, a cui viene passato come argomento un oggetto props
 // https://it.reactjs.org/docs/components-and-props.html
 // possono essere riutilizzati (tipo bottoni stilizzati) o possono rappresentare intere pagine
 export const CardSection: FC<{
-    titolo?: string
-    cards: Omit<ComponentProps<typeof Card>, "children">[]
+    title?: string
+    cards: CardProps[]
     numColumns?: number
-    renderItem?: any
+    renderItem?: (value: { item: CardProps; index: number }) => JSX.Element
 }> = props => {
     // all'interno dei tag Text può essere passato del testo interpolato con delle espressioni
     // avvolte da delle parentesi graffe (in questo caso, l'espressione è il ternary operator che
@@ -23,18 +23,17 @@ export const CardSection: FC<{
                     fontWeight: "bold",
                 }}
             >
-                {props.titolo}
+                {props.title}
             </Text>
 
             <Grid
                 data={props.cards}
                 numColumns={props.numColumns}
                 renderItem={
-                    props.renderItem == null
-                        ? ({ item, index }) => {
-                              return <Card {...item} key={"card" + index} />
-                          }
-                        : props.renderItem
+                    props.renderItem ??
+                    (({ item, index }) => (
+                        <Card {...item} key={props.title + "card" + index} />
+                    ))
                 }
             />
         </View>

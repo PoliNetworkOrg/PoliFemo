@@ -16,7 +16,7 @@ export function Grid<T = any>(props: {
     return (
         <FlatList
             data={rows}
-            // eslint-disable-next-line no-extra-parens
+            keyExtractor={(item, index) => "grid_sublist_" + index}
             renderItem={({ item, index }) => (
                 <View
                     style={{
@@ -25,7 +25,6 @@ export function Grid<T = any>(props: {
                         justifyContent: "space-between",
                         alignItems: "center",
                     }}
-                    key={"grid_sublist_" + index}
                 >
                     {item.map((item, i) =>
                         props.renderItem({

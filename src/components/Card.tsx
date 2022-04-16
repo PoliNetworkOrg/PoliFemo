@@ -1,31 +1,29 @@
 import React, { FC } from "react"
 import { Text, View, Image, StyleSheet, Pressable } from "react-native"
 
+export interface CardProps {
+    title?: string
+    subtitle?: string
+    imageURL?: string
+    onClick?: () => void
+}
+
 // I componenti sono delle funzioni, a cui viene passato come argomento un oggetto props
 // https://it.reactjs.org/docs/components-and-props.html
 // possono essere riutilizzati (tipo bottoni stilizzati) o possono rappresentare intere pagine
-export const Card: FC<{
-    titolo?: string
-    sottotitolo?: string
-    imageURL?: string
-    onClick?: any
-}> = props => {
+export const Card: FC<CardProps> = props => {
     // all'interno dei tag Text può essere passato del testo interpolato con delle espressioni
     // avvolte da delle parentesi graffe (in questo caso, l'espressione è il ternary operator che
     // restituisce una stringa eventualmente concatenata al nome)
 
-    const image =
-        props.imageURL == null ? (
-            <Text></Text>
-        ) : (
-            // eslint-disable-next-line no-extra-parens
-            <Image
-                style={styles.tinyLogo}
-                source={{
-                    uri: props.imageURL,
-                }}
-            />
-        )
+    const image = props.imageURL ? (
+        <Image
+            style={styles.tinyLogo}
+            source={{
+                uri: props.imageURL,
+            }}
+        />
+    ) : undefined
 
     return (
         <Pressable
@@ -42,9 +40,9 @@ export const Card: FC<{
             {image}
             <View>
                 <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                    {props.titolo}
+                    {props.title}
                 </Text>
-                <Text>{props.sottotitolo}</Text>
+                <Text>{props.subtitle}</Text>
             </View>
         </Pressable>
     )

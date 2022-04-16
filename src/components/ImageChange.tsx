@@ -2,30 +2,23 @@ import React, { FC, useState } from "react"
 import { Image, Pressable } from "react-native"
 
 export const ImageChange: FC<{
-    imageURL?: string[]
+    imageURLs: string[]
 }> = props => {
-    const [ImageURL, setImageURL] = useState<string>()
+    const [imageURL, setImageURL] = useState(props.imageURLs[0])
     return (
         <Pressable
             onPress={() => {
                 setImageURL(
-                    props.imageURL == undefined
-                        ? undefined
-                        : props.imageURL[
-                              Math.floor(Math.random() * props.imageURL?.length)
-                          ]
+                    props.imageURLs[
+                        Math.floor(Math.random() * props.imageURLs.length)
+                    ]
                 )
             }}
         >
             <Image
                 style={{ width: 150, height: 150, resizeMode: "contain" }}
                 source={{
-                    uri:
-                        ImageURL == undefined
-                            ? props.imageURL == undefined
-                                ? undefined
-                                : props.imageURL[0]
-                            : ImageURL ?? "",
+                    uri: imageURL,
                 }}
             />
         </Pressable>
