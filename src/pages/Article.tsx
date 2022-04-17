@@ -9,7 +9,7 @@ export const Article: FC<{
 }> = props => {
     return (
         <View style={styles.screen}>
-            <Text>{props.title}</Text>
+            <Text style={styles.title}>{props.title}</Text>
             <Text>
                 <ImageChange imageURLs={props.imageURLs} />
             </Text>
@@ -26,5 +26,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         alignSelf: "center",
+    },
+    title: {
+        fontSize: 24,
     },
 })
