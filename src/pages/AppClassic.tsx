@@ -1,16 +1,21 @@
-import React from "react"
+import React, { useState } from "react"
 import { NavigationContainer } from "@react-navigation/native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import Icon from "react-native-vector-icons/AntDesign"
 import { SalutoConBottone } from "./SalutoConBottone"
 import { CardSection } from "../components/CardSection"
 import { CardProps } from "../components/Card"
-import { Menu } from "./Menu"
+
 import { Article } from "./Article"
+import { MenuChange } from "./MenuChange"
 
 const Tab = createBottomTabNavigator()
 
 const AppClassic = () => {
+    const [MenuIcon, setMenuIcon] = useState("ellipsis1")
+    const [MenuText, setMenuText] = useState("Menu")
+    const [CurrentMenuView, setCurrentMenuView] = useState(-1)
+
     const cards: CardProps[] = []
     for (let i = 0; i < 20; i++) {
         cards.push({
@@ -49,8 +54,15 @@ const AppClassic = () => {
         },
         {
             name: "Menu",
-            icon: "ellipsis1",
-            component: () => <Menu />,
+            title: MenuText,
+            icon: MenuIcon,
+            component: () => (
+                <MenuChange
+                    onChangeIcon={setMenuIcon}
+                    onChangeText={setMenuText}
+                    CurrentMenuView={[CurrentMenuView, setCurrentMenuView]}
+                />
+            ),
         },
     ]
 
@@ -61,7 +73,7 @@ const AppClassic = () => {
                 key={"page_" + pagesInfo[i].name}
                 name={pagesInfo[i].name}
                 options={{
-                    title: pagesInfo[i].name,
+                    title: pagesInfo[i].title ?? pagesInfo[i].name,
                     tabBarIcon: ({ color, size }) => (
                         <Icon
                             name={pagesInfo[i].icon}
@@ -77,7 +89,13 @@ const AppClassic = () => {
     }
 
     return (
-        <NavigationContainer>
+        <NavigationContainer
+            onStateChange={() => {
+                setCurrentMenuView(-1)
+                setMenuIcon("ellipsis1")
+                setMenuText("Menu")
+            }}
+        >
             <Tab.Navigator
                 //initialRouteName="Name"
                 screenOptions={{ headerShown: false }}
