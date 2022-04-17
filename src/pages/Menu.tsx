@@ -3,7 +3,7 @@ import { View } from "react-native"
 import { CardProps } from "../components/Card"
 import { CardSection } from "../components/CardSection"
 
-const menuItems = [
+const menuItems: CardProps[] = [
     {
         title: "PoliTinder",
         subtitle: "Trova nuove amicizie",
@@ -33,15 +33,10 @@ const menuItems = [
     },
 ]
 
-const cards: CardProps[] = []
-for (let i = 0; i < menuItems.length; i++) {
-    cards.push(menuItems[i])
-}
-
 export const Menu: FC = () => {
     return (
         <View>
-            <CardSection title="Menu" cards={cards} numColumns={1} />
+            <CardSection title="Menu" cards={menuItems} numColumns={1} />
         </View>
     )
 }
