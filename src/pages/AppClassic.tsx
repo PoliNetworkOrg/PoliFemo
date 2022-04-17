@@ -42,6 +42,7 @@ const AppClassic = () => {
                     imageURLs={[
                         "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg",
                         "https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg",
+                        "https://fruttamami.com/wp-content/uploads/2017/08/5.jpg",
                     ]}
                 />
             ),
