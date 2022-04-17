@@ -16,18 +16,34 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     slide: {
-        display: "flex",
-        width: "100%",
-        height: "100%",
+        padding: 5,
+
+        alignItems: "center",
+        textAlign: "center",
+
+        flex: 1,
     },
     title: {
         display: "flex",
         textAlign: "center",
+        alignItems: "center",
+
+        flex: 1,
     },
     text: {
         display: "flex",
         textAlign: "center",
         justifyContent: "center",
+        alignItems: "center",
+
+        flex: 1,
+    },
+    image: {
+        width: 150,
+        height: 150,
+        resizeMode: "contain",
+        alignItems: "center",
+        flex: 0,
     },
 })
 
@@ -37,9 +53,14 @@ export const IntroSlider: FC<{
     return (
         <AppIntroSlider
             renderItem={({ item }) => (
-                <View style={styles.slide}>
+                <View
+                    style={[
+                        styles.slide,
+                        { backgroundColor: item.backgroundColor },
+                    ]}
+                >
                     <Text style={styles.title}>{item.title}</Text>
-                    <Image source={{ uri: item.image }} />
+                    <Image style={styles.image} source={{ uri: item.image }} />
                     <Text style={styles.text}>{item.text}</Text>
                 </View>
             )}
@@ -99,20 +120,20 @@ const slides = [
         title: "Title 1",
         text: "Description.\nSay something cool",
         image: "https://thumbs.dreamstime.com/z/jour-de-terre-d-environnement-dans-les-mains-des-arbres-cultivant-jeunes-plantes-bokeh-verdissent-la-main-femelle-fond-tenant-l-130247647.jpg",
-        backgroundColor: "#59b2ab",
+        backgroundColor: "#00ff0033",
     },
     {
         key: "two",
         title: "Title 2",
         text: "Other cool stuff",
         image: "https://thumbs.dreamstime.com/z/jour-de-terre-d-environnement-dans-les-mains-des-arbres-cultivant-jeunes-plantes-bokeh-verdissent-la-main-femelle-fond-tenant-l-130247647.jpg",
-        backgroundColor: "#febe29",
+        backgroundColor: "#0000ff33",
     },
     {
         key: "three",
         title: "Rocket guy",
         text: "I'm already out of descriptions\n\nLorem ipsum bla bla bla",
         image: "https://thumbs.dreamstime.com/z/jour-de-terre-d-environnement-dans-les-mains-des-arbres-cultivant-jeunes-plantes-bokeh-verdissent-la-main-femelle-fond-tenant-l-130247647.jpg",
-        backgroundColor: "#22bcb5",
+        backgroundColor: "#ff000033",
     },
 ]
