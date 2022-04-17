@@ -37,6 +37,13 @@ const menuItems: {
             "https://media.istockphoto.com/vectors/cyclops-polyphemus-vector-id516139946",
         icon: "eye",
     },
+    {
+        title: "Impostazioni",
+        subtitle: "",
+        imageURL:
+            "https://cdn.icon-icons.com/icons2/1632/PNG/512/62971gear_109245.png",
+        icon: "setting",
+    },
 ]
 
 export const MenuChange: FC<{
