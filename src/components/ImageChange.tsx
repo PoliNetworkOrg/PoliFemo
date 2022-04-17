@@ -8,11 +8,17 @@ export const ImageChange: FC<{
     return (
         <Pressable
             onPress={() => {
-                setImageURL(
-                    props.imageURLs[
-                        Math.floor(Math.random() * props.imageURLs.length)
-                    ]
-                )
+                if (props.imageURLs.length <= 1) return
+                else {
+                    const otherPictures = props.imageURLs.filter(
+                        v => v !== imageURL
+                    )
+                    setImageURL(
+                        otherPictures[
+                            Math.floor(Math.random() * otherPictures.length)
+                        ]
+                    )
+                }
             }}
         >
             <Image
