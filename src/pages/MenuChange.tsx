@@ -1,6 +1,10 @@
 import React, { FC } from "react"
 import { Menu } from "./Menu"
 import { Text } from "react-native"
+import { AuleLibere } from "./AuleLibere"
+import { Impostazioni } from "./Impostazioni"
+import { Article } from "./Article"
+import { Dating } from "./Dating"
 
 const menuItems: {
     title: string
@@ -8,6 +12,7 @@ const menuItems: {
     imageURL: string
     icon?: string
     onClick?: any
+    view?: any
 }[] = [
     {
         title: "PoliTinder",
@@ -15,6 +20,7 @@ const menuItems: {
         imageURL:
             "https://www.iconpacks.net/icons/1/free-heart-icon-431-thumb.png",
         icon: "heart",
+        view: <Dating />,
     },
     {
         title: "Aule libere",
@@ -22,6 +28,7 @@ const menuItems: {
         imageURL:
             "https://previews.123rf.com/images/dacianlogan/dacianlogan1402/dacianlogan140200011/26057672-icono-plana-compass.jpg?fj=1",
         icon: "pushpin",
+        view: <AuleLibere />,
     },
     {
         title: "News",
@@ -29,6 +36,7 @@ const menuItems: {
         imageURL:
             "https://previews.123rf.com/images/tribalium123/tribalium1231208/tribalium123120800011/14836390-zeitung-icon.jpg?fj=1",
         icon: "filetext1",
+        view: <Article title="Titolo articolo..." imageURLs={[]} />,
     },
     {
         title: "PoliFemo",
@@ -43,6 +51,7 @@ const menuItems: {
         imageURL:
             "https://cdn.icon-icons.com/icons2/1632/PNG/512/62971gear_109245.png",
         icon: "setting",
+        view: <Impostazioni />,
     },
 ]
 
@@ -60,8 +69,10 @@ export const MenuChange: FC<{
             itemChanged={setCurrentView}
         />
     ) : (
-        <Text style={{ padding: 100, textAlign: "center" }}>
-            {menuItems[CurrentView].title}
-        </Text>
+        menuItems[CurrentView].view ?? (
+            <Text style={{ padding: 100, textAlign: "center" }}>
+                {menuItems[CurrentView].title}
+            </Text>
+        )
     )
 }
