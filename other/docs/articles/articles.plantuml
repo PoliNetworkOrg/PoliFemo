@@ -1,0 +1,39 @@
+@startuml
+class Article {
+  int id
+  String title
+  String? subtitle
+  String text //html
+  Author[] authours
+  String[]? sources
+  Position[]? positions
+  String[]? hashtag
+  Territorial[]? territorials //polibovisa, polileonardo, tutti
+  DateTime publishTime
+  DateTime? targetTime
+  String[]? music
+  String[]? photos
+}
+
+class Author {
+  int id
+  String name
+  String? link
+}
+
+class Position {
+   Point point
+   string name
+}
+
+class Point {
+   decimal x
+   decimal y
+}
+
+class Territorial {
+   int id
+   string name
+}
+
+@enduml
