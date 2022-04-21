@@ -13,6 +13,7 @@ class Article {
   DateTime? targetTime
   String[]? music
   String[]? photos
+  Collection? collection
 }
 
 class Author {
@@ -34,6 +35,12 @@ class Point {
 class Territorial {
    int id
    string name
+}
+
+class Collection {
+	int id
+	string name
+	string? link
 }
 
 @enduml
