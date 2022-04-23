@@ -14,7 +14,6 @@ const Tab = createBottomTabNavigator()
 const AppClassic = () => {
     const [MenuIcon, setMenuIcon] = useState("ellipsis1")
     const [MenuText, setMenuText] = useState("Menu")
-    const [CurrentMenuView, setCurrentMenuView] = useState(-1)
 
     const cards: CardProps[] = []
     for (let i = 0; i < 20; i++) {
@@ -58,9 +57,8 @@ const AppClassic = () => {
             icon: MenuIcon,
             component: () => (
                 <MenuChange
-                    onChangeIcon={setMenuIcon}
+                    onChangeIcon={icon => setMenuIcon(icon ?? "")}
                     onChangeText={setMenuText}
-                    CurrentMenuView={[CurrentMenuView, setCurrentMenuView]}
                 />
             ),
         },
@@ -91,15 +89,11 @@ const AppClassic = () => {
     return (
         <NavigationContainer
             onStateChange={() => {
-                setCurrentMenuView(-1)
                 setMenuIcon("ellipsis1")
                 setMenuText("Menu")
             }}
         >
-            <Tab.Navigator
-                //initialRouteName="Name"
-                screenOptions={{ headerShown: false }}
-            >
+            <Tab.Navigator screenOptions={{ headerShown: false }}>
                 {pages}
             </Tab.Navigator>
         </NavigationContainer>

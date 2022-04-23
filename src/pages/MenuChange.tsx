@@ -1,19 +1,12 @@
-import React, { FC } from "react"
-import { Menu } from "./Menu"
+import React, { FC, useState } from "react"
+import { Menu, MenuItem } from "./Menu"
 import { Text } from "react-native"
 import { AuleLibere } from "./AuleLibere"
 import { Impostazioni } from "./Impostazioni"
 import { Article } from "./Article"
 import { Dating } from "./Dating"
 
-const menuItems: {
-    title: string
-    subtitle: string
-    imageURL: string
-    icon?: string
-    onClick?: any
-    view?: any
-}[] = [
+const menuItems: MenuItem[] = [
     {
         title: "PoliTinder",
         subtitle: "Trova nuove amicizie",
@@ -56,12 +49,11 @@ const menuItems: {
 ]
 
 export const MenuChange: FC<{
-    onChangeIcon: any
-    onChangeText: any
-    CurrentMenuView: any
+    onChangeIcon: (icon: string | undefined) => void
+    onChangeText: (text: string) => void
 }> = props => {
-    const [CurrentView, setCurrentView] = props.CurrentMenuView
-    return CurrentView == -1 ? (
+    const [currentView, setCurrentView] = useState<number>()
+    return !currentView ? (
         <Menu
             onChangeIcon={props.onChangeIcon}
             onChangeText={props.onChangeText}
@@ -69,9 +61,9 @@ export const MenuChange: FC<{
             itemChanged={setCurrentView}
         />
     ) : (
-        menuItems[CurrentView].view ?? (
+        menuItems[currentView].view ?? (
             <Text style={{ padding: 100, textAlign: "center" }}>
-                {menuItems[CurrentView].title}
+                {menuItems[currentView].title}
             </Text>
         )
     )

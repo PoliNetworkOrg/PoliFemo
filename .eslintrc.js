@@ -27,7 +27,7 @@ module.exports = {
     },
     plugins: ["react", "@typescript-eslint", "prettier"],
     rules: {
-        "no-extra-parens": ["error", "all", { ignoreJSX: "all" }],
+        "no-extra-parens": ["off"],
         indent: ["error", 4],
         "linebreak-style": ["error", "unix"],
         quotes: ["error", "double"],
