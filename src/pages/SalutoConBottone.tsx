@@ -1,6 +1,7 @@
-import React, { FC, useState } from "react"
+import React, { useState } from "react"
 import { Pressable, StyleSheet, Text, View } from "react-native"
 import { Saluto } from "../components/Saluto"
+import { RootStackScreen } from "../navigation/NavigationTypes"
 
 const nomi = [
     "Tommaso",
@@ -12,10 +13,13 @@ const nomi = [
     "Vincenzo",
 ]
 
-export const SalutoConBottone: FC = () => {
+export const SalutoConBottone: RootStackScreen<"Saluti"> = props => {
     // le variabili nella UI possono essere gestite con lo stato di react
     // https://it.reactjs.org/docs/state-and-lifecycle.html
-    const [nome, setNome] = useState<string>() // se non viene passato nessun valore, viene inizializzato con undefined
+    const { route } = props
+    const { defaultName } = route.params
+
+    const [nome, setNome] = useState<string>(defaultName) // valore di default preso dai parametri della navigazione
     return (
         <View style={styles.container}>
             <Saluto

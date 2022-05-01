@@ -1,10 +1,11 @@
-import React, { useState } from "react"
-import AppClassic from "./src/pages/AppClassic"
-import { IntroSlider } from "./src/pages/IntroSlider"
+import { NavigationContainer } from "@react-navigation/native"
+import React from "react"
+import { RootStack } from "./src/navigation/RootStackNavigator"
 
 export default function App() {
-    const [realApp, setRealApp] = useState(false)
-
-    if (realApp) return <AppClassic />
-    else return <IntroSlider onDone={() => setRealApp(true)} />
+    return (
+        <NavigationContainer>
+            <RootStack />
+        </NavigationContainer>
+    )
 }
