@@ -1,4 +1,4 @@
-/* eslint-disable indent */
+/* eslint-disable indent, no-undef */
 /* eslint-disable prettier/prettier */
 // eslint-disable-next-line no-undef
 module.exports = {
@@ -15,6 +15,7 @@ module.exports = {
         "eslint:recommended",
         "plugin:react/recommended",
         "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
         "plugin:prettier/recommended",
     ],
     parser: "@typescript-eslint/parser",
@@ -24,6 +25,8 @@ module.exports = {
         },
         ecmaVersion: "latest",
         sourceType: "module",
+        tsconfigRootDir: __dirname,
+        project: ["./tsconfig.json"],
     },
     plugins: ["react", "@typescript-eslint", "prettier"],
     rules: {
@@ -33,5 +36,31 @@ module.exports = {
         quotes: ["error", "double"],
         semi: ["error", "never"],
         "react/prop-types": ["off"],
+        "@typescript-eslint/naming-convention": [
+            "error",
+            {
+                selector: "default",
+                format: ["camelCase"],
+                leadingUnderscore: "allow",
+                trailingUnderscore: "allow",
+            },
+            {
+                selector: "variable",
+                types: ["function"],
+                format: ["camelCase", "PascalCase"],
+            },
+            {
+                selector: "variable",
+                format: ["camelCase", "UPPER_CASE"],
+                leadingUnderscore: "allow",
+                trailingUnderscore: "allow",
+            },
+
+            {
+                selector: "typeLike",
+                format: ["PascalCase"],
+            },
+        ],
+        "@typescript-eslint/restrict-plus-operands": "off",
     },
 }

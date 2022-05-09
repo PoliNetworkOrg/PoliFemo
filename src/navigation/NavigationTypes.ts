@@ -26,8 +26,10 @@ import { FC } from "react"
  * More info: https://reactnavigation.org/docs/typescript/
  */
 export type RootStackNavigatorParams = {
+    /* eslint-disable @typescript-eslint/naming-convention */
     Home: undefined
     Saluti: { defaultName: string }
+    /* eslint-enable @typescript-eslint/naming-convention */
 }
 
 // Here are a couple of magic types, straight from the Underground Realm of Weird Types:

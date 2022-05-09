@@ -1,7 +1,7 @@
 import React from "react"
 import { FlatList, View } from "react-native"
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/naming-convention
 export function Grid<T = any>(props: {
     data: T[]
     renderItem: (i: { item: T; index: number }) => JSX.Element

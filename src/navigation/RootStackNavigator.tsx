@@ -9,6 +9,7 @@ import { RootStackNavigatorParams } from "./NavigationTypes"
 import { Home } from "../pages/Home"
 import { SalutoConBottone } from "../pages/SalutoConBottone"
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const RootStackNavigator = createStackNavigator<RootStackNavigatorParams>()
 
 export const RootStack = () => {
