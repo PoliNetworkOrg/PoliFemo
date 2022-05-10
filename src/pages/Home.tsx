@@ -14,7 +14,7 @@ export const Home: RootStackScreen<"Home"> = ({ navigation }) => {
             <Text style={{ fontSize: 36, fontWeight: "bold" }}>Polifemo</Text>
             <Pressable
                 onPress={() => {
-                    navigation.navigate("Saluti", { defaultName: "Mario" })
+                    navigation.navigate("Calendar")
                 }}
                 style={{
                     margin: 10,
