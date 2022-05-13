@@ -20,7 +20,7 @@ Shop per feature
 
 -   https://github.com/raghiii/react-native-vertical-distribution
 
-Swipe for PoliTinder
+Swipe for PoliTinder - PoliMeet
 
 -   https://github.com/meteor-factory/react-native-tinder-swipe-cards
 
@@ -45,3 +45,8 @@ Intro
 Installed Icon Pack
 
 -   https://github.com/oblador/react-native-vector-icons
+
+Search Bar
+
+-   https://github.com/localz/react-native-searchbar
+
