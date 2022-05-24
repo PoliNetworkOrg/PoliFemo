@@ -37,6 +37,7 @@ module.exports = {
         semi: ["error", "never"],
         "react/prop-types": ["off"],
         indent: ["off"],
+        "@typescript-eslint/no-misused-promises": ["off"],
         "@typescript-eslint/naming-convention": [
             "error",
             {

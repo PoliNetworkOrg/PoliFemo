@@ -32,6 +32,7 @@ import {
 export type RootStackNavigatorParams = {
     /* eslint-disable @typescript-eslint/naming-convention */
     Home: undefined
+    Calendar: undefined
     Saluti: { defaultName: string }
     /* eslint-enable @typescript-eslint/naming-convention */
 }
