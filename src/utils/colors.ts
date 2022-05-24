@@ -61,7 +61,7 @@ export interface ColorSchemeInfo {
     /** true when in dark mode */
     isDark: boolean
     /** see {@link https://reactnative.dev/docs/usecolorscheme} */
-    colorScheme: ColorSchemeName
+    colorScheme: NonNullable<ColorSchemeName>
 }
 
 /**
@@ -108,7 +108,7 @@ export const usePalette: () => ColorTheme &
         /** the colors for the dark theme, see {@link ColorTheme} */
         darkTheme: ColorTheme
     } = () => {
-    const colorScheme = useColorScheme()
+    const colorScheme = useColorScheme() ?? "light"
 
     const isDark = colorScheme === "dark"
     const isLight = !isDark
