@@ -16,6 +16,10 @@
 
 import { StackScreenProps } from "@react-navigation/stack"
 import { FC } from "react"
+import {
+    NavigationProp,
+    useNavigation as nativeUseNav,
+} from "@react-navigation/native"
 
 /**
  * interface containing the info about the params for each page of the stack navigator
@@ -77,3 +81,10 @@ export type RootStackScreen<
     T extends keyof RootStackNavigatorParams,
     P = Record<string, never>
 > = FC<RootStackProps<T> & P>
+
+/**
+ * Hook to access the navigation prop of the parent screen anywhere.
+ * With correct typings for the Root Stack Navigator.
+ */
+export const useNavigation = () =>
+    nativeUseNav<NavigationProp<RootStackNavigatorParams>>()
