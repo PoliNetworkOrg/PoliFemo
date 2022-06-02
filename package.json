@@ -33,7 +33,6 @@
         "react-native-safe-area-context": "3.3.2",
         "react-native-safe-area-view": "^1.1.1",
         "react-native-status-bar-height": "^2.6.0",
-        "react-native-svg": "12.1.1",
         "react-native-vector-icons": "^9.1.0",
         "react-native-web": "0.17.1",
         "rn-slick-bottom-tabs": "^1.1.1",

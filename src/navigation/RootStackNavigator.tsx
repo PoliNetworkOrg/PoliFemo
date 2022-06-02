@@ -14,12 +14,8 @@ const RootStackNavigator = createStackNavigator<RootStackNavigatorParams>()
 
 export const RootStack = () => {
     return (
-        <RootStackNavigator.Navigator>
-            <RootStackNavigator.Screen
-                name="Home"
-                component={Home}
-                options={{ headerShown: false }}
-            />
+        <RootStackNavigator.Navigator screenOptions={{ headerShown: false }}>
+            <RootStackNavigator.Screen name="Home" component={Home} />
             <RootStackNavigator.Screen
                 name="Saluti"
                 component={SalutoConBottone}
