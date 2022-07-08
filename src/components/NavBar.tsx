@@ -1,10 +1,10 @@
 import React, { FC } from "react"
 import { Dimensions, Pressable, View, StyleSheet, Image } from "react-native"
-import { useNavigation } from "../../navigation/NavigationTypes"
-import { usePalette } from "../../utils/colors"
-import { Text } from "../Text"
+import { useNavigation } from "../navigation/NavigationTypes"
+import { usePalette } from "../utils/colors"
+import { Text } from "./Text"
 
-import { NavbarIcon, useNavbarIcon } from "../../../assets/navbar"
+import { NavbarIcon, useNavbarIcon } from "../../assets/navbar"
 
 const styles = StyleSheet.create({
     button: {
