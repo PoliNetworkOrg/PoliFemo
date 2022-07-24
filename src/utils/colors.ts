@@ -116,7 +116,7 @@ export const usePalette: () => ColorTheme &
     const lightTheme: ColorTheme = {
         background: "#FFFFFF",
         backgroundAccent: "#DBDFF2",
-        homeBackground: "#DBDFF2",
+        homeBackground: "#424967",
         primary: "#454773",
         secondary: "#726FBF",
         text: "#000000",
