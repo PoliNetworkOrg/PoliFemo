@@ -10,7 +10,8 @@ export const TrayButton: FC<{
     onClick: () => void
     label: "settings" | "notifications" | "downloads"
 }> = props => {
-    const { primary } = usePalette()
+    const { darkTheme } = usePalette()
+    const color = darkTheme.buttonFill
     return (
         <Pressable
             onPress={props.onClick}
@@ -20,11 +21,11 @@ export const TrayButton: FC<{
             }}
         >
             {props.label === "settings" ? (
-                <SettingsSVG color={primary} />
+                <SettingsSVG color={color} />
             ) : props.label === "notifications" ? (
-                <NotificationsSVG color={primary} />
+                <NotificationsSVG color={color} />
             ) : (
-                <DownloadsSVG color={primary} />
+                <DownloadsSVG color={color} />
             )}
         </Pressable>
     )

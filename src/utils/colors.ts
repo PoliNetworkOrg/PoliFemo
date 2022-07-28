@@ -120,19 +120,19 @@ export const usePalette: () => ColorTheme &
         primary: "#454773",
         secondary: "#726FBF",
         text: "#000000",
-        buttonFill: "#F2F2F2",
-        buttonText: "#454773",
+        buttonFill: "#424967",
+        buttonText: "#fff",
     }
 
     const darkTheme: ColorTheme = {
         background: "#232A3E",
         backgroundAccent: "#677098",
-        homeBackground: "#1B2132",
+        homeBackground: "#232A3E",
         primary: "#AFB5D9",
         secondary: "#726FBF",
         text: "#F9F9F9",
-        buttonFill: "#AFB5D9",
-        buttonText: "#454773",
+        buttonFill: "#8791BD",
+        buttonText: "#fff",
     }
 
     const colors = isLight ? lightTheme : darkTheme
