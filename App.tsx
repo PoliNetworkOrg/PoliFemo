@@ -2,13 +2,13 @@
 import React from "react"
 import { NavigationContainer } from "@react-navigation/native"
 import AppLoading from "expo-app-loading"
-import { RootStack } from "./src/navigation/RootStackNavigator"
 import { useFonts } from "@expo-google-fonts/roboto"
 import {
     Roboto_400Regular,
     Roboto_500Medium_Italic,
     Roboto_900Black,
 } from "@expo-google-fonts/roboto"
+import { AppContainer } from "./src/AppContainer"
 
 export default function App() {
     const [fontsLoaded] = useFonts({
@@ -21,7 +21,7 @@ export default function App() {
 
     return (
         <NavigationContainer>
-            <RootStack />
+            <AppContainer />
         </NavigationContainer>
     )
 }
