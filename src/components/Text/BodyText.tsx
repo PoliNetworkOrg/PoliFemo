@@ -11,14 +11,18 @@ export const BodyText: FC<TextProps> = props => {
     let { style } = props
     style = StyleSheet.flatten(style) // so that we can override the fontWeight
 
+    const fontWeight = (style && style.fontWeight) || "normal"
+
     return (
         <_Text
             {...props}
             style={[
                 {
                     fontFamily:
-                        style && style.fontWeight === "bold"
+                        fontWeight === "bold" || fontWeight === "900"
                             ? "Roboto_900Black"
+                            : fontWeight === "300"
+                            ? "Roboto_300Light"
                             : "Roboto_400Regular",
                     fontSize: 16,
                     color: text,

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React from "react"
+import React, { useEffect } from "react"
 import { NavigationContainer } from "@react-navigation/native"
-import AppLoading from "expo-app-loading"
+import { hideAsync } from "expo-splash-screen"
 import { useFonts } from "@expo-google-fonts/roboto"
 import {
+    Roboto_300Light,
     Roboto_400Regular,
     Roboto_500Medium_Italic,
     Roboto_900Black,
@@ -12,12 +13,17 @@ import { AppContainer } from "./src/AppContainer"
 
 export default function App() {
     const [fontsLoaded] = useFonts({
+        Roboto_300Light,
         Roboto_400Regular,
         Roboto_500Medium_Italic,
         Roboto_900Black,
     })
 
-    if (!fontsLoaded) return <AppLoading />
+    useEffect(() => {
+        if (fontsLoaded) void hideAsync()
+    }, [fontsLoaded])
+
+    if (!fontsLoaded) return null
 
     return (
         <NavigationContainer>
