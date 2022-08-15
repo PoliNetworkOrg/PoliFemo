@@ -5,9 +5,10 @@
 
 import React from "react"
 import { createStackNavigator } from "@react-navigation/stack"
-import { RootStackNavigatorParams } from "./NavigationTypes"
-import { Home } from "../pages/Home"
-import { SalutoConBottone } from "../pages/SalutoConBottone"
+
+import { RootStackNavigatorParams } from "navigation/NavigationTypes"
+import { Home } from "pages/Home"
+import { SalutoConBottone } from "pages/SalutoConBottone"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const RootStackNavigator = createStackNavigator<RootStackNavigatorParams>()

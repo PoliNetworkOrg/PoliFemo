@@ -1,8 +1,9 @@
 import React, { FC } from "react"
 import { View } from "react-native"
-import { Tray } from "./components/Tray"
-import { RootStack } from "./navigation/RootStackNavigator"
-import { usePalette } from "./utils/colors"
+
+import { Tray } from "components/Tray"
+import { RootStack } from "navigation/RootStackNavigator"
+import { usePalette } from "utils/colors"
 
 /**
  * The main app container.

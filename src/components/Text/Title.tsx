@@ -1,6 +1,7 @@
 import React, { FC } from "react"
 import { Text as _Text, TextProps } from "react-native"
-import { usePalette } from "../../utils/colors"
+
+import { usePalette } from "utils/colors"
 
 /**
  * Title used for the Page component, custom font, default size and automatic color.
@@ -13,8 +14,8 @@ export const Title: FC<TextProps> = props => {
             {...props}
             style={[
                 {
-                    fontFamily: "Roboto_900Black",
-                    fontSize: 64,
+                    fontFamily: "Roboto_700Bold",
+                    fontSize: 48,
                     color: primary,
                 },
                 style,
