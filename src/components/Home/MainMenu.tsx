@@ -18,7 +18,10 @@ const pages = [
 export const MainMenu: FC = () => {
     const { navigate } = useNavigation()
     return (
-        <ScrollView horizontal style={{ paddingHorizontal: 24 }}>
+        <ScrollView
+            horizontal
+            contentContainerStyle={{ paddingHorizontal: 21 }}
+        >
             {pages.map(p => (
                 <MenuButton
                     // TODO: actual navigation

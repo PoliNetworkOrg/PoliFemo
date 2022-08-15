@@ -1,5 +1,5 @@
-import React from "react"
-import { Dimensions, TextInput, View } from "react-native"
+import React, { useEffect, useState } from "react"
+import { Dimensions, TextInput, View, Image, Pressable } from "react-native"
 import BottomSheet, {
     BottomSheetScrollView,
     BottomSheetScrollViewMethods,
@@ -9,15 +9,27 @@ import { RootStackScreen } from "../navigation/NavigationTypes"
 import { BodyText, Title } from "../components/Text"
 import { usePalette } from "../utils/colors"
 import { MainMenu, MainTitle } from "../components/Home"
-// import { StickyHeader } from "../components/MainMenu/StickyHeader"
+import openNav from "../../assets/menu/open-nav.png"
+import { NavBar } from "../components/NavBar"
 
+/**
+ * Home page containing the POLIFEMO logo, search bar, main horizontal scroll menu and the entry
+ * point for the news section (which is a bottom sheet)
+ */
 export const Home: RootStackScreen<"Home"> = () => {
-    // const [isNewsClosed, setNewsClosed] = useState(true)
+    const [isNewsClosed, setNewsClosed] = useState(true)
     const { homeBackground, background } = usePalette()
     // the ref for the News bottom sheet, used to open and close it programmatically
     const bottomSheetRef = React.useRef<BottomSheet>(null)
     // The reference to the News scrollview, used to scroll programmatically
     const scrollViewRef = React.useRef<BottomSheetScrollViewMethods>(null)
+
+    useEffect(() => {
+        // scrolls to the top of the news scrollview when the news bottom sheet is closed
+        if (isNewsClosed && scrollViewRef.current) {
+            scrollViewRef.current.scrollToEnd({ animated: true })
+        }
+    }, [isNewsClosed])
 
     return (
         <View
@@ -27,43 +39,6 @@ export const Home: RootStackScreen<"Home"> = () => {
                 backgroundColor: homeBackground,
             }}
         >
-            {/* <ScrollView
-                style={{
-                    flex: 1,
-                    zIndex: 2,
-                    marginTop: 106,
-                    borderTopLeftRadius: 30,
-                    borderTopRightRadius: 30,
-                    overflow: "hidden",
-                }}
-                bounces={false}
-                snapToOffsets={[0, 300]}
-                snapToStart={false}
-                snapToEnd={false}
-                StickyHeaderComponent={StickyHeader}
-                // stickyHeaderHiddenOnScroll
-                stickyHeaderIndices={[0, 2]}
-                disableIntervalMomentum
-                decelerationRate={isNewsClosed ? "fast" : "normal"}
-                scrollEventThrottle={100}
-                onScroll={e => {
-                    // console.log(e.nativeEvent.contentOffset.y)
-                    if (e.nativeEvent.contentOffset.y < 350) {
-                        setNewsClosed(true)
-                    } else {
-                        setNewsClosed(false)
-                    }
-                }}
-                // onMomentumScrollEnd={e => {
-                //     if (e.nativeEvent.contentOffset.y < 300) {
-                //         console.log("now closed!")
-                //         setNewsClosed(true)
-                //     } else {
-                //         console.log("now open!")
-                //         setNewsClosed(false)
-                //     }
-                // }}
-            > */}
             <View
                 style={{
                     flex: 1,
@@ -72,6 +47,7 @@ export const Home: RootStackScreen<"Home"> = () => {
             >
                 <MainTitle />
                 <View
+                    // section containing the search bar and the main menu
                     style={{
                         marginTop: 35,
                         paddingBottom: 50,
@@ -92,11 +68,12 @@ export const Home: RootStackScreen<"Home"> = () => {
                     }}
                 >
                     <TextInput
+                        // search bar
                         placeholder="Search"
                         style={{
-                            padding: 12,
-                            margin: 46,
-                            marginBottom: 35,
+                            padding: 10,
+                            margin: 51,
+                            marginBottom: 26,
                             borderRadius: 100,
                             backgroundColor: "white",
 
@@ -114,13 +91,16 @@ export const Home: RootStackScreen<"Home"> = () => {
                 </View>
             </View>
             <BottomSheet
+                ref={bottomSheetRef}
                 handleComponent={() => (
                     // "News" title component
-                    // TODO: add button to open and close the sheet
                     <View
                         style={{
-                            zIndex: 2000000,
-                            padding: 25,
+                            flexDirection: "row",
+                            alignItems: "baseline",
+                            zIndex: 3,
+                            paddingHorizontal: 22,
+                            paddingTop: 39,
                             flex: 1,
                             backgroundColor: background,
                             borderTopLeftRadius: 30,
@@ -128,18 +108,41 @@ export const Home: RootStackScreen<"Home"> = () => {
                         }}
                     >
                         <Title>News</Title>
+                        <Pressable
+                            style={{ marginLeft: 10 }}
+                            // toggles the bottom sheet open and closed
+                            onPress={() => setNewsClosed(!isNewsClosed)}
+                        >
+                            <Image
+                                source={openNav}
+                                style={{
+                                    height: 27,
+                                    width: 27,
+                                    transform: [
+                                        {
+                                            // TODO: animate this icon
+                                            rotate: isNewsClosed
+                                                ? "0deg"
+                                                : "180deg",
+                                        },
+                                    ],
+                                }}
+                            />
+                        </Pressable>
                     </View>
                 )}
-                onAnimate={progress => {
-                    if (progress == 1 && scrollViewRef.current) {
-                        scrollViewRef.current.scrollTo({ y: 0, animated: true })
-                    }
-                }}
-                ref={bottomSheetRef}
-                style={{
-                    // Shadow below
+                backgroundStyle={{
+                    // rounds the top corners the same as the rest of the app
                     borderTopLeftRadius: 30,
                     borderTopRightRadius: 30,
+                }}
+                onAnimate={progress => {
+                    // fires when the bottom sheet is animating, keeps track of when the sheet is
+                    // closed/opened
+                    setNewsClosed(progress == 1)
+                }}
+                style={{
+                    // Shadow below
                     shadowColor: "#000",
                     shadowOffset: {
                         width: 0,
@@ -150,17 +153,23 @@ export const Home: RootStackScreen<"Home"> = () => {
 
                     elevation: 15,
                 }}
-                index={0} // starts closed
-                // TODO: get right height programmatically, not just 50%
-                snapPoints={["50%", Dimensions.get("window").height - 106]}
-                animateOnMount={false} // should begin stationary
+                index={isNewsClosed ? 0 : 1} // the position depends on if closed or open
+                snapPoints={[
+                    // TODO: this can be probably made better
+                    Dimensions.get("window").height - 425,
+                    Dimensions.get("window").height - 106,
+                ]}
+                animateOnMount={false} // app should begin stationary
             >
                 <BottomSheetScrollView ref={scrollViewRef}>
                     <View
-                        // TODO: Everything below is just a placeholder
+                        //
+                        // TODO: EVERYTHING BELOW IS JUST A PLACEHOLDER
+                        //
                         style={{
                             zIndex: 2,
                             minHeight: 2000,
+                            paddingHorizontal: 22,
                             backgroundColor: background,
                         }}
                     >
@@ -211,8 +220,12 @@ export const Home: RootStackScreen<"Home"> = () => {
                         </BodyText>
                     </View>
                 </BottomSheetScrollView>
+                <NavBar
+                    // TODO: ask the design team if we need to use the navbar here
+                    overrideBackBehavior={() => setNewsClosed(true)}
+                    overrideHomeBehavior={() => setNewsClosed(true)}
+                />
             </BottomSheet>
-            {/* </ScrollView> */}
         </View>
     )
 }
