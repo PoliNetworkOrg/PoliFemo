@@ -1,10 +1,10 @@
 import React, { FC } from "react"
-import { Pressable, View, Image } from "react-native"
+import { Pressable, View } from "react-native"
 import { usePalette } from "../../utils/colors"
 
-import { Text } from "../Text"
+import { BodyText } from "../Text"
 
-import icon from "../../../assets/menu/calendar.png"
+import Icon from "../../../assets/menu/calendar.svg"
 
 /**
  * single buttons for the main menu, with custom icons and titles
@@ -19,24 +19,26 @@ export const MenuButton: FC<{
         <Pressable onPress={onPress}>
             <View
                 style={{
-                    width: 75,
+                    width: 85,
+                    height: 70,
                     backgroundColor: color,
-                    padding: 4,
-                    margin: 8,
+                    paddingVertical: 6,
+                    marginHorizontal: 6,
                     justifyContent: "space-between",
                     alignItems: "center",
                     borderRadius: 10,
                 }}
             >
-                <Image source={icon} style={{ height: 26, marginBottom: 4 }} />
-                <Text
+                {/* <Image source={icon} style={{ height: 26, marginBottom: 4 }} /> */}
+                <Icon width={40} />
+                <BodyText
                     style={{
-                        fontSize: 8,
+                        fontSize: 10,
                         color: "white",
                     }}
                 >
                     {title}
-                </Text>
+                </BodyText>
             </View>
         </Pressable>
     )
