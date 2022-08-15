@@ -1,7 +1,9 @@
 import React, { FC } from "react"
 import { ScrollView } from "react-native"
+
+import { useNavigation } from "navigation/NavigationTypes"
+
 import { MenuButton } from "./MenuButton"
-import { useNavigation } from "../../navigation/NavigationTypes"
 
 // TODO: pages should be defined in a more configurable way (in a single place, probably in navigation)
 const pages = [

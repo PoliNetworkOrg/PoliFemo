@@ -1,10 +1,9 @@
 import React, { FC } from "react"
 import { Pressable, View } from "react-native"
-import { usePalette } from "../../utils/colors"
 
-import { BodyText } from "../Text"
-
-import Icon from "../../../assets/menu/calendar.svg"
+import { BodyText } from "components/Text"
+import { usePalette } from "utils/colors"
+import Icon from "assets/menu/calendar.svg"
 
 /**
  * single buttons for the main menu, with custom icons and titles

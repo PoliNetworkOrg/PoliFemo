@@ -1,10 +1,10 @@
 import React, { FC } from "react"
 import { Dimensions, Pressable, View, StyleSheet } from "react-native"
-import { useNavigation } from "../navigation/NavigationTypes"
-import { usePalette } from "../utils/colors"
-import { Text } from "./Text"
 
-import { NavbarIcon, icons } from "../../assets/navbar"
+import { Text } from "components/Text"
+import { useNavigation } from "navigation/NavigationTypes"
+import { usePalette } from "utils/colors"
+import { NavbarIcon, icons } from "assets/navbar"
 
 const { Home, Back } = icons
 

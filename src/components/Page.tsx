@@ -1,8 +1,9 @@
 import React, { FC, useEffect, useRef } from "react"
 import { RefreshControl, ScrollView, View, Animated } from "react-native"
-import { usePalette } from "../utils/colors"
-import { Title, Subtitle } from "./Text"
-import { NavBar, NavbarProps } from "./NavBar"
+
+import { Title, Subtitle } from "components/Text"
+import { NavBar, NavbarProps } from "components/NavBar"
+import { usePalette } from "utils/colors"
 
 /**
  * General component useful for pages with a scrollable content.

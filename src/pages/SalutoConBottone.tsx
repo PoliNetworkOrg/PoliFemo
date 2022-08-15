@@ -9,9 +9,10 @@
 
 import React, { useState } from "react"
 import { Pressable, Image } from "react-native"
-import { Page } from "../components/Page"
-import { RootStackScreen } from "../navigation/NavigationTypes"
-import { BodyText } from "../components/Text"
+
+import { RootStackScreen } from "navigation/NavigationTypes"
+import { Page } from "components/Page"
+import { BodyText } from "components/Text"
 
 export const SalutoConBottone: RootStackScreen<"Saluti"> = () => {
     // le variabili nella UI possono essere gestite con lo stato di react

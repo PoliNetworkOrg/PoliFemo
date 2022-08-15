@@ -2,7 +2,7 @@ import React, { FC } from "react"
 import { LinearGradient } from "expo-linear-gradient"
 import MaskedView from "@react-native-masked-view/masked-view"
 
-import { Text } from "../Text"
+import { Text } from "components/Text"
 
 export const MainTitle: FC = () => {
     return (

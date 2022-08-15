@@ -1,6 +1,7 @@
 import React, { FC } from "react"
 import { Text as _Text, TextProps } from "react-native"
-import { usePalette } from "../../utils/colors"
+
+import { usePalette } from "utils/colors"
 
 /**
  * Subtitle used for the Page component, custom font, default size and automatic color.

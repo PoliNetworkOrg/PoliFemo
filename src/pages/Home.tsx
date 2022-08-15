@@ -5,12 +5,13 @@ import BottomSheet, {
     BottomSheetScrollViewMethods,
 } from "@gorhom/bottom-sheet"
 
-import { RootStackScreen } from "../navigation/NavigationTypes"
-import { BodyText, Title } from "../components/Text"
-import { usePalette } from "../utils/colors"
-import { MainMenu, MainTitle } from "../components/Home"
-import openNav from "../../assets/menu/open-nav.png"
-import { NavBar } from "../components/NavBar"
+import { RootStackScreen } from "navigation/NavigationTypes"
+import { BodyText, Title } from "components/Text"
+import { MainMenu, MainTitle } from "components/Home"
+import { NavBar } from "components/NavBar"
+import { usePalette } from "utils/colors"
+
+import openNav from "assets/menu/open-nav.png"
 
 /**
  * Home page containing the POLIFEMO logo, search bar, main horizontal scroll menu and the entry

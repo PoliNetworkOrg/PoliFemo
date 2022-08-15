@@ -1,7 +1,9 @@
 import React, { FC } from "react"
 import { StyleSheet, TextProps } from "react-native"
+
+import { usePalette } from "utils/colors"
+
 import { BodyText } from "./BodyText"
-import { usePalette } from "../../utils/colors"
 
 /**
  * Just like the default react-native Text component, but with a custom font, and automatic color.
