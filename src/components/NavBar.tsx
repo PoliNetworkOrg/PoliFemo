@@ -1,10 +1,12 @@
 import React, { FC } from "react"
-import { Dimensions, Pressable, View, StyleSheet, Image } from "react-native"
+import { Dimensions, Pressable, View, StyleSheet } from "react-native"
 import { useNavigation } from "../navigation/NavigationTypes"
 import { usePalette } from "../utils/colors"
 import { Text } from "./Text"
 
-import { NavbarIcon, useNavbarIcon } from "../../assets/navbar"
+import { NavbarIcon, icons } from "../../assets/navbar"
+
+const { Home, Back } = icons
 
 const styles = StyleSheet.create({
     button: {
@@ -58,6 +60,15 @@ export interface NavbarProps {
      * @default true
      */
     elevated?: boolean
+
+    /**
+     * overrides the default navigation "goBack" behavior
+     */
+    overrideBackBehavior?: () => void
+    /**
+     * overrides the default navigation "navigate" to home behavior
+     */
+    overrideHomeBehavior?: () => void
 }
 
 /**
@@ -108,7 +119,10 @@ export const NavBar: FC<NavbarProps> = props => {
             {/* TODO: substitute with actual buttons */}
             {back && (
                 <Pressable
-                    onPress={() => navigation.goBack()}
+                    onPress={
+                        props.overrideBackBehavior ??
+                        (() => navigation.goBack())
+                    }
                     style={[
                         styles.button,
                         {
@@ -119,10 +133,11 @@ export const NavBar: FC<NavbarProps> = props => {
                         },
                     ]}
                 >
-                    <Image
-                        source={useNavbarIcon("back")}
+                    <Back style={{ marginLeft: 12, marginRight: "auto" }} />
+                    {/* <Image
+                        source={icons["back"]}
                         style={{ marginLeft: 12, marginRight: "auto" }}
-                    />
+                    /> */}
                     <Text style={{ marginLeft: "auto", marginRight: 20 }}>
                         Back
                     </Text>
@@ -131,29 +146,35 @@ export const NavBar: FC<NavbarProps> = props => {
 
             {home && (
                 <Pressable
-                    onPress={() => navigation.navigate("Home")}
+                    onPress={
+                        props.overrideHomeBehavior ??
+                        (() => navigation.navigate("Home"))
+                    }
                     style={[styles.button, { backgroundColor: buttonFill }]}
                 >
-                    <Image source={useNavbarIcon("home")} />
+                    <Home />
                 </Pressable>
             )}
 
             {props.customButtons
-                ? props.customButtons.map(({ icon, onPress }, i) => (
-                      <Pressable
-                          key={"navbar-custom-button-" + i}
-                          style={[
-                              styles.button,
-                              {
-                                  backgroundColor: buttonFill,
-                                  marginLeft: "auto",
-                              },
-                          ]}
-                          onPress={onPress}
-                      >
-                          <Image source={useNavbarIcon(icon)} />
-                      </Pressable>
-                  ))
+                ? props.customButtons.map(({ icon, onPress }, i) => {
+                      const Icon = icons[icon]
+                      return (
+                          <Pressable
+                              key={"navbar-custom-button-" + i}
+                              style={[
+                                  styles.button,
+                                  {
+                                      backgroundColor: buttonFill,
+                                      marginLeft: "auto",
+                                  },
+                              ]}
+                              onPress={onPress}
+                          >
+                              <Icon />
+                          </Pressable>
+                      )
+                  })
                 : undefined}
         </View>
     )
