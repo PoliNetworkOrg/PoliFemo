@@ -7,6 +7,7 @@ import {
     Roboto_300Light,
     Roboto_400Regular,
     Roboto_500Medium_Italic,
+    Roboto_700Bold,
     Roboto_900Black,
 } from "@expo-google-fonts/roboto"
 import { AppContainer } from "./src/AppContainer"
@@ -16,6 +17,7 @@ export default function App() {
         Roboto_300Light,
         Roboto_400Regular,
         Roboto_500Medium_Italic,
+        Roboto_700Bold,
         Roboto_900Black,
     })
 

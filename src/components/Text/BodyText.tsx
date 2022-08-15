@@ -19,8 +19,10 @@ export const BodyText: FC<TextProps> = props => {
             style={[
                 {
                     fontFamily:
-                        fontWeight === "bold" || fontWeight === "900"
+                        fontWeight === "900"
                             ? "Roboto_900Black"
+                            : fontWeight === "bold" || fontWeight === "700"
+                            ? "Roboto_700Bold"
                             : fontWeight === "300"
                             ? "Roboto_300Light"
                             : "Roboto_400Regular",

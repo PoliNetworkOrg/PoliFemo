@@ -13,8 +13,8 @@ export const Title: FC<TextProps> = props => {
             {...props}
             style={[
                 {
-                    fontFamily: "Roboto_900Black",
-                    fontSize: 64,
+                    fontFamily: "Roboto_700Bold",
+                    fontSize: 48,
                     color: primary,
                 },
                 style,
