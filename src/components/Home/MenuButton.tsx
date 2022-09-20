@@ -1,9 +1,10 @@
 import React, { FC } from "react"
 import { Pressable, View } from "react-native"
+import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 
 import { BodyText } from "components/Text"
 import { usePalette } from "utils/colors"
-import Icon from "assets/menu/calendar.svg"
+import icon from "assets/menu/calendar.svg"
 
 /**
  * single buttons for the main menu, with custom icons and titles
@@ -14,6 +15,7 @@ export const MenuButton: FC<{
 }> = ({ onPress, title }) => {
     const { lightTheme } = usePalette()
     const color = lightTheme.buttonFill
+    const svg = useSVG(icon)
     return (
         <Pressable onPress={onPress}>
             <View
@@ -29,7 +31,18 @@ export const MenuButton: FC<{
                 }}
             >
                 {/* <Image source={icon} style={{ height: 26, marginBottom: 4 }} /> */}
-                <Icon width={40} />
+                {/* <Icon width={40} /> */}
+                <Canvas style={{ flex: 1, width: 40 }}>
+                    {svg && (
+                        <ImageSVG
+                            svg={svg}
+                            x={0}
+                            y={0}
+                            width={40}
+                            height={38}
+                        />
+                    )}
+                </Canvas>
                 <BodyText
                     style={{
                         fontSize: 10,

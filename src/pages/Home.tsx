@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
-import { Dimensions, TextInput, View, Image, Pressable } from "react-native"
+import { Dimensions, TextInput, View, Pressable } from "react-native"
+import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import BottomSheet, {
     BottomSheetScrollView,
     BottomSheetScrollViewMethods,
@@ -11,7 +12,7 @@ import { MainMenu, MainTitle } from "components/Home"
 import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
 
-import openNav from "assets/menu/open-nav.png"
+import openNavSVG from "assets/menu/open-nav.svg"
 
 /**
  * Home page containing the POLIFEMO logo, search bar, main horizontal scroll menu and the entry
@@ -24,6 +25,8 @@ export const Home: RootStackScreen<"Home"> = () => {
     const bottomSheetRef = React.useRef<BottomSheet>(null)
     // The reference to the News scrollview, used to scroll programmatically
     const scrollViewRef = React.useRef<BottomSheetScrollViewMethods>(null)
+
+    const svg = useSVG(openNavSVG)
 
     useEffect(() => {
         // scrolls to the top of the news scrollview when the news bottom sheet is closed
@@ -114,21 +117,29 @@ export const Home: RootStackScreen<"Home"> = () => {
                             // toggles the bottom sheet open and closed
                             onPress={() => setNewsClosed(!isNewsClosed)}
                         >
-                            <Image
-                                source={openNav}
+                            <Canvas
                                 style={{
-                                    height: 27,
                                     width: 27,
+                                    height: 28,
                                     transform: [
                                         {
-                                            // TODO: animate this icon
                                             rotate: isNewsClosed
                                                 ? "0deg"
                                                 : "180deg",
                                         },
                                     ],
                                 }}
-                            />
+                            >
+                                {svg && (
+                                    <ImageSVG
+                                        svg={svg}
+                                        x={0}
+                                        y={0}
+                                        width={27}
+                                        height={27}
+                                    />
+                                )}
+                            </Canvas>
                         </Pressable>
                     </View>
                 )}

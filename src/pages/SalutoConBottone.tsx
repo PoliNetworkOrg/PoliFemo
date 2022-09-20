@@ -24,7 +24,7 @@ export const SalutoConBottone: RootStackScreen<"Saluti"> = () => {
             navbarOptions={{
                 customButtons: [
                     {
-                        icon: "Down",
+                        icon: "down",
                         onPress: () => {
                             // esempio di chiamata alla navigazione
                             console.log("pressed!")

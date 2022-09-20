@@ -1,12 +1,11 @@
 import React, { FC } from "react"
 import { Dimensions, Pressable, View, StyleSheet } from "react-native"
+import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 
 import { Text } from "components/Text"
 import { useNavigation } from "navigation/NavigationTypes"
 import { usePalette } from "utils/colors"
-import { NavbarIcon, icons } from "assets/navbar"
-
-const { Home, Back } = icons
+import { NavbarIcon, navbarIcons } from "assets/navbar"
 
 const styles = StyleSheet.create({
     button: {
@@ -82,6 +81,9 @@ export const NavBar: FC<NavbarProps> = props => {
     const back = props.back ?? true
     const home = props.home ?? true
 
+    const homeSVG = useSVG(navbarIcons.home.svg)
+    const backSVG = useSVG(navbarIcons.back.svg)
+
     const elevated = props.elevated ?? true
 
     return (
@@ -133,11 +135,24 @@ export const NavBar: FC<NavbarProps> = props => {
                         },
                     ]}
                 >
-                    <Back style={{ marginLeft: 12, marginRight: "auto" }} />
-                    {/* <Image
-                        source={icons["back"]}
-                        style={{ marginLeft: 12, marginRight: "auto" }}
-                    /> */}
+                    <Canvas
+                        style={{
+                            marginLeft: 12,
+                            marginRight: "auto",
+                            width: navbarIcons.back.width,
+                            height: navbarIcons.back.heigth,
+                        }}
+                    >
+                        {backSVG && (
+                            <ImageSVG
+                                svg={backSVG}
+                                x={0}
+                                y={0}
+                                width={navbarIcons.back.width}
+                                height={navbarIcons.back.heigth}
+                            />
+                        )}
+                    </Canvas>
                     <Text style={{ marginLeft: "auto", marginRight: 20 }}>
                         Back
                     </Text>
@@ -152,13 +167,29 @@ export const NavBar: FC<NavbarProps> = props => {
                     }
                     style={[styles.button, { backgroundColor: buttonFill }]}
                 >
-                    <Home />
+                    <Canvas
+                        style={{
+                            width: navbarIcons.home.width,
+                            height: navbarIcons.home.heigth,
+                        }}
+                    >
+                        {homeSVG && (
+                            <ImageSVG
+                                svg={homeSVG}
+                                x={0}
+                                y={0}
+                                width={navbarIcons.home.width}
+                                height={navbarIcons.home.heigth}
+                            />
+                        )}
+                    </Canvas>
                 </Pressable>
             )}
 
             {props.customButtons
                 ? props.customButtons.map(({ icon, onPress }, i) => {
-                      const Icon = icons[icon]
+                      const iconSVG = navbarIcons[icon]
+                      const svg = useSVG(iconSVG.svg)
                       return (
                           <Pressable
                               key={"navbar-custom-button-" + i}
@@ -171,7 +202,22 @@ export const NavBar: FC<NavbarProps> = props => {
                               ]}
                               onPress={onPress}
                           >
-                              <Icon />
+                              <Canvas
+                                  style={{
+                                      width: iconSVG.width,
+                                      height: iconSVG.heigth,
+                                  }}
+                              >
+                                  {svg && (
+                                      <ImageSVG
+                                          svg={svg}
+                                          x={0}
+                                          y={0}
+                                          width={iconSVG.width}
+                                          height={iconSVG.heigth}
+                                      />
+                                  )}
+                              </Canvas>
                           </Pressable>
                       )
                   })
