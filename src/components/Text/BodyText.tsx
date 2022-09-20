@@ -8,7 +8,7 @@ import { usePalette } from "utils/colors"
  * Used in large bodies of text
  */
 export const BodyText: FC<TextProps> = props => {
-    const { text } = usePalette()
+    const { bodyText } = usePalette()
     let { style } = props
     style = StyleSheet.flatten(style) // so that we can override the fontWeight
 
@@ -28,7 +28,7 @@ export const BodyText: FC<TextProps> = props => {
                             ? "Roboto_300Light"
                             : "Roboto_400Regular",
                     fontSize: 16,
-                    color: text,
+                    color: bodyText,
                 },
                 style,
             ]}

@@ -10,8 +10,8 @@ export const TrayButton: FC<{
     onClick: () => void
     label: "settings" | "notifications" | "downloads"
 }> = props => {
-    const { darkTheme } = usePalette()
-    const color = darkTheme.buttonFill
+    const { palette } = usePalette()
+    const color = palette.lighter
     return (
         <Pressable
             onPress={props.onClick}

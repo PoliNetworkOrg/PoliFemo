@@ -1,5 +1,21 @@
 import { useColorScheme, ColorSchemeName } from "react-native"
 
+export interface Palette {
+    primary: string
+    lighter: string
+    darker: string
+    variant1: string
+    accent: string
+}
+
+const palette: Palette = {
+    primary: "#424967",
+    lighter: "#8791BD",
+    darker: "#232A3E",
+    variant1: "#414867",
+    accent: "#FFB544",
+}
+
 /**
  * Interface containing strings with the hex values for most used colors in the app, additional info
  * can be found as comments for each color.
@@ -14,37 +30,38 @@ export interface ColorTheme {
      * White in light mode, deep blue in dark mode.
      */
     background: string
+
     /**
-     * Accent background color for stacked UI elements, such as cards.
-     * It's a kind of lilac thing idk
+     * Accent background color for stacked UI elements, a slightly lighter version of the background
+     * color.
      */
-    backgroundAccent: string
+    backgroundSecondary: string
+
     /**
      * Background for the home screen.
-     * Lilac in light theme, veery deep blue in dark theme.
+     * Lilac in light theme, deep blue in dark theme.
      */
     homeBackground: string
+
     /**
      * Primary color, used mostly in titles.
-     * Deep blue in dark mode, kind of lilac in light mode.
+     * Deep blue in dark mode, orange in light mode.
      * Im not a designer i dont know colors
      */
     primary: string
-    /**
-     * Secondary color for accents, used in confirmation buttons.
-     * Vibrant purple? Kinda?
-     */
-    secondary: string
+
     /**
      * Color for bulk text, e.g the body for an article.
      * Straight up black in dark mode, almost white in light mode.
      */
-    text: string
+    bodyText: string
+
     /**
      * Fill color for most buttons that do not require sudden attention.
      * Gray in light mode, lilac again in dark mode.
      */
     buttonFill: string
+
     /**
      * Text color for most buttons.
      * Yeah that's purple i know this one.
@@ -70,7 +87,7 @@ export interface ColorSchemeInfo {
  * It automatically handles light/dark mode, so no need to worry about that.
  *
  * For info about which color to use, see the specific descriptions in {@link ColorTheme} and refer
- * to the [Figma project]{@link https://www.figma.com/file/ABlBGriBVZHRqGHwheQaVt/PoliFemo}
+ * to the [Figma project]({@link https://www.figma.com/file/ABlBGriBVZHRqGHwheQaVt/PoliFemo})
  *
  * @returns an object that can be destructured to get the different colors
  *
@@ -103,6 +120,8 @@ export interface ColorSchemeInfo {
  */
 export const usePalette: () => ColorTheme &
     ColorSchemeInfo & {
+        /** object containing the colors of the palette */
+        palette: Palette
         /** the colors for the light theme, see {@link ColorTheme} */
         lightTheme: ColorTheme
         /** the colors for the dark theme, see {@link ColorTheme} */
@@ -115,24 +134,22 @@ export const usePalette: () => ColorTheme &
 
     const lightTheme: ColorTheme = {
         background: "#FFFFFF",
-        backgroundAccent: "#DBDFF2",
-        homeBackground: "#424967",
-        primary: "#454773",
-        secondary: "#726FBF",
-        text: "#000000",
-        buttonFill: "#424967",
-        buttonText: "#fff",
+        backgroundSecondary: "#FFFFFF",
+        homeBackground: palette.primary, // "#424967",
+        primary: palette.variant1, // "#414867",
+        bodyText: "#000000",
+        buttonFill: palette.primary, // "#424967",
+        buttonText: "#FFFFFF",
     }
 
     const darkTheme: ColorTheme = {
-        background: "#232A3E",
-        backgroundAccent: "#677098",
-        homeBackground: "#232A3E",
-        primary: "#AFB5D9",
-        secondary: "#726FBF",
-        text: "#F9F9F9",
-        buttonFill: "#8791BD",
-        buttonText: "#fff",
+        background: palette.darker, // "#232A3E",
+        backgroundSecondary: palette.primary, // "#424967",
+        homeBackground: palette.darker, // "#232A3E",
+        primary: palette.accent, // "#FFB544",
+        bodyText: "#FFFFFF",
+        buttonFill: palette.lighter, // "#8791BD",
+        buttonText: "#FFFFFF",
     }
 
     const colors = isLight ? lightTheme : darkTheme
@@ -144,5 +161,6 @@ export const usePalette: () => ColorTheme &
         colorScheme,
         lightTheme,
         darkTheme,
+        palette,
     }
 }

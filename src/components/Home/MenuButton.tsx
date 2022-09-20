@@ -13,8 +13,8 @@ export const MenuButton: FC<{
     onPress: () => void
     title: string
 }> = ({ onPress, title }) => {
-    const { lightTheme } = usePalette()
-    const color = lightTheme.buttonFill
+    const { palette } = usePalette()
+    const color = palette.primary
     const svg = useSVG(icon)
     return (
         <Pressable onPress={onPress}>
