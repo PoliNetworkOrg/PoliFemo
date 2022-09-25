@@ -14,6 +14,7 @@
     "dependencies": {
         "@ant-design/icons-react-native": "^2.3.2",
         "@expo-google-fonts/roboto": "^0.2.2",
+        "@expo/webpack-config": "^0.17.0",
         "@fortawesome/fontawesome-svg-core": "^6.1.1",
         "@fortawesome/free-solid-svg-icons": "^6.1.1",
         "@fortawesome/react-native-fontawesome": "^0.2.7",
