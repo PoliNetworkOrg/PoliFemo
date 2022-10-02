@@ -41,7 +41,7 @@
         "react-native-status-bar-height": "^2.6.0",
         "react-native-svg": "12.3.0",
         "react-native-vector-icons": "^9.1.0",
-        "react-native-web": "~0.18.7",
+        "react-native-web": "~0.18.9",
         "rn-slick-bottom-tabs": "^1.1.1",
         "styled-components": "^5.3.5",
         "yarn": "^1.22.18"
