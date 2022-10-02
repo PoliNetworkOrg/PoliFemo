@@ -43,7 +43,7 @@
         "react-native-vector-icons": "^9.1.0",
         "react-native-web": "~0.18.7",
         "rn-slick-bottom-tabs": "^1.1.1",
-        "styled-components": "^5.3.5",
+        "styled-components": "^5.3.6",
         "yarn": "^1.22.18"
     },
     "devDependencies": {
