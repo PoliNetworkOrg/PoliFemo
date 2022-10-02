@@ -23,7 +23,7 @@
         "@react-native-masked-view/masked-view": "0.2.7",
         "@react-navigation/native": "^6.0.10",
         "@react-navigation/stack": "^6.2.1",
-        "@shopify/react-native-skia": "0.1.141",
+        "@shopify/react-native-skia": "0.1.153",
         "expo": "^46.0.0",
         "expo-linear-gradient": "~11.4.0",
         "expo-splash-screen": "~0.16.2",
