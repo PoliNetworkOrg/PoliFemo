@@ -22,7 +22,7 @@
         "@gorhom/bottom-sheet": "^4.4.3",
         "@react-native-masked-view/masked-view": "0.2.7",
         "@react-navigation/native": "^6.0.10",
-        "@react-navigation/stack": "^6.2.1",
+        "@react-navigation/stack": "^6.3.2",
         "@shopify/react-native-skia": "0.1.153",
         "expo": "^46.0.0",
         "expo-linear-gradient": "~11.4.0",
