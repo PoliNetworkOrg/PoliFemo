@@ -16,6 +16,7 @@ export const StickyHeader: FC<{
     scrollAnimatedValue: Animated.AnimatedValue
     nextHeaderLayoutY?: number
     onLayout: (e: LayoutChangeEvent) => void
+    children: React.ReactNode
     // eslint-disable-next-line react/display-name
 }> = React.forwardRef((props, ref) => {
     const [layoutY, setLayoutY] = React.useState(0)
