@@ -9,7 +9,8 @@
         "web": "expo start --web",
         "eject": "expo eject",
         "lint": "eslint src",
-        "lint:fix": "eslint src --fix"
+        "lint:fix": "eslint src --fix",
+        "type-check": "tsc --noEmit"
     },
     "dependencies": {
         "@ant-design/icons-react-native": "^2.3.2",
