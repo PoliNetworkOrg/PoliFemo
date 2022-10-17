@@ -1,16 +1,17 @@
 name: Test
 on:
-  push:
+    push:
 
 jobs:
-  lint:
-    name: Run linters
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 16
-          cache: 'yarn'
-      - run: yarn install --frozen-lockfile --ignore-scripts
-      - run: yarn run lint
+    lint:
+        name: Run linters and tsc
+        runs-on: ubuntu-20.04
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: 16
+                  cache: "yarn"
+            - run: yarn install --frozen-lockfile --ignore-scripts
+            - run: yarn run lint
+            - run: yarn run type-check
