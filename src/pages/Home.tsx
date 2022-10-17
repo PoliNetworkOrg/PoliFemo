@@ -80,6 +80,8 @@ export const Home: RootStackScreen<"Home"> = () => {
                 title={"Aggiungi features"}
                 subTitle={"Personalizza la tua bacheca"}
                 isShowing={isModal}
+                // ? è questo il modo corretto di passare un componente come prop?
+                // ? forse è meglio considerare la possibilità di creare un modal specifico per la home?
                 // eslint-disable-next-line react/no-children-prop
                 children={modalContent}
                 toggleModal={() => setModal(false)}
