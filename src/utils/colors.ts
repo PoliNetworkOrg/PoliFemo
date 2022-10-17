@@ -67,6 +67,12 @@ export interface ColorTheme {
      * Yeah that's purple i know this one.
      */
     buttonText: string
+
+    /**
+     * Fill color for modal barriers.
+     * different shades of blue I guess
+     */
+    modalBarrier: string
 }
 
 /**
@@ -140,6 +146,7 @@ export const usePalette: () => ColorTheme &
         bodyText: "#000000",
         buttonFill: palette.primary, // "#424967",
         buttonText: "#FFFFFF",
+        modalBarrier: "rgba(1, 27, 41, 0.45)",
     }
 
     const darkTheme: ColorTheme = {
@@ -150,6 +157,7 @@ export const usePalette: () => ColorTheme &
         bodyText: "#FFFFFF",
         buttonFill: palette.lighter, // "#8791BD",
         buttonText: "#FFFFFF",
+        modalBarrier: "rgba(1, 27, 41, 0.6)",
     }
 
     const colors = isLight ? lightTheme : darkTheme
