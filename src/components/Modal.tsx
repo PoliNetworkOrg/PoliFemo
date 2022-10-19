@@ -4,6 +4,10 @@ import { View, Modal, StyleSheet, Text, Pressable } from "react-native"
 import { usePalette } from "utils/colors"
 
 export interface ModalCustomProps {
+    /**
+     * content of the modal
+     */
+    children: React.ReactNode
     title: string
     subTitle?: string
     /**
@@ -11,26 +15,27 @@ export interface ModalCustomProps {
      */
     isShowing: boolean
     /**
-     * content of the modal
-     */
-    children: JSX.Element
-    /**
      * this function hides the modal by changing the state in the parent component
      */
     toggleModal: () => void
+
+    /**
+     * whether ot not to center title and subtitle and apply different margins
+     * @default false
+     */
+    centerText?: boolean
 }
 
 /**
  * custom modal component
  *
  */
-
 export const ModalCustom: FC<ModalCustomProps> = props => {
     const { backgroundSecondary, homeBackground, modalBarrier, isLight } =
         usePalette()
-
+    const centerText = props.centerText ?? false
     return (
-        //TODO: animationType?
+        //TODO: animationType fade or slide?
         <Modal
             statusBarTranslucent={true}
             visible={props.isShowing}
@@ -47,13 +52,8 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
                         onPress={() => props.toggleModal()}
                     >
                         <View style={styles.circle}>
-                            <Text
-                                style={{
-                                    textAlign: "center",
-                                }}
-                            >
-                                X
-                            </Text>
+                            <Text style={{ textAlign: "center" }}>X</Text>
+                            {/* TODO : replace "X" with svg*/}
                         </View>
                     </Pressable>
                     <View
@@ -66,6 +66,8 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
                             style={[
                                 styles.title,
                                 { color: isLight ? homeBackground : "#ffffff" },
+                                { textAlign: centerText ? "center" : "left" },
+                                { marginTop: centerText ? 72 : 36 },
                             ]}
                         >
                             {props.title}
@@ -74,27 +76,12 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
                             style={[
                                 styles.subTitle,
                                 { color: isLight ? homeBackground : "#ffffff" },
+                                { textAlign: centerText ? "center" : "left" },
+                                { marginTop: centerText ? 56 : 8 },
                             ]}
                         >
                             {props.subTitle}
                         </Text>
-                        {/* <ScrollView
-                            horizontal
-                            contentContainerStyle={{
-                                marginTop: 32,
-                                flex: 1,
-                                flexDirection: "row",
-                                flexWrap: "wrap",
-                            }}
-                        >
-                            {props.iconNames.map(p => (
-                                <MenuButton
-                                    onPress={() => console.log("added")}
-                                    title={p}
-                                    key={"menu_" + p}
-                                />
-                            ))}
-                        </ScrollView> */}
                         {props.children}
                     </View>
                 </View>
@@ -127,17 +114,11 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     title: {
-        textAlign: "left",
-        paddingTop: 36,
         fontSize: 32,
-
         fontWeight: "900",
     },
     subTitle: {
-        textAlign: "left",
-        paddingTop: 16,
         fontSize: 13,
-
         fontWeight: "600",
     },
 })

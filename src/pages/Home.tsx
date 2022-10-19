@@ -40,27 +40,6 @@ export const Home: RootStackScreen<"Home"> = () => {
     // ! the purpose of this list is to try ModalCustom
     const iconNames: string[] = ["Prova1", "Prova2", "Prova3", "Prova4"]
 
-    // ! the purpose of this list is to try ModalCustom
-    const modalContent: JSX.Element = (
-        <ScrollView
-            horizontal
-            contentContainerStyle={{
-                marginTop: 32,
-                flex: 1,
-                flexDirection: "row",
-                flexWrap: "wrap",
-            }}
-        >
-            {iconNames.map(p => (
-                <MenuButton
-                    onPress={() => console.log("added")}
-                    title={p}
-                    key={"menu_" + p}
-                />
-            ))}
-        </ScrollView>
-    )
-
     useEffect(() => {
         // scrolls to the top of the news scrollview when the news bottom sheet is closed
         if (isNewsClosed && scrollViewRef.current) {
@@ -77,15 +56,30 @@ export const Home: RootStackScreen<"Home"> = () => {
             }}
         >
             <ModalCustom
+                centerText={false}
                 title={"Aggiungi features"}
                 subTitle={"Personalizza la tua bacheca"}
                 isShowing={isModal}
-                // ? è questo il modo corretto di passare un componente come prop?
-                // ? forse è meglio considerare la possibilità di creare un modal specifico per la home?
-                // eslint-disable-next-line react/no-children-prop
-                children={modalContent}
                 toggleModal={() => setModal(false)}
-            />
+            >
+                <ScrollView
+                    horizontal
+                    contentContainerStyle={{
+                        marginTop: 32,
+                        flex: 1,
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                    }}
+                >
+                    {iconNames.map(p => (
+                        <MenuButton
+                            onPress={() => console.log("added")}
+                            title={p}
+                            key={"menu_" + p}
+                        />
+                    ))}
+                </ScrollView>
+            </ModalCustom>
             <View
                 style={{
                     flex: 1,
