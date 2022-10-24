@@ -3,11 +3,11 @@ import { Pressable } from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 
 // import { usePalette } from "utils/colors"
-import { trayIcons } from "assets/tray"
+import { TrayIcon, trayIcons } from "assets/tray"
 
 export const TrayButton: FC<{
     onClick: () => void
-    label: "downloads" | "notifications" | "settings"
+    label: TrayIcon
 }> = props => {
     // const { palette } = usePalette()
     // const color = palette.lighter
