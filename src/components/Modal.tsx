@@ -1,8 +1,9 @@
 import React, { FC } from "react"
-import { View, Modal, StyleSheet, Text, Pressable } from "react-native"
-
+import { View, Modal, StyleSheet, Pressable } from "react-native"
+import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
-
+import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
+import { deleteSvg as icon } from "assets/modal"
 export interface ModalCustomProps {
     /**
      * content of the modal
@@ -34,6 +35,7 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
     const { backgroundSecondary, homeBackground, modalBarrier, isLight } =
         usePalette()
     const centerText = props.centerText ?? false
+    const deleteSvg = useSVG(icon.svg)
     return (
         //TODO: animationType fade or slide?
         <Modal
@@ -52,8 +54,22 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
                         onPress={() => props.toggleModal()}
                     >
                         <View style={styles.circle}>
-                            <Text style={{ textAlign: "center" }}>X</Text>
-                            {/* TODO : replace "X" with svg*/}
+                            <Canvas
+                                style={{
+                                    width: icon.width,
+                                    height: icon.heigth,
+                                }}
+                            >
+                                {deleteSvg && (
+                                    <ImageSVG
+                                        svg={deleteSvg}
+                                        x={0}
+                                        y={0}
+                                        width={icon.width}
+                                        height={icon.heigth}
+                                    />
+                                )}
+                            </Canvas>
                         </View>
                     </Pressable>
                     <View
@@ -112,6 +128,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginBottom: 8,
         justifyContent: "center",
+        alignItems: "center",
     },
     title: {
         fontSize: 32,
