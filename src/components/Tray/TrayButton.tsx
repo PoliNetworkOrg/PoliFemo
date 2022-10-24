@@ -12,9 +12,8 @@ export const TrayButton: FC<{
     // const { palette } = usePalette()
     // const color = palette.lighter
 
-    const downloadsSVG = useSVG(trayIcons.downloads.svg)
-    const notificationsSVG = useSVG(trayIcons.notifications.svg)
-    const settingsSVG = useSVG(trayIcons.settings.svg)
+    const icon = trayIcons[props.label]
+    const iconSVG = useSVG(icon.svg)
 
     return (
         <Pressable
@@ -24,58 +23,22 @@ export const TrayButton: FC<{
                 marginLeft: 0,
             }}
         >
-            {props.label === "downloads" ? (
-                <Canvas
-                    style={{
-                        width: trayIcons.downloads.width,
-                        height: trayIcons.downloads.heigth,
-                    }}
-                >
-                    {downloadsSVG && (
-                        <ImageSVG
-                            svg={downloadsSVG}
-                            x={0}
-                            y={0}
-                            width={trayIcons.downloads.width}
-                            height={trayIcons.downloads.heigth}
-                        />
-                    )}
-                </Canvas>
-            ) : props.label === "notifications" ? (
-                <Canvas
-                    style={{
-                        width: trayIcons.notifications.width,
-                        height: trayIcons.notifications.heigth,
-                    }}
-                >
-                    {notificationsSVG && (
-                        <ImageSVG
-                            svg={notificationsSVG}
-                            x={0}
-                            y={0}
-                            width={trayIcons.notifications.width}
-                            height={trayIcons.notifications.heigth}
-                        />
-                    )}
-                </Canvas>
-            ) : (
-                <Canvas
-                    style={{
-                        width: trayIcons.settings.width,
-                        height: trayIcons.settings.heigth,
-                    }}
-                >
-                    {settingsSVG && (
-                        <ImageSVG
-                            svg={settingsSVG}
-                            x={0}
-                            y={0}
-                            width={trayIcons.settings.width}
-                            height={trayIcons.settings.heigth}
-                        />
-                    )}
-                </Canvas>
-            )}
+            <Canvas
+                style={{
+                    width: icon.width,
+                    height: icon.heigth,
+                }}
+            >
+                {iconSVG && (
+                    <ImageSVG
+                        svg={iconSVG}
+                        x={0}
+                        y={0}
+                        width={icon.width}
+                        height={icon.heigth}
+                    />
+                )}
+            </Canvas>
         </Pressable>
     )
 }
