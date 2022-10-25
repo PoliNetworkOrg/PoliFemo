@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react"
-import { Dimensions, TextInput, View, Pressable } from "react-native"
+import {
+    Dimensions,
+    TextInput,
+    View,
+    Pressable,
+    ScrollView,
+} from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import BottomSheet, {
     BottomSheetScrollView,
@@ -8,17 +14,20 @@ import BottomSheet, {
 
 import { RootStackScreen } from "navigation/NavigationTypes"
 import { BodyText, Title } from "components/Text"
-import { MainMenu, MainTitle } from "components/Home"
+import { MainMenu, MainTitle, MenuButton } from "components/Home"
 import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
 
 import openNavSVG from "assets/menu/open-nav.svg"
+import { ModalCustom } from "components/Modal"
 
 /**
  * Home page containing the POLIFEMO logo, search bar, main horizontal scroll menu and the entry
  * point for the news section (which is a bottom sheet)
  */
 export const Home: RootStackScreen<"Home"> = () => {
+    // modal state
+    const [isModal, setModal] = useState(false)
     const [isNewsClosed, setNewsClosed] = useState(true)
     const { homeBackground, background } = usePalette()
     // the ref for the News bottom sheet, used to open and close it programmatically
@@ -27,6 +36,9 @@ export const Home: RootStackScreen<"Home"> = () => {
     const scrollViewRef = React.useRef<BottomSheetScrollViewMethods>(null)
 
     const svg = useSVG(openNavSVG)
+
+    // ! the purpose of this list is to try ModalCustom
+    const iconNames: string[] = ["Prova1", "Prova2", "Prova3", "Prova4"]
 
     useEffect(() => {
         // scrolls to the top of the news scrollview when the news bottom sheet is closed
@@ -43,6 +55,31 @@ export const Home: RootStackScreen<"Home"> = () => {
                 backgroundColor: homeBackground,
             }}
         >
+            <ModalCustom
+                centerText={false}
+                title={"Aggiungi features"}
+                subTitle={"Personalizza la tua bacheca"}
+                isShowing={isModal}
+                toggleModal={() => setModal(false)}
+            >
+                <ScrollView
+                    horizontal
+                    contentContainerStyle={{
+                        marginTop: 32,
+                        flex: 1,
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                    }}
+                >
+                    {iconNames.map(p => (
+                        <MenuButton
+                            onPress={() => console.log("added")}
+                            title={p}
+                            key={"menu_" + p}
+                        />
+                    ))}
+                </ScrollView>
+            </ModalCustom>
             <View
                 style={{
                     flex: 1,
@@ -91,7 +128,7 @@ export const Home: RootStackScreen<"Home"> = () => {
                             elevation: 6,
                         }}
                     />
-                    <MainMenu />
+                    <MainMenu showModal={() => setModal(true)} />
                 </View>
             </View>
             <BottomSheet

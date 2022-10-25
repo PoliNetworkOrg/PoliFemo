@@ -12,12 +12,18 @@ const pages = [
     "PoliAssociazioni",
     "AuleLibere",
     "Materiali Scaricabili",
+    "Aggiungi",
 ]
+
+// ! the purpose of these props is to try ModalCustom
+export interface MainMenuProps {
+    showModal: () => void
+}
 
 /**
  * the main menu of the app, an horizontal scroll view with the buttons to navigate to the different pages
  */
-export const MainMenu: FC = () => {
+export const MainMenu: FC<MainMenuProps> = props => {
     const { navigate } = useNavigation()
     return (
         <ScrollView
@@ -27,7 +33,13 @@ export const MainMenu: FC = () => {
             {pages.map(p => (
                 <MenuButton
                     // TODO: actual navigation
-                    onPress={() => navigate("Saluti", { defaultName: "ciao" })}
+                    onPress={
+                        p == "Aggiungi"
+                            ? () => {
+                                  props.showModal()
+                              }
+                            : () => navigate("Saluti", { defaultName: "ciao" })
+                    }
                     title={p}
                     key={"menu_" + p}
                 />
