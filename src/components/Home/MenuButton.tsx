@@ -1,57 +1,95 @@
 import React, { FC } from "react"
-import { Pressable, View } from "react-native"
+import { ImageSourcePropType, Pressable, View } from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 
 import { BodyText } from "components/Text"
 import { usePalette } from "utils/colors"
-import icon from "assets/menu/calendar.svg"
+import deleteIcon from "assets/menu/delete.svg"
+
+export interface ButtonInterface {
+    id: number
+    title: string
+    icon: ImageSourcePropType
+    isDeleting: boolean
+}
 
 /**
  * single buttons for the main menu, with custom icons and titles
  */
 export const MenuButton: FC<{
     onPress: () => void
-    title: string
-}> = ({ onPress, title }) => {
+    onLongPress: () => void
+    buttonIcon: ButtonInterface
+}> = ({ onPress, onLongPress, buttonIcon }) => {
     const { palette } = usePalette()
     const color = palette.primary
-    const svg = useSVG(icon)
+    const svg = useSVG(buttonIcon.icon)
+    const delIcon = useSVG(deleteIcon)
     return (
-        <Pressable onPress={onPress}>
-            <View
-                style={{
-                    width: 85,
-                    height: 70,
-                    backgroundColor: color,
-                    paddingVertical: 6,
-                    marginHorizontal: 6,
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    borderRadius: 10,
-                }}
-            >
-                {/* <Image source={icon} style={{ height: 26, marginBottom: 4 }} /> */}
-                {/* <Icon width={40} /> */}
-                <Canvas style={{ flex: 1, width: 40 }}>
-                    {svg && (
-                        <ImageSVG
-                            svg={svg}
-                            x={0}
-                            y={0}
-                            width={40}
-                            height={38}
-                        />
-                    )}
-                </Canvas>
-                <BodyText
+        <View>
+            <Pressable onPress={onPress} onLongPress={onLongPress}>
+                <View
                     style={{
-                        fontSize: 10,
-                        color: "white",
+                        width: 84,
+                        height: 70,
+                        backgroundColor: color,
+                        paddingVertical: 7,
+                        marginHorizontal: 6,
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        borderRadius: 10,
+                        marginTop: 8, //added margin to the top due to the deleting operation
                     }}
                 >
-                    {title}
-                </BodyText>
-            </View>
-        </Pressable>
+                    {/* <Image source={icon} style={{ height: 26, marginBottom: 4 }} /> */}
+                    {/* <Icon width={40} /> */}
+                    <Canvas style={{ flex: 1, width: 40 }}>
+                        {svg && (
+                            <ImageSVG
+                                svg={svg}
+                                x={0}
+                                y={0}
+                                width={40}
+                                height={38}
+                            />
+                        )}
+                    </Canvas>
+                    <BodyText
+                        style={{
+                            fontSize: 10,
+                            color: "white",
+                        }}
+                    >
+                        {buttonIcon.title}
+                    </BodyText>
+                </View>
+            </Pressable>
+            {/* this component has been made to manage the button's deleting
+                //so far, I display the 'X' correctly
+                //TODO: change the prop isDeleting when the button is longPressed
+                <Pressable>
+                    <View
+                        style={{
+                            position: "absolute",
+                            width: 27,
+                            height: 27,
+                            right: 0,
+                            bottom: 56,
+                        }}
+                    >
+                        <Canvas style={{ flex: 1, width: 27 }}>
+                            {delIcon && (
+                                <ImageSVG
+                                    svg={delIcon}
+                                    x={0}
+                                    y={0}
+                                    width={27}
+                                    height={27}
+                                />
+                            )}
+                        </Canvas>
+                    </View>
+                </Pressable> */}
+        </View>
     )
 }
