@@ -16,6 +16,9 @@ import grading_book from "assets/menu/grading_book.svg"
 import tests from "assets/menu/tests.svg"
 import add from "assets/menu/add.svg"
 
+/**
+ * the buttons and their features
+ */
 const buttonsIcons: ButtonInterface[] = [
     { id: 0, title: "Calendario", icon: calendar, isDeleting: false },
     { id: 1, title: "Orario Lezioni", icon: clock, isDeleting: false },

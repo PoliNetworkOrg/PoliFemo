@@ -64,17 +64,15 @@ export const MenuButton: FC<{
                     </BodyText>
                 </View>
             </Pressable>
-            {/* this component has been made to manage the button's deleting
-                //so far, I display the 'X' correctly
-                //TODO: change the prop isDeleting when the button is longPressed
+            {buttonIcon.isDeleting ? ( //if the prop isDeleting is true
                 <Pressable>
                     <View
                         style={{
                             position: "absolute",
-                            width: 27,
-                            height: 27,
+                            width: 25,
+                            height: 25,
                             right: 0,
-                            bottom: 56,
+                            bottom: 53,
                         }}
                     >
                         <Canvas style={{ flex: 1, width: 27 }}>
@@ -83,13 +81,14 @@ export const MenuButton: FC<{
                                     svg={delIcon}
                                     x={0}
                                     y={0}
-                                    width={27}
-                                    height={27}
+                                    width={25}
+                                    height={25}
                                 />
                             )}
                         </Canvas>
                     </View>
-                </Pressable> */}
+                </Pressable>
+            ) : undefined}
         </View>
     )
 }
