@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Dimensions, TextInput, View, Pressable } from "react-native"
+import { Dimensions, View, Pressable } from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import BottomSheet, {
     BottomSheetScrollView,
@@ -8,7 +8,7 @@ import BottomSheet, {
 
 import { RootStackScreen } from "navigation/NavigationTypes"
 import { BodyText, Title } from "components/Text"
-import { MainMenu, MainTitle } from "components/Home"
+import { MainMenu, MainTitle, PoliSearchBar } from "components/Home"
 import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
 
@@ -71,26 +71,7 @@ export const Home: RootStackScreen<"Home"> = () => {
                         elevation: 15,
                     }}
                 >
-                    <TextInput
-                        // search bar
-                        placeholder="Search"
-                        style={{
-                            padding: 10,
-                            margin: 51,
-                            marginBottom: 26,
-                            borderRadius: 100,
-                            backgroundColor: "white",
-
-                            shadowColor: "#000",
-                            shadowOffset: {
-                                width: 0,
-                                height: 3,
-                            },
-                            shadowOpacity: 0.27,
-                            shadowRadius: 4.65,
-                            elevation: 6,
-                        }}
-                    />
+                    <PoliSearchBar />
                     <MainMenu />
                 </View>
             </View>
