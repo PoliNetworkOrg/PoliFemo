@@ -20,16 +20,16 @@ import add from "assets/menu/add.svg"
  * the buttons and their features
  */
 const buttonsIcons: ButtonInterface[] = [
-    { id: 0, title: "Calendario", icon: calendar, isDeleting: false },
-    { id: 1, title: "Orario Lezioni", icon: clock, isDeleting: false },
-    { id: 2, title: "PoliAssociazioni", icon: association, isDeleting: false },
-    { id: 3, title: "Aule Libere", icon: free_classrooms, isDeleting: false },
-    { id: 4, title: "Materiali", icon: materials, isDeleting: false },
-    { id: 5, title: "Gruppi WA", icon: groups, isDeleting: false },
-    { id: 6, title: "Valutazioni", icon: marks, isDeleting: false },
-    { id: 7, title: "Libretto", icon: grading_book, isDeleting: false },
-    { id: 8, title: "Test e Prove", icon: tests, isDeleting: false },
-    { id: 9, title: "Aggiungi", icon: add, isDeleting: false },
+    { id: 0, title: "Calendario", icon: calendar },
+    { id: 1, title: "Orario Lezioni", icon: clock },
+    { id: 2, title: "PoliAssociazioni", icon: association },
+    { id: 3, title: "Aule Libere", icon: free_classrooms },
+    { id: 4, title: "Materiali", icon: materials },
+    { id: 5, title: "Gruppi WA", icon: groups },
+    { id: 6, title: "Valutazioni", icon: marks },
+    { id: 7, title: "Libretto", icon: grading_book },
+    { id: 8, title: "Test e Prove", icon: tests },
+    { id: 9, title: "Aggiungi", icon: add },
 ]
 
 /**
@@ -48,6 +48,7 @@ export const MainMenu: FC = () => {
                     onPress={() => navigate("Saluti", { defaultName: "ciao" })}
                     onLongPress={() => console.log("Bottone premuto a lungo")}
                     buttonIcon={buttonIcon}
+                    isDeleting={false}
                     key={"menu_" + buttonIcon.id}
                 />
             ))}

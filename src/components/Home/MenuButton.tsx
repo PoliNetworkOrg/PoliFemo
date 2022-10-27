@@ -10,7 +10,6 @@ export interface ButtonInterface {
     id: number
     title: string
     icon: ImageSourcePropType
-    isDeleting: boolean
 }
 
 /**
@@ -20,7 +19,8 @@ export const MenuButton: FC<{
     onPress: () => void
     onLongPress: () => void
     buttonIcon: ButtonInterface
-}> = ({ onPress, onLongPress, buttonIcon }) => {
+    isDeleting: boolean
+}> = ({ onPress, onLongPress, buttonIcon, isDeleting }) => {
     const { palette } = usePalette()
     const color = palette.primary
     const svg = useSVG(buttonIcon.icon)
@@ -41,8 +41,6 @@ export const MenuButton: FC<{
                         marginTop: 8, //added margin to the top due to the deleting operation
                     }}
                 >
-                    {/* <Image source={icon} style={{ height: 26, marginBottom: 4 }} /> */}
-                    {/* <Icon width={40} /> */}
                     <Canvas style={{ flex: 1, width: 40 }}>
                         {svg && (
                             <ImageSVG
@@ -64,7 +62,7 @@ export const MenuButton: FC<{
                     </BodyText>
                 </View>
             </Pressable>
-            {buttonIcon.isDeleting ? ( //if the prop isDeleting is true
+            {isDeleting ? ( //if the prop isDeleting is true
                 <Pressable>
                     <View
                         style={{
