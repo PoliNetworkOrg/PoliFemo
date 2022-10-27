@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react"
-import {
-    Dimensions,
-    TextInput,
-    View,
-    Pressable,
-    ScrollView,
-} from "react-native"
+import { Dimensions, TextInput, View, Pressable } from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import BottomSheet, {
     BottomSheetScrollView,
@@ -14,7 +8,7 @@ import BottomSheet, {
 
 import { RootStackScreen } from "navigation/NavigationTypes"
 import { BodyText, Title } from "components/Text"
-import { MainMenu, MainTitle, MenuButton } from "components/Home"
+import { MainMenu, MainTitle } from "components/Home"
 import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
 
@@ -36,9 +30,6 @@ export const Home: RootStackScreen<"Home"> = () => {
     const scrollViewRef = React.useRef<BottomSheetScrollViewMethods>(null)
 
     const svg = useSVG(openNavSVG)
-
-    // ! the purpose of this list is to try ModalCustom
-    const iconNames: string[] = ["Prova1", "Prova2", "Prova3", "Prova4"]
 
     useEffect(() => {
         // scrolls to the top of the news scrollview when the news bottom sheet is closed
@@ -62,23 +53,14 @@ export const Home: RootStackScreen<"Home"> = () => {
                 isShowing={isModal}
                 toggleModal={() => setModal(false)}
             >
-                <ScrollView
-                    horizontal
-                    contentContainerStyle={{
-                        marginTop: 32,
-                        flex: 1,
-                        flexDirection: "row",
-                        flexWrap: "wrap",
-                    }}
-                >
-                    {iconNames.map(p => (
-                        <MenuButton
-                            onPress={() => console.log("added")}
-                            title={p}
-                            key={"menu_" + p}
-                        />
-                    ))}
-                </ScrollView>
+                <BodyText>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Nunc ut dui tempus, porttitor magna at, ultrices mi. Morbi
+                    non imperdiet dui. Sed mollis, elit ut eleifend eleifend,
+                    quam mi luctus tellus, nec maximus ipsum lorem sit amet
+                    libero. In ultrices pharetra turpis, id bibendum orci
+                    scelerisque ut.
+                </BodyText>
             </ModalCustom>
             <View
                 style={{
