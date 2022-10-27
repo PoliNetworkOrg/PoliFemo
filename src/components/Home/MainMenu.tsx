@@ -32,10 +32,15 @@ const buttonsIcons: ButtonInterface[] = [
     { id: 9, title: "Aggiungi", icon: add },
 ]
 
+// ! the purpose of these props is to try ModalCustom
+export interface MainMenuProps {
+    showModal: () => void
+}
+
 /**
  * the main menu of the app, an horizontal scroll view with the buttons to navigate to the different pages
  */
-export const MainMenu: FC = () => {
+export const MainMenu: FC<MainMenuProps> = props => {
     const { navigate } = useNavigation()
     return (
         <ScrollView
@@ -45,7 +50,13 @@ export const MainMenu: FC = () => {
             {buttonsIcons.map(buttonIcon => (
                 <MenuButton
                     // TODO: actual navigation
-                    onPress={() => navigate("Saluti", { defaultName: "ciao" })}
+                    onPress={
+                        buttonIcon.icon == "Aggiungi"
+                            ? () => {
+                                  props.showModal()
+                              }
+                            : () => navigate("Saluti", { defaultName: "ciao" })
+                    }
                     onLongPress={() => console.log("Bottone premuto a lungo")}
                     buttonIcon={buttonIcon}
                     isDeleting={false}

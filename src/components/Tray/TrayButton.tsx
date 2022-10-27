@@ -1,17 +1,20 @@
 import React, { FC } from "react"
 import { Pressable } from "react-native"
+import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 
-import { usePalette } from "utils/colors"
-import { SettingsSVG } from "assets/tray/Settings"
-import { NotificationsSVG } from "assets/tray/Notifications"
-import { DownloadsSVG } from "assets/tray/Downloads"
+// import { usePalette } from "utils/colors"
+import { TrayIcon, trayIcons } from "assets/tray"
 
 export const TrayButton: FC<{
     onClick: () => void
-    label: "settings" | "notifications" | "downloads"
+    label: TrayIcon
 }> = props => {
-    const { palette } = usePalette()
-    const color = palette.lighter
+    // const { palette } = usePalette()
+    // const color = palette.lighter
+
+    const icon = trayIcons[props.label]
+    const iconSVG = useSVG(icon.svg)
+
     return (
         <Pressable
             onPress={props.onClick}
@@ -20,13 +23,22 @@ export const TrayButton: FC<{
                 marginLeft: 0,
             }}
         >
-            {props.label === "settings" ? (
-                <SettingsSVG color={color} />
-            ) : props.label === "notifications" ? (
-                <NotificationsSVG color={color} />
-            ) : (
-                <DownloadsSVG color={color} />
-            )}
+            <Canvas
+                style={{
+                    width: icon.width,
+                    height: icon.heigth,
+                }}
+            >
+                {iconSVG && (
+                    <ImageSVG
+                        svg={iconSVG}
+                        x={0}
+                        y={0}
+                        width={icon.width}
+                        height={icon.heigth}
+                    />
+                )}
+            </Canvas>
         </Pressable>
     )
 }
