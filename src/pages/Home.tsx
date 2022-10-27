@@ -51,7 +51,7 @@ export const Home: RootStackScreen<"Home"> = () => {
                 title={"Aggiungi features"}
                 subTitle={"Personalizza la tua bacheca"}
                 isShowing={isModal}
-                toggleModal={() => setModal(false)}
+                onClose={() => setModal(false)}
             >
                 <BodyText>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -110,7 +110,7 @@ export const Home: RootStackScreen<"Home"> = () => {
                             elevation: 6,
                         }}
                     />
-                    <MainMenu showModal={() => setModal(true)} />
+                    <MainMenu onAddFeature={() => setModal(true)} />
                 </View>
             </View>
             <BottomSheet

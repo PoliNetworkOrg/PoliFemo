@@ -18,7 +18,7 @@ export interface ModalCustomProps {
     /**
      * this function hides the modal by changing the state in the parent component
      */
-    toggleModal: () => void
+    onClose: () => void
 
     /**
      * whether ot not to center title and subtitle and apply different margins
@@ -51,7 +51,7 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
                 <View>
                     <Pressable
                         style={{ alignSelf: "flex-end" }}
-                        onPress={() => props.toggleModal()}
+                        onPress={() => props.onClose()}
                     >
                         <View style={styles.circle}>
                             <Canvas

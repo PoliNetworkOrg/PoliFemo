@@ -34,7 +34,10 @@ const buttonsIcons: ButtonInterface[] = [
 
 // ! the purpose of these props is to try ModalCustom
 export interface MainMenuProps {
-    showModal: () => void
+    /**
+     * called when the modal to add features needs to be shown
+     */
+    onAddFeature: () => void
 }
 
 /**
@@ -51,9 +54,9 @@ export const MainMenu: FC<MainMenuProps> = props => {
                 <MenuButton
                     // TODO: actual navigation
                     onPress={
-                        buttonIcon.icon == "Aggiungi"
+                        buttonIcon.title == "Aggiungi"
                             ? () => {
-                                  props.showModal()
+                                  props.onAddFeature()
                               }
                             : () => navigate("Saluti", { defaultName: "ciao" })
                     }
