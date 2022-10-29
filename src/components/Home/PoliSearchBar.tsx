@@ -23,14 +23,18 @@ export const PoliSearchBar: FC = () => {
                 style={{
                     marginVertical: 10,
                     marginHorizontal: 18,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
                 }}
             >
                 <TextInput
+                    style={{ width: "90%" }}
                     autoCorrect={true}
                     placeholder="Cerca"
                     selectionColor={palette.primary}
                 />
-                <Canvas style={{ flex: 1, width: 22, alignSelf: "flex-end" }}>
+                <Canvas style={{ flex: 1, width: 22, height: 22 }}>
                     {svg && (
                         <ImageSVG
                             svg={svg}
