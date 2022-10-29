@@ -32,7 +32,13 @@ export const MainTitle: FC = () => {
             }
         >
             <LinearGradient
-                colors={["#FFB544", "#424967"]}
+                colors={[
+                    "#FFB544",
+                    "#FBB544",
+                    "#FBB544",
+                    "rgba(255, 181, 68, .45)",
+                    "#1B2132",
+                ]}
                 style={{ flex: 1 }}
             />
         </MaskedView>
