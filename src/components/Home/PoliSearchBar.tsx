@@ -16,7 +16,8 @@ export const PoliSearchBar: FC<{
     return (
         <View
             style={{
-                marginVertical: 46,
+                marginTop: 51,
+                marginBottom: 26,
                 marginHorizontal: 52,
                 borderRadius: 28,
                 backgroundColor: "#F6F7FC",
@@ -26,19 +27,18 @@ export const PoliSearchBar: FC<{
         >
             <TextInput
                 style={{
-                    paddingVertical: 10,
                     paddingLeft: 18,
                     color: color,
                 }}
                 autoCorrect={true}
                 placeholder="Cerca"
                 selectionColor={color}
-                maxLength={32}
+                maxLength={37}
                 onSubmitEditing={onPress}
             />
             <View
                 style={{
-                    paddingVertical: 10,
+                    paddingVertical: 8,
                     paddingRight: 18,
                     alignItems: "center",
                     justifyContent: "center",
