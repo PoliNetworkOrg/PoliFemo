@@ -71,7 +71,7 @@ export const Home: RootStackScreen<"Home"> = () => {
                         elevation: 15,
                     }}
                 >
-                    <PoliSearchBar />
+                    <PoliSearchBar onChange={() => console.log("Searched")} />
                     <MainMenu />
                 </View>
             </View>
