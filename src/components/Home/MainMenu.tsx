@@ -60,7 +60,7 @@ export const MainMenu: FC<MainMenuProps> = props => {
                               }
                             : () => navigate("Saluti", { defaultName: "ciao" })
                     }
-                    onLongPress={() => console.log("Bottone premuto a lungo")}
+                    onLongPress={() => console.log("ciao")}
                     buttonIcon={buttonIcon}
                     isDeleting={false}
                     key={"menu_" + buttonIcon.id}
