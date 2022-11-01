@@ -8,7 +8,8 @@ import BottomSheet, {
 
 import { RootStackScreen } from "navigation/NavigationTypes"
 import { BodyText, Title } from "components/Text"
-import { MainMenu, MainTitle } from "components/Home"
+import { MainMenu, MainTitle, MenuButton } from "components/Home"
+import { buttonsIcons } from "components/Home/MainMenu"
 import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
 
@@ -54,12 +55,17 @@ export const Home: RootStackScreen<"Home"> = () => {
                 onClose={() => setModal(false)}
             >
                 <BodyText>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Nunc ut dui tempus, porttitor magna at, ultrices mi. Morbi
-                    non imperdiet dui. Sed mollis, elit ut eleifend eleifend,
-                    quam mi luctus tellus, nec maximus ipsum lorem sit amet
-                    libero. In ultrices pharetra turpis, id bibendum orci
-                    scelerisque ut.
+                    {buttonsIcons.map(buttonIcon => (
+                        <MenuButton
+                            // TODO: actual navigation
+                            onPress={() => {
+                                /* */
+                            }}
+                            buttonIcon={buttonIcon}
+                            isFocused={false}
+                            key={"menu_" + buttonIcon.id}
+                        />
+                    ))}
                 </BodyText>
             </ModalCustom>
             <View

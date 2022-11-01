@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 import { ScrollView } from "react-native"
 
 import { useNavigation } from "navigation/NavigationTypes"
@@ -19,7 +19,7 @@ import add from "assets/menu/add.svg"
 /**
  * the buttons and their features
  */
-const buttonsIcons: ButtonInterface[] = [
+export const buttonsIcons: ButtonInterface[] = [
     { id: 0, title: "Calendario", icon: calendar },
     { id: 1, title: "Orario Lezioni", icon: clock },
     { id: 2, title: "PoliAssociazioni", icon: association },
@@ -45,6 +45,8 @@ export interface MainMenuProps {
  */
 export const MainMenu: FC<MainMenuProps> = props => {
     const { navigate } = useNavigation()
+
+    const [isFocused, set] = useState(false)
     return (
         <ScrollView
             horizontal
@@ -57,12 +59,22 @@ export const MainMenu: FC<MainMenuProps> = props => {
                         buttonIcon.title == "Aggiungi"
                             ? () => {
                                   props.onAddFeature()
+                                  isFocused && set(!isFocused)
                               }
-                            : () => navigate("Saluti", { defaultName: "ciao" })
+                            : () => {
+                                  navigate("Saluti", { defaultName: "ciao" })
+                                  isFocused && set(!isFocused)
+                              }
                     }
-                    onLongPress={() => console.log("Bottone premuto a lungo")}
+                    onLongPress={
+                        buttonIcon.title != "Aggiungi"
+                            ? () => {
+                                  set(!isFocused) // (TO-DO: how to SET(FALSE) quando viene effettuato il click all'esterno del componente)
+                              }
+                            : () => ""
+                    }
                     buttonIcon={buttonIcon}
-                    isDeleting={false}
+                    isFocused={isFocused}
                     key={"menu_" + buttonIcon.id}
                 />
             ))}
