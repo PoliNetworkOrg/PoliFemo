@@ -93,7 +93,7 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
                                 styles.subTitle,
                                 { color: isLight ? homeBackground : "#ffffff" },
                                 { textAlign: centerText ? "center" : "left" },
-                                { marginTop: centerText ? 56 : 8 },
+                                { marginVertical: centerText ? 56 : 8 },
                             ]}
                         >
                             {props.subTitle}

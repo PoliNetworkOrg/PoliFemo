@@ -9,7 +9,7 @@ import BottomSheet, {
 import { RootStackScreen } from "navigation/NavigationTypes"
 import { BodyText, Title } from "components/Text"
 import { MainMenu, MainTitle, MenuButton } from "components/Home"
-import { array } from "components/Home"
+import { buttonsIconsToAdd, buttonsIcons } from "components/Home"
 import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
 
@@ -55,11 +55,21 @@ export const Home: RootStackScreen<"Home"> = () => {
                 onClose={() => setModal(false)}
             >
                 <BodyText>
-                    {array.map(buttonIcon => (
+                    {buttonsIconsToAdd.map(buttonIcon => (
                         <MenuButton
                             // TODO: actual navigation
                             onPress={() => {
-                                /* */
+                                buttonsIconsToAdd.splice(
+                                    buttonsIcons.indexOf(buttonIcon),
+                                    1
+                                )
+                                buttonsIcons.unshift(buttonIcon)
+                                buttonsIcons.sort((a, b) => {
+                                    if (a.id < b.id) return -1
+                                    if (a.id > b.id) return 1
+                                    return 0
+                                }) // order
+                                setModal(false)
                             }}
                             buttonIcon={buttonIcon}
                             isFocused={false}

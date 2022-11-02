@@ -19,7 +19,7 @@ import add from "assets/menu/add.svg"
 /**
  * the buttons and their features
  */
-const buttonsIcons: ButtonInterface[] = [
+export const buttonsIcons: ButtonInterface[] = [
     { id: 0, title: "Calendario", icon: calendar },
     { id: 1, title: "Orario Lezioni", icon: clock },
     { id: 2, title: "PoliAssociazioni", icon: association },
@@ -32,7 +32,7 @@ const buttonsIcons: ButtonInterface[] = [
     { id: 9, title: "Aggiungi", icon: add },
 ]
 
-export const array: ButtonInterface[] = []
+export const buttonsIconsToAdd: ButtonInterface[] = []
 
 // ! the purpose of these props is to try ModalCustom
 export interface MainMenuProps {
@@ -83,7 +83,12 @@ export const MainMenu: FC<MainMenuProps> = props => {
                                 buttonsIcons.indexOf(buttonIcon),
                                 1
                             )
-                        array.push(buttonIcon)
+                        buttonsIconsToAdd.push(buttonIcon)
+                        buttonsIconsToAdd.sort((a, b) => {
+                            if (a.id < b.id) return -1
+                            if (a.id > b.id) return 1
+                            return 0
+                        })
                     }}
                     key={"menu_" + buttonIcon.id}
                 />
