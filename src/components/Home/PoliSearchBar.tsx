@@ -5,14 +5,14 @@ import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import icon from "assets/menu/search.svg"
 
 /**
- * butterblablabla
+ * the search bar, which requests a search everytime the input text changes
  */
 export const PoliSearchBar: FC<{
     onChange: () => void
 }> = ({ onChange }) => {
-    const { palette } = usePalette()
+    const { isLight } = usePalette()
     const svg = useSVG(icon)
-    const color = palette.primary
+    const color = isLight ? "#F6F7FC" : "#343E5A"
     const [isFocused, setIsFocused] = useState(false)
     const shadowAnim = useRef(new Animated.Value(0)).current
     const inputText = useRef<TextInput>(null)
@@ -60,6 +60,7 @@ export const PoliSearchBar: FC<{
                     paddingLeft: 18,
                     color: color,
                     flex: 1,
+                    fontFamily: "Roboto_400Regular",
                 }}
                 ref={inputText}
                 autoCorrect={true}
