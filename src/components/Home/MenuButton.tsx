@@ -72,7 +72,7 @@ export const MenuButton: FC<{
                         <Pressable
                             onPress={() => {
                                 set(!isDeleting)
-                                handleFeatures()
+                                handleFeatures && handleFeatures()
                             }}
                         >
                             <View

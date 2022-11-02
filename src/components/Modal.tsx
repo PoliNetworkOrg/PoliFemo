@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { View, Modal, StyleSheet, Pressable } from "react-native"
+import { View, Modal, StyleSheet, Pressable, ScrollView } from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
@@ -98,7 +98,7 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
                         >
                             {props.subTitle}
                         </Text>
-                        {props.children}
+                        <ScrollView>{props.children}</ScrollView>
                     </View>
                 </View>
             </View>

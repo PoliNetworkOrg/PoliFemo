@@ -16,6 +16,8 @@ import grading_book from "assets/menu/grading_book.svg"
 import tests from "assets/menu/tests.svg"
 import add from "assets/menu/add.svg"
 
+// import AsyncStorage from "@react-native-async-storage/async-storage"
+
 /**
  * the buttons and their features
  */
@@ -47,6 +49,21 @@ export interface MainMenuProps {
  */
 export const MainMenu: FC<MainMenuProps> = props => {
     const { navigate } = useNavigation()
+
+    /**
+        const [features, setFeatures] = useEffect()
+        const storeData: FC<{
+            e: ???
+        }> = async e => {
+            try {
+                const jsonValue = JSON.stringify(e)
+                await AsyncStorage.setItem("defaultFeatures", jsonValue)
+            } catch (e) {
+                // saving error
+            }
+        }
+        useEffect(() => {})
+    */
 
     const [isFocused, set] = useState(false)
     return (
