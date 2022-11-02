@@ -9,7 +9,7 @@ import BottomSheet, {
 import { RootStackScreen } from "navigation/NavigationTypes"
 import { BodyText, Title } from "components/Text"
 import { MainMenu, MainTitle, MenuButton } from "components/Home"
-import { buttonsIcons } from "components/Home/MainMenu"
+import { array } from "components/Home"
 import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
 
@@ -55,7 +55,7 @@ export const Home: RootStackScreen<"Home"> = () => {
                 onClose={() => setModal(false)}
             >
                 <BodyText>
-                    {buttonsIcons.map(buttonIcon => (
+                    {array.map(buttonIcon => (
                         <MenuButton
                             // TODO: actual navigation
                             onPress={() => {

@@ -20,7 +20,8 @@ export const MenuButton: FC<{
     buttonIcon: ButtonInterface
     onLongPress?: () => void
     isFocused: boolean
-}> = ({ onPress, onLongPress, buttonIcon, isFocused }) => {
+    handleFeatures?: () => void
+}> = ({ onPress, onLongPress, buttonIcon, isFocused, handleFeatures }) => {
     const { palette } = usePalette()
     const color = palette.primary
     const svg = useSVG(buttonIcon.icon)
@@ -68,7 +69,12 @@ export const MenuButton: FC<{
             {isFocused ? ( //if the prop isFocused is true
                 <>
                     {buttonIcon.title != "Aggiungi" && (
-                        <Pressable onPress={() => set(!isDeleting)}>
+                        <Pressable
+                            onPress={() => {
+                                set(!isDeleting)
+                                handleFeatures()
+                            }}
+                        >
                             <View
                                 style={{
                                     position: "absolute",
