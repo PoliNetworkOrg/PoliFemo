@@ -29,17 +29,22 @@ export const MenuButton: FC<{
 
     //function to call to perform the shake of the button
     const handleAnimation = () => {
+        //in order to obtain different offsets when we shake the icons
+        const randomNumber = Math.random()
+        let value
+        randomNumber < 0.5 ? (value = 1) : (value = -1)
+
         Animated.loop(
             Animated.sequence([
                 Animated.timing(animatedValue, {
-                    toValue: 1.0,
-                    duration: 85,
+                    toValue: value,
+                    duration: 100,
                     useNativeDriver: true,
                 }),
 
                 Animated.timing(animatedValue, {
-                    toValue: -1.0,
-                    duration: 85,
+                    toValue: -value,
+                    duration: 100,
                     useNativeDriver: true,
                 }),
             ])
@@ -47,7 +52,14 @@ export const MenuButton: FC<{
     }
 
     useEffect(() => {
-        if (isDeleting && buttonIcon.title != "Aggiungi") handleAnimation()
+        if (isDeleting) handleAnimation()
+        else {
+            Animated.timing(animatedValue, {
+                toValue: 0,
+                duration: 100,
+                useNativeDriver: true,
+            }).start()
+        }
     }, [isDeleting, animatedValue])
 
     return (
@@ -75,7 +87,7 @@ export const MenuButton: FC<{
                             justifyContent: "space-between",
                             alignItems: "center",
                             borderRadius: 10,
-                            marginTop: 8, //added margin to the top due to the deleting
+                            marginTop: 9, //added margin to the top due to the deleting
                         }}
                     >
                         <Canvas style={{ flex: 1, width: 40 }}>
@@ -99,7 +111,7 @@ export const MenuButton: FC<{
                         </BodyText>
                     </View>
                 </Pressable>
-                {isDeleting && buttonIcon.title != "Aggiungi" ? ( //if the prop isDeleting is true
+                {isDeleting ? ( //if the prop isDeleting is true
                     <Pressable>
                         <View
                             style={{

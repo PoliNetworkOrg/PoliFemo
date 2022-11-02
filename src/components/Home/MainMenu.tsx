@@ -62,7 +62,7 @@ export const MainMenu: FC<MainMenuProps> = props => {
                     }
                     onLongPress={() => console.log("ciao")}
                     buttonIcon={buttonIcon}
-                    isDeleting={false}
+                    isDeleting={true}
                     key={"menu_" + buttonIcon.id}
                 />
             ))}
