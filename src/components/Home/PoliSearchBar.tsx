@@ -11,8 +11,11 @@ export const PoliSearchBar: FC<{
     onChange: () => void
 }> = ({ onChange }) => {
     const { isLight } = usePalette()
+    const backgroundColor = isLight ? "#F6F7FC" : "#343E5A"
+    const iconColor = isLight ? "#424967" : "#D4D4D4"
+    const textColor = isLight ? "#424967" : "#FFFFFF"
+
     const svg = useSVG(icon)
-    const color = isLight ? "#F6F7FC" : "#343E5A"
     const [isFocused, setIsFocused] = useState(false)
     const shadowAnim = useRef(new Animated.Value(0)).current
     const inputText = useRef<TextInput>(null)
@@ -39,7 +42,7 @@ export const PoliSearchBar: FC<{
                 marginBottom: 26,
                 marginHorizontal: 52,
                 borderRadius: 28,
-                backgroundColor: "#F6F7FC",
+                backgroundColor: backgroundColor,
                 flexDirection: "row",
 
                 // cross-platform
@@ -58,14 +61,15 @@ export const PoliSearchBar: FC<{
             <TextInput
                 style={{
                     paddingLeft: 18,
-                    color: color,
+                    color: textColor,
                     flex: 1,
                     fontFamily: "Roboto_400Regular",
                 }}
                 ref={inputText}
                 autoCorrect={true}
                 placeholder="Cerca"
-                selectionColor={color}
+                placeholderTextColor={iconColor}
+                selectionColor={textColor}
                 onChange={onChange}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
@@ -90,7 +94,7 @@ export const PoliSearchBar: FC<{
                 >
                     {svg && (
                         <ImageSVG
-                            svg={svg}
+                            svg={svg} /*color??*/
                             x={0}
                             y={0}
                             width={22}
