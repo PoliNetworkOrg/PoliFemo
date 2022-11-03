@@ -29,22 +29,17 @@ export const MenuButton: FC<{
 
     //function to call to perform the shake of the button
     const handleAnimation = () => {
-        //in order to obtain different offsets when we shake the icons
         const randomNumber = Math.random()
-        let value
-        randomNumber < 0.5 ? (value = 1) : (value = -1)
-
         Animated.loop(
             Animated.sequence([
                 Animated.timing(animatedValue, {
-                    toValue: value,
-                    duration: 100,
+                    toValue: 1.0,
+                    duration: 100 + (randomNumber * 50 - 20),
                     useNativeDriver: true,
                 }),
-
                 Animated.timing(animatedValue, {
-                    toValue: -value,
-                    duration: 100,
+                    toValue: -1.0,
+                    duration: 100 + (randomNumber * 50 - 20),
                     useNativeDriver: true,
                 }),
             ])
