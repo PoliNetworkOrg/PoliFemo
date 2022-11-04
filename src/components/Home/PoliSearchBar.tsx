@@ -2,20 +2,21 @@ import React, { FC, useEffect, useState, useRef } from "react"
 import { TextInput, Animated, Pressable } from "react-native"
 import { usePalette } from "utils/colors"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
-import icon from "assets/menu/search.svg"
+import searchLight from "assets/menu/searchLight.svg"
+import searchDark from "assets/menu/searchDark.svg"
 
 /**
  * the search bar, which requests a search everytime the input text changes
  */
 export const PoliSearchBar: FC<{
-    onChange: () => void
+    onChange: (searchKey: string) => void
 }> = ({ onChange }) => {
-    const { isLight } = usePalette()
-    const backgroundColor = isLight ? "#F6F7FC" : "#343E5A"
-    const iconColor = isLight ? "#424967" : "#D4D4D4"
-    const textColor = isLight ? "#424967" : "#FFFFFF"
+    const { background3, buttonFill2, bodyText, isLight } = usePalette()
+    const backgroundColor = background3
+    const iconColor = buttonFill2
+    const textColor = bodyText
+    const svg = useSVG(isLight ? searchLight : searchDark)
 
-    const svg = useSVG(icon)
     const [isFocused, setIsFocused] = useState(false)
     const shadowAnim = useRef(new Animated.Value(0)).current
     const inputText = useRef<TextInput>(null)
@@ -70,7 +71,7 @@ export const PoliSearchBar: FC<{
                 placeholder="Cerca"
                 placeholderTextColor={iconColor}
                 selectionColor={textColor}
-                onChange={onChange}
+                onChangeText={onChange}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
             />
