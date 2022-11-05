@@ -6,13 +6,15 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/3279e65d-78fe-4db0-9d4f-368a501f4912"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -31,7 +33,15 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "sdkVersion": "46.0.0"
+    "sdkVersion": "46.0.0",
+    "extra": {
+      "eas": {
+        "projectId": "3279e65d-78fe-4db0-9d4f-368a501f4912"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    }
   },
   "name": "polifemo"
 }

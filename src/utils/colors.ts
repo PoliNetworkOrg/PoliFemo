@@ -77,6 +77,12 @@ export interface ColorTheme {
      * Darker in white mode, Lighter in dark mode background color, used in the text input fields.
      */
     fieldBackground: string
+
+    /**
+     * Fill color for modal barriers.
+     * different shades of blue I guess
+     */
+    modalBarrier: string
 }
 
 /**
@@ -152,6 +158,7 @@ export const usePalette: () => ColorTheme &
         buttonText: "#FFFFFF",
         fieldText: palette.primary, //"#424967",
         fieldBackground: "#F6F7FC",
+        modalBarrier: "rgba(1, 27, 41, 0.45)",
     }
 
     const darkTheme: ColorTheme = {
@@ -164,6 +171,7 @@ export const usePalette: () => ColorTheme &
         buttonText: "#FFFFFF",
         fieldText: "#D4D4D4",
         fieldBackground: "#343E5A",
+        modalBarrier: "rgba(1, 27, 41, 0.6)",
     }
 
     const colors = isLight ? lightTheme : darkTheme

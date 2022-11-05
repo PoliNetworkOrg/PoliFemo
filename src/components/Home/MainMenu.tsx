@@ -3,33 +3,67 @@ import { ScrollView } from "react-native"
 
 import { useNavigation } from "navigation/NavigationTypes"
 
-import { MenuButton } from "./MenuButton"
+import { MenuButton, ButtonInterface } from "./MenuButton"
 
-// TODO: pages should be defined in a more configurable way (in a single place, probably in navigation)
-const pages = [
-    "Calendario",
-    "Orario Lezioni",
-    "PoliAssociazioni",
-    "AuleLibere",
-    "Materiali Scaricabili",
+import calendar from "assets/menu/calendar.svg"
+import clock from "assets/menu/clock.svg"
+import association from "assets/menu/association.svg"
+import free_classrooms from "assets/menu/free_classrooms.svg"
+import materials from "assets/menu/materials.svg"
+import groups from "assets/menu/whatsapp.svg"
+import marks from "assets/menu/marks.svg"
+import grading_book from "assets/menu/grading_book.svg"
+import tests from "assets/menu/tests.svg"
+import add from "assets/menu/add.svg"
+
+/**
+ * the buttons and their features
+ */
+const buttonsIcons: ButtonInterface[] = [
+    { id: 0, title: "Calendario", icon: calendar },
+    { id: 1, title: "Orario Lezioni", icon: clock },
+    { id: 2, title: "PoliAssociazioni", icon: association },
+    { id: 3, title: "Aule Libere", icon: free_classrooms },
+    { id: 4, title: "Materiali", icon: materials },
+    { id: 5, title: "Gruppi WA", icon: groups },
+    { id: 6, title: "Valutazioni", icon: marks },
+    { id: 7, title: "Libretto", icon: grading_book },
+    { id: 8, title: "Test e Prove", icon: tests },
+    { id: 9, title: "Aggiungi", icon: add },
 ]
+
+// ! the purpose of these props is to try ModalCustom
+export interface MainMenuProps {
+    /**
+     * called when the modal to add features needs to be shown
+     */
+    onAddFeature: () => void
+}
 
 /**
  * the main menu of the app, an horizontal scroll view with the buttons to navigate to the different pages
  */
-export const MainMenu: FC = () => {
+export const MainMenu: FC<MainMenuProps> = props => {
     const { navigate } = useNavigation()
     return (
         <ScrollView
             horizontal
             contentContainerStyle={{ paddingHorizontal: 21 }}
         >
-            {pages.map(p => (
+            {buttonsIcons.map(buttonIcon => (
                 <MenuButton
                     // TODO: actual navigation
-                    onPress={() => navigate("Saluti", { defaultName: "ciao" })}
-                    title={p}
-                    key={"menu_" + p}
+                    onPress={
+                        buttonIcon.title == "Aggiungi"
+                            ? () => {
+                                  props.onAddFeature()
+                              }
+                            : () => navigate("Saluti", { defaultName: "ciao" })
+                    }
+                    onLongPress={() => console.log("ciao")}
+                    buttonIcon={buttonIcon}
+                    isDeleting={false}
+                    key={"menu_" + buttonIcon.id}
                 />
             ))}
         </ScrollView>

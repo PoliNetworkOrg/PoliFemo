@@ -13,12 +13,15 @@ import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
 
 import openNavSVG from "assets/menu/open-nav.svg"
+import { ModalCustom } from "components/Modal"
 
 /**
  * Home page containing the POLIFEMO logo, search bar, main horizontal scroll menu and the entry
  * point for the news section (which is a bottom sheet)
  */
 export const Home: RootStackScreen<"Home"> = () => {
+    // modal state
+    const [isModal, setModal] = useState(false)
     const [isNewsClosed, setNewsClosed] = useState(true)
     const { homeBackground, background } = usePalette()
     // the ref for the News bottom sheet, used to open and close it programmatically
@@ -43,6 +46,22 @@ export const Home: RootStackScreen<"Home"> = () => {
                 backgroundColor: homeBackground,
             }}
         >
+            <ModalCustom
+                centerText={false}
+                title={"Aggiungi features"}
+                subTitle={"Personalizza la tua bacheca"}
+                isShowing={isModal}
+                onClose={() => setModal(false)}
+            >
+                <BodyText>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Nunc ut dui tempus, porttitor magna at, ultrices mi. Morbi
+                    non imperdiet dui. Sed mollis, elit ut eleifend eleifend,
+                    quam mi luctus tellus, nec maximus ipsum lorem sit amet
+                    libero. In ultrices pharetra turpis, id bibendum orci
+                    scelerisque ut.
+                </BodyText>
+            </ModalCustom>
             <View
                 style={{
                     flex: 1,
@@ -74,7 +93,7 @@ export const Home: RootStackScreen<"Home"> = () => {
                     <PoliSearchBar
                         onChange={searchKey => console.log(searchKey)}
                     />
-                    <MainMenu />
+                    <MainMenu onAddFeature={() => setModal(true)} />
                 </View>
             </View>
             <BottomSheet
