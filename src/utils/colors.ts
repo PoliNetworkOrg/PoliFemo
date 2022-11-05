@@ -38,11 +38,6 @@ export interface ColorTheme {
     backgroundSecondary: string
 
     /**
-     * Darker in white mode, Lighter in dark mode background color, used in the search bar
-     */
-    background3: string
-
-    /**
      * Background for the home screen.
      * Lilac in light theme, deep blue in dark theme.
      */
@@ -68,15 +63,20 @@ export interface ColorTheme {
     buttonFill: string
 
     /**
-     * Fill color for the search button
-     */
-    buttonFill2: string
-
-    /**
      * Text color for most buttons.
      * Yeah that's purple i know this one.
      */
     buttonText: string
+
+    /**
+     * Fill color for the search button
+     */
+    fieldText: string
+
+    /**
+     * Darker in white mode, Lighter in dark mode background color, used in the text input fields.
+     */
+    fieldBackground: string
 }
 
 /**
@@ -145,25 +145,25 @@ export const usePalette: () => ColorTheme &
     const lightTheme: ColorTheme = {
         background: "#FFFFFF",
         backgroundSecondary: "#FFFFFF",
-        background3: "#F6F7FC",
         homeBackground: palette.primary, // "#424967",
         primary: palette.variant1, // "#414867",
         bodyText: "#000000",
         buttonFill: palette.primary, // "#424967",
-        buttonFill2: "#424967",
         buttonText: "#FFFFFF",
+        fieldText: palette.primary, //"#424967",
+        fieldBackground: "#F6F7FC",
     }
 
     const darkTheme: ColorTheme = {
         background: palette.darker, // "#232A3E",
         backgroundSecondary: palette.primary, // "#424967",
-        background3: "#343E5A",
         homeBackground: palette.darker, // "#232A3E",
         primary: palette.accent, // "#FFB544",
         bodyText: "#FFFFFF",
         buttonFill: palette.lighter, // "#8791BD",
-        buttonFill2: "#D4D4D4",
         buttonText: "#FFFFFF",
+        fieldText: "#D4D4D4",
+        fieldBackground: "#343E5A",
     }
 
     const colors = isLight ? lightTheme : darkTheme

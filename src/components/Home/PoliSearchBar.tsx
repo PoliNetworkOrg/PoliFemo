@@ -11,10 +11,8 @@ import searchDark from "assets/menu/searchDark.svg"
 export const PoliSearchBar: FC<{
     onChange: (searchKey: string) => void
 }> = ({ onChange }) => {
-    const { background3, buttonFill2, bodyText, isLight } = usePalette()
-    const backgroundColor = background3
-    const iconColor = buttonFill2
-    const textColor = bodyText
+    const { fieldBackground, fieldText, bodyText, isLight } = usePalette()
+
     const svg = useSVG(isLight ? searchLight : searchDark)
 
     const [isFocused, setIsFocused] = useState(false)
@@ -43,7 +41,7 @@ export const PoliSearchBar: FC<{
                 marginBottom: 26,
                 marginHorizontal: 52,
                 borderRadius: 28,
-                backgroundColor: backgroundColor,
+                backgroundColor: fieldBackground,
                 flexDirection: "row",
 
                 // cross-platform
@@ -62,15 +60,15 @@ export const PoliSearchBar: FC<{
             <TextInput
                 style={{
                     paddingLeft: 18,
-                    color: textColor,
+                    color: bodyText,
                     flex: 1,
                     fontFamily: "Roboto_400Regular",
                 }}
                 ref={inputText}
                 autoCorrect={true}
                 placeholder="Cerca"
-                placeholderTextColor={iconColor}
-                selectionColor={textColor}
+                placeholderTextColor={fieldText}
+                selectionColor={bodyText}
                 onChangeText={onChange}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
