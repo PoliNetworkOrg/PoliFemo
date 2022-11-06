@@ -19,7 +19,7 @@ export const TrayButton: FC<{
         <Pressable
             onPress={props.onClick}
             style={{
-                marginHorizontal: 20,
+                marginRight: 17,
                 marginLeft: 0,
             }}
         >
