@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState, useRef } from "react"
-import { TextInput, Animated, Pressable, Easing } from "react-native"
+import { TextInput, Animated, Pressable } from "react-native"
 import { usePalette } from "utils/colors"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import searchLight from "assets/menu/searchLight.svg"
