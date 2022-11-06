@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { ScrollView } from "react-native"
 
 import { useNavigation } from "navigation/NavigationTypes"
@@ -17,12 +17,12 @@ import tests from "assets/menu/tests.svg"
 import add from "assets/menu/add.svg"
 import { ModalCustom } from "components/Modal"
 
-// import AsyncStorage from "@react-native-async-storage/async-storage"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 /**
  * the buttons and their features
  */
-export const buttonsIcons: ButtonInterface[] = [
+export const defaultIcons: ButtonInterface[] = [
     { id: 0, title: "Calendario", icon: calendar },
     { id: 1, title: "Orario Lezioni", icon: clock },
     { id: 2, title: "PoliAssociazioni", icon: association },
@@ -41,11 +41,36 @@ export const buttonsIcons: ButtonInterface[] = [
 export const MainMenu: FC = () => {
     const { navigate } = useNavigation()
 
-    const [icons, setIcons] = useState<ButtonInterface[]>([...buttonsIcons])
+    const [icons, setIcons] = useState<ButtonInterface[]>([...defaultIcons])
     const [iconsToAdd, setIconsToAdd] = useState<ButtonInterface[]>([])
 
     const [isModalVisible, setModalVisible] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false)
+
+    useEffect(() => {
+        AsyncStorage.getItem("menu:icons")
+            .then(iconJSON => {
+                if (iconJSON) {
+                    console.log("Loading menu icons from storage")
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    const icons: number[] = JSON.parse(iconJSON)
+                    setIcons(defaultIcons.filter(i => icons.includes(i.id)))
+                    setIconsToAdd(
+                        defaultIcons.filter(i => !icons.includes(i.id))
+                    )
+                }
+            })
+            .catch(err => console.log(err))
+    }, [])
+
+    useEffect(() => {
+        console.log("Saving menu icons to storage")
+        AsyncStorage.setItem(
+            "menu:icons",
+            JSON.stringify(icons.map(i => i.id))
+        ).catch(err => console.log(err))
+    }, [icons])
+
     return (
         <ScrollView
             horizontal
@@ -79,11 +104,12 @@ export const MainMenu: FC = () => {
             </ModalCustom>
             {icons.map((buttonIcon, idx) => (
                 <MenuButton
-                    // TODO: actual navigation
                     onPress={() => {
                         if (isDeleting) setIsDeleting(false)
                         if (buttonIcon.id === 9) setModalVisible(true)
-                        else navigate("Saluti", { defaultName: "Ciao" })
+                        // TODO: actual navigation
+                        if (!isDeleting && buttonIcon.id !== 9)
+                            navigate("Saluti", { defaultName: "Ciao" })
                     }}
                     onLongPress={() => {
                         if (buttonIcon.id !== 9) setIsDeleting(!isDeleting)
