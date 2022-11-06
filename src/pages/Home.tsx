@@ -8,13 +8,11 @@ import BottomSheet, {
 
 import { RootStackScreen } from "navigation/NavigationTypes"
 import { BodyText, Title } from "components/Text"
-import { MainMenu, MainTitle, MenuButton } from "components/Home"
-import { buttonsIconsToAdd, buttonsIcons } from "components/Home"
+import { MainMenu, MainTitle } from "components/Home"
 import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
 
 import openNavSVG from "assets/menu/open-nav.svg"
-import { ModalCustom } from "components/Modal"
 
 /**
  * Home page containing the POLIFEMO logo, search bar, main horizontal scroll menu and the entry
@@ -22,7 +20,6 @@ import { ModalCustom } from "components/Modal"
  */
 export const Home: RootStackScreen<"Home"> = () => {
     // modal state
-    const [isModal, setModal] = useState(false)
     const [isNewsClosed, setNewsClosed] = useState(true)
     const { homeBackground, background } = usePalette()
     // the ref for the News bottom sheet, used to open and close it programmatically
@@ -47,37 +44,6 @@ export const Home: RootStackScreen<"Home"> = () => {
                 backgroundColor: homeBackground,
             }}
         >
-            <ModalCustom
-                centerText={false}
-                title={"Aggiungi features"}
-                subTitle={"Personalizza la tua bacheca"}
-                isShowing={isModal}
-                onClose={() => setModal(false)}
-            >
-                <BodyText>
-                    {buttonsIconsToAdd.map(buttonIcon => (
-                        <MenuButton
-                            // TODO: actual navigation
-                            onPress={() => {
-                                buttonsIconsToAdd.splice(
-                                    buttonsIcons.indexOf(buttonIcon),
-                                    1
-                                )
-                                buttonsIcons.unshift(buttonIcon)
-                                buttonsIcons.sort((a, b) => {
-                                    if (a.id < b.id) return -1
-                                    if (a.id > b.id) return 1
-                                    return 0
-                                }) // order
-                                setModal(false)
-                            }}
-                            buttonIcon={buttonIcon}
-                            isFocused={false}
-                            key={"menu_" + buttonIcon.id}
-                        />
-                    ))}
-                </BodyText>
-            </ModalCustom>
             <View
                 style={{
                     flex: 1,
@@ -126,7 +92,7 @@ export const Home: RootStackScreen<"Home"> = () => {
                             elevation: 6,
                         }}
                     />
-                    <MainMenu onAddFeature={() => setModal(true)} />
+                    <MainMenu />
                 </View>
             </View>
             <BottomSheet

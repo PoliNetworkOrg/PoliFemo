@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC } from "react"
 import { ImageSourcePropType, Pressable, View } from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 
@@ -19,15 +19,14 @@ export const MenuButton: FC<{
     onPress: () => void
     buttonIcon: ButtonInterface
     onLongPress?: () => void
-    isFocused: boolean
-    handleFeatures?: () => void
-}> = ({ onPress, onLongPress, buttonIcon, isFocused, handleFeatures }) => {
+    isDeleting: boolean
+    onDelete?: () => void
+}> = ({ onPress, onLongPress, buttonIcon, isDeleting, onDelete }) => {
     const { palette } = usePalette()
     const color = palette.primary
     const svg = useSVG(buttonIcon.icon)
     const delIcon = useSVG(deleteIcon)
 
-    const [isDeleting, set] = useState(false)
     return (
         <View>
             <Pressable onPress={onPress} onLongPress={onLongPress}>
@@ -42,7 +41,6 @@ export const MenuButton: FC<{
                         alignItems: "center",
                         borderRadius: 10,
                         marginTop: 8, //added margin to the top due to the deleting operation
-                        display: isDeleting ? "none" : "flex",
                     }}
                 >
                     <Canvas style={{ flex: 1, width: 40 }}>
@@ -66,13 +64,12 @@ export const MenuButton: FC<{
                     </BodyText>
                 </View>
             </Pressable>
-            {isFocused ? ( //if the prop isFocused is true
+            {isDeleting ? ( //if the prop isFocused is true
                 <>
                     {buttonIcon.title != "Aggiungi" && (
                         <Pressable
                             onPress={() => {
-                                set(!isDeleting)
-                                handleFeatures && handleFeatures()
+                                onDelete && onDelete()
                             }}
                         >
                             <View
@@ -81,7 +78,7 @@ export const MenuButton: FC<{
                                     width: 25,
                                     height: 25,
                                     right: 0,
-                                    bottom: 53,
+                                    bottom: 57,
                                 }}
                             >
                                 <Canvas style={{ flex: 1, width: 27 }}>

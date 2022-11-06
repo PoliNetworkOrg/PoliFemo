@@ -15,6 +15,7 @@ import marks from "assets/menu/marks.svg"
 import grading_book from "assets/menu/grading_book.svg"
 import tests from "assets/menu/tests.svg"
 import add from "assets/menu/add.svg"
+import { ModalCustom } from "components/Modal"
 
 // import AsyncStorage from "@react-native-async-storage/async-storage"
 
@@ -34,78 +35,71 @@ export const buttonsIcons: ButtonInterface[] = [
     { id: 9, title: "Aggiungi", icon: add },
 ]
 
-export const buttonsIconsToAdd: ButtonInterface[] = []
-
-// ! the purpose of these props is to try ModalCustom
-export interface MainMenuProps {
-    /**
-     * called when the modal to add features needs to be shown
-     */
-    onAddFeature: () => void
-}
-
 /**
  * the main menu of the app, an horizontal scroll view with the buttons to navigate to the different pages
  */
-export const MainMenu: FC<MainMenuProps> = props => {
+export const MainMenu: FC = () => {
     const { navigate } = useNavigation()
 
-    /**
-        const [features, setFeatures] = useEffect()
-        const storeData: FC<{
-            e: ???
-        }> = async e => {
-            try {
-                const jsonValue = JSON.stringify(e)
-                await AsyncStorage.setItem("defaultFeatures", jsonValue)
-            } catch (e) {
-                // saving error
-            }
-        }
-        useEffect(() => {})
-    */
+    const [icons, setIcons] = useState<ButtonInterface[]>([...buttonsIcons])
+    const [iconsToAdd, setIconsToAdd] = useState<ButtonInterface[]>([])
 
-    const [isFocused, set] = useState(false)
+    const [isModalVisible, setModalVisible] = useState(false)
+    const [isDeleting, setIsDeleting] = useState(false)
     return (
         <ScrollView
             horizontal
             contentContainerStyle={{ paddingHorizontal: 21 }}
         >
-            {buttonsIcons.map(buttonIcon => (
+            <ModalCustom
+                centerText={false}
+                title={"Aggiungi features"}
+                subTitle={"Personalizza la tua bacheca"}
+                isShowing={isModalVisible}
+                onClose={() => setModalVisible(false)}
+            >
+                {iconsToAdd.map((buttonIcon, idx) => (
+                    <MenuButton
+                        onPress={() => {
+                            // remove the icon from the list of icons to add
+                            const newIconsToAdd = [...iconsToAdd]
+                            newIconsToAdd.splice(idx, 1)
+                            // add the icon back to the list of icons
+                            const newIcons = [...icons, buttonIcon]
+                            newIcons.sort((a, b) => a.id - b.id)
+
+                            setIcons(newIcons)
+                            setIconsToAdd(newIconsToAdd)
+                        }}
+                        buttonIcon={buttonIcon}
+                        isDeleting={false}
+                        key={"menu_" + buttonIcon.id}
+                    />
+                ))}
+            </ModalCustom>
+            {icons.map((buttonIcon, idx) => (
                 <MenuButton
                     // TODO: actual navigation
-                    onPress={
-                        buttonIcon.title == "Aggiungi"
-                            ? () => {
-                                  props.onAddFeature()
-                                  isFocused && set(!isFocused)
-                              }
-                            : () => {
-                                  navigate("Saluti", { defaultName: "ciao" })
-                                  isFocused && set(!isFocused)
-                              }
-                    }
-                    onLongPress={
-                        buttonIcon.title != "Aggiungi"
-                            ? () => {
-                                  set(!isFocused) // (TO-DO: how to SET(FALSE) quando viene effettuato il click all'esterno del componente)
-                              }
-                            : () => ""
-                    }
+                    onPress={() => {
+                        if (isDeleting) setIsDeleting(false)
+                        if (buttonIcon.id === 9) setModalVisible(true)
+                        else navigate("Saluti", { defaultName: "Ciao" })
+                    }}
+                    onLongPress={() => {
+                        if (buttonIcon.id !== 9) setIsDeleting(!isDeleting)
+                    }}
                     buttonIcon={buttonIcon}
-                    isFocused={isFocused}
-                    handleFeatures={() => {
-                        buttonIcon.title != "Aggiungi" &&
-                            buttonsIcons.splice(
-                                buttonsIcons.indexOf(buttonIcon),
-                                1
+                    isDeleting={isDeleting}
+                    onDelete={() => {
+                        // remove the icon and add it to the list of icons to add
+                        const newIcons = [...icons]
+                        newIcons.splice(idx, 1)
+                        setIcons(newIcons)
+                        setIconsToAdd(
+                            [...iconsToAdd, buttonIcon].sort(
+                                (a, b) => a.id - b.id
                             )
-                        buttonsIconsToAdd.push(buttonIcon)
-                        buttonsIconsToAdd.sort((a, b) => {
-                            if (a.id < b.id) return -1
-                            if (a.id > b.id) return 1
-                            return 0
-                        })
+                        )
                     }}
                     key={"menu_" + buttonIcon.id}
                 />
