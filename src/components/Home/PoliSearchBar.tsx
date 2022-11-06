@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState, useRef } from "react"
-import { TextInput, Animated, Pressable } from "react-native"
+import { TextInput, Animated, Pressable, Easing } from "react-native"
 import { usePalette } from "utils/colors"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import searchLight from "assets/menu/searchLight.svg"
@@ -37,8 +37,8 @@ export const PoliSearchBar: FC<{
     return (
         <Animated.View
             style={{
-                marginTop: 51,
-                marginBottom: 26,
+                marginTop: 46,
+                marginBottom: 23,
                 marginHorizontal: 52,
                 borderRadius: 28,
                 backgroundColor: fieldBackground,
