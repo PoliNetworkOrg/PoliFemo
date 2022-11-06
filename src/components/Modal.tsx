@@ -39,13 +39,15 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
     return (
         //TODO: animationType fade or slide?
         <Modal
+            onRequestClose={props.onClose}
             statusBarTranslucent={true}
             visible={props.isShowing}
             animationType="fade"
             transparent={true}
             style={{}}
         >
-            <View
+            <Pressable
+                onPress={props.onClose}
                 style={[styles.pageWrapper, { backgroundColor: modalBarrier }]}
             >
                 <View>
@@ -72,7 +74,9 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
                             </Canvas>
                         </View>
                     </Pressable>
-                    <View
+                    <Pressable
+                        // this is a pressable just to prevent the modal from closing when clicking
+                        // on the content
                         style={[
                             styles.contentWrapper,
                             { backgroundColor: backgroundSecondary },
@@ -99,9 +103,9 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
                             {props.subTitle}
                         </Text>
                         <ScrollView>{props.children}</ScrollView>
-                    </View>
+                    </Pressable>
                 </View>
-            </View>
+            </Pressable>
         </Modal>
     )
 }
