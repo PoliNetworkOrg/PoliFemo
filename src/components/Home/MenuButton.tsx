@@ -17,29 +17,30 @@ export interface ButtonInterface {
  */
 export const MenuButton: FC<{
     onPress: () => void
-    onLongPress: () => void
+    onLongPress?: () => void
     buttonIcon: ButtonInterface
     isDeleting: boolean
-}> = ({ onPress, onLongPress, buttonIcon, isDeleting }) => {
+    onDelete?: () => void
+}> = ({ onPress, onLongPress, buttonIcon, isDeleting, onDelete }) => {
     const { palette } = usePalette()
     const color = palette.primary
     const svg = useSVG(buttonIcon.icon)
     const delIcon = useSVG(deleteIcon)
+
     const animatedValue = new Animated.Value(0)
 
     //function to call to perform the shake of the button
     const handleAnimation = () => {
-        const randomNumber = Math.random()
         Animated.loop(
             Animated.sequence([
                 Animated.timing(animatedValue, {
                     toValue: 1.0,
-                    duration: 100 + (randomNumber * 50 - 20),
+                    duration: 100 + (Math.random() * 40 - 20),
                     useNativeDriver: true,
                 }),
                 Animated.timing(animatedValue, {
                     toValue: -1.0,
-                    duration: 100 + (randomNumber * 50 - 20),
+                    duration: 100 + (Math.random() * 40 - 20),
                     useNativeDriver: true,
                 }),
             ])
@@ -82,7 +83,7 @@ export const MenuButton: FC<{
                             justifyContent: "space-between",
                             alignItems: "center",
                             borderRadius: 10,
-                            marginTop: 9, //added margin to the top due to the deleting
+                            marginTop: 8, //added margin to the top due to the deleting operation
                         }}
                     >
                         <Canvas style={{ flex: 1, width: 40 }}>
@@ -106,15 +107,19 @@ export const MenuButton: FC<{
                         </BodyText>
                     </View>
                 </Pressable>
-                {isDeleting ? ( //if the prop isDeleting is true
-                    <Pressable>
+                {isDeleting && buttonIcon.id !== 9 && (
+                    <Pressable
+                        onPress={() => {
+                            onDelete && onDelete()
+                        }}
+                    >
                         <View
                             style={{
                                 position: "absolute",
                                 width: 25,
                                 height: 25,
                                 right: 0,
-                                bottom: 53,
+                                bottom: 57,
                             }}
                         >
                             <Canvas style={{ flex: 1, width: 27 }}>
@@ -130,7 +135,7 @@ export const MenuButton: FC<{
                             </Canvas>
                         </View>
                     </Pressable>
-                ) : undefined}
+                )}
             </Animated.View>
         </View>
     )

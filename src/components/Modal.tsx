@@ -39,13 +39,14 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
     return (
         //TODO: animationType fade or slide?
         <Modal
+            onRequestClose={props.onClose}
             statusBarTranslucent={true}
             visible={props.isShowing}
             animationType="fade"
             transparent={true}
-            style={{}}
         >
-            <View
+            <Pressable
+                onPress={props.onClose}
                 style={[styles.pageWrapper, { backgroundColor: modalBarrier }]}
             >
                 <View>
@@ -72,7 +73,9 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
                             </Canvas>
                         </View>
                     </Pressable>
-                    <View
+                    <Pressable
+                        // this is a pressable just to prevent the modal from closing when clicking
+                        // on the content
                         style={[
                             styles.contentWrapper,
                             { backgroundColor: backgroundSecondary },
@@ -93,15 +96,15 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
                                 styles.subTitle,
                                 { color: isLight ? homeBackground : "#ffffff" },
                                 { textAlign: centerText ? "center" : "left" },
-                                { marginTop: centerText ? 56 : 8 },
+                                { marginVertical: centerText ? 56 : 8 },
                             ]}
                         >
                             {props.subTitle}
                         </Text>
-                        {props.children}
-                    </View>
+                        <View style={{ flex: 1 }}>{props.children}</View>
+                    </Pressable>
                 </View>
-            </View>
+            </Pressable>
         </Modal>
     )
 }
@@ -116,26 +119,35 @@ const styles = StyleSheet.create({
         width: 320,
         height: 420,
         borderRadius: 12,
-        paddingHorizontal: 27,
         marginHorizontal: 15,
+
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.27,
+        shadowRadius: 4.65,
+        elevation: 6,
     },
     circle: {
         width: 30,
         height: 30,
-        borderWidth: 1,
-        borderColor: "#000000",
         backgroundColor: "#ffffff",
         borderRadius: 15,
+        marginTop: 96,
         marginBottom: 8,
         justifyContent: "center",
         alignItems: "center",
     },
     title: {
         fontSize: 32,
+        marginHorizontal: 27,
         fontWeight: "900",
     },
     subTitle: {
         fontSize: 13,
+        marginHorizontal: 27,
         fontWeight: "600",
     },
 })
