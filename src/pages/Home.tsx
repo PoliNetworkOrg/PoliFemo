@@ -19,9 +19,11 @@ import openNavSVG from "assets/menu/open-nav.svg"
  * point for the news section (which is a bottom sheet)
  */
 export const Home: RootStackScreen<"Home"> = () => {
+    const { homeBackground, background } = usePalette()
+
+    const [search, setSearch] = useState("")
     // modal state
     const [isNewsClosed, setNewsClosed] = useState(true)
-    const { homeBackground, background } = usePalette()
     // the ref for the News bottom sheet, used to open and close it programmatically
     const bottomSheetRef = React.useRef<BottomSheet>(null)
     // The reference to the News scrollview, used to scroll programmatically
@@ -73,9 +75,9 @@ export const Home: RootStackScreen<"Home"> = () => {
                     }}
                 >
                     <PoliSearchBar
-                        onChange={searchKey => console.log(searchKey)}
+                        onChange={searchKey => setSearch(searchKey)}
                     />
-                    <MainMenu />
+                    <MainMenu filter={search} />
                 </View>
             </View>
             <BottomSheet

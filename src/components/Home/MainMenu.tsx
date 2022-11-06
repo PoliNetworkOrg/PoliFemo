@@ -38,7 +38,7 @@ export const defaultIcons: ButtonInterface[] = [
 /**
  * the main menu of the app, an horizontal scroll view with the buttons to navigate to the different pages
  */
-export const MainMenu: FC = () => {
+export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
     const { navigate } = useNavigation()
 
     const [icons, setIcons] = useState<ButtonInterface[]>([...defaultIcons])
@@ -130,34 +130,44 @@ export const MainMenu: FC = () => {
                     ))}
                 </View>
             </ModalCustom>
-            {icons.map((buttonIcon, idx) => (
-                <MenuButton
-                    onPress={() => {
-                        if (isDeleting) setIsDeleting(false)
-                        if (buttonIcon.id === 9) setModalVisible(true)
-                        // TODO: actual navigation
-                        if (!isDeleting && buttonIcon.id !== 9)
-                            navigate("Saluti", { defaultName: "Ciao" })
-                    }}
-                    onLongPress={() => {
-                        if (buttonIcon.id !== 9) setIsDeleting(!isDeleting)
-                    }}
-                    buttonIcon={buttonIcon}
-                    isDeleting={isDeleting}
-                    onDelete={() => {
-                        // remove the icon and add it to the list of icons to add
-                        const newIcons = [...icons]
-                        newIcons.splice(idx, 1)
-                        setIcons(newIcons)
-                        setIconsToAdd(
-                            [...iconsToAdd, buttonIcon].sort(
-                                (a, b) => a.id - b.id
+            {icons
+                .filter(
+                    i =>
+                        i.id === 9 ||
+                        (filter
+                            ? i.title
+                                  .toLowerCase()
+                                  .includes(filter.toLowerCase())
+                            : true)
+                )
+                .map((buttonIcon, idx) => (
+                    <MenuButton
+                        onPress={() => {
+                            if (isDeleting) setIsDeleting(false)
+                            if (buttonIcon.id === 9) setModalVisible(true)
+                            // TODO: actual navigation
+                            if (!isDeleting && buttonIcon.id !== 9)
+                                navigate("Saluti", { defaultName: "Ciao" })
+                        }}
+                        onLongPress={() => {
+                            if (buttonIcon.id !== 9) setIsDeleting(!isDeleting)
+                        }}
+                        buttonIcon={buttonIcon}
+                        isDeleting={isDeleting}
+                        onDelete={() => {
+                            // remove the icon and add it to the list of icons to add
+                            const newIcons = [...icons]
+                            newIcons.splice(idx, 1)
+                            setIcons(newIcons)
+                            setIconsToAdd(
+                                [...iconsToAdd, buttonIcon].sort(
+                                    (a, b) => a.id - b.id
+                                )
                             )
-                        )
-                    }}
-                    key={"menu_" + buttonIcon.id}
-                />
-            ))}
+                        }}
+                        key={"menu_" + buttonIcon.id}
+                    />
+                ))}
         </ScrollView>
     )
 }
