@@ -1,11 +1,9 @@
-name: Test
+name: Publish
 on:
     push:
-        branches:
-            - main
 
 jobs:
-    lint:
+    publish:
         name: Publish via EAS updates
         runs-on: ubuntu-20.04
         steps:
