@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react"
-import { ScrollView } from "react-native"
+import { ScrollView, View } from "react-native"
 
 import { useNavigation } from "navigation/NavigationTypes"
 
@@ -71,6 +71,16 @@ export const MainMenu: FC = () => {
         ).catch(err => console.log(err))
     }, [icons])
 
+    // divide iconsToAdd in triplets
+    const triplets = iconsToAdd.reduce((acc, cur, i) => {
+        if (i % 3 === 0) {
+            acc.push([cur])
+        } else {
+            acc[acc.length - 1].push(cur)
+        }
+        return acc
+    }, [] as ButtonInterface[][])
+
     return (
         <ScrollView
             horizontal
@@ -83,24 +93,42 @@ export const MainMenu: FC = () => {
                 isShowing={isModalVisible}
                 onClose={() => setModalVisible(false)}
             >
-                {iconsToAdd.map((buttonIcon, idx) => (
-                    <MenuButton
-                        onPress={() => {
-                            // remove the icon from the list of icons to add
-                            const newIconsToAdd = [...iconsToAdd]
-                            newIconsToAdd.splice(idx, 1)
-                            // add the icon back to the list of icons
-                            const newIcons = [...icons, buttonIcon]
-                            newIcons.sort((a, b) => a.id - b.id)
+                <View
+                    style={{
+                        alignItems: "center",
+                        marginTop: 6,
+                    }}
+                >
+                    {triplets.map((triplet, i) => (
+                        <View
+                            key={"menu_add_row" + i}
+                            style={{
+                                flexDirection: "row",
+                                marginVertical: 2,
+                                width: 288,
+                            }}
+                        >
+                            {triplet.map((buttonIcon, idx) => (
+                                <MenuButton
+                                    onPress={() => {
+                                        // remove the icon from the list of icons to add
+                                        const newIconsToAdd = [...iconsToAdd]
+                                        newIconsToAdd.splice(idx, 1)
+                                        // add the icon back to the list of icons
+                                        const newIcons = [...icons, buttonIcon]
+                                        newIcons.sort((a, b) => a.id - b.id)
 
-                            setIcons(newIcons)
-                            setIconsToAdd(newIconsToAdd)
-                        }}
-                        buttonIcon={buttonIcon}
-                        isDeleting={false}
-                        key={"menu_" + buttonIcon.id}
-                    />
-                ))}
+                                        setIcons(newIcons)
+                                        setIconsToAdd(newIconsToAdd)
+                                    }}
+                                    buttonIcon={buttonIcon}
+                                    isDeleting={false}
+                                    key={"menu_add_icon" + buttonIcon.id}
+                                />
+                            ))}
+                        </View>
+                    ))}
+                </View>
             </ModalCustom>
             {icons.map((buttonIcon, idx) => (
                 <MenuButton

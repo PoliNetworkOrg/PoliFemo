@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { View, Modal, StyleSheet, Pressable, ScrollView } from "react-native"
+import { View, Modal, StyleSheet, Pressable } from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
@@ -44,7 +44,6 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
             visible={props.isShowing}
             animationType="fade"
             transparent={true}
-            style={{}}
         >
             <Pressable
                 onPress={props.onClose}
@@ -102,7 +101,7 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
                         >
                             {props.subTitle}
                         </Text>
-                        <ScrollView>{props.children}</ScrollView>
+                        <View style={{ flex: 1 }}>{props.children}</View>
                     </Pressable>
                 </View>
             </Pressable>
@@ -120,26 +119,35 @@ const styles = StyleSheet.create({
         width: 320,
         height: 420,
         borderRadius: 12,
-        paddingHorizontal: 27,
         marginHorizontal: 15,
+
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.27,
+        shadowRadius: 4.65,
+        elevation: 6,
     },
     circle: {
         width: 30,
         height: 30,
-        borderWidth: 1,
-        borderColor: "#000000",
         backgroundColor: "#ffffff",
         borderRadius: 15,
+        marginTop: 96,
         marginBottom: 8,
         justifyContent: "center",
         alignItems: "center",
     },
     title: {
         fontSize: 32,
+        marginHorizontal: 27,
         fontWeight: "900",
     },
     subTitle: {
         fontSize: 13,
+        marginHorizontal: 27,
         fontWeight: "600",
     },
 })
