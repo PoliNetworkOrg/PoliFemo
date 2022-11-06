@@ -17,8 +17,8 @@ export interface ButtonInterface {
  */
 export const MenuButton: FC<{
     onPress: () => void
-    buttonIcon: ButtonInterface
     onLongPress?: () => void
+    buttonIcon: ButtonInterface
     isDeleting: boolean
     onDelete?: () => void
 }> = ({ onPress, onLongPress, buttonIcon, isDeleting, onDelete }) => {
