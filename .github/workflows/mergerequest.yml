@@ -1,28 +1,48 @@
 name: Comment on PR with ClickUp task
 on:
     pull_request:
-        types: [opened, reopened]
+        types: [opened, reopened, closed]
 
 jobs:
     comment:
         name: Comment on PR with ClickUp task
         runs-on: ubuntu-20.04
         steps:
-            - uses: actions/github-script@v6
+            - name: Change status and comment
+              uses: actions/github-script@v6
               id: my-script
               with:
                   result-encoding: string
                   retries: 3
                   script: |
                       const branch_name = context.payload.pull_request.head.ref;
+                      console.log(`Branch name: ${branch_name}`);
                       if (!branch_name) return;
                       const matches = branch_name.match(/feature\/CU-([a-z0-9]+)/i) 
                       if (!matches) return;
                       const taskID = matches[1]
+                      console.log(`Task ID: ${taskID}`);
                       if (!taskID) return;
-                      github.rest.issues.createComment({
-                        issue_number: context.issue.number,
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        body: `task: CU-${taskID}`
-                      })
+
+                      const OPENED = context.payload.action === 'opened' || context.payload.action === 'reopened';
+                      const MERGED = context.payload.action === 'closed' && context.payload.pull_request.merged === true;
+
+                      if (OPENED || MERGED) {
+                        const status = OPENED ? "in review" : "completed"
+
+                        await fetch('https://api.clickup.com/api/v2/task/32q2nmq', {
+                          headers: {
+                            "Authorization": "${{secrets.CLICKUP_TOKEN}}",
+                            "Content-Type": "application/json"
+                          },
+                          method: "POST",
+                          body: JSON.stringify({ status })
+                        })
+
+                        github.rest.issues.createComment({
+                          issue_number: context.issue.number,
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          body: `Status task aggiornato: CU-${taskID} - ${status}`
+                        })
+                      }
