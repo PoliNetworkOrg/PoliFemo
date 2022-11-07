@@ -11,8 +11,8 @@ import { BodyText, Title } from "components/Text"
 import { MainMenu, MainTitle, PoliSearchBar } from "components/Home"
 import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
-
 import openNavSVG from "assets/menu/open-nav.svg"
+import MainApi, { Article } from "api"
 
 /**
  * Home page containing the POLIFEMO logo, search bar, main horizontal scroll menu and the entry
@@ -37,6 +37,18 @@ export const Home: RootStackScreen<"Home"> = () => {
             scrollViewRef.current.scrollToEnd({ animated: true })
         }
     }, [isNewsClosed])
+
+    useEffect(() => {
+        const mainApi = MainApi.getInstance("https://api.polinetwork.org:446/")
+        console.log("fetching something...")
+        mainApi
+            .getArticles()
+            .then(response => {
+                const articles: Article[] = response.data
+                console.log(articles[0])
+            })
+            .catch(err => console.log(err))
+    }, [])
 
     return (
         <View
