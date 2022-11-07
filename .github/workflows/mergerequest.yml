@@ -14,4 +14,15 @@ jobs:
                   result-encoding: string
                   retries: 3
                   script: |
-                      console.log(process.env.GITHUB_REF_NAME);
+                      const branch_name = context.payload.pull_request.head.ref;
+                      if (!branch_name) return;
+                      const matches = branch_name.match(/feature\/CU-([a-z0-9]+)/i) 
+                      if (!matches) return;
+                      const taskID = matches[1]
+                      if (!taskID) return;
+                      github.rest.issues.createComment({
+                        issue_number: context.issue.number,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        body: `task: CU-${taskID}`
+                      })
