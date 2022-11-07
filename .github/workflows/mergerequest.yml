@@ -1,6 +1,6 @@
 name: Comment on PR with ClickUp task
 on:
-    pull_request_target:
+    pull_request:
         types: [opened]
 
 jobs:
@@ -19,5 +19,5 @@ jobs:
                         issue_number: context.issue.number,
                         owner: context.repo.owner,
                         repo: context.repo.repo,
-                        body: `${taskID}`
+                        body: `task: CU-${taskID} ${{ github.event.action }}`
                       })
