@@ -15,10 +15,3 @@ jobs:
                   retries: 3
                   script: |
                       console.log(process.env.GITHUB_REF_NAME);
-                      const taskID = process.env.GITHUB_REF_NAME.match(/feature\/CU-([a-z0-9]+)/i)[1]
-                      if (taskID) github.rest.issues.createComment({
-                        issue_number: context.issue.number,
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        body: `task: CU-${taskID}`
-                      })
