@@ -6,7 +6,7 @@ on:
 jobs:
     comment:
         name: Comment on PR with ClickUp task
-        if: github.event.action == "opened" || github.event.action == "reopened" || (github.event.action == "closed" && github.event.pull_request.merged == true)
+        if: github.event.action == 'opened' || github.event.action == 'reopened' || (github.event.action == 'closed' && github.event.pull_request.merged == true)
         runs-on: ubuntu-20.04
         steps:
             - name: Get taskID
