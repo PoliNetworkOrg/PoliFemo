@@ -6,6 +6,7 @@ on:
 jobs:
     comment:
         name: Comment on PR with ClickUp task
+        if: github.event.action == "opened" || github.event.action == "reopened" || (github.event.action == "closed" && github.event.pull_request.merged == true)
         runs-on: ubuntu-20.04
         steps:
             - name: Get taskID
@@ -13,7 +14,6 @@ jobs:
               id: taskID
               with:
                   result-encoding: string
-                  retries: 3
                   script: |
                       const branch_name = context.payload.pull_request.head.ref;
                       console.log(`Branch name: ${branch_name}`);
@@ -30,10 +30,8 @@ jobs:
               id: new-status
               with:
                   result-encoding: string
-                  retries: 3
                   script: |
                       const OPENED = context.payload.action === 'opened' || context.payload.action === 'reopened';
-                      // const MERGED = context.payload.action === 'closed' && context.payload.pull_request.merged === true;
                       return OPENED ? "in review" : "completed"
 
             - name: Change status with cURL call
@@ -50,7 +48,6 @@ jobs:
               uses: actions/github-script@v6
               id: my-script
               with:
-                  result-encoding: string
                   retries: 3
                   script: |
                       github.rest.issues.createComment({
