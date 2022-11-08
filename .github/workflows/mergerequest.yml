@@ -1,0 +1,58 @@
+name: Comment on PR with ClickUp task
+on:
+    pull_request:
+        types: [opened, reopened, closed]
+
+jobs:
+    comment:
+        name: Comment on PR with ClickUp task
+        if: github.event.action == 'opened' || github.event.action == 'reopened' || (github.event.action == 'closed' && github.event.pull_request.merged == true)
+        runs-on: ubuntu-20.04
+        steps:
+            - name: Get taskID
+              uses: actions/github-script@v6
+              id: taskID
+              with:
+                  result-encoding: string
+                  script: |
+                      const branch_name = context.payload.pull_request.head.ref;
+                      console.log(`Branch name: ${branch_name}`);
+                      if (!branch_name) return '';
+                      const matches = branch_name.match(/feature\/CU-([a-z0-9]+)/i) 
+                      if (!matches) return '';
+                      const taskID = matches[1]
+                      console.log(`Task ID: ${taskID}`);
+                      if (!taskID) return '';
+                      return taskID;
+
+            - name: Get new status
+              uses: actions/github-script@v6
+              id: new-status
+              with:
+                  result-encoding: string
+                  script: |
+                      const OPENED = context.payload.action === 'opened' || context.payload.action === 'reopened';
+                      return OPENED ? "in review" : "completed"
+
+            - name: Change status with cURL call
+              run: |
+                  curl -i -X PUT \
+                  'https://api.clickup.com/api/v2/task/${{steps.taskid.outputs.result}}' \
+                  -H 'Authorization: ${{secrets.CLICKUP_TOKEN}}' \
+                  -H 'Content-Type: application/json' \
+                  -d '{
+                    "status": "${{steps.new-status.outputs.result}}"
+                  }'
+
+            - name: Comment on PR
+              uses: actions/github-script@v6
+              id: my-script
+              with:
+                  retries: 3
+                  script: |
+                      github.rest.issues.createComment({
+                        issue_number: context.issue.number,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        body: `Status task aggiornato: CU-${{steps.taskid.outputs.result}} - ${{steps.new-status.outputs.result}}`
+                      })
