@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import axios, {
-    AxiosError,
-    AxiosInstance,
-    AxiosResponse,
-    AxiosRequestConfig,
-} from "axios"
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios"
 
 /*Docs used to make this:
 Singleton:
@@ -14,8 +9,8 @@ Error retrying:
 https://stackblitz.com/edit/retry-api-call-axios-interceptor?file=index.ts
 */
 
-const ONE_MINUTE = 60 * 60
-const MAX_RETRIES = 5
+const DEFAULT_MAX_RETRIES = 5
+const DEFAULT_WAITING_TIME = 3
 
 export enum RetryType {
     RETRY_INDEFINETELY,
@@ -32,27 +27,61 @@ declare module "axios" {
         retryCount?: number
     }
 }
-
-//in this way we can keep track of number of retries already done when errors occur
-/* interface AxiosConfig extends AxiosRequestConfig {
-    retryCount?: number
-}
-
-interface AxiosConfigCustom extends AxiosConfig {
-    retryCount: number
-} */
-/* interface AxiosErrorCustom extends AxiosError {
-    config: AxiosRequestConfig
-} */
-
+/**
+ * Singleton object which manages requests to Polinetwork Server.
+ *
+ * Retrieve the instance of MainApi in order to make a request:
+ *
+ * ```
+ * import MainApi from "api"
+ * const mainApi = MainApi.getInstance()
+ * ```
+ *
+ * Call a public method on the instance object in order to make a request.
+ * @param retryType
+ * You can have specific behaviour in case of errors, namely:
+ * - retry until request succeds ---> `RetryType.RETRY_INDEFINETELY`
+ * - retry n times ---> `RetryType.RETRY_N_TIMES`
+ * - no retry ---> `RetryType.NO_RETRY`
+ *
+ *
+ * You can also specify additional params to a request:
+ * @param maxRetries maximum number of retries if `RetryType.RETRY_N_TIMES` is selected
+ * @param waitingTime seconds to wait before retrying request
+ * @param retryCount how many retries have already been done, this param shouldn't be changed. its purpose is only to keep track of the retry count and is kept up to date by the MainApi object
+ *
+ * @example
+ * ```ts
+ * const mainApi = MainApi.getInstance()
+ * mainApi
+ *     .getArticles(RetryType.RETRY_N_TIMES, 5, 3)
+ *      //maxRetries = 5
+ *      //waitingTime = 3s
+ *     .then(response => {
+ *          const articles: Article[] = response.data
+ *          //do something
+ *      })
+ *      .catch(err => console.log(err))
+ * }
+ * ```
+ *
+ */
 export default class MainApi {
     private static classInstance?: MainApi
 
     private readonly instance: AxiosInstance
 
-    public static getInstance(baseUrl: string) {
+    /**
+     * retrieves singleton instance.
+     *
+     * @example
+     * ```
+     * const mainApi = MainApi.getInstance()
+     * ```
+     * */
+    public static getInstance() {
         if (!this.classInstance) {
-            this.classInstance = new MainApi(baseUrl)
+            this.classInstance = new MainApi("https://api.polinetwork.org:446/")
         }
 
         return this.classInstance
@@ -66,6 +95,9 @@ export default class MainApi {
         this._initializeResponseInterceptor()
     }
 
+    /**
+     * initialize interceptors functions
+     * */
     private _initializeResponseInterceptor = () => {
         this.instance.interceptors.response.use(
             this._handleResponse,
@@ -73,68 +105,73 @@ export default class MainApi {
         )
     }
 
-    //intercepts successfull responses from server and
-    //does (or will do) something before .then is called
+    /**
+     * intercepts successful responses from server and
+     * does (or will do) something before `.then` is called
+     * */
     private _handleResponse = (res: AxiosResponse): AxiosResponse => {
         console.log("successful response intercepted")
         return res
     }
 
-    //intercepts unsuccessful responses before .catch is called
-    //and manages retries --- not working properly (too much hardcoded)
+    /**
+     * intercepts unsuccessful responses before `.catch` is called
+     * and manages retries
+     * */
     private _handleError = (error: AxiosError) => {
         /*
         error 429 -> too many requests
         error 500-503 -> server error
         */
         const { config, message, response } = error
-        //DEBUGGING INFO
-        /* console.log("error response status: " + error.response?.status)
-        console.log("error status: " + error.status)
-        console.log("error message: " + error.message)
-        console.log("error method" + error.config?.method) */
-        // END DEBUGGING INFO
+        console.log("intercepted error")
 
-        console.log("intercepted error - now decide if retry")
-
-        /* if (message === "Network Error") {
-            //no retry
-            console.log("network error, bad address!")
+        if (message === "Network Error") {
+            console.log("network error, bad address! no retry")
             return Promise.reject(error)
-        } */
+        }
         if (
+            // ? which response statuses need checking ?
             (response?.status == 429 ||
                 response?.status === 503 ||
-                response?.status === 500 ||
-                message === "Network Error") &&
+                response?.status === 500) &&
             config
         ) {
             if (config.retryType === RetryType.RETRY_INDEFINETELY) {
                 console.log("Retrying until request is successful")
-                return new Promise((resolve, _) => {
-                    //waiting time [seconds]
-                    const waitingTime = config.waitingTime ?? 3
-                    console.log("waiting some time: " + waitingTime + "s")
+                return new Promise(resolve => {
+                    const waitingTime =
+                        config.waitingTime ?? DEFAULT_WAITING_TIME
+                    console.log("waiting before retrying: " + waitingTime + "s")
                     setTimeout(() => {
-                        resolve(this._retryMatchUrl(config))
+                        resolve(
+                            axios(config).then(res => {
+                                return res
+                            })
+                        )
                     }, waitingTime * 1000)
                 })
             } else if (config.retryType === RetryType.RETRY_N_TIMES) {
                 const retryCount = (config.retryCount ?? 0) + 1
                 console.log(
-                    "Retrying at most " +
-                        (config.maxRetries ?? MAX_RETRIES) +
-                        " times"
+                    `Try number ${retryCount}/${
+                        config.maxRetries ?? DEFAULT_MAX_RETRIES
+                    }`
                 )
-                console.log("Try number #" + config.retryCount)
                 config.retryCount = retryCount
-                if (retryCount <= (config.maxRetries ?? MAX_RETRIES)) {
-                    return new Promise((resolve, _) => {
-                        //waiting time [seconds]
-                        const waitingTime = config.waitingTime ?? 3
-                        console.log("waiting some time: " + waitingTime + "s")
+                if (retryCount <= (config.maxRetries ?? DEFAULT_MAX_RETRIES)) {
+                    return new Promise(resolve => {
+                        const waitingTime =
+                            config.waitingTime ?? DEFAULT_WAITING_TIME
+                        console.log(
+                            "waiting before retrying: " + waitingTime + "s"
+                        )
                         setTimeout(() => {
-                            resolve(this._retryMatchUrl(config))
+                            resolve(
+                                axios(config).then(res => {
+                                    return res
+                                })
+                            )
                         }, waitingTime * 1000)
                     })
                 }
@@ -144,43 +181,50 @@ export default class MainApi {
         } else {
             if (config == undefined) {
                 console.log(
-                    "error config is undefined, what went wrong? Does this even happen?"
+                    "error: config is undefined, what went wrong? Does this even happen?"
                 )
             }
             return Promise.reject(error)
         }
     }
 
-    private _retryMatchUrl = (config: AxiosRequestConfig) => {
-        if (config.url === "/mock/articles") {
-            if (config.retryCount === 2) {
-                config.baseURL = "https://api.polinetwork.org:446/"
-            }
-            console.log("retry count: " + config.retryCount)
-            console.log("retry type: " + config.retryType)
-            return this.instance
-                .get<Article[]>("/mock/articles", {
-                    baseURL: config.baseURL,
-                    retryType: config.retryType,
-                    maxRetries: config.maxRetries ?? MAX_RETRIES,
-                    retryCount: config.retryCount ?? undefined,
-                })
-                .then(res => {
-                    console.log("successful")
-                    return res
-                })
-        }
-    }
-
-    //this method gets mock articles from swagger
+    /**
+     * Retrieves articles from Polinetwork server.
+     *
+     * @param retryType
+     * @default retryType.RETRY_INDEFINETELY
+     * @param maxRetries maximum number of retries if `RetryType.RETRY_N_TIMES` is selected
+     * @default DEFAULT_MAX_RETRIES
+     * @param waitingTime seconds to wait before retrying request
+     * @default DEFAULT_WAITING_TIME
+     * @param retryCount how many retries have already been done, don't change this.
+     * @default 0
+     *
+     * @example
+     * ```ts
+     * const mainApi = MainApi.getInstance()
+     * mainApi
+     *     .getArticles(RetryType.RETRY_N_TIMES, 5, 3)
+     *      //maxRetries = 5
+     *      //waitingTime = 3s
+     *     .then(response => {
+     *          const articles: Article[] = response.data
+     *          //do something
+     *      })
+     *      .catch(err => console.log(err))
+     * }
+     * ```
+     * */
     public getArticles = (
         retryType: RetryType = RetryType.RETRY_INDEFINETELY,
-        maxRetries?: number,
+        maxRetries = DEFAULT_MAX_RETRIES,
+        waitingTime = 3,
         retryCount = 0
     ) =>
         this.instance.get<Article[]>("/mock/articles", {
             retryType: retryType,
-            maxRetries: maxRetries ?? undefined,
+            maxRetries: maxRetries,
+            waitingTime: waitingTime,
             retryCount: retryCount,
         })
 }
