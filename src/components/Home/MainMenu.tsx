@@ -41,11 +41,17 @@ export const defaultIcons: ButtonInterface[] = [
 export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
     const { navigate } = useNavigation()
 
+    const scrollView = React.useRef<ScrollView>(null)
+
     const [icons, setIcons] = useState<ButtonInterface[]>([...defaultIcons])
     const [iconsToAdd, setIconsToAdd] = useState<ButtonInterface[]>([])
 
     const [isModalVisible, setModalVisible] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false)
+
+    useEffect(() => {
+        scrollView.current?.scrollTo({ x: 0, y: 0, animated: true })
+    }, [filter, scrollView])
 
     useEffect(() => {
         AsyncStorage.getItem("menu:icons")
@@ -83,6 +89,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
 
     return (
         <ScrollView
+            ref={scrollView}
             horizontal
             contentContainerStyle={{ paddingHorizontal: 21 }}
         >
