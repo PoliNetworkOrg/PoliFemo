@@ -19,17 +19,17 @@ export const trayIcons: Record<
 > = {
     downloads: {
         svg: downloads,
-        width: 14,
-        heigth: 15,
+        width: 22,
+        heigth: 23,
     },
     notifications: {
         svg: notifications,
-        width: 24,
-        heigth: 21,
+        width: 31,
+        heigth: 39,
     },
     settings: {
         svg: settings,
-        width: 23,
-        heigth: 22,
+        width: 28,
+        heigth: 29,
     },
 }

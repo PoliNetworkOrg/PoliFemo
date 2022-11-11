@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Dimensions, TextInput, View, Pressable } from "react-native"
+import { Dimensions, View, Pressable } from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import BottomSheet, {
     BottomSheetScrollView,
@@ -8,22 +8,22 @@ import BottomSheet, {
 
 import { RootStackScreen } from "navigation/NavigationTypes"
 import { BodyText, Title } from "components/Text"
-import { MainMenu, MainTitle } from "components/Home"
+import { MainMenu, MainTitle, PoliSearchBar } from "components/Home"
 import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
 
 import openNavSVG from "assets/menu/open-nav.svg"
-import { ModalCustom } from "components/Modal"
 
 /**
  * Home page containing the POLIFEMO logo, search bar, main horizontal scroll menu and the entry
  * point for the news section (which is a bottom sheet)
  */
 export const Home: RootStackScreen<"Home"> = () => {
-    // modal state
-    const [isModal, setModal] = useState(false)
-    const [isNewsClosed, setNewsClosed] = useState(true)
     const { homeBackground, background } = usePalette()
+
+    const [search, setSearch] = useState("")
+    // modal state
+    const [isNewsClosed, setNewsClosed] = useState(true)
     // the ref for the News bottom sheet, used to open and close it programmatically
     const bottomSheetRef = React.useRef<BottomSheet>(null)
     // The reference to the News scrollview, used to scroll programmatically
@@ -46,22 +46,6 @@ export const Home: RootStackScreen<"Home"> = () => {
                 backgroundColor: homeBackground,
             }}
         >
-            <ModalCustom
-                centerText={false}
-                title={"Aggiungi features"}
-                subTitle={"Personalizza la tua bacheca"}
-                isShowing={isModal}
-                onClose={() => setModal(false)}
-            >
-                <BodyText>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Nunc ut dui tempus, porttitor magna at, ultrices mi. Morbi
-                    non imperdiet dui. Sed mollis, elit ut eleifend eleifend,
-                    quam mi luctus tellus, nec maximus ipsum lorem sit amet
-                    libero. In ultrices pharetra turpis, id bibendum orci
-                    scelerisque ut.
-                </BodyText>
-            </ModalCustom>
             <View
                 style={{
                     flex: 1,
@@ -90,27 +74,10 @@ export const Home: RootStackScreen<"Home"> = () => {
                         elevation: 15,
                     }}
                 >
-                    <TextInput
-                        // search bar
-                        placeholder="Search"
-                        style={{
-                            padding: 10,
-                            margin: 51,
-                            marginBottom: 26,
-                            borderRadius: 100,
-                            backgroundColor: "white",
-
-                            shadowColor: "#000",
-                            shadowOffset: {
-                                width: 0,
-                                height: 3,
-                            },
-                            shadowOpacity: 0.27,
-                            shadowRadius: 4.65,
-                            elevation: 6,
-                        }}
+                    <PoliSearchBar
+                        onChange={searchKey => setSearch(searchKey)}
                     />
-                    <MainMenu onAddFeature={() => setModal(true)} />
+                    <MainMenu filter={search} />
                 </View>
             </View>
             <BottomSheet
