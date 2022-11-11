@@ -84,7 +84,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
     return (
         <ScrollView
             horizontal
-            contentContainerStyle={{ paddingHorizontal: 21 }}
+            contentContainerStyle={{ paddingHorizontal: 21, marginTop: 5 }}
         >
             <ModalCustom
                 centerText={false}

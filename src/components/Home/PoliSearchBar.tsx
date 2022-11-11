@@ -38,7 +38,7 @@ export const PoliSearchBar: FC<{
         <Animated.View
             style={{
                 marginTop: 46,
-                marginBottom: 23,
+                marginBottom: 15,
                 marginHorizontal: 52,
                 borderRadius: 28,
                 backgroundColor: fieldBackground,
