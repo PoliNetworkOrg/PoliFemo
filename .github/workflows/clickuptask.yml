@@ -1,13 +1,15 @@
-name: Comment on PR with ClickUp task
+name: Update ClickUp task status
+
 on:
     pull_request:
         types: [opened, reopened, closed]
 
 jobs:
-    comment:
-        name: Comment on PR with ClickUp task
+    update:
+        name: Update ClickUp task status
         if: github.event.action == 'opened' || github.event.action == 'reopened' || (github.event.action == 'closed' && github.event.pull_request.merged == true)
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-latest
+
         steps:
             - name: Get taskID
               uses: actions/github-script@v6
