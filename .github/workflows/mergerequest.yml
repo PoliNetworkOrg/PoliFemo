@@ -26,7 +26,7 @@ jobs:
                       return taskID;
 
             - name: Get new status
-              if: steps.taskID.outputs.result != false
+              if: steps.taskID.outputs.result != 'false'
               uses: actions/github-script@v6
               id: new-status
               with:
@@ -36,7 +36,7 @@ jobs:
                       return OPENED ? "in review" : "completed"
 
             - name: Change status with cURL call
-              if: steps.taskID.outputs.result != false
+              if: steps.taskID.outputs.result != 'false'
               run: |
                   curl -i -X PUT \
                   'https://api.clickup.com/api/v2/task/${{steps.taskID.outputs.result}}' \
@@ -47,7 +47,7 @@ jobs:
                   }'
 
             - name: Comment on PR
-              if: steps.taskID.outputs.result != false
+              if: steps.taskID.outputs.result != 'false'
               uses: actions/github-script@v6
               id: my-script
               with:
