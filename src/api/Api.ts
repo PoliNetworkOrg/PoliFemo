@@ -120,8 +120,8 @@ export default class MainApi {
      * */
     private _handleError = (error: AxiosError) => {
         /*
-        error 429 -> too many requests
-        error 500-503 -> server error
+        error 404 -> not found
+        error 500 -> server error
         */
         const { config, message, response } = error
         console.log("intercepted error")
@@ -132,9 +132,7 @@ export default class MainApi {
         }
         if (
             // ? which response statuses need checking ?
-            (response?.status == 429 ||
-                response?.status === 503 ||
-                response?.status === 500) &&
+            (response?.status === 404 || response?.status === 500) &&
             config
         ) {
             if (config.retryType === RetryType.RETRY_INDEFINETELY) {
