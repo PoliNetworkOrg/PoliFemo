@@ -28,7 +28,7 @@ declare module "axios" {
     }
 }
 /**
- * Singleton object which manages requests to Polinetwork Server.
+ * Singleton object which manages requests to PoliNetwork Server.
  *
  * Retrieve the instance of MainApi in order to make a request:
  *
@@ -187,7 +187,7 @@ export default class MainApi {
     }
 
     /**
-     * Retrieves articles from Polinetwork server.
+     * Retrieves articles from PoliNetwork server.
      *
      * @param retryType
      * @default retryType.RETRY_INDEFINETELY
@@ -227,7 +227,7 @@ export default class MainApi {
         })
 
     /**
-     * Retrieves Tags from Polinetwork server.
+     * Retrieves Tags from PoliNetwork server.
      *
      *
      * @example
