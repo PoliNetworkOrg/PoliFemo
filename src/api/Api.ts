@@ -143,7 +143,7 @@ export default class MainApi {
                     console.log("waiting before retrying: " + waitingTime + "s")
                     setTimeout(() => {
                         resolve(
-                            axios(config).then(res => {
+                            this.instance(config).then(res => {
                                 return res
                             })
                         )
@@ -151,13 +151,13 @@ export default class MainApi {
                 })
             } else if (config.retryType === RetryType.RETRY_N_TIMES) {
                 const retryCount = (config.retryCount ?? 0) + 1
-                console.log(
-                    `Try number ${retryCount}/${
-                        config.maxRetries ?? DEFAULT_MAX_RETRIES
-                    }`
-                )
                 config.retryCount = retryCount
                 if (retryCount <= (config.maxRetries ?? DEFAULT_MAX_RETRIES)) {
+                    console.log(
+                        `Try number ${retryCount}/${
+                            config.maxRetries ?? DEFAULT_MAX_RETRIES
+                        }`
+                    )
                     return new Promise(resolve => {
                         const waitingTime =
                             config.waitingTime ?? DEFAULT_WAITING_TIME
@@ -166,7 +166,7 @@ export default class MainApi {
                         )
                         setTimeout(() => {
                             resolve(
-                                axios(config).then(res => {
+                                this.instance(config).then(res => {
                                     return res
                                 })
                             )
@@ -174,7 +174,9 @@ export default class MainApi {
                     })
                 }
             }
-            console.log("Retry Type is set to RetryType.NO_TRY... not retrying")
+            console.log(
+                "RetryType.NO_RETRY or maximum numbers of retries reached"
+            )
             return Promise.reject(error)
         } else {
             if (config == undefined) {
