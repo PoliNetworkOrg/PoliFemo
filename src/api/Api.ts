@@ -227,9 +227,42 @@ export default class MainApi {
             waitingTime: waitingTime,
             retryCount: retryCount,
         })
+
+    /**
+     * Retrieves Tags from Polinetwork server.
+     *
+     *
+     * @example
+     * ```ts
+     * const mainApi = MainApi.getInstance()
+     * mainApi
+     *     .getTags(RetryType.RETRY_N_TIMES, 5, 3)
+     *      //maxRetries = 5
+     *      //waitingTime = 3s
+     *     .then(response => {
+     *          const tags: Tag[] = response.data.tags
+     *          //note that you need to specify the field .tags
+     *          //unlike other requests
+     *      })
+     *      .catch(err => console.log(err))
+     * }
+     * ```
+     * */
+    public getTags = (
+        retryType: RetryType = RetryType.RETRY_INDEFINETELY,
+        maxRetries = DEFAULT_MAX_RETRIES,
+        waitingTime = 3,
+        retryCount = 0
+    ) =>
+        this.instance.get<Tags>("/tags", {
+            retryType: retryType,
+            maxRetries: maxRetries,
+            waitingTime: waitingTime,
+            retryCount: retryCount,
+        })
 }
 
-// article object taken from swagger
+// ? should we create a dedicated folder to put these interfaces?
 export interface Article {
     event_id: number
     date_start: Date
@@ -261,4 +294,13 @@ export interface Article {
         classroom_id: number
         room_dn: string
     }
+}
+
+export interface Tags {
+    tags: Tag[]
+}
+
+export interface Tag {
+    name: string
+    image: string
 }
