@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios"
+import Article from "./Article"
+import { RetryType } from "./RetryType"
+import { Tags } from "./Tag"
 
 /*Docs used to make this:
 Singleton:
@@ -11,12 +15,6 @@ https://stackblitz.com/edit/retry-api-call-axios-interceptor?file=index.ts
 
 const DEFAULT_MAX_RETRIES = 5
 const DEFAULT_WAITING_TIME = 3
-
-export enum RetryType {
-    RETRY_INDEFINETELY,
-    RETRY_N_TIMES,
-    NO_RETRY,
-}
 
 //in this way we can add fields to AxiosRequestConfig for more control in case of errors
 declare module "axios" {
@@ -33,7 +31,7 @@ declare module "axios" {
  * Retrieve the instance of MainApi in order to make a request:
  *
  * ```
- * import MainApi from "api"
+ * import MainApi from "api/MainApi"
  * const mainApi = MainApi.getInstance()
  * ```
  *
@@ -189,7 +187,7 @@ export default class MainApi {
     }
 
     /**
-     * Retrieves articles from PoliNetwork server.
+     * Retrieves mock articles from PoliNetwork server.
      *
      * @param retryType
      * @default retryType.RETRY_INDEFINETELY
@@ -221,7 +219,7 @@ export default class MainApi {
         waitingTime = 3,
         retryCount = 0
     ) =>
-        this.instance.get<Article[]>("/mock/articles", {
+        this.instance.get<Article[]>("/v1/mock/articles", {
             retryType: retryType,
             maxRetries: maxRetries,
             waitingTime: waitingTime,
@@ -229,7 +227,7 @@ export default class MainApi {
         })
 
     /**
-     * Retrieves Tags from PoliNetwork server.
+     * Retrieves Tags (news categories) from PoliNetwork server.
      *
      *
      * @example
@@ -242,7 +240,8 @@ export default class MainApi {
      *     .then(response => {
      *          const tags: Tag[] = response.data.tags
      *          //note that you need to specify the field .tags
-     *          //unlike other requests
+     *          //in order to get the Tag array, unlike other
+     *          // requests
      *      })
      *      .catch(err => console.log(err))
      * }
@@ -254,53 +253,10 @@ export default class MainApi {
         waitingTime = 3,
         retryCount = 0
     ) =>
-        this.instance.get<Tags>("/tags", {
+        this.instance.get<Tags>("/v1/tags", {
             retryType: retryType,
             maxRetries: maxRetries,
             waitingTime: waitingTime,
             retryCount: retryCount,
         })
-}
-
-// ? should we create a dedicated folder to put these interfaces?
-export interface Article {
-    event_id: number
-    date_start: Date
-    date_end: Date
-    favourite: boolean
-    show_agenda: boolean
-    matricola: number
-    title: {
-        it: string
-        en: string
-    }
-    event_type: {
-        typeId: string
-        type_dn: {
-            it: string
-            en: string
-        }
-    }
-    calendar: {
-        calendar_id: number
-        calendar_dn: {
-            it: string
-            en: string
-        }
-    }
-    room: {
-        room_id: number
-        acronym_dn: number
-        classroom_id: number
-        room_dn: string
-    }
-}
-
-export interface Tags {
-    tags: Tag[]
-}
-
-export interface Tag {
-    name: string
-    image: string
 }
