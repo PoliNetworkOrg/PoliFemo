@@ -213,18 +213,23 @@ export default class MainApi {
      * }
      * ```
      * */
-    public getArticles = (
+    public getArticles = async (
         retryType: RetryType = RetryType.RETRY_INDEFINETELY,
         maxRetries = DEFAULT_MAX_RETRIES,
         waitingTime = 3,
         retryCount = 0
-    ) =>
-        this.instance.get<Article[]>("/v1/mock/articles", {
-            retryType: retryType,
-            maxRetries: maxRetries,
-            waitingTime: waitingTime,
-            retryCount: retryCount,
-        })
+    ) => {
+        const response = await this.instance.get<Article[]>(
+            "/v1/mock/articles",
+            {
+                retryType: retryType,
+                maxRetries: maxRetries,
+                waitingTime: waitingTime,
+                retryCount: retryCount,
+            }
+        )
+        return response.data
+    }
 
     /**
      * Retrieves Tags (news categories) from PoliNetwork server.
