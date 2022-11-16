@@ -9,7 +9,8 @@
             "components/*": ["src/components/*"],
             "navigation/*": ["src/navigation/*"],
             "pages/*": ["src/pages/*"],
-            "utils/*": ["src/utils/*"]
+            "utils/*": ["src/utils/*"],
+            "api/*": ["src/api/*"]
         }
     }
 }

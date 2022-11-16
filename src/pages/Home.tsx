@@ -11,7 +11,6 @@ import { BodyText, Title } from "components/Text"
 import { MainMenu, MainTitle, PoliSearchBar } from "components/Home"
 import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
-
 import openNavSVG from "assets/menu/open-nav.svg"
 
 /**
