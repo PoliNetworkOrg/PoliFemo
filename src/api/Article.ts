@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-export default interface Article {
+export interface Article {
     event_id: number
     date_start: Date
     date_end: Date

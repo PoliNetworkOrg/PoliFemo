@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios"
-import Article from "./Article"
+import { Article } from "./Article"
 import { RetryType } from "./RetryType"
 import { Tags } from "./Tag"
 
@@ -31,8 +29,7 @@ declare module "axios" {
  * Retrieve the instance of MainApi in order to make a request:
  *
  * ```
- * import MainApi from "api/MainApi"
- * const mainApi = MainApi.getInstance()
+ * import { api } from "api"
  * ```
  *
  * Call a public method on the instance object in order to make a request.
@@ -50,17 +47,14 @@ declare module "axios" {
  *
  * @example
  * ```ts
- * const mainApi = MainApi.getInstance()
- * mainApi
- *     .getArticles(RetryType.RETRY_N_TIMES, 5, 3)
- *      //maxRetries = 5
- *      //waitingTime = 3s
- *     .then(response => {
- *          const articles: Article[] = response.data
- *          //do something
- *      })
- *      .catch(err => console.log(err))
- * }
+ *       api.getArticles(RetryType.RETRY_N_TIMES, 5, 3)
+ *           .then(response => {
+ *               //maxRetries = 5
+ *               //waitingTime = 3s
+ *               const articles: Article[] = response
+ *               //do something
+ *           })
+ *           .catch(err => console.log(err))
  * ```
  *
  */
@@ -121,13 +115,9 @@ export default class MainApi {
         error 404 -> not found
         error 500 -> server error
         */
-        const { config, message, response } = error
+        const { config, response } = error
         console.log("intercepted error")
 
-        if (message === "Network Error") {
-            console.log("network error, bad address! no retry")
-            return Promise.reject(error)
-        }
         if (
             // ? which response statuses need checking ?
             (response?.status === 404 || response?.status === 500) &&
@@ -200,13 +190,11 @@ export default class MainApi {
      *
      * @example
      * ```ts
-     * const mainApi = MainApi.getInstance()
-     * mainApi
-     *     .getArticles(RetryType.RETRY_N_TIMES, 5, 3)
+     *  api.getArticles(RetryType.RETRY_N_TIMES, 5, 3)
      *      //maxRetries = 5
      *      //waitingTime = 3s
      *     .then(response => {
-     *          const articles: Article[] = response.data
+     *          const articles: Article[] = response
      *          //do something
      *      })
      *      .catch(err => console.log(err))
@@ -237,31 +225,28 @@ export default class MainApi {
      *
      * @example
      * ```ts
-     * const mainApi = MainApi.getInstance()
-     * mainApi
-     *     .getTags(RetryType.RETRY_N_TIMES, 5, 3)
+     *  api.getTags(RetryType.RETRY_N_TIMES, 5, 3)
      *      //maxRetries = 5
      *      //waitingTime = 3s
      *     .then(response => {
-     *          const tags: Tag[] = response.data.tags
-     *          //note that you need to specify the field .tags
-     *          //in order to get the Tag array, unlike other
-     *          // requests
+     *          const tags: Tag[] = response
      *      })
      *      .catch(err => console.log(err))
      * }
      * ```
      * */
-    public getTags = (
+    public getTags = async (
         retryType: RetryType = RetryType.RETRY_INDEFINETELY,
         maxRetries = DEFAULT_MAX_RETRIES,
         waitingTime = 3,
         retryCount = 0
-    ) =>
-        this.instance.get<Tags>("/v1/tags", {
+    ) => {
+        const response = await this.instance.get<Tags>("/v1/tags", {
             retryType: retryType,
             maxRetries: maxRetries,
             waitingTime: waitingTime,
             retryCount: retryCount,
         })
+        return response.data.tags
+    }
 }
