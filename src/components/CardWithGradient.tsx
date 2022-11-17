@@ -11,6 +11,8 @@ export interface CardWithGradientProps {
     title?: string
     /**
      * URL of the image in the background of the card
+     *
+     * TODO: remove ?
      */
     imageURL?: string
     /**
@@ -34,10 +36,10 @@ export interface CardWithGradientProps {
  * Component useful to create clickable cards with a background image, a yellowish
  * linear gradient, and a title in the top-left corner.
  *
- * The external Pressable native component can be styled through props.
+ * The card can be styled through props.
  */
 export const CardWithGradient: FC<CardWithGradientProps> = props => {
-    // borderRadius of the style if it is defined, otherwise default value 12
+    // border radius given to the background image and linear gradient (it matches the border radius of the card)
     const borderRadius =
         props.style && props.style.borderRadius !== undefined
             ? props.style.borderRadius
@@ -71,12 +73,7 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
                     style={{ flex: 1, borderRadius: borderRadius }}
                 >
                     <View style={{ margin: closerToCorner ? 9 : 17 }}>
-                        <DarkTitle
-                            style={{
-                                lineHeight: 19,
-                                height: 19,
-                            }}
-                        >
+                        <DarkTitle style={{ lineHeight: 19 }}>
                             {props.title}
                         </DarkTitle>
                     </View>
