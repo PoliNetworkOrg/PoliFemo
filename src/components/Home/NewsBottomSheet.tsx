@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useRef } from "react"
+import React, { FC, useEffect, useState, useRef, ReactNode } from "react"
 import { StyleSheet, View } from "react-native"
 import BottomSheet, {
     BottomSheetScrollView,
@@ -10,6 +10,11 @@ import { CardWithGradient } from "components/CardWithGradient"
 import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
 import { getUsableScreenHeight } from "utils/height"
+
+export interface NewsCategoriesColumns {
+    left: ReactNode[]
+    right: ReactNode[]
+}
 
 /**
  * Bottom sheet in the home page to access news highlights and news categories.
@@ -34,7 +39,7 @@ import { getUsableScreenHeight } from "utils/height"
  * e così via...
  */
 export const NewsBottomSheet: FC = () => {
-    const { background } = usePalette()
+    const { isLight, background } = usePalette()
 
     // modal state
     const [isNewsClosed, setIsNewsClosed] = useState(true)
@@ -44,9 +49,23 @@ export const NewsBottomSheet: FC = () => {
     const scrollViewRef = useRef<BottomSheetScrollViewMethods>(null)
 
     const distanceFromTop = {
-        closed: 430,
+        closed: 666,
         opened: 106,
     }
+
+    const testCategories = [
+        "Segreteria",
+        "Eventi",
+        "Gaming",
+        "Anime & Manga",
+        "Mobilità Internazionale",
+        "Polimi Sport",
+        "Poli Jobs",
+        // "Poli Book",
+        // "Fotografia & Videomaking",
+        // "Categoria",
+        // "Categoria",
+    ]
 
     useEffect(() => {
         // scrolls to the top of the news scrollview when the news bottom sheet is Closed
@@ -57,18 +76,153 @@ export const NewsBottomSheet: FC = () => {
         }
     }, [isNewsClosed])
 
-    // TODO: change with correct titles and heights
-    const boxes = [1, 2, 3, 4, 5].map(num => {
-        const category = "Category " + String(num)
-        return (
-            <CardWithGradient
-                key={num}
-                title={category}
-                onClick={() => console.log(category)}
-                style={{ height: num * 50 }}
-            />
-        )
-    })
+    const getColumns = (
+        categories: string[],
+        offset = 0
+    ): NewsCategoriesColumns => {
+        if (categories.length === 1) {
+            return {
+                left: [
+                    <CardWithGradient
+                        key={0 + offset}
+                        title={categories[0]}
+                        onClick={() => console.log(categories[0])}
+                        style={{ height: 274 }}
+                    />,
+                ],
+                right: [],
+            }
+        }
+        if (categories.length === 2) {
+            return {
+                left: [
+                    <CardWithGradient
+                        key={0 + offset}
+                        title={categories[0]}
+                        onClick={() => console.log(categories[0])}
+                        style={{ height: 274 }}
+                    />,
+                ],
+                right: [
+                    <CardWithGradient
+                        key={1 + offset}
+                        title={categories[1]}
+                        onClick={() => console.log(categories[1])}
+                        style={{ height: 274 }}
+                    />,
+                ],
+            }
+        }
+        if (categories.length === 3) {
+            return {
+                left: [
+                    <CardWithGradient
+                        key={0 + offset}
+                        title={categories[0]}
+                        onClick={() => console.log(categories[0])}
+                        style={{ height: 277 }}
+                    />,
+                ],
+                right: [
+                    <CardWithGradient
+                        key={1 + offset}
+                        title={categories[1]}
+                        onClick={() => console.log(categories[1])}
+                        style={{ height: 130 }}
+                    />,
+                    <CardWithGradient
+                        key={2 + offset}
+                        title={categories[2]}
+                        onClick={() => console.log(categories[2])}
+                        style={{ height: 130 }}
+                    />,
+                ],
+            }
+        }
+        if (categories.length === 4) {
+            return {
+                left: [
+                    <CardWithGradient
+                        key={0 + offset}
+                        title={categories[0]}
+                        onClick={() => console.log(categories[0])}
+                        style={{ height: 274 }}
+                    />,
+                    <CardWithGradient
+                        key={2 + offset}
+                        title={categories[2]}
+                        onClick={() => console.log(categories[2])}
+                        style={{ height: 130 }}
+                    />,
+                ],
+                right: [
+                    <CardWithGradient
+                        key={1 + offset}
+                        title={categories[1]}
+                        onClick={() => console.log(categories[1])}
+                        style={{ height: 193 }}
+                    />,
+                    <CardWithGradient
+                        key={3 + offset}
+                        title={categories[3]}
+                        onClick={() => console.log(categories[3])}
+                        style={{ height: 211 }}
+                    />,
+                ],
+            }
+        }
+        if (categories.length === 5) {
+            return {
+                left: [
+                    <CardWithGradient
+                        key={0 + offset}
+                        title={categories[0]}
+                        onClick={() => console.log(categories[0])}
+                        style={{ height: 133 }}
+                    />,
+                    <CardWithGradient
+                        key={2 + offset}
+                        title={categories[2]}
+                        onClick={() => console.log(categories[2])}
+                        style={{ height: 132 }}
+                    />,
+                    <CardWithGradient
+                        key={4 + offset}
+                        title={categories[4]}
+                        onClick={() => console.log(categories[4])}
+                        style={{ height: 132 }}
+                    />,
+                ],
+                right: [
+                    <CardWithGradient
+                        key={1 + offset}
+                        title={categories[1]}
+                        onClick={() => console.log(categories[1])}
+                        style={{ height: 193 }}
+                    />,
+                    <CardWithGradient
+                        key={3 + offset}
+                        title={categories[3]}
+                        onClick={() => console.log(categories[3])}
+                        style={{ height: 222 }}
+                    />,
+                ],
+            }
+        }
+
+        const res: NewsCategoriesColumns = { left: [], right: [] }
+        let temp: NewsCategoriesColumns
+
+        temp = getColumns(categories.slice(0, 4), offset)
+        res.left = [...res.left, ...temp.left]
+        res.right = [...res.right, ...temp.right]
+
+        temp = getColumns(categories.slice(4), offset + 4)
+        res.left = [...res.left, ...temp.left]
+        res.right = [...res.right, ...temp.right]
+
+        return res
+    }
 
     return (
         <BottomSheet
@@ -76,29 +230,31 @@ export const NewsBottomSheet: FC = () => {
             handleComponent={() => (
                 // "News" title top bar component
                 <View style={[styles.topBar, { backgroundColor: background }]}>
+                    <View
+                        style={[
+                            styles.dragDropBar,
+                            {
+                                backgroundColor: isLight
+                                    ? "rgba(135, 145, 189, 0.5)"
+                                    : "#424967",
+                            },
+                        ]}
+                    />
                     <Title>News</Title>
                 </View>
             )}
             style={[styles.bottomSheet, { backgroundColor: background }]}
             backgroundStyle={{
                 backgroundColor: background,
-                // rounds the top corners the same as the rest of the app
-                // TODO: test on ios. Vedere se lo posso levare
+                // Not 30 borderRadius because on IOS on dark mode there where white borders
                 borderTopLeftRadius: 33,
                 borderTopRightRadius: 33,
             }}
-            onAnimate={fromIndex => {
-                // fires when the bottom sheet is animating, keeps track of when the sheet is open/close
-                setIsNewsClosed(fromIndex === 1)
-            }}
             onChange={index => {
-                // fires when the bottom changes position index
-                // keeps track of when the sheet is open/close if the user scrolls all the way to the top (onAnimate fails)
-                if ((index === 0) != isNewsClosed) {
-                    setIsNewsClosed(index === 0)
-                }
+                // fires when the bottom sheet changes position index, keeps track of when the sheet is open/close
+                setIsNewsClosed(index === 0)
             }}
-            index={isNewsClosed ? 0 : 1} // the position depends on if Open or open
+            index={isNewsClosed ? 0 : 1}
             snapPoints={[
                 // 0 is at the bottom of the screen
                 getUsableScreenHeight() - distanceFromTop.closed,
@@ -113,11 +269,7 @@ export const NewsBottomSheet: FC = () => {
                     backgroundColor: background,
                 }}
             >
-                <View
-                    style={{
-                        paddingBottom: 110,
-                    }}
-                >
+                <View style={{ paddingBottom: 110 }}>
                     <CardWithGradient
                         // the news highlight box
                         title={"In Evidenza"}
@@ -127,16 +279,16 @@ export const NewsBottomSheet: FC = () => {
                     />
                     <View style={{ flexDirection: "row" }}>
                         <View
-                            // left column of news category boxes
-                            style={{ flex: 1, marginRight: 17 }}
+                            // left column of news categories
+                            style={{ flex: 17, marginRight: 17 }}
                         >
-                            {boxes}
+                            {getColumns(testCategories).left}
                         </View>
                         <View
-                            // right column of news category boxes
-                            style={{ flex: 1 }}
+                            // right column of news categories
+                            style={{ flex: 14 }}
                         >
-                            {boxes}
+                            {getColumns(testCategories).right}
                         </View>
                     </View>
                 </View>
@@ -155,8 +307,6 @@ const styles = StyleSheet.create({
         flex: 1,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-
-        // IOS shadow above "News" title
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -164,19 +314,20 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.43,
         shadowRadius: 9.51,
-
-        // Android shadow above "News" title
-        elevation: 15,
+        elevation: 20,
     },
     topBar: {
         flex: 1,
-        flexDirection: "row",
-        // alignItems: "baseline",
+        justifyContent: "center",
         paddingHorizontal: 26,
-        paddingBottom: 20,
-        paddingTop: 38,
-        height: 56 + 38 + 20, // content height + paddingTop + paddingBottom
+        height: 112,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
+    },
+    dragDropBar: {
+        alignSelf: "center",
+        width: 120,
+        height: 5,
+        borderRadius: 4,
     },
 })
