@@ -232,7 +232,7 @@ export const NewsBottomSheet: FC = () => {
                 <View style={[styles.topBar, { backgroundColor: background }]}>
                     <View
                         style={[
-                            styles.dragDropBar,
+                            styles.dragBar,
                             {
                                 backgroundColor: isLight
                                     ? "rgba(135, 145, 189, 0.5)"
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
     },
-    dragDropBar: {
+    dragBar: {
         alignSelf: "center",
         width: 120,
         height: 5,
