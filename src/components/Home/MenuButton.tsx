@@ -21,9 +21,10 @@ export const MenuButton: FC<{
     buttonIcon: ButtonInterface
     isDeleting: boolean
     onDelete?: () => void
-}> = ({ onPress, onLongPress, buttonIcon, isDeleting, onDelete }) => {
-    const { palette } = usePalette()
-    const color = palette.primary
+    inMenu?: boolean
+}> = ({ onPress, onLongPress, buttonIcon, isDeleting, onDelete, inMenu }) => {
+    const { palette, isDark } = usePalette()
+    const color = isDark && inMenu ? palette.lighter : palette.primary
     const svg = useSVG(buttonIcon.icon)
     const delIcon = useSVG(deleteIcon)
 
