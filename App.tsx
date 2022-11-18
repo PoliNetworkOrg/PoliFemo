@@ -12,6 +12,8 @@ import {
 } from "@expo-google-fonts/roboto"
 import { AppContainer } from "./src/AppContainer"
 
+import { OutsideClickProvider } from "utils/outsideClick"
+
 export default function App() {
     const [fontsLoaded] = useFonts({
         Roboto_300Light,
@@ -29,7 +31,9 @@ export default function App() {
 
     return (
         <NavigationContainer>
-            <AppContainer />
+            <OutsideClickProvider>
+                <AppContainer />
+            </OutsideClickProvider>
         </NavigationContainer>
     )
 }

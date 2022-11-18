@@ -78,7 +78,7 @@ export const MenuButton: FC<{
                             width: 84,
                             height: 70,
                             backgroundColor: color,
-                            paddingVertical: 7,
+                            paddingVertical: 10,
                             marginHorizontal: 6,
                             justifyContent: "space-between",
                             alignItems: "center",
