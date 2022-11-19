@@ -1,6 +1,7 @@
 import React, { useState, useEffect, ReactNode } from "react"
 import { View } from "react-native"
 
+import { useNavigation } from "navigation/NavigationTypes"
 import { CardWithGradient } from "components/CardWithGradient"
 import {
     allNewsCardsPatterns as allPatterns,
@@ -19,6 +20,8 @@ export interface NewsCategoryCards {
  * the news bottom sheet in the home page.
  */
 export const NewsCategoriesGrid = () => {
+    const navigation = useNavigation()
+
     const [newsCategoryCards, setNewsCategoryCards] =
         useState<NewsCategoryCards>()
 
@@ -35,6 +38,8 @@ export const NewsCategoriesGrid = () => {
     ]
 
     useEffect(() => {
+        // NON MI PIACE IL COMMENTO, SPIEGARE MEGLIO
+        // TODO: usare operazione % e lasciare tutti i blocchi da 5 per gli ultimi batch
         // Build the list of news category cards divided into left and right column, using hardcoded
         // patterns when there is a low number of news categories, and a combination of patterns otherwise
         const categories = testCategories
@@ -87,7 +92,7 @@ export const NewsCategoriesGrid = () => {
                 // the news highlight card
                 title={"In Evidenza"}
                 closerToCorner={false}
-                onClick={() => console.log("in evidenza")}
+                onClick={() => navigation.navigate("NewsHighlights")}
                 style={{ height: 220 }}
             />
 

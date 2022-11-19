@@ -1,6 +1,6 @@
-/** Type of an array containing the data needed to display a specific pattern of cards.
+/** Type of an array containing the data needed to create a specific pattern of cards.
  *
- * Each piece of data is a tuple that contains the height of the
+ * Each element of the array is a tuple that contains the height of the
  * corresponding card and the column in which it has to be inserted (left / right)
  */
 export type NewsCardsPattern = [number, "left" | "right"][]
@@ -13,7 +13,7 @@ export interface AllNewsCardsPatterns {
 }
 
 /**
- * An hardcoded object that contains data to map a batch
+ * An object that contains data to map a batch
  * of news category cards to a specific visual pattern.
  */
 export const allNewsCardsPatterns: AllNewsCardsPatterns = {

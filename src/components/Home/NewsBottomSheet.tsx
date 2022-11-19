@@ -13,6 +13,8 @@ import { getUsableScreenHeight } from "utils/height"
 
 /**
  * Bottom sheet in the home page to access news highlights and news categories.
+ *
+ * Its positioning is absolute.
  */
 export const NewsBottomSheet: FC = () => {
     const { isLight, background } = usePalette()
