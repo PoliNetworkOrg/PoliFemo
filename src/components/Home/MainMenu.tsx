@@ -18,6 +18,7 @@ import add from "assets/menu/add.svg"
 import { ModalCustom } from "components/Modal"
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useOutsideClick } from "utils/outsideClick"
 
 /**
  * the buttons and their features
@@ -46,6 +47,14 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
 
     const [isModalVisible, setModalVisible] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false)
+
+    const scrollView = useOutsideClick<ScrollView>(() => {
+        setIsDeleting(false)
+    }, isDeleting)
+
+    useEffect(() => {
+        scrollView.current?.scrollTo({ x: 0, y: 0, animated: true })
+    }, [filter, scrollView])
 
     useEffect(() => {
         AsyncStorage.getItem("menu:icons")
@@ -83,8 +92,9 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
 
     return (
         <ScrollView
+            ref={scrollView}
             horizontal
-            contentContainerStyle={{ paddingHorizontal: 21 }}
+            contentContainerStyle={{ paddingHorizontal: 21, marginTop: 5 }}
         >
             <ModalCustom
                 centerText={false}
