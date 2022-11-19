@@ -36,14 +36,17 @@ export const defaultIcons: ButtonInterface[] = [
     { id: 9, title: "Aggiungi", icon: add },
 ]
 
+type ButtonState = ButtonInterface & { shown: boolean }
+
 /**
  * the main menu of the app, an horizontal scroll view with the buttons to navigate to the different pages
  */
 export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
     const { navigate } = useNavigation()
 
-    const [icons, setIcons] = useState<ButtonInterface[]>([...defaultIcons])
-    const [iconsToAdd, setIconsToAdd] = useState<ButtonInterface[]>([])
+    const [icons, setIcons] = useState<ButtonState[]>(
+        defaultIcons.map(icon => ({ ...icon, shown: true }))
+    )
 
     const [isModalVisible, setModalVisible] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false)
@@ -62,10 +65,12 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                 if (iconJSON) {
                     console.log("Loading menu icons from storage")
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                    const icons: number[] = JSON.parse(iconJSON)
-                    setIcons(defaultIcons.filter(i => icons.includes(i.id)))
-                    setIconsToAdd(
-                        defaultIcons.filter(i => !icons.includes(i.id))
+                    const showns: number[] = JSON.parse(iconJSON)
+                    setIcons(
+                        icons.map(icon => ({
+                            ...icon,
+                            shown: showns.includes(icon.id),
+                        }))
                     )
                 }
             })
@@ -76,19 +81,21 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
         console.log("Saving menu icons to storage")
         AsyncStorage.setItem(
             "menu:icons",
-            JSON.stringify(icons.map(i => i.id))
+            JSON.stringify(icons.filter(i => i.shown).map(i => i.id))
         ).catch(err => console.log(err))
     }, [icons])
 
     // divide iconsToAdd in triplets
-    const triplets = iconsToAdd.reduce((acc, cur, i) => {
-        if (i % 3 === 0) {
-            acc.push([cur])
-        } else {
-            acc[acc.length - 1].push(cur)
-        }
-        return acc
-    }, [] as ButtonInterface[][])
+    const triplets = icons
+        .filter(i => !i.shown)
+        .reduce((acc, cur, i) => {
+            if (i % 3 === 0) {
+                acc.push([cur])
+            } else {
+                acc[acc.length - 1].push(cur)
+            }
+            return acc
+        }, [] as ButtonInterface[][])
 
     return (
         <ScrollView
@@ -118,22 +125,21 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                                 width: 288,
                             }}
                         >
-                            {triplet.map((buttonIcon, idx) => (
+                            {triplet.map(buttonIcon => (
                                 <MenuButton
                                     onPress={() => {
-                                        // remove the icon from the list of icons to add
-                                        const newIconsToAdd = [...iconsToAdd]
-                                        newIconsToAdd.splice(idx, 1)
-                                        // add the icon back to the list of icons
-                                        const newIcons = [...icons, buttonIcon]
-                                        newIcons.sort((a, b) => a.id - b.id)
-
-                                        setIcons(newIcons)
-                                        setIconsToAdd(newIconsToAdd)
+                                        setIcons(
+                                            icons.map(i =>
+                                                i.id === buttonIcon.id
+                                                    ? { ...i, shown: true }
+                                                    : i
+                                            )
+                                        )
                                     }}
                                     buttonIcon={buttonIcon}
                                     isDeleting={false}
                                     key={"menu_add_icon" + buttonIcon.id}
+                                    inMenu
                                 />
                             ))}
                         </View>
@@ -141,6 +147,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                 </View>
             </ModalCustom>
             {icons
+                .filter(i => i.shown)
                 .filter(
                     i =>
                         i.id === 9 ||
@@ -150,7 +157,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                                   .includes(filter.toLowerCase())
                             : true)
                 )
-                .map((buttonIcon, idx) => (
+                .map(buttonIcon => (
                     <MenuButton
                         onPress={() => {
                             if (isDeleting) setIsDeleting(false)
@@ -165,13 +172,10 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                         buttonIcon={buttonIcon}
                         isDeleting={isDeleting}
                         onDelete={() => {
-                            // remove the icon and add it to the list of icons to add
-                            const newIcons = [...icons]
-                            newIcons.splice(idx, 1)
-                            setIcons(newIcons)
-                            setIconsToAdd(
-                                [...iconsToAdd, buttonIcon].sort(
-                                    (a, b) => a.id - b.id
+                            const { id } = buttonIcon
+                            setIcons(
+                                icons.map(i =>
+                                    i.id === id ? { ...i, shown: false } : i
                                 )
                             )
                         }}
