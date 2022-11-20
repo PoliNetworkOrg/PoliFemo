@@ -11,8 +11,6 @@ export interface CardWithGradientProps {
     title?: string
     /**
      * URL of the image in the background of the card
-     *
-     * TODO: remove ?
      */
     imageURL?: string
     /**
@@ -47,8 +45,9 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
 
     const closerToCorner = props.closerToCorner ?? true
 
-    // TODO: change with correct image
+    // TODO: what is the default image?
     const imageURL =
+        props.imageURL ||
         "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"
 
     return (

@@ -6,7 +6,8 @@ import { CardWithGradient } from "components/CardWithGradient"
 import {
     allNewsCardsPatterns as allPatterns,
     NewsCardsPattern,
-} from "utils/newsCardPatterns"
+} from "utils/newsCardsPatterns"
+import { api } from "api"
 
 export interface NewsCategoryCards {
     /** left column of news category cards*/
@@ -22,68 +23,70 @@ export interface NewsCategoryCards {
 export const NewsCategoriesGrid = () => {
     const navigation = useNavigation()
 
-    const [newsCategoryCards, setNewsCategoryCards] =
-        useState<NewsCategoryCards>()
+    // Store the list of news category cards divided into left and right columns
+    const [cards, setCards] = useState<NewsCategoryCards>({
+        left: [],
+        right: [],
+    })
 
-    const testCategories = [
-        "Segreteria",
-        "Eventi",
-        "Gaming",
-        "Anime & Manga",
-        "Mobilità Internazionale",
-        "Polimi Sport",
-        "Poli Jobs",
-        "Poli Book",
-        "Fotografia & Videomaking",
-    ]
+    const capitalize = (string: string) => {
+        const arr = string.split(" ")
+        for (let i = 0; i < arr.length; i++) {
+            arr[i] =
+                arr[i].charAt(0).toUpperCase() + arr[i].slice(1).toLowerCase()
+        }
+        return arr.join(" ")
+    }
 
     useEffect(() => {
-        // NON MI PIACE IL COMMENTO, SPIEGARE MEGLIO
-        // TODO: usare operazione % e lasciare tutti i blocchi da 5 per gli ultimi batch
-        // Build the list of news category cards divided into left and right column, using hardcoded
-        // patterns when there is a low number of news categories, and a combination of patterns otherwise
-        const categories = testCategories
-        const tempCards: NewsCategoryCards = { left: [], right: [] }
+        // Build the list of news category cards divided into left and right columns,
+        // using hardcoded patterns to get the heights and positions (left or right) of the cards
+        api.getTags()
+            .then(categories => {
+                const tempCards: NewsCategoryCards = { left: [], right: [] }
+                let pattern: NewsCardsPattern
+                let index = 0
+                let remaining = categories.length
 
-        let remaining = categories.length
-        let index = 0
-        let pattern: NewsCardsPattern
-
-        while (index < categories.length) {
-            if (index === 0) {
-                // choose a pattern for the first batch of news category cards
-                if (remaining <= 4 || remaining === 5 || remaining === 6) {
-                    pattern = allPatterns.start[remaining]
-                } else {
-                    pattern = allPatterns.start[4]
+                while (index < categories.length) {
+                    if (index === 0) {
+                        // choose a pattern for the first batch of news category cards
+                        if (remaining <= 6) {
+                            pattern = allPatterns.start[remaining]
+                        } else {
+                            pattern = allPatterns.start[4]
+                        }
+                    } else {
+                        // choose a pattern for an other batch of news category cards
+                        // here it is never possible that remaining === 1 or remaining === 2
+                        if (remaining % 5 === 1 || remaining % 5 === 3) {
+                            pattern = allPatterns.other[3]
+                        } else if (remaining % 5 === 2 || remaining % 5 === 4) {
+                            pattern = allPatterns.other[4]
+                        } else {
+                            pattern = allPatterns.other[5]
+                        }
+                    }
+                    // create all the cards using the data in the pattern and append them to the correct column
+                    for (const [height, column] of pattern) {
+                        tempCards[column].push(
+                            <CardWithGradient
+                                key={index}
+                                title={capitalize(categories[index].name)}
+                                imageURL={categories[index].image}
+                                onClick={() =>
+                                    console.log(categories[index].name)
+                                }
+                                style={{ height: height }}
+                            />
+                        )
+                        index++
+                        remaining--
+                    }
                 }
-            } else {
-                // choose a pattern for an other batch of news category cards
-                if (remaining === 6) {
-                    pattern = allPatterns.other[3]
-                } else if (remaining === 7) {
-                    pattern = allPatterns.other[4]
-                } else if (remaining >= 5) {
-                    pattern = allPatterns.other[5]
-                } else {
-                    pattern = allPatterns.other[remaining]
-                }
-            }
-            // create all the cards using the data in the pattern and append them to the correct column
-            for (const [height, column] of pattern) {
-                tempCards[column].push(
-                    <CardWithGradient
-                        key={index}
-                        title={categories[index]}
-                        onClick={() => console.log(categories[index])}
-                        style={{ height: height }}
-                    />
-                )
-                index++
-                remaining--
-            }
-        }
-        setNewsCategoryCards(tempCards)
+                setCards(tempCards)
+            })
+            .catch(error => console.log(error))
     }, [])
 
     return (
@@ -96,23 +99,22 @@ export const NewsCategoriesGrid = () => {
                 style={{ height: 220 }}
             />
 
-            {newsCategoryCards?.left.length === 1 &&
-            newsCategoryCards?.right.length === 0 ? (
+            {cards.left.length === 1 && cards.right.length === 0 ? (
                 // if there is only 1 news category card, display it at full width
-                newsCategoryCards.left[0]
+                cards.left[0]
             ) : (
                 <View style={{ flexDirection: "row" }}>
                     <View
                         // left column of news category cards
                         style={{ flex: 17, marginRight: 17 }}
                     >
-                        {newsCategoryCards?.left}
+                        {cards.left}
                     </View>
                     <View
                         // right column of news category cards
                         style={{ flex: 14 }}
                     >
-                        {newsCategoryCards?.right}
+                        {cards.right}
                     </View>
                 </View>
             )}
