@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  aggiorna_graduatorie:
+  check_file_length:
     runs-on: ubuntu-20.04
     steps:
     - name: Install dependencies
