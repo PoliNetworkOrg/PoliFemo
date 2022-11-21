@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios"
-import { Article } from "./Article"
+import { Articles } from "./Article"
 import { RetryType } from "./RetryType"
 import { Tags } from "./Tag"
 
@@ -43,15 +43,16 @@ declare module "axios" {
  * You can also specify additional params to a request:
  * @param maxRetries maximum number of retries if `RetryType.RETRY_N_TIMES` is selected
  * @param waitingTime seconds to wait before retrying request
+ * @param days see {@link getArticlesFromDate}
  * @param retryCount how many retries have already been done, this param shouldn't be changed. its purpose is only to keep track of the retry count and is kept up to date by the MainApi object
  *
  * @example
  * ```ts
- *       api.getArticles(RetryType.RETRY_N_TIMES, 5, 3)
+ *       api.getTags(RetryType.RETRY_N_TIMES, 5, 3)
  *           .then(response => {
  *               //maxRetries = 5
  *               //waitingTime = 3s
- *               const articles: Article[] = response
+ *               const articles: Tag[] = response
  *               //do something
  *           })
  *           .catch(err => console.log(err))
@@ -177,7 +178,8 @@ export default class MainApi {
     }
 
     /**
-     * Retrieves mock articles from PoliNetwork server.
+     * Retrieves articles from PoliNetwork server. Specify param `days` to select
+     * articles published in the last n days. Defaults to 7 days.
      *
      * @param retryType
      * @default retryType.RETRY_INDEFINETELY
@@ -185,14 +187,17 @@ export default class MainApi {
      * @default DEFAULT_MAX_RETRIES
      * @param waitingTime seconds to wait before retrying request
      * @default DEFAULT_WAITING_TIME
+     * @param days
+     * @default 7
      * @param retryCount how many retries have already been done, don't change this.
      * @default 0
      *
      * @example
      * ```ts
-     *  api.getArticles(RetryType.RETRY_N_TIMES, 5, 3)
+     *  api.getArticlesFromDate(RetryType.RETRY_N_TIMES, 5, 3, 30)
      *      //maxRetries = 5
      *      //waitingTime = 3s
+     *      //days = 30
      *     .then(response => {
      *          const articles: Article[] = response
      *          //do something
@@ -201,14 +206,19 @@ export default class MainApi {
      * }
      * ```
      * */
-    public getArticles = async (
+    public getArticlesFromDate = async (
         retryType: RetryType = RetryType.RETRY_INDEFINETELY,
         maxRetries = DEFAULT_MAX_RETRIES,
         waitingTime = 3,
+        days?: number,
         retryCount = 0
     ) => {
-        const response = await this.instance.get<Article[]>(
-            "/v1/mock/articles",
+        const start: string = getIsoStringFromDaysPassed(days ?? 7)
+        const end = new Date().toISOString()
+        console.log("start " + start)
+        console.log("end " + start)
+        const response = await this.instance.get<Articles>(
+            `/v1/articles/timerange/${start}/${end}`,
             {
                 retryType: retryType,
                 maxRetries: maxRetries,
@@ -216,7 +226,7 @@ export default class MainApi {
                 retryCount: retryCount,
             }
         )
-        return response.data
+        return response.data.results
     }
 
     /**
@@ -249,4 +259,27 @@ export default class MainApi {
         })
         return response.data.tags
     }
+}
+
+/**
+ * takes as input a number, let's say "n".
+ * Returns the ISO date string of "n" days ago
+ *
+ * the name of this function can improve D:
+ */
+function getIsoStringFromDaysPassed(n: number): string {
+    //todays'date
+    const today = new Date()
+    //today's date in milliseconds from the beginning of time
+    const time = today.getTime()
+    console.log(time)
+    //milliseconds in n days
+    const timeToSubtract = n * 24 * 60 * 60 * 1000
+    console.log(timeToSubtract)
+    //n-days-ago's date in milliseconds from the beginning of time
+    const newTime = time - timeToSubtract
+    //n-days-ago's date
+    const newDate = new Date(newTime)
+
+    return newDate.toISOString()
 }
