@@ -7,3 +7,5 @@ export { RetryType } from "./RetryType"
 export { Article } from "./Article"
 
 export { Tag } from "./Tag"
+
+export { getIsoStringFromDaysPassed } from "./MainApi"

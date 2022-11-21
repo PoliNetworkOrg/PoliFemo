@@ -187,17 +187,18 @@ export default class MainApi {
      * @default DEFAULT_MAX_RETRIES
      * @param waitingTime seconds to wait before retrying request
      * @default DEFAULT_WAITING_TIME
-     * @param days
-     * @default 7
+     * @param days starting point
+     * @param end ending date
      * @param retryCount how many retries have already been done, don't change this.
      * @default 0
      *
      * @example
      * ```ts
-     *  api.getArticlesFromDate(RetryType.RETRY_N_TIMES, 5, 3, 30)
+     *  api.getArticlesFromDaysAgoTillDate(RetryType.RETRY_N_TIMES, 5, 3, 7, isoDate)
      *      //maxRetries = 5
      *      //waitingTime = 3s
-     *      //days = 30
+     *      //days = 7
+     *      //end = isoDate
      *     .then(response => {
      *          const articles: Article[] = response
      *          //do something
@@ -206,15 +207,16 @@ export default class MainApi {
      * }
      * ```
      * */
-    public getArticlesFromDate = async (
+    public getArticlesFromDaysAgoTillDate = async (
         retryType: RetryType = RetryType.RETRY_INDEFINETELY,
         maxRetries = DEFAULT_MAX_RETRIES,
         waitingTime = 3,
-        days?: number,
+        days: number,
+        end: string,
         retryCount = 0
     ) => {
-        const start: string = getIsoStringFromDaysPassed(days ?? 7)
-        const end = new Date().toISOString()
+        const start: string = getIsoStringFromDaysPassed(days)
+
         console.log("start " + start)
         console.log("end " + start)
         const response = await this.instance.get<Articles>(
@@ -226,6 +228,31 @@ export default class MainApi {
                 retryCount: retryCount,
             }
         )
+        return response.data.results
+    }
+
+    /**
+     * Retrieves articles from PoliNetwork server, given a starting and ending date.
+     *
+     */
+    public getArticlesFromDateTillDate = async (
+        retryType: RetryType = RetryType.RETRY_INDEFINETELY,
+        maxRetries = DEFAULT_MAX_RETRIES,
+        waitingTime = 3,
+        start: string,
+        end: string,
+        retryCount = 0
+    ) => {
+        const response = await this.instance.get<Articles>(
+            `/v1/articles/timerange/${start}/${end}`,
+            {
+                retryType: retryType,
+                maxRetries: maxRetries,
+                waitingTime: waitingTime,
+                retryCount: retryCount,
+            }
+        )
+
         return response.data.results
     }
 
@@ -267,15 +294,15 @@ export default class MainApi {
  *
  * the name of this function can improve D:
  */
-function getIsoStringFromDaysPassed(n: number): string {
+export function getIsoStringFromDaysPassed(n: number): string {
     //todays'date
     const today = new Date()
     //today's date in milliseconds from the beginning of time
     const time = today.getTime()
-    console.log(time)
+
     //milliseconds in n days
     const timeToSubtract = n * 24 * 60 * 60 * 1000
-    console.log(timeToSubtract)
+
     //n-days-ago's date in milliseconds from the beginning of time
     const newTime = time - timeToSubtract
     //n-days-ago's date
