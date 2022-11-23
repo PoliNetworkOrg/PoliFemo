@@ -20,6 +20,7 @@ import {
     NavigationProp,
     useNavigation as nativeUseNav,
 } from "@react-navigation/native"
+import { Article } from "api"
 
 /**
  * interface containing the info about the params for each page of the stack navigator
@@ -33,6 +34,7 @@ export type RootStackNavigatorParams = {
     /* eslint-disable @typescript-eslint/naming-convention */
     Home: undefined
     Saluti: { defaultName: string }
+    Article: { article: Article }
     /* eslint-enable @typescript-eslint/naming-convention */
 }
 

@@ -19,6 +19,7 @@ import { ModalCustom } from "components/Modal"
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useOutsideClick } from "utils/outsideClick"
+import { api, RetryType } from "api"
 
 /**
  * the buttons and their features
@@ -164,7 +165,29 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                             if (buttonIcon.id === 9) setModalVisible(true)
                             // TODO: actual navigation
                             if (!isDeleting && buttonIcon.id !== 9)
-                                navigate("Saluti", { defaultName: "Ciao" })
+                                navigate("Article", {
+                                    article: {
+                                        title: "Il Politecnico di Milano è partner del progetto ANSELMUS",
+                                        subtitle:
+                                            "Il prestigioso riconoscimento assegnato dalla Società Chimica Italiana",
+                                        latitude: undefined,
+                                        longitude: undefined,
+                                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                                        publish_time:
+                                            "2022-11-18T15:02:17.000Z",
+                                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                                        target_time: undefined,
+                                        content:
+                                            // eslint-disable-next-line prettier/prettier, quotes
+                                            '["“Per i contributi di particolare rilievo scientifico nell’ambito dell’analisi multiscala dei processi catalitici”. Con questa motivazione è stata assegnata al prof. Matteo Maestri – Dipartimento di Energia del Politecnico di Milano – la Medaglia d’oro Gian Paolo Chiusoli 2022.","Il prestigioso riconoscimento, istituito dalla Società Chimica Italiana su iniziativa della Divisione di Chimica Industriale e del Gruppo Interdivisionale di Catalisi, è attribuito a scienziati italiani di non oltre 45 anni di età – operanti in centri di ricerca universitari o industriali – per i <strong>contributi di particolare rilievo scientifico, innovativo o applicativo, nel settore della catalisi</strong>.","Il premio è stato consegnato lo scorso 7 novembre durante il XXII Congresso Nazionale della Divisione di Chimica Industriale della Società Chimica Italiana tenutosi a Catania.<br>\n&nbsp;"]',
+                                        image: "https://polimi.it/fileadmin/user_upload/HOME/Slider-evidenza/Copertine/maestri_500x320.jpg",
+                                        author: {
+                                            name: "Politecnico di Milano",
+                                            link: "https://polimi.it",
+                                            image: "https://upload.wikimedia.org/wikiFpedia/it/b/be/Logo_Politecnico_Milano.png",
+                                        },
+                                    },
+                                })
                         }}
                         onLongPress={() => {
                             if (buttonIcon.id !== 9) setIsDeleting(!isDeleting)

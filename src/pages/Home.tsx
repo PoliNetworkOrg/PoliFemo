@@ -42,7 +42,7 @@ export const Home: RootStackScreen<"Home"> = () => {
     }, [isNewsClosed])
 
     /**
-     * Lo scopo di questo useEffect è determinare se è passato `DEFAULT_TIME_INTERVAL`
+     * Lo scopo di questo useEffect è determinare se è passato `DEFAULT_FETCH_INTERVAL`
      * (al momento settato a 1 giorno) dall'ultima volta che è stato eseguito
      * un fetch degli articoli. Se la condizione è soddisfatta,
      * viene eseguito un fetch degli articoli con data di inizio pari alla data di
@@ -63,7 +63,7 @@ export const Home: RootStackScreen<"Home"> = () => {
      *
      *
      */
-    useEffect(() => {
+    /* useEffect(() => {
         AsyncStorage.getItem("date:articles")
             .then(dateJSON => {
                 const endDate = new Date() //today
@@ -117,7 +117,7 @@ export const Home: RootStackScreen<"Home"> = () => {
                 }
             })
             .catch(err => console.log(err))
-    }, [])
+    }, []) */
 
     return (
         <View

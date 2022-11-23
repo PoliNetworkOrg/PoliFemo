@@ -27,6 +27,7 @@
         "@react-navigation/native": "^6.0.13",
         "@react-navigation/stack": "^6.3.2",
         "@shopify/react-native-skia": "0.1.141",
+        "add": "^2.0.6",
         "axios": "^1.1.3",
         "expo": "^46.0.15",
         "expo-linear-gradient": "~11.4.0",
@@ -47,9 +48,10 @@
         "react-native-svg": "12.3.0",
         "react-native-vector-icons": "^9.1.0",
         "react-native-web": "~0.18.9",
+        "react-native-webview": "11.23.0",
         "rn-slick-bottom-tabs": "^1.1.1",
         "styled-components": "^5.3.6",
-        "yarn": "^1.22.18"
+        "yarn": "^1.22.19"
     },
     "devDependencies": {
         "@babel/core": "^7.18.6",
