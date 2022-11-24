@@ -56,7 +56,7 @@ export const Home: RootStackScreen<"Home"> = () => {
                     // section containing the search bar and the main menu
                     style={{
                         marginTop: 35,
-                        //paddingBottom: 300, //originally 50
+                        paddingBottom: 190,
                         flex: 1,
                         backgroundColor: background,
                         borderTopLeftRadius: 30,
@@ -154,7 +154,7 @@ export const Home: RootStackScreen<"Home"> = () => {
                     index={isNewsClosed ? 0 : 1} // the position depends on if closed or open
                     snapPoints={[
                         // TODO: this can be probably made better
-                        Dimensions.get("window").height - 800, //425 originally
+                        Dimensions.get("window").height - 658, //425 originally
                         Dimensions.get("window").height - 106, //106 originally
                     ]}
                     animateOnMount={false} // app should begin stationary

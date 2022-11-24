@@ -27,6 +27,7 @@ export const PoliCarousel: FC = () => {
 
     //questa parte funziona ma non va bene scritta cosi
     const handleViewableItemsChanged = useRef(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ({ changed }: { changed: any }) => {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             if (changed[0].isViewable) {
@@ -39,12 +40,7 @@ export const PoliCarousel: FC = () => {
     const viewAbilityConfig = { viewAreaCoveragePercentThreshold: 65 }
 
     return (
-        <View
-            style={{
-                position: "absolute",
-                marginTop: 245,
-            }}
-        >
+        <View style={{ marginTop: 60 }}>
             <Animated.FlatList
                 data={data}
                 keyExtractor={(_, index) => index.toString()}
@@ -85,7 +81,17 @@ export const PoliCarousel: FC = () => {
                 viewabilityConfig={viewAbilityConfig}
                 onViewableItemsChanged={handleViewableItemsChanged}
             ></Animated.FlatList>
-
+            <View
+                //this view represents the line of separation
+                style={{
+                    width: width - 40,
+                    marginTop: 38,
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    borderBottomColor: "#8791BD",
+                    borderBottomWidth: 1,
+                }}
+            />
             <PaginationCarousel
                 data={data}
                 scrollX={scrollX}

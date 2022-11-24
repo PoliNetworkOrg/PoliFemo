@@ -99,7 +99,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
         }, [] as ButtonInterface[][])
 
     return (
-        <>
+        <View>
             <ScrollView
                 ref={scrollView}
                 horizontal
@@ -187,6 +187,6 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                     ))}
             </ScrollView>
             <PoliCarousel />
-        </>
+        </View>
     )
 }
