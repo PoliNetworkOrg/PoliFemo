@@ -2,7 +2,7 @@ import React, { FC } from "react"
 import { ImageBackground, Pressable, View, ViewStyle } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 
-import { DarkTitle } from "components/Text"
+import { CardTitle } from "components/Text"
 
 export interface CardWithGradientProps {
     /**
@@ -20,7 +20,7 @@ export interface CardWithGradientProps {
     onClick?: () => void
     /**
      * whether or not to render the title closer to the top-left corner
-     * @default true
+     * @default false
      */
     closerToCorner?: boolean
     /**
@@ -43,7 +43,7 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
             ? props.style.borderRadius
             : 12
 
-    const closerToCorner = props.closerToCorner ?? true
+    const closerToCorner = props.closerToCorner ?? false
 
     // TODO: what is the default image?
     const imageURL =
@@ -72,9 +72,9 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
                     style={{ flex: 1, borderRadius: borderRadius }}
                 >
                     <View style={{ margin: closerToCorner ? 9 : 17 }}>
-                        <DarkTitle style={{ lineHeight: 19 }}>
+                        <CardTitle style={{ lineHeight: 19 }}>
                             {props.title}
-                        </DarkTitle>
+                        </CardTitle>
                     </View>
                 </LinearGradient>
             </ImageBackground>

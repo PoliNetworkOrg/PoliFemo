@@ -1,32 +1,37 @@
-/** Type of an array containing the data needed to create a specific pattern of cards.
- *
- * Each element of the array is a tuple that contains the height of the
- * corresponding card and the column in which it has to be inserted (left / right)
+/**
+ * Type of a tuple that contains the height of a card
+ * and the column in which it has to be inserted (left / right)
  */
-export type NewsCardsPattern = [number, "left" | "right"][]
-
-export interface AllNewsCardsPatterns {
-    /** patterns used by the first batch of cards */
-    start: { [key: number]: NewsCardsPattern }
-    /** patterns used by all the following batches of cards */
-    other: { [key: number]: NewsCardsPattern }
-}
+export type CardData = [number, "left" | "right"]
 
 /**
- * An object that contains data to map a batch
- * of news category cards to a specific visual pattern.
+ * Type of an array that contains the data of multiple cards.
  */
-export const allNewsCardsPatterns: AllNewsCardsPatterns = {
-    start: {
+export type CardsPattern = CardData[]
+
+/**
+ * Interface of an object that contains data to map a batch
+ * with a given number of cards to a visual pattern
+ */
+export interface CardsPatterns {
+    /** patterns used by the first batch of cards */
+    first: { [key: number]: CardsPattern }
+    /** patterns used by all the following batches of cards */
+    other: { [key: number]: CardsPattern }
+}
+
+export const newsCategoryPatterns: CardsPatterns = {
+    // first batch of news category cards
+    first: {
         [1]: [[190, "left"]],
         [2]: [
             [274, "left"],
             [274, "right"],
         ],
         [3]: [
-            [277, "left"],
-            [130, "right"],
-            [130, "right"],
+            [277, "right"],
+            [130, "left"],
+            [130, "left"],
         ],
         [4]: [
             [274, "left"],
@@ -50,6 +55,7 @@ export const allNewsCardsPatterns: AllNewsCardsPatterns = {
             [212, "right"],
         ],
     },
+    // other batches of news category cards
     other: {
         [3]: [
             [277, "right"],

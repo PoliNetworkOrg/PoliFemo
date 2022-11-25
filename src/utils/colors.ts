@@ -89,7 +89,7 @@ export interface ColorTheme {
     /**
      * Dark blue used for the title in cards with a background image and a yellowish gradient.
      */
-    darkTitle: string
+    cardTitle: string
 }
 
 /**
@@ -166,7 +166,7 @@ export const usePalette: () => ColorTheme &
         fieldText: palette.primary, //"#424967",
         fieldBackground: "#F6F7FC",
         modalBarrier: "rgba(1, 27, 41, 0.45)",
-        darkTitle: palette.variant2, // "#010B40"
+        cardTitle: palette.variant2, // "#010B40"
     }
 
     const darkTheme: ColorTheme = {
@@ -180,7 +180,7 @@ export const usePalette: () => ColorTheme &
         fieldText: "#D4D4D4",
         fieldBackground: "#343E5A",
         modalBarrier: "rgba(1, 27, 41, 0.6)",
-        darkTitle: palette.variant2, // "#010B40"
+        cardTitle: palette.variant2, // "#010B40"
     }
 
     const colors = isLight ? lightTheme : darkTheme

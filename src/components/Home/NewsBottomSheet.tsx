@@ -57,7 +57,11 @@ export const NewsBottomSheet: FC = () => {
                             },
                         ]}
                     />
-                    <Title>News</Title>
+                    <Title
+                        style={{ fontFamily: "Roboto_700Bold", fontSize: 48 }}
+                    >
+                        News
+                    </Title>
                 </View>
             )}
             style={[styles.bottomSheet, { backgroundColor: background }]}
@@ -67,8 +71,14 @@ export const NewsBottomSheet: FC = () => {
                 borderTopLeftRadius: 33,
                 borderTopRightRadius: 33,
             }}
+            onAnimate={fromIndex => {
+                // fires when the bottom sheet changes position index, keeps track of when the sheet is open/close.
+                // More responsive than onChange
+                setIsNewsClosed(fromIndex === 1)
+            }}
             onChange={index => {
-                // fires when the bottom sheet changes position index, keeps track of when the sheet is open/close
+                // fires when the bottom sheet changes position index, keeps track of when the sheet is open/close.
+                // In certain cases, onAnimate fails
                 setIsNewsClosed(index === 0)
             }}
             index={isNewsClosed ? 0 : 1}
@@ -89,7 +99,6 @@ export const NewsBottomSheet: FC = () => {
                 <NewsCategoriesGrid />
             </BottomSheetScrollView>
             <NavBar
-                // TODO: ask the design team if we need to use the navbar here
                 overrideBackBehavior={() => setIsNewsClosed(true)}
                 overrideHomeBehavior={() => setIsNewsClosed(true)}
             />

@@ -1,13 +1,10 @@
 import React, { useState, useEffect, ReactNode } from "react"
 import { View } from "react-native"
 
-import { useNavigation } from "navigation/NavigationTypes"
 import { CardWithGradient } from "components/CardWithGradient"
-import {
-    allNewsCardsPatterns as allPatterns,
-    NewsCardsPattern,
-} from "utils/newsCardsPatterns"
 import { api } from "api"
+import { useNavigation } from "navigation/NavigationTypes"
+import { newsCategoryPatterns, CardsPattern } from "utils/cardsPatterns"
 
 export interface NewsCategoryCards {
     /** left column of news category cards*/
@@ -17,7 +14,7 @@ export interface NewsCategoryCards {
 }
 
 /**
- * Component used to display a grid of news categories inside of
+ * Component used to display the grid of news categories inside of
  * the news bottom sheet in the home page.
  */
 export const NewsCategoriesGrid = () => {
@@ -29,54 +26,54 @@ export const NewsCategoriesGrid = () => {
         right: [],
     })
 
-    const capitalize = (string: string) => {
-        const arr = string.split(" ")
-        for (let i = 0; i < arr.length; i++) {
-            arr[i] =
-                arr[i].charAt(0).toUpperCase() + arr[i].slice(1).toLowerCase()
-        }
-        return arr.join(" ")
-    }
-
+    // TODO: should add a way to refresh news categories ?
     useEffect(() => {
-        // Build the list of news category cards divided into left and right columns,
-        // using hardcoded patterns to get the heights and positions (left or right) of the cards
+        // Get the news categories from the backend and build the list of cards
+        // using hardcoded patterns to get heights and positions (left / right) of the cards
         api.getTags()
             .then(categories => {
                 const tempCards: NewsCategoryCards = { left: [], right: [] }
-                let pattern: NewsCardsPattern
+
+                // store the pattern data of the current batch of cards
+                let pattern: CardsPattern
+                // index of the current category
                 let index = 0
+                // number of categories remaining
                 let remaining = categories.length
 
                 while (index < categories.length) {
+                    // choose the dimension of the next batch of cards and get the corresponding pattern
                     if (index === 0) {
-                        // choose a pattern for the first batch of news category cards
+                        // When first bacth
                         if (remaining <= 6) {
-                            pattern = allPatterns.start[remaining]
+                            pattern = newsCategoryPatterns.first[remaining]
                         } else {
-                            pattern = allPatterns.start[4]
+                            pattern = newsCategoryPatterns.first[4]
                         }
                     } else {
-                        // choose a pattern for an other batch of news category cards
-                        // here it is never possible that remaining === 1 or remaining === 2
+                        // When other batches. Here it is never possible that remaining === 1 or remaining === 2
                         if (remaining % 5 === 1 || remaining % 5 === 3) {
-                            pattern = allPatterns.other[3]
+                            pattern = newsCategoryPatterns.other[3]
                         } else if (remaining % 5 === 2 || remaining % 5 === 4) {
-                            pattern = allPatterns.other[4]
+                            pattern = newsCategoryPatterns.other[4]
                         } else {
-                            pattern = allPatterns.other[5]
+                            pattern = newsCategoryPatterns.other[5]
                         }
                     }
                     // create all the cards using the data in the pattern and append them to the correct column
                     for (const [height, column] of pattern) {
+                        const title = categories[index].name
                         tempCards[column].push(
                             <CardWithGradient
                                 key={index}
-                                title={capitalize(categories[index].name)}
+                                title={title}
                                 imageURL={categories[index].image}
                                 onClick={() =>
-                                    console.log(categories[index].name)
+                                    navigation.navigate("NewsList", {
+                                        categoryName: title,
+                                    })
                                 }
+                                closerToCorner={true}
                                 style={{ height: height }}
                             />
                         )
@@ -90,12 +87,16 @@ export const NewsCategoriesGrid = () => {
     }, [])
 
     return (
-        <View style={{ paddingBottom: 110 }}>
+        <View style={{ paddingBottom: 120 }}>
             <CardWithGradient
                 // the news highlight card
                 title={"In Evidenza"}
-                closerToCorner={false}
-                onClick={() => navigation.navigate("NewsHighlights")}
+                imageURL={undefined} // TODO: update with correct highlight image
+                onClick={() =>
+                    navigation.navigate("NewsList", {
+                        categoryName: "In Evidenza",
+                    })
+                }
                 style={{ height: 220 }}
             />
 
