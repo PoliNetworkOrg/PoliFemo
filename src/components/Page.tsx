@@ -1,5 +1,11 @@
-import React, { FC, useEffect, useRef } from "react"
-import { RefreshControl, ScrollView, View, Animated } from "react-native"
+import React, { FC, useState, useEffect, useRef } from "react"
+import {
+    RefreshControl,
+    ScrollView,
+    View,
+    Animated,
+    Switch,
+} from "react-native"
 
 import { Title, Subtitle } from "components/Text"
 import { NavBar, NavbarProps } from "components/NavBar"
@@ -43,13 +49,15 @@ export const Page: FC<{
     }
     children: React.ReactNode
 }> = props => {
-    const { background, homeBackground } = usePalette()
+    const { background, homeBackground, palette } = usePalette()
     const [isPastTitle, setIsPastTitle] = React.useState(false)
     const shadowAnim = useRef(new Animated.Value(0)).current
 
     const navbar = !props.hideNavbar
 
     const showHeader = props.title !== undefined
+
+    const [toggled, setToggled] = useState<boolean>(false)
 
     useEffect(() => {
         // hook called when the shadown needs to be animated
@@ -95,6 +103,7 @@ export const Page: FC<{
                     borderTopLeftRadius: 30,
                     borderTopRightRadius: 30,
                     overflow: "hidden",
+                    elevation: 15,
                 }}
             >
                 <ScrollView
@@ -150,12 +159,38 @@ export const Page: FC<{
                                     shadowAnim,
                                     0.27
                                 ),
+
+                                // this creates an unwanted shadow between the title and the content
+                                // elevation: Animated.multiply(shadowAnim, 6),
                             }}
                         >
-                            <Title>{props.title}</Title>
-                            {props.subtitle && (
-                                <Subtitle>{props.subtitle}</Subtitle>
-                            )}
+                            <View style={{ flexDirection: "row" }}>
+                                <View>
+                                    <Title>{props.title}</Title>
+                                    {props.subtitle && (
+                                        <Subtitle>{props.subtitle}</Subtitle>
+                                    )}
+                                </View>
+
+                                <Switch
+                                    value={toggled}
+                                    onValueChange={value => setToggled(value)}
+                                    trackColor={{
+                                        false: homeBackground,
+                                        true: palette.accent,
+                                    }}
+                                    thumbColor={background}
+                                    style={{
+                                        position: "absolute",
+                                        alignSelf: "center",
+                                        right: 8,
+                                        transform: [
+                                            { scaleX: 1.5 },
+                                            { scaleY: 1.5 },
+                                        ],
+                                    }}
+                                />
+                            </View>
                         </Animated.View>
                     )}
                     <View
