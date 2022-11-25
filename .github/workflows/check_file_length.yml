@@ -1,0 +1,19 @@
+name: Check file length
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  check_file_length:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Install dependencies
+      run: |
+        sudo apt-get install bash curl git python3 python3-pip
+    - name: Pull repository
+      uses: actions/checkout@v2
+    - name: Get check_file_length
+      run: curl -Lo check_file_length.py https://raw.githubusercontent.com/PoliNetworkOrg/CheckFilesLength/master/main.py
+    - name: Run check_file_length
+      run: python3 ./check_file_length.py
