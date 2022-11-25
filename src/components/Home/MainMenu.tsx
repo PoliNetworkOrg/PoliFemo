@@ -19,7 +19,7 @@ import { ModalCustom } from "components/Modal"
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useOutsideClick } from "utils/outsideClick"
-import { PoliCarousel } from "./PoliCarousel"
+import { HighlightsManager } from "./HighlightsManager"
 
 /**
  * the buttons and their features
@@ -186,7 +186,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                         />
                     ))}
             </ScrollView>
-            <PoliCarousel />
+            <HighlightsManager />
         </View>
     )
 }

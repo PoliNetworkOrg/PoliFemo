@@ -1,5 +1,6 @@
+import { BodyText } from "components/Text"
 import React, { FC, useState, useRef } from "react"
-import { View, Image, Dimensions } from "react-native"
+import { View, Image, Dimensions, Pressable } from "react-native"
 import Animated from "react-native-reanimated"
 import { PaginationCarousel } from "./PaginationCarousel"
 
@@ -14,6 +15,8 @@ const data: CarouselItem[] = [
     { id: 2, color: "yellow" },
     { id: 3, color: "cyan" },
     { id: 4, color: "green" },
+    { id: 5, color: "orange" },
+    { id: 6, color: "lightblue" },
 ]
 
 const { width } = Dimensions.get("window")
@@ -37,7 +40,7 @@ export const PoliCarousel: FC = () => {
         }
     ).current
 
-    const viewAbilityConfig = { viewAreaCoveragePercentThreshold: 65 }
+    const viewAbilityConfig = { viewAreaCoveragePercentThreshold: 50 }
 
     return (
         <View style={{ marginTop: 60 }}>
@@ -60,12 +63,13 @@ export const PoliCarousel: FC = () => {
                 )}
                 renderItem={({ item }) => {
                     return (
-                        <View
+                        <Pressable
                             style={{
                                 width,
                                 justifyContent: "center",
                                 alignItems: "center",
                             }}
+                            onPress={() => console.log("Highlights premuto!")}
                         >
                             <Image
                                 style={{
@@ -75,17 +79,34 @@ export const PoliCarousel: FC = () => {
                                     borderRadius: 10,
                                 }}
                             ></Image>
-                        </View>
+                        </Pressable>
                     )
                 }}
                 viewabilityConfig={viewAbilityConfig}
                 onViewableItemsChanged={handleViewableItemsChanged}
             ></Animated.FlatList>
             <View
+                //this view represents the text under the highlights
+                style={{
+                    marginTop: 12,
+                    width: width - 40,
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    flexDirection: "row",
+                }}
+            >
+                <BodyText style={{ fontWeight: "700" }}>
+                    Mer 31 Ottobre 2022
+                </BodyText>
+                <BodyText style={{ fontWeight: "700" }}> orario </BodyText>
+                <BodyText style={{ fontWeight: "700" }}>aula</BodyText>
+            </View>
+
+            <View
                 //this view represents the line of separation
                 style={{
                     width: width - 40,
-                    marginTop: 38,
+                    marginTop: 12,
                     justifyContent: "center",
                     alignSelf: "center",
                     borderBottomColor: "#8791BD",

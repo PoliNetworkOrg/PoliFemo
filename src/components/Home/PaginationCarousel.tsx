@@ -42,7 +42,7 @@ export const PaginationCarousel: FC<{
                     return (
                         <View
                             style={{
-                                width: 20,
+                                width: 15,
                             }}
                         >
                             <Animated.View
