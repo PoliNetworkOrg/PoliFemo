@@ -10,7 +10,11 @@ import { CardWithGradient } from "components/CardWithGradient"
  * News page containing the articles of a specific category.
  */
 export const NewsList: RootStackScreen<"NewsList"> = props => {
+    // Name of the news category, which is the title of the page
     const { categoryName } = props.route.params
+
+    // State of the toggle switch in the header (on / off)
+    const [toggled, setToggled] = useState<boolean>(false)
 
     const [articlesCards, setArticlesCards] = useState<ReactNode[]>([])
 
@@ -59,6 +63,9 @@ export const NewsList: RootStackScreen<"NewsList"> = props => {
                     updateArticles(RetryType.NO_RETRY)
                 },
             }}
+            showSwitch={true}
+            switchValue={toggled}
+            onSwitchToggle={value => setToggled(value)}
         >
             <View style={{ flex: 1, paddingTop: 16 }}>{articlesCards}</View>
         </Page>

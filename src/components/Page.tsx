@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useRef } from "react"
+import React, { FC, useEffect, useRef } from "react"
 import {
     RefreshControl,
     ScrollView,
@@ -41,6 +41,26 @@ export const Page: FC<{
      */
     scrollOffset?: number
     /**
+     * Whether or not to show a toggle switch on the right of the title.
+     *
+     * If true, provide also these 2 properties:
+     * - switchValue: boolean
+     * - onSwitchToggle: (value: booelan) => void
+     *
+     * @default false
+     */
+    showSwitch?: boolean
+    /**
+     * Used to draw the switch in the correct state (on / off).
+     */
+    switchValue?: boolean
+    /**
+     * Function to change the state of the switch (on / off).
+     *
+     * @default false
+     */
+    onSwitchToggle?: (value: boolean) => void
+    /**
      * props for the refresh control
      */
     refreshControl?: {
@@ -57,7 +77,7 @@ export const Page: FC<{
 
     const showHeader = props.title !== undefined
 
-    const [toggled, setToggled] = useState<boolean>(false)
+    const showSwitch = props.showSwitch ?? false
 
     useEffect(() => {
         // hook called when the shadown needs to be animated
@@ -172,24 +192,30 @@ export const Page: FC<{
                                     )}
                                 </View>
 
-                                <Switch
-                                    value={toggled}
-                                    onValueChange={value => setToggled(value)}
-                                    trackColor={{
-                                        false: homeBackground,
-                                        true: palette.accent,
-                                    }}
-                                    thumbColor={background}
-                                    style={{
-                                        position: "absolute",
-                                        alignSelf: "center",
-                                        right: 8,
-                                        transform: [
-                                            { scaleX: 1.5 },
-                                            { scaleY: 1.5 },
-                                        ],
-                                    }}
-                                />
+                                {showSwitch && (
+                                    // Toggle switch on the right of the title
+                                    <Switch
+                                        value={props.switchValue}
+                                        onValueChange={value =>
+                                            props.onSwitchToggle &&
+                                            props.onSwitchToggle(value)
+                                        }
+                                        trackColor={{
+                                            false: homeBackground, // TODO: ask the design team which is the correct color
+                                            true: palette.accent,
+                                        }}
+                                        thumbColor={background}
+                                        style={{
+                                            position: "absolute",
+                                            alignSelf: "center",
+                                            right: 8,
+                                            transform: [
+                                                { scaleX: 1.5 },
+                                                { scaleY: 1.5 },
+                                            ],
+                                        }}
+                                    />
+                                )}
                             </View>
                         </Animated.View>
                     )}
