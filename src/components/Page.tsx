@@ -56,8 +56,6 @@ export const Page: FC<{
     switchValue?: boolean
     /**
      * Function to change the state of the switch (on / off).
-     *
-     * @default false
      */
     onSwitchToggle?: (value: boolean) => void
     /**
