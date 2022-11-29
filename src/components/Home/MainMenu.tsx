@@ -104,6 +104,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                 ref={scrollView}
                 horizontal
                 contentContainerStyle={{ paddingHorizontal: 21, marginTop: 5 }}
+                showsHorizontalScrollIndicator={false}
             >
                 <ModalCustom
                     centerText={false}

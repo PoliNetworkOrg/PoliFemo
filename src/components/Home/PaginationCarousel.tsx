@@ -42,13 +42,13 @@ export const PaginationCarousel: FC<{
                     return (
                         <View
                             style={{
-                                width: 15,
+                                width: 11,
                             }}
                         >
                             <Animated.View
                                 style={{
-                                    width: 15,
-                                    height: 15,
+                                    width: 11,
+                                    height: 11,
                                     borderRadius: 7,
                                     backgroundColor:
                                         index === currentIndex

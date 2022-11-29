@@ -73,7 +73,7 @@ export const PoliCarousel: FC = () => {
                         >
                             <Image
                                 style={{
-                                    width: width - 40,
+                                    width: width - 80,
                                     height: 77,
                                     backgroundColor: item.color,
                                     borderRadius: 10,
@@ -89,7 +89,7 @@ export const PoliCarousel: FC = () => {
                 //this view represents the text under the highlights
                 style={{
                     marginTop: 12,
-                    width: width - 40,
+                    width: width - 80,
                     justifyContent: "center",
                     alignSelf: "center",
                     flexDirection: "row",
@@ -105,7 +105,7 @@ export const PoliCarousel: FC = () => {
             <View
                 //this view represents the line of separation
                 style={{
-                    width: width - 40,
+                    width: width - 80,
                     marginTop: 12,
                     justifyContent: "center",
                     alignSelf: "center",
