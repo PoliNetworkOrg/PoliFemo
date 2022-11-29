@@ -1,30 +1,19 @@
 import { BodyText } from "components/Text"
 import React, { FC, useState, useRef } from "react"
-import { View, Image, Dimensions, Pressable } from "react-native"
+import { View, Dimensions, Pressable, ImageBackground } from "react-native"
 import Animated from "react-native-reanimated"
 import { PaginationCarousel } from "./PaginationCarousel"
-
-//just to test with same data
-export interface CarouselItem {
-    id: number
-    color: string
-}
-const data: CarouselItem[] = [
-    { id: 0, color: "red" },
-    { id: 1, color: "blue" },
-    { id: 2, color: "yellow" },
-    { id: 3, color: "cyan" },
-    { id: 4, color: "green" },
-    { id: 5, color: "orange" },
-    { id: 6, color: "lightblue" },
-]
+import defaultImage from "assets/carousel-default.png"
+import { CarouselItem } from "./HighlightsManager"
 
 const { width } = Dimensions.get("window")
 
 /**
  * custom Carousel component
  */
-export const PoliCarousel: FC = () => {
+export const PoliCarousel: FC<{ dataToShow: CarouselItem[] }> = ({
+    dataToShow,
+}) => {
     const [currentIndex, setCurrentIndex] = useState<number>(0)
     const scrollX = useRef(new Animated.Value(0)).current
 
@@ -45,7 +34,7 @@ export const PoliCarousel: FC = () => {
     return (
         <View style={{ marginTop: 60 }}>
             <Animated.FlatList
-                data={data}
+                data={dataToShow}
                 keyExtractor={(_, index) => index.toString()}
                 bounces={true}
                 pagingEnabled={true}
@@ -63,58 +52,102 @@ export const PoliCarousel: FC = () => {
                 )}
                 renderItem={({ item }) => {
                     return (
-                        <Pressable
-                            style={{
-                                width,
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                            onPress={() => console.log("Highlights premuto!")}
-                        >
-                            <Image
+                        <>
+                            <Pressable
+                                style={{
+                                    width,
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                }}
+                                onPress={() =>
+                                    console.log("Highlights premuto!")
+                                }
+                            >
+                                <ImageBackground
+                                    style={{
+                                        width: width - 80,
+                                        height: 77,
+                                        borderRadius: 10,
+                                    }}
+                                    source={defaultImage}
+                                >
+                                    <View
+                                        style={{
+                                            position: "absolute",
+                                            top: 0,
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0,
+                                            margin: 15,
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <BodyText
+                                            style={{
+                                                fontWeight: "900",
+                                                color: "white",
+                                                fontSize: 20,
+                                                textAlign: "center",
+                                            }}
+                                        >
+                                            {item.title}
+                                        </BodyText>
+                                    </View>
+                                </ImageBackground>
+                            </Pressable>
+                            <View
+                                //this view represents the text under the highlights
+                                style={{
+                                    marginTop: 12,
+                                    width: width - 80,
+                                    justifyContent: "space-between",
+                                    alignSelf: "center",
+                                    flexDirection: "row",
+                                }}
+                            >
+                                <Pressable>
+                                    <BodyText
+                                        style={{
+                                            fontWeight: "700",
+                                            marginLeft: 2,
+                                        }}
+                                    >
+                                        {item.date}
+                                        {"          "}
+                                        {item.time}
+                                    </BodyText>
+                                </Pressable>
+                                <Pressable>
+                                    <BodyText
+                                        style={{
+                                            fontWeight: "700",
+                                            marginRight: 2,
+                                        }}
+                                    >
+                                        {item.room}
+                                    </BodyText>
+                                </Pressable>
+                            </View>
+                            <View
+                                //this view represents the line of separation
                                 style={{
                                     width: width - 80,
-                                    height: 77,
-                                    backgroundColor: item.color,
-                                    borderRadius: 10,
+                                    marginTop: 12,
+                                    justifyContent: "center",
+                                    alignSelf: "center",
+                                    borderBottomColor: "#8791BD",
+                                    borderBottomWidth: 1,
                                 }}
-                            ></Image>
-                        </Pressable>
+                            />
+                        </>
                     )
                 }}
                 viewabilityConfig={viewAbilityConfig}
                 onViewableItemsChanged={handleViewableItemsChanged}
             ></Animated.FlatList>
-            <View
-                //this view represents the text under the highlights
-                style={{
-                    marginTop: 12,
-                    width: width - 80,
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    flexDirection: "row",
-                }}
-            >
-                <BodyText style={{ fontWeight: "700" }}>
-                    Mer 31 Ottobre 2022
-                </BodyText>
-                <BodyText style={{ fontWeight: "700" }}> orario </BodyText>
-                <BodyText style={{ fontWeight: "700" }}>aula</BodyText>
-            </View>
-
-            <View
-                //this view represents the line of separation
-                style={{
-                    width: width - 80,
-                    marginTop: 12,
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    borderBottomColor: "#8791BD",
-                    borderBottomWidth: 1,
-                }}
-            />
             <PaginationCarousel
-                data={data}
+                dataToShow={dataToShow}
                 scrollX={scrollX}
                 currentIndex={currentIndex}
             />

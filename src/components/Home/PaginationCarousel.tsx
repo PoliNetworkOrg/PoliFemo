@@ -1,7 +1,7 @@
 import React, { FC } from "react"
 import Animated, { Extrapolate } from "react-native-reanimated"
 import { View, Dimensions } from "react-native"
-import { CarouselItem } from "./PoliCarousel"
+import { CarouselItem } from "./HighlightsManager"
 
 const { width } = Dimensions.get("window")
 
@@ -9,14 +9,14 @@ const { width } = Dimensions.get("window")
  * Custom Pagination component to handle the animation of the dots
  */
 export const PaginationCarousel: FC<{
-    data: CarouselItem[]
+    dataToShow: CarouselItem[]
     scrollX: Animated.Value<number>
     currentIndex: number
-}> = ({ data, scrollX, currentIndex }) => {
+}> = ({ dataToShow, scrollX, currentIndex }) => {
     return (
         <View style={{ marginTop: 24 }}>
             <Animated.FlatList
-                data={data}
+                data={dataToShow}
                 keyExtractor={(_, idx) => idx.toString()}
                 horizontal
                 bounces={false}
@@ -54,6 +54,7 @@ export const PaginationCarousel: FC<{
                                         index === currentIndex
                                             ? "#FFB544"
                                             : "#8791BD",
+                                    opacity: dotScale,
                                     transform: [
                                         {
                                             scale: dotScale,
