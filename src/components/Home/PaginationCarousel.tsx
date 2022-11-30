@@ -32,10 +32,17 @@ export const PaginationCarousel: FC<{
                     ]
 
                     const scaleOutputRange = [0.5, 1, 0.5]
+                    const opacityOutputRange = [0.2, 1, 0.2]
 
                     const dotScale = scrollX.interpolate({
                         inputRange,
                         outputRange: scaleOutputRange,
+                        extrapolate: Extrapolate.CLAMP,
+                    })
+
+                    const opacity = scrollX.interpolate({
+                        inputRange,
+                        outputRange: opacityOutputRange,
                         extrapolate: Extrapolate.CLAMP,
                     })
 
@@ -54,7 +61,8 @@ export const PaginationCarousel: FC<{
                                         index === currentIndex
                                             ? "#FFB544"
                                             : "#8791BD",
-                                    opacity: dotScale,
+                                    opacity:
+                                        index === currentIndex ? opacity : 1,
                                     transform: [
                                         {
                                             scale: dotScale,
