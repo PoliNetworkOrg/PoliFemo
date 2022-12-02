@@ -5,13 +5,32 @@ import { PoliCarousel, WidgetType } from "./PoliCarousel"
 //ideally this is the object we want to pass to the carousel
 //this might be expansed in the future
 export interface CarouselItem {
+    /**
+     * number to identify the object and the relative widget
+     */
     id: number
+    /**
+     * enum field to identify the type of the widget
+     */
     type: WidgetType
+    /**
+     * string to identify the date of the event(or deadline) contained in the widget
+     */
     date: string
+    /**
+     * string to identify the time of the event(or deadline) contained in the widget
+     */
     time: string
+    /**
+     * string to identify the title of the event contained in the widget
+     */
     title: string
+    /**
+     * string to identify eventually the room when the event takes place
+     */
     room?: string
 }
+
 //just to test with same static data
 const data: CarouselItem[] = [
     {

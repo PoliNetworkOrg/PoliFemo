@@ -5,6 +5,7 @@ import Animated, {
 } from "react-native-reanimated"
 import { View, Dimensions } from "react-native"
 import { CarouselItem } from "./HighlightsManager"
+import { usePalette } from "utils/colors"
 
 const { width } = Dimensions.get("window")
 
@@ -16,6 +17,7 @@ export const PaginationCarousel: FC<{
     scrollX: Animated.Value<number>
     currentIndex: number
 }> = ({ dataToShow, scrollX, currentIndex }) => {
+    const { palette } = usePalette()
     return (
         <View style={{ marginTop: 24 }}>
             <Animated.FlatList
@@ -35,7 +37,11 @@ export const PaginationCarousel: FC<{
                     ]
 
                     const scaleOutputRange = [0.5, 1, 0.5]
-                    const colorOutputRange = ["#8791BD", "#FFB544", "#8791BD"]
+                    const colorOutputRange = [
+                        palette.lighter,
+                        palette.accent,
+                        palette.lighter,
+                    ]
 
                     const dotScale = scrollX.interpolate({
                         inputRange,
