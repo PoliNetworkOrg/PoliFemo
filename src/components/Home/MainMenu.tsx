@@ -179,7 +179,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                                         })
                                     })
                                     .catch(err => console.log(err)) */
-                                navigate("Article", {
+                                /* navigate("Article", {
                                     article: {
                                         title: "Il Politecnico di Milano è partner del progetto ANSELMUS",
                                         subtitle:
@@ -201,7 +201,8 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                                             image: "https://upload.wikimedia.org/wikiFpedia/it/b/be/Logo_Politecnico_Milano.png",
                                         },
                                     },
-                                })
+                                }) */
+                                navigate("Error404")
                             }
                         }}
                         onLongPress={() => {
