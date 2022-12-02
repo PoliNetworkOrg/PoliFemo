@@ -6,6 +6,9 @@ import { WebView } from "react-native-webview"
 import { ScrollPage } from "components/ScrollPage"
 import { usePalette } from "utils/colors"
 
+import { Asset } from "expo-asset"
+import { Roboto_400Regular } from "@expo-google-fonts/roboto"
+
 export const Article: RootStackScreen<"Article"> = props => {
     const { isLight } = usePalette()
     const article = props.route.params.article
@@ -79,15 +82,20 @@ export const Article: RootStackScreen<"Article"> = props => {
                 nestedScrollEnabled={false}
                 scrollEnabled={false}
                 androidHardwareAccelerationDisabled={true}
+                originWhitelist={["*"]}
                 source={{
                     // ! Font-Family non funzionante
                     // ? come fare?
                     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                     html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"> 
                     <style type="text/css">
+                    @font-face {
+                        font-family: "Roboto";
+                        src: url("${Asset.fromModule(Roboto_400Regular).uri}");
+                    }
                     body {
                       font-size: 16;
-                      font-family: 'Roboto_400Regular';
+                      font-family: "Roboto";
                       background-color: ${isLight ? "white" : "#232A3E"};
                     }
                     p {
