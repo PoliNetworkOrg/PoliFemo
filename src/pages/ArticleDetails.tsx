@@ -28,22 +28,15 @@ export const Article: RootStackScreen<"Article"> = props => {
             title={article.title}
             subtitle={article.subtitle}
             backdropElement={
-                <Pressable
-                    onPress={() => {
-                        // ? cosa deve fare questo callback?
-                        console.log("not implemented yet")
+                <Image
+                    source={{
+                        uri: article.image,
                     }}
-                >
-                    <Image
-                        source={{
-                            uri: article.image,
-                        }}
-                        style={{
-                            width: "100%",
-                            height: "100%",
-                        }}
-                    />
-                </Pressable>
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                    }}
+                />
             }
             refreshControl={{
                 refreshing,
