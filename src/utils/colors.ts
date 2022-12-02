@@ -5,6 +5,7 @@ export interface Palette {
     lighter: string
     darker: string
     variant1: string
+    variant2: string
     accent: string
 }
 
@@ -13,6 +14,7 @@ const palette: Palette = {
     lighter: "#8791BD",
     darker: "#232A3E",
     variant1: "#414867",
+    variant2: "#010B40",
     accent: "#FFB544",
 }
 
@@ -93,6 +95,11 @@ export interface ColorTheme {
      * Color for article subtitle
      */
     articleSubtitle: string
+
+    /**
+     * Dark blue used for the title in cards with a background image and a yellowish gradient.
+     */
+    cardTitle: string
 }
 
 /**
@@ -171,6 +178,7 @@ export const usePalette: () => ColorTheme &
         modalBarrier: "rgba(1, 27, 41, 0.45)",
         articleTitle: palette.darker,
         articleSubtitle: palette.primary,
+        cardTitle: palette.variant2, // "#010B40"
     }
 
     const darkTheme: ColorTheme = {
@@ -186,6 +194,7 @@ export const usePalette: () => ColorTheme &
         modalBarrier: "rgba(1, 27, 41, 0.6)",
         articleTitle: "#FFFFFF",
         articleSubtitle: palette.lighter,
+        cardTitle: palette.variant2, // "#010B40"
     }
 
     const colors = isLight ? lightTheme : darkTheme

@@ -1,5 +1,11 @@
 import React, { FC, useEffect, useRef } from "react"
-import { RefreshControl, ScrollView, View, Animated } from "react-native"
+import {
+    RefreshControl,
+    ScrollView,
+    View,
+    Animated,
+    Switch,
+} from "react-native"
 
 import { Title, Subtitle } from "components/Text"
 import { NavBar, NavbarProps } from "components/NavBar"
@@ -35,6 +41,24 @@ export const Page: FC<{
      */
     scrollOffset?: number
     /**
+     * Whether or not to show a toggle switch on the right of the title.
+     *
+     * If true, provide also these 2 properties:
+     * - switchValue: boolean
+     * - onSwitchToggle: (value: booelan) => void
+     *
+     * @default false
+     */
+    showSwitch?: boolean
+    /**
+     * Used to draw the switch in the correct state (on / off).
+     */
+    switchValue?: boolean
+    /**
+     * Function to change the state of the switch (on / off).
+     */
+    onSwitchToggle?: (value: boolean) => void
+    /**
      * props for the refresh control
      */
     refreshControl?: {
@@ -43,13 +67,15 @@ export const Page: FC<{
     }
     children: React.ReactNode
 }> = props => {
-    const { background, homeBackground } = usePalette()
+    const { background, homeBackground, palette } = usePalette()
     const [isPastTitle, setIsPastTitle] = React.useState(false)
     const shadowAnim = useRef(new Animated.Value(0)).current
 
     const navbar = !props.hideNavbar
 
     const showHeader = props.title !== undefined
+
+    const showSwitch = props.showSwitch ?? false
 
     useEffect(() => {
         // hook called when the shadown needs to be animated
@@ -71,13 +97,14 @@ export const Page: FC<{
     return (
         <View style={{ flex: 1, backgroundColor: homeBackground }}>
             {props.backdropElement && (
+                // element at the top of the screen, above the page
                 <View
                     style={{
                         height: 200,
                         width: "100%",
                         backgroundColor: homeBackground,
                         position: "absolute",
-                        zIndex: 1,
+                        zIndex: -1,
                         justifyContent: "center",
                         alignItems: "center",
                     }}
@@ -85,93 +112,125 @@ export const Page: FC<{
                     {props.backdropElement}
                 </View>
             )}
-            <ScrollView
-                refreshControl={
-                    props.refreshControl ? (
-                        <RefreshControl
-                            refreshing={props.refreshControl.refreshing}
-                            onRefresh={props.refreshControl.onRefresh}
-                        />
-                    ) : undefined
-                }
-                stickyHeaderIndices={props.title ? [0] : undefined}
+            <View
+                // wrapper to make the borders of every child rounded
                 style={{
-                    zIndex: 2,
-                    overflow: "hidden",
+                    flex: 1,
+                    marginTop: 106 + (props.scrollOffset || 0),
+                    backgroundColor: background,
                     borderTopLeftRadius: 30,
                     borderTopRightRadius: 30,
-                    marginTop: 106,
-                }}
-                contentContainerStyle={{
                     overflow: "hidden",
+                    elevation: 15,
                 }}
-                scrollEventThrottle={100}
-                onScroll={
-                    showHeader
-                        ? e => {
-                              const scollThreshold =
-                                  20 + (props.scrollOffset || 0)
-                              if (
-                                  e.nativeEvent.contentOffset.y >=
-                                      scollThreshold &&
-                                  !isPastTitle
-                              )
-                                  setIsPastTitle(true)
-                              else if (
-                                  e.nativeEvent.contentOffset.y <
-                                      scollThreshold &&
-                                  isPastTitle
-                              )
-                                  setIsPastTitle(false)
-                          }
-                        : undefined
-                }
             >
-                {showHeader && (
-                    <Animated.View
+                <ScrollView
+                    refreshControl={
+                        props.refreshControl ? (
+                            <RefreshControl
+                                refreshing={props.refreshControl.refreshing}
+                                onRefresh={props.refreshControl.onRefresh}
+                            />
+                        ) : undefined
+                    }
+                    stickyHeaderIndices={props.title ? [0] : undefined} // first child is the sticky header
+                    scrollEventThrottle={100}
+                    onScroll={
+                        showHeader
+                            ? e => {
+                                  const scollThreshold =
+                                      20 + (props.scrollOffset || 0)
+                                  if (
+                                      e.nativeEvent.contentOffset.y >=
+                                          scollThreshold &&
+                                      !isPastTitle
+                                  )
+                                      setIsPastTitle(true)
+                                  else if (
+                                      e.nativeEvent.contentOffset.y <
+                                          scollThreshold &&
+                                      isPastTitle
+                                  )
+                                      setIsPastTitle(false)
+                              }
+                            : undefined
+                    }
+                >
+                    {showHeader && (
+                        // Sticky page header with the title and subtitle
+                        <Animated.View
+                            style={{
+                                backgroundColor: background,
+                                zIndex: 1000,
+                                paddingHorizontal: 28,
+                                paddingVertical: 22,
+                                borderTopLeftRadius: 30,
+                                borderTopRightRadius: 30,
+
+                                shadowColor: isPastTitle ? "#0003" : undefined,
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 3,
+                                },
+                                shadowRadius: 4.65,
+                                shadowOpacity: Animated.multiply(
+                                    shadowAnim,
+                                    0.27
+                                ),
+
+                                // this creates an unwanted shadow between the title and the content
+                                // elevation: Animated.multiply(shadowAnim, 6),
+                            }}
+                        >
+                            <View style={{ flexDirection: "row" }}>
+                                <View>
+                                    <Title>{props.title}</Title>
+                                    {props.subtitle && (
+                                        <Subtitle>{props.subtitle}</Subtitle>
+                                    )}
+                                </View>
+
+                                {showSwitch && (
+                                    // Toggle switch on the right of the title
+                                    <Switch
+                                        value={props.switchValue}
+                                        onValueChange={value =>
+                                            props.onSwitchToggle &&
+                                            props.onSwitchToggle(value)
+                                        }
+                                        trackColor={{
+                                            false: homeBackground, // TODO: ask the design team which is the correct color
+                                            true: palette.accent,
+                                        }}
+                                        thumbColor={background}
+                                        style={{
+                                            position: "absolute",
+                                            alignSelf: "center",
+                                            right: 8,
+                                            transform: [
+                                                { scaleX: 1.5 },
+                                                { scaleY: 1.5 },
+                                            ],
+                                        }}
+                                    />
+                                )}
+                            </View>
+                        </Animated.View>
+                    )}
+                    <View
+                        // wrapper of the scrollable content
                         style={{
-                            marginTop: props.scrollOffset || 0,
                             flex: 1,
                             backgroundColor: background,
-                            padding: 28,
-                            zIndex: 1000,
-                            borderTopLeftRadius: 30,
-                            borderTopRightRadius: 30,
-
-                            shadowColor: isPastTitle ? "#0003" : undefined,
-                            shadowOffset: {
-                                width: 0,
-                                height: 3,
-                            },
-                            shadowRadius: 4.65,
-                            shadowOpacity: Animated.multiply(shadowAnim, 0.27),
-                            elevation: Animated.multiply(shadowAnim, 6),
+                            paddingHorizontal: 28,
+                            paddingBottom: 120,
+                            paddingTop: !showHeader ? 30 : 0,
                         }}
                     >
-                        <Title>{props.title}</Title>
-                        {props.subtitle && (
-                            <Subtitle>{props.subtitle}</Subtitle>
-                        )}
-                    </Animated.View>
-                )}
-                <View
-                    style={{
-                        backgroundColor: background,
-                        paddingHorizontal: 30,
-                        paddingBottom: 130,
-                        ...(!showHeader
-                            ? {
-                                  marginTop: props.scrollOffset || 0,
-                                  paddingTop: 30,
-                                  borderTopLeftRadius: 30,
-                                  borderTopRightRadius: 30,
-                              }
-                            : {}),
-                    }}
-                >
-                    {props.children}
-                </View>
-            </ScrollView>
+                        {props.children}
+                    </View>
+                </ScrollView>
+            </View>
             {navbar ? <NavBar {...props.navbarOptions} /> : null}
         </View>
     )
