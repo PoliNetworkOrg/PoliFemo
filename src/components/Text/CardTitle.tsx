@@ -4,10 +4,11 @@ import { Text as _Text, TextProps } from "react-native"
 import { usePalette } from "utils/colors"
 
 /**
- * Title used for the Page component, custom font, default size and automatic color.
+ * Title used in cards with a background image and a yellowish gradient,
+ * custom font, default size and automatic color.
  */
-export const Title: FC<TextProps> = props => {
-    const { primary } = usePalette()
+export const CardTitle: FC<TextProps> = props => {
+    const { cardTitle } = usePalette()
     const { style, children } = props
     return (
         <_Text
@@ -15,8 +16,8 @@ export const Title: FC<TextProps> = props => {
             style={[
                 {
                     fontFamily: "Roboto_900Black",
-                    fontSize: 42,
-                    color: primary,
+                    fontSize: 16,
+                    color: cardTitle,
                 },
                 style,
             ]}

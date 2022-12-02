@@ -8,6 +8,7 @@ import { createStackNavigator } from "@react-navigation/stack"
 
 import { RootStackNavigatorParams } from "navigation/NavigationTypes"
 import { Home } from "pages/Home"
+import { NewsList } from "pages/NewsList"
 import { SalutoConBottone } from "pages/SalutoConBottone"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -21,6 +22,7 @@ export const RootStack = () => {
                 name="Saluti"
                 component={SalutoConBottone}
             />
+            <RootStackNavigator.Screen name="NewsList" component={NewsList} />
         </RootStackNavigator.Navigator>
     )
 }
