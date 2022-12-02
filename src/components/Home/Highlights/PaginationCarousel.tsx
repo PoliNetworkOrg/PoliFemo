@@ -1,5 +1,8 @@
 import React, { FC } from "react"
-import Animated, { Extrapolate } from "react-native-reanimated"
+import Animated, {
+    Extrapolate,
+    interpolateColors,
+} from "react-native-reanimated"
 import { View, Dimensions } from "react-native"
 import { CarouselItem } from "./HighlightsManager"
 
@@ -32,17 +35,11 @@ export const PaginationCarousel: FC<{
                     ]
 
                     const scaleOutputRange = [0.5, 1, 0.5]
-                    const opacityOutputRange = [0.2, 1, 0.2]
+                    const colorOutputRange = ["#8791BD", "#FFB544", "#8791BD"]
 
                     const dotScale = scrollX.interpolate({
                         inputRange,
                         outputRange: scaleOutputRange,
-                        extrapolate: Extrapolate.CLAMP,
-                    })
-
-                    const opacity = scrollX.interpolate({
-                        inputRange,
-                        outputRange: opacityOutputRange,
                         extrapolate: Extrapolate.CLAMP,
                     })
 
@@ -59,10 +56,12 @@ export const PaginationCarousel: FC<{
                                     borderRadius: 7,
                                     backgroundColor:
                                         index === currentIndex
-                                            ? "#FFB544"
-                                            : "#8791BD",
-                                    opacity:
-                                        index === currentIndex ? opacity : 1,
+                                            ? (interpolateColors(scrollX, {
+                                                  inputRange,
+                                                  outputColorRange:
+                                                      colorOutputRange,
+                                              }) as never)
+                                            : colorOutputRange[0],
                                     transform: [
                                         {
                                             scale: dotScale,

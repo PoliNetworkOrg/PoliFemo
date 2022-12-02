@@ -19,7 +19,7 @@ import { ModalCustom } from "components/Modal"
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useOutsideClick } from "utils/outsideClick"
-import { HighlightsManager } from "./HighlightsManager"
+import { HighlightsManager } from "./Highlights/HighlightsManager"
 
 /**
  * the buttons and their features

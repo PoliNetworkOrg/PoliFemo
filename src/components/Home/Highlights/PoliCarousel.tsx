@@ -3,13 +3,23 @@ import React, { FC, useState, useRef } from "react"
 import { View, Dimensions, Pressable, ImageBackground } from "react-native"
 import Animated from "react-native-reanimated"
 import { PaginationCarousel } from "./PaginationCarousel"
-import defaultImage from "assets/carousel-default.png"
+import lecturesImage from "assets/carousel-lectures.png"
+import iseeImage from "assets/carousel-isee.png"
 import { CarouselItem } from "./HighlightsManager"
 
 const { width } = Dimensions.get("window")
 
 /**
- * custom Carousel component
+ * enum to differentiate the different types of widget we could have
+ * different widget types have different background images
+ */
+export enum WidgetType {
+    LECTURES,
+    ISEE,
+}
+
+/**
+ * custom Carousel component, it receives the data to show from the HighlightsManager
  */
 export const PoliCarousel: FC<{ dataToShow: CarouselItem[] }> = ({
     dataToShow,
@@ -52,7 +62,7 @@ export const PoliCarousel: FC<{ dataToShow: CarouselItem[] }> = ({
                 )}
                 renderItem={({ item }) => {
                     return (
-                        <>
+                        <View>
                             <Pressable
                                 style={{
                                     width,
@@ -69,7 +79,11 @@ export const PoliCarousel: FC<{ dataToShow: CarouselItem[] }> = ({
                                         height: 77,
                                         borderRadius: 10,
                                     }}
-                                    source={defaultImage}
+                                    source={
+                                        item.type === WidgetType.LECTURES
+                                            ? lecturesImage
+                                            : iseeImage
+                                    }
                                 >
                                     <View
                                         style={{
@@ -140,7 +154,7 @@ export const PoliCarousel: FC<{ dataToShow: CarouselItem[] }> = ({
                                     borderBottomWidth: 1,
                                 }}
                             />
-                        </>
+                        </View>
                     )
                 }}
                 viewabilityConfig={viewAbilityConfig}
