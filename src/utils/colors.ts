@@ -83,6 +83,16 @@ export interface ColorTheme {
      * different shades of blue I guess
      */
     modalBarrier: string
+
+    /**
+     * Color for article title
+     */
+    articleTitle: string
+
+    /**
+     * Color for article subtitle
+     */
+    articleSubtitle: string
 }
 
 /**
@@ -159,6 +169,8 @@ export const usePalette: () => ColorTheme &
         fieldText: palette.primary, //"#424967",
         fieldBackground: "#F6F7FC",
         modalBarrier: "rgba(1, 27, 41, 0.45)",
+        articleTitle: palette.darker,
+        articleSubtitle: palette.primary,
     }
 
     const darkTheme: ColorTheme = {
@@ -172,6 +184,8 @@ export const usePalette: () => ColorTheme &
         fieldText: "#D4D4D4",
         fieldBackground: "#343E5A",
         modalBarrier: "rgba(1, 27, 41, 0.6)",
+        articleTitle: "#FFFFFF",
+        articleSubtitle: palette.lighter,
     }
 
     const colors = isLight ? lightTheme : darkTheme

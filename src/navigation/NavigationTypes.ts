@@ -33,7 +33,6 @@ import { Article } from "api"
 export type RootStackNavigatorParams = {
     /* eslint-disable @typescript-eslint/naming-convention */
     Home: undefined
-    Saluti: { defaultName: string }
     Article: { article: Article }
     /* eslint-enable @typescript-eslint/naming-convention */
 }

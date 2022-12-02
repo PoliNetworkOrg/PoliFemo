@@ -1,15 +1,16 @@
 import React, { FC } from "react"
-import { RefreshControl, ScrollView, View } from "react-native"
+import { RefreshControl, ScrollView, View, Dimensions } from "react-native"
 
 import { Title, Subtitle } from "components/Text"
 import { NavBar, NavbarProps } from "components/NavBar"
 import { usePalette } from "utils/colors"
+import { LinearGradient } from "expo-linear-gradient"
 
 /**
  * General component useful for pages with a scrollable content.
  * It provides a navbar and a scrollview with margin and rounded corners.
  */
-export const ArticleScroll: FC<{
+export const ScrollPage: FC<{
     /**
      * Title in the sticky header.
      */
@@ -31,10 +32,6 @@ export const ArticleScroll: FC<{
      */
     backdropElement?: React.ReactNode
     /**
-     * Margin above the title to leave space for the backdrop element.
-     */
-    scrollOffset?: number
-    /**
      * props for the refresh control
      */
     refreshControl?: {
@@ -43,12 +40,46 @@ export const ArticleScroll: FC<{
     }
     children: React.ReactNode
 }> = props => {
-    const { background, homeBackground } = usePalette()
+    const { background, isLight } = usePalette()
 
     const navbar = !props.hideNavbar
 
+    const { height, width } = Dimensions.get("window")
+
+    const { articleTitle, articleSubtitle } = usePalette()
     return (
-        <View style={{ flex: 1, backgroundColor: homeBackground }}>
+        <View style={{ flex: 1 }}>
+            {isLight && (
+                <LinearGradient
+                    colors={[
+                        "#424967",
+                        "rgba(66, 73, 103, 0.43)",
+                        "rgba(66, 73, 103, 0.252403)",
+                        "rgba(66, 73, 103, 0)",
+                    ]}
+                    style={{
+                        flex: 1,
+                        zIndex: 1,
+                        width: width,
+                        height: height,
+                        position: "absolute",
+                    }}
+                    locations={[0.04, 0.19, 0.55, 0.96]}
+                ></LinearGradient>
+            )}
+            {!isLight && (
+                <View
+                    style={{
+                        zIndex: 1,
+                        backgroundColor: "rgba(27, 33, 50, 0.63)",
+                        flex: 1,
+                        position: "absolute",
+                        top: 0,
+                        width: width,
+                        height: 230,
+                    }}
+                ></View>
+            )}
             {props.backdropElement && (
                 <View
                     style={{
@@ -57,22 +88,21 @@ export const ArticleScroll: FC<{
                         position: "absolute",
                         top: 0,
                         zIndex: 0,
-
-                        /* justifyContent: "flex-start", */
-                        /*   alignItems: "flex-start", */
                     }}
                 >
                     {props.backdropElement}
                 </View>
             )}
+
             <View
                 style={{
                     backgroundColor: background,
                     borderTopLeftRadius: 30,
                     borderTopRightRadius: 30,
                     marginTop: 192,
-                    paddingHorizontal: 28,
+                    paddingHorizontal: 24,
                     paddingTop: 8,
+                    zIndex: 2,
                 }}
             >
                 <ScrollView
@@ -86,17 +116,24 @@ export const ArticleScroll: FC<{
                         ) : undefined
                     }
                 >
-                    <View>
+                    <View style={{ paddingHorizontal: 4 }}>
                         <Title
                             style={{
                                 fontSize: 42,
                                 fontFamily: "Roboto_900Black",
+                                color: articleTitle,
                             }}
                         >
                             {props.title}
                         </Title>
                         {props.subtitle && (
-                            <Subtitle style={{ paddingLeft: 8 }}>
+                            <Subtitle
+                                style={{
+                                    paddingLeft: 8,
+                                    paddingTop: 8,
+                                    color: articleSubtitle,
+                                }}
+                            >
                                 {props.subtitle}
                             </Subtitle>
                         )}
@@ -105,6 +142,7 @@ export const ArticleScroll: FC<{
                     <View>{props.children}</View>
                 </ScrollView>
             </View>
+
             {navbar ? <NavBar {...props.navbarOptions} /> : null}
         </View>
     )

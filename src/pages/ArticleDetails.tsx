@@ -1,25 +1,34 @@
+/* eslint-disable prettier/prettier */
 import React, { useState } from "react"
 import { RootStackScreen } from "navigation/NavigationTypes"
-
-import { Pressable, Image } from "react-native"
-
+import { Pressable, Image, Linking } from "react-native"
 import { WebView } from "react-native-webview"
-import { ArticleScroll } from "components/ArticleScroll"
+import { ScrollPage } from "components/ScrollPage"
+import { usePalette } from "utils/colors"
 
 export const Article: RootStackScreen<"Article"> = props => {
+    const { isLight } = usePalette()
     const article = props.route.params.article
     const [webHeight, setWebHeight] = useState<number>(400)
     const [refreshing, setRefreshing] = useState<boolean>(false)
+    let html: string[] = []
+    try {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        html = JSON.parse(article.content)
+    } catch (error) {
+        console.log(error)
+    }
 
     return (
-        <ArticleScroll
+        <ScrollPage
             navbarOptions={{ elevated: true }}
             title={article.title}
             subtitle={article.subtitle}
             backdropElement={
                 <Pressable
                     onPress={() => {
-                        console.log("hi")
+                        // ? cosa deve fare questo callback?
+                        console.log("not implemented yet")
                     }}
                 >
                     <Image
@@ -27,14 +36,12 @@ export const Article: RootStackScreen<"Article"> = props => {
                             uri: article.image,
                         }}
                         style={{
-                            resizeMode: "cover",
                             width: "100%",
                             height: "100%",
                         }}
                     />
                 </Pressable>
             }
-            scrollOffset={100}
             refreshControl={{
                 refreshing,
                 onRefresh: () => {
@@ -50,6 +57,20 @@ export const Article: RootStackScreen<"Article"> = props => {
                     console.log(event)
                     setWebHeight(parseInt(event.nativeEvent.data))
                 }}
+                /* Questo dovrebbe reindirizzare i link nel browser,
+                stoppando la webview. Apparentemente non funziona col mio
+                android, nel senso che non viene chiamata (comunque 
+                il problema dei reindirizzamenti dentro la webview non
+                si presenta sul mio telefono). Da testare su iOS e altri
+                Android.  */
+                onShouldStartLoadWithRequest={event => {
+                    if (event.url.slice(0, 4) === "http") {
+                        void Linking.openURL(event.url)
+                        return false
+                    }
+
+                    return true
+                }}
                 javaScriptEnabled={true}
                 injectedJavaScript={webViewScript}
                 containerStyle={{ height: webHeight, marginBottom: 120 }}
@@ -57,16 +78,33 @@ export const Article: RootStackScreen<"Article"> = props => {
                 setBuiltInZoomControls={false}
                 nestedScrollEnabled={false}
                 scrollEnabled={false}
-                minimumFontSize={16}
                 androidHardwareAccelerationDisabled={true}
                 source={{
-                    html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body><p align="justify" style="font-family:roboto">${
-                        article.content ?? "error"
-                    }</p></body></html>`,
+                    // ! Font-Family non funzionante
+                    // ? come fare?
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                    html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+                    <style type="text/css">
+                    body {
+                      font-size: 16;
+                      font-family: 'Roboto_400Regular';
+                      background-color: ${isLight ? "white" : "#232A3E"};
+                    }
+                    p {
+                      color: ${isLight ? "black" : "white"};
+                      text-align: justify;
+                    }
+                    a {
+                        color: ${isLight ? "black" : "white"};
+                      }
+                  </style></head><body><div>${html
+                      .map(el => `<p>${el}<p/>`)
+                      .join("")}
+                    <div/></body></html>`,
+                    baseUrl: "",
                 }}
-                automaticallyAdjustContentInsets={false}
             />
-        </ArticleScroll>
+        </ScrollPage>
     )
 }
 

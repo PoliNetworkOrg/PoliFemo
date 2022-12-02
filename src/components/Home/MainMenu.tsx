@@ -164,7 +164,21 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                             if (isDeleting) setIsDeleting(false)
                             if (buttonIcon.id === 9) setModalVisible(true)
                             // TODO: actual navigation
-                            if (!isDeleting && buttonIcon.id !== 9)
+                            if (!isDeleting && buttonIcon.id !== 9) {
+                                /* api.getArticlesFromDaysAgoTillDate(
+                                    RetryType.RETRY_N_TIMES,
+                                    3,
+                                    3,
+                                    8,
+                                    new Date().toISOString()
+                                )
+                                    .then(res => {
+                                        const articles = res
+                                        navigate("Article", {
+                                            article: articles[2],
+                                        })
+                                    })
+                                    .catch(err => console.log(err)) */
                                 navigate("Article", {
                                     article: {
                                         title: "Il Politecnico di Milano è partner del progetto ANSELMUS",
@@ -179,7 +193,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                                         target_time: undefined,
                                         content:
                                             // eslint-disable-next-line prettier/prettier, quotes
-                                            '["“Per i contributi di particolare rilievo scientifico nell’ambito dell’analisi multiscala dei processi catalitici”. Con questa motivazione è stata assegnata al prof. Matteo Maestri – Dipartimento di Energia del Politecnico di Milano – la Medaglia d’oro Gian Paolo Chiusoli 2022.","Il prestigioso riconoscimento, istituito dalla Società Chimica Italiana su iniziativa della Divisione di Chimica Industriale e del Gruppo Interdivisionale di Catalisi, è attribuito a scienziati italiani di non oltre 45 anni di età – operanti in centri di ricerca universitari o industriali – per i <strong>contributi di particolare rilievo scientifico, innovativo o applicativo, nel settore della catalisi</strong>.","Il premio è stato consegnato lo scorso 7 novembre durante il XXII Congresso Nazionale della Divisione di Chimica Industriale della Società Chimica Italiana tenutosi a Catania.<br>\n&nbsp;"]',
+                                            '["<strong>TU Delft University of Technology</strong>, <strong>Gdańsk University of Technology </strong>e <strong>ETH Zurich</strong> si uniscono alla Alleanza ENHANCE&nbsp;nel suo percorso verso un’università europea.&nbsp;","L’Alleanza ENHANCE&nbsp;è lieta di dare il benvenuto a TU Delft University of Technology (Paesi Bassi), Gdańsk University of Technology (Polonia) e ETH Zurich (Svizzera) come nuovi membri.&nbsp;<br />Rappresentanti di alto livello di tutte e tre le istituzioni hanno aderito al ENHANCE Leadership Meeting, tenutosi venerdì 25 novembre 2022 presso l’RWTH .&nbsp;","Per maggiori informazioni: <a href=\\"https://enhanceuniversity.eu/\\" target=\\"_blank\\" rel=\\"noreferrer\\">https://enhanceuniversity.eu/</a>&nbsp;","<strong>TU Delft University of Technology</strong>, <strong>Gdańsk University of Technology </strong>e <strong>ETH Zurich</strong> si uniscono alla Alleanza ENHANCE&nbsp;nel suo percorso verso un’università europea.&nbsp;","L’Alleanza ENHANCE&nbsp;è lieta di dare il benvenuto a TU Delft University of Technology (Paesi Bassi), Gdańsk University of Technology (Polonia) e ETH Zurich (Svizzera) come nuovi membri.&nbsp;<br />Rappresentanti di alto livello di tutte e tre le istituzioni hanno aderito al ENHANCE Leadership Meeting, tenutosi venerdì 25 novembre 2022 presso l’RWTH .&nbsp;","Per maggiori informazioni: <a href=\\"https://enhanceuniversity.eu/\\" target=\\"_blank\\" rel=\\"noreferrer\\">https://enhanceuniversity.eu/</a>&nbsp;"]',
                                         image: "https://polimi.it/fileadmin/user_upload/HOME/Slider-evidenza/Copertine/maestri_500x320.jpg",
                                         author: {
                                             name: "Politecnico di Milano",
@@ -188,6 +202,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                                         },
                                     },
                                 })
+                            }
                         }}
                         onLongPress={() => {
                             if (buttonIcon.id !== 9) setIsDeleting(!isDeleting)

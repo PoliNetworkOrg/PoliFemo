@@ -4,12 +4,12 @@ export interface Articles {
 }
 export interface Article {
     title: string
-    subtitle: string
+    subtitle?: string
     latitude?: number
     longitude?: number
     publish_time?: string
     target_time?: string
-    content?: string
+    content: string
     image?: string
     author?: { name?: string; link?: string; image?: string }
 }
