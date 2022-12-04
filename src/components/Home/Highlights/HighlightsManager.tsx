@@ -1,6 +1,7 @@
 import React, { FC } from "react"
 import { View } from "react-native"
 import { PoliCarousel, WidgetType } from "./PoliCarousel"
+import lectures from "./lectures.json"
 
 //ideally this is the object we want to pass to the carousel
 //this might be expansed in the future
@@ -35,19 +36,17 @@ export interface CarouselItem {
 const data: CarouselItem[] = [
     {
         id: 0,
-        type: WidgetType.LECTURES,
-        date: "Lun 20/10/2022",
-        time: "9:00",
-        title: "ANALISI MATEMATICA 1 Squadra 1",
-        room: "B.2.2.1",
+        type: WidgetType.ISEE,
+        date: "Mer 22/10/2022",
+        time: "8:00",
+        title: "Scadenza ISEE 2023",
     },
     {
         id: 1,
-        type: WidgetType.LECTURES,
-        date: "Mar 21/10/2022",
-        time: "12:00",
-        title: "ANALISI MATEMATICA 2",
-        room: "B.2.2.10",
+        type: WidgetType.ISEE,
+        date: "Mer 22/10/2022",
+        time: "8:00",
+        title: "Scadenza ISEE 2023",
     },
     {
         id: 2,
@@ -56,23 +55,58 @@ const data: CarouselItem[] = [
         time: "8:00",
         title: "Scadenza ISEE 2023",
     },
-    {
+]
+
+const findNextLecture = () => {
+    /**
+     * sorting dates in ascending order, priority is the 'date_start' field.If there are two lecture with the same
+     * 'date_start' we check the 'date_end' field!
+     * @example
+     * lecture 1{date_start: "2022-12-04T08:15:00",date_end: "2022-12-04T13:15:00"}
+     * lecture 2{date_start: "2022-12-04T08:15:00",date_end: "2022-12-04T14:00:00"}
+     * So in this case lecture 1 has more priority than lecture 2
+     */
+    const sorted = lectures.sort((a, b) => {
+        //unary (+) operator converts an operand (new Date()) into a number
+        if (+new Date(a.date_start) != +new Date(b.date_start)) {
+            return +new Date(a.date_start) - +new Date(b.date_start)
+        } else {
+            return +new Date(a.date_end) - +new Date(b.date_end)
+        }
+    })
+    const currentDate = new Date().toISOString().slice(0, 10)
+    const currentTime = new Date().toLocaleTimeString() //in order to get the current local time
+    const now = currentDate + "T" + currentTime
+    const futureEvents = []
+
+    for (let i = 0; i < sorted.length; i++) {
+        if (
+            new Date(sorted[i].date_start) > new Date(now) ||
+            (new Date(now) > new Date(sorted[i].date_start) &&
+                new Date(now) < new Date(sorted[i].date_end))
+        ) {
+            futureEvents.push(sorted[i])
+            break
+        }
+    }
+    addItem({
         id: 3,
         type: WidgetType.LECTURES,
-        date: "Gio 23/10/2022",
-        time: "18:00",
-        title: "ACSO",
-        room: "B.2.2.1",
-    },
-    {
-        id: 4,
-        type: WidgetType.LECTURES,
-        date: "Ven 24/10/2022",
-        time: "13:00",
-        title: "ANALISI MATEMATICA 1 Squadra 2",
-        room: "B.2.2.1",
-    },
-]
+        date: new Date(futureEvents[0].date_start).toLocaleDateString("it-IT", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            weekday: "short", //problem: it is not capitalized!
+        }),
+        time: futureEvents[0].date_start.slice(11, 16),
+        title: futureEvents[0].title.it,
+        room: futureEvents[0].room.acronym_dn,
+    })
+}
+
+const addItem = (item: CarouselItem) => {
+    data.push(item)
+}
 
 /**
  * Component that decides the content of the carousel.
@@ -80,6 +114,7 @@ const data: CarouselItem[] = [
  * the correct data to the PolimiCarousel
  */
 export const HighlightsManager: FC = () => {
+    findNextLecture()
     return (
         <View>
             <PoliCarousel dataToShow={data} />
