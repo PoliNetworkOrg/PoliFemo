@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useState } from "react"
 import { RootStackScreen } from "navigation/NavigationTypes"
-import { Pressable, Image, Linking } from "react-native"
+import { Image, Linking } from "react-native"
 import { WebView } from "react-native-webview"
 import { ScrollPage } from "components/ScrollPage"
 import { usePalette } from "utils/colors"
@@ -77,9 +77,6 @@ export const Article: RootStackScreen<"Article"> = props => {
                 androidHardwareAccelerationDisabled={true}
                 originWhitelist={["*"]}
                 source={{
-                    // ! Font-Family non funzionante
-                    // ? come fare?
-                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                     html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"> 
                     <style type="text/css">
                     @font-face {

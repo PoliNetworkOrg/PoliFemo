@@ -165,20 +165,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                             if (buttonIcon.id === 9) setModalVisible(true)
                             // TODO: actual navigation
                             if (!isDeleting && buttonIcon.id !== 9) {
-                                /* api.getArticlesFromDaysAgoTillDate(
-                                    RetryType.RETRY_N_TIMES,
-                                    3,
-                                    3,
-                                    8,
-                                    new Date().toISOString()
-                                )
-                                    .then(res => {
-                                        const articles = res
-                                        navigate("Article", {
-                                            article: articles[2],
-                                        })
-                                    })
-                                    .catch(err => console.log(err)) */
+                                //ARTICLE EXAMPLE
                                 /* navigate("Article", {
                                     article: {
                                         title: "Il Politecnico di Milano è partner del progetto ANSELMUS",
