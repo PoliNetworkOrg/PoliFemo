@@ -1,6 +1,7 @@
 import React, { FC } from "react"
 import { Pressable, View, StyleSheet } from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { Text } from "components/Text"
 import { useNavigation } from "navigation/NavigationTypes"
@@ -52,6 +53,7 @@ export interface NavbarProps {
  * download button
  */
 export const NavBar: FC<NavbarProps> = props => {
+    const insets = useSafeAreaInsets()
     const navigation = useNavigation()
     const { buttonFill, background } = usePalette()
 
@@ -69,6 +71,7 @@ export const NavBar: FC<NavbarProps> = props => {
                 styles.wrapper,
                 {
                     backgroundColor: background,
+                    bottom: insets.bottom,
                 },
                 elevated ? styles.wrapperElevated : {},
             ]}
@@ -108,10 +111,11 @@ export const NavBar: FC<NavbarProps> = props => {
                     </Canvas>
                     <Text
                         style={{
+                            fontWeight: "900",
                             marginRight: 20,
                             marginLeft: "auto",
-                            marginTop: 4,
-                            marginBottom: "auto",
+                            lineHeight: 19,
+                            height: 19,
                         }}
                     >
                         Back
@@ -195,7 +199,6 @@ export const NavBar: FC<NavbarProps> = props => {
 const styles = StyleSheet.create({
     wrapper: {
         position: "absolute",
-        bottom: 0,
         height: 93,
         width: "100%",
         zIndex: 3,
@@ -221,20 +224,9 @@ const styles = StyleSheet.create({
     button: {
         height: 32,
         minWidth: 33,
-
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.23,
-        shadowRadius: 2.62,
-        elevation: 4,
-
+        borderRadius: 16,
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-
-        borderRadius: 50,
     },
 })
