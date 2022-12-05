@@ -249,4 +249,49 @@ export default class MainApi {
         })
         return response.data.tags
     }
+
+    /**
+     * Retrieves mock timetable from PoliNetwork server.
+     *
+     * @param retryType
+     * @default retryType.RETRY_INDEFINETELY
+     * @param maxRetries maximum number of retries if `RetryType.RETRY_N_TIMES` is selected
+     * @default DEFAULT_MAX_RETRIES
+     * @param waitingTime seconds to wait before retrying request
+     * @default DEFAULT_WAITING_TIME
+     * @param retryCount how many retries have already been done, don't change this.
+     * @default 0
+     *
+     * @example
+     * ```ts
+     *  api.getTimetable(RetryType.RETRY_N_TIMES, 5, 3)
+     *      //maxRetries = 5
+     *      //waitingTime = 3s
+     *     .then(response => {
+     *          const timetable: Article[] = response
+     *          //do something
+     *      })
+     *      .catch(err => console.log(err))
+     * }
+     * ```
+     * */
+    public getTimetable = async (
+        retryType: RetryType = RetryType.RETRY_INDEFINETELY,
+        maxRetries = DEFAULT_MAX_RETRIES,
+        waitingTime = 3,
+        retryCount = 0
+    ) => {
+        //the lectures and the articles have the same fields
+        //temporarily solution
+        const response = await this.instance.get<Article[]>(
+            "/v1/mock/timetable",
+            {
+                retryType: retryType,
+                maxRetries: maxRetries,
+                waitingTime: waitingTime,
+                retryCount: retryCount,
+            }
+        )
+        return response.data
+    }
 }

@@ -1,7 +1,8 @@
-import React, { FC } from "react"
+import React, { FC, useEffect } from "react"
 import { View } from "react-native"
 import { PoliCarousel, WidgetType } from "./PoliCarousel"
 import lectures from "./lectures.json"
+import { api } from "api"
 
 //ideally this is the object we want to pass to the carousel
 //this might be expansed in the future
@@ -57,6 +58,18 @@ const data: CarouselItem[] = [
     },
 ]
 
+/**
+ * this function calls the api to get the data
+ * temporarly disabled!So far I am using the lecture.json file because the api returns data only in the past
+ */
+const getTimetable = () => {
+    api.getTimetable()
+        .then(response => {
+            const timetable = response
+        })
+        .catch(err => console.log(err))
+}
+
 const findNextLecture = () => {
     /**
      * sorting dates in ascending order, priority is the 'date_start' field.If there are two lecture with the same
@@ -77,7 +90,6 @@ const findNextLecture = () => {
     const currentDate = new Date().toISOString().slice(0, 10)
     const currentTime = new Date().toLocaleTimeString() //in order to get the current local time
     const now = currentDate + "T" + currentTime
-    const futureEvents = []
 
     for (let i = 0; i < sorted.length; i++) {
         if (
@@ -85,23 +97,27 @@ const findNextLecture = () => {
             (new Date(now) > new Date(sorted[i].date_start) &&
                 new Date(now) < new Date(sorted[i].date_end))
         ) {
-            futureEvents.push(sorted[i])
+            const currentObject = sorted[i]
+            const nextLecture: CarouselItem = {
+                id: currentObject.event_id,
+                type: WidgetType.LECTURES,
+                date: new Date(currentObject.date_start).toLocaleDateString(
+                    "it-IT",
+                    {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        weekday: "short", //problem: it is not capitalized!
+                    }
+                ),
+                time: currentObject.date_start.toString().slice(11, 16),
+                title: currentObject.title.it,
+                room: currentObject.room.acronym_dn,
+            }
+            addItem(nextLecture)
             break
         }
     }
-    addItem({
-        id: 3,
-        type: WidgetType.LECTURES,
-        date: new Date(futureEvents[0].date_start).toLocaleDateString("it-IT", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            weekday: "short", //problem: it is not capitalized!
-        }),
-        time: futureEvents[0].date_start.slice(11, 16),
-        title: futureEvents[0].title.it,
-        room: futureEvents[0].room.acronym_dn,
-    })
 }
 
 const addItem = (item: CarouselItem) => {
@@ -114,7 +130,8 @@ const addItem = (item: CarouselItem) => {
  * the correct data to the PolimiCarousel
  */
 export const HighlightsManager: FC = () => {
-    findNextLecture()
+    useEffect(() => findNextLecture(), [])
+
     return (
         <View>
             <PoliCarousel dataToShow={data} />
