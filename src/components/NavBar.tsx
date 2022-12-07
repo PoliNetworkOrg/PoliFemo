@@ -71,7 +71,9 @@ export const NavBar: FC<NavbarProps> = props => {
                 styles.wrapper,
                 {
                     backgroundColor: background,
-                    bottom: insets.bottom,
+                    paddingBottom: insets.bottom
+                        ? insets.bottom + 10
+                        : undefined,
                 },
                 elevated ? styles.wrapperElevated : {},
             ]}
@@ -199,10 +201,11 @@ export const NavBar: FC<NavbarProps> = props => {
 const styles = StyleSheet.create({
     wrapper: {
         position: "absolute",
-        height: 93,
         width: "100%",
+        bottom: 0,
         zIndex: 3,
         paddingHorizontal: 25,
+        paddingVertical: 30,
 
         flexDirection: "row",
         justifyContent: "flex-start",
