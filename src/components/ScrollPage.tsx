@@ -65,7 +65,7 @@ export const ScrollPage: FC<{
                         position: "absolute",
                     }}
                     locations={[0.04, 0.19, 0.55, 0.96]}
-                ></LinearGradient>
+                />
             )}
             {!isLight && (
                 <View

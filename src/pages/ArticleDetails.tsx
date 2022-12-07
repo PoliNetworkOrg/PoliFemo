@@ -13,7 +13,6 @@ export const Article: RootStackScreen<"Article"> = props => {
     const { isLight } = usePalette()
     const article = props.route.params.article
     const [webHeight, setWebHeight] = useState<number>(400)
-    const [refreshing, setRefreshing] = useState<boolean>(false)
     let html: string[] = []
     try {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -38,7 +37,6 @@ export const Article: RootStackScreen<"Article"> = props => {
                     }}
                 />
             }
-            refreshControl={undefined}
         >
             <WebView
                 onMessage={event => {
