@@ -19,7 +19,6 @@ import { ModalCustom } from "components/Modal"
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useOutsideClick } from "utils/outsideClick"
-import { api, RetryType } from "api"
 
 /**
  * the buttons and their features
@@ -165,30 +164,6 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                             if (buttonIcon.id === 9) setModalVisible(true)
                             // TODO: actual navigation
                             if (!isDeleting && buttonIcon.id !== 9) {
-                                //ARTICLE EXAMPLE
-                                /* navigate("Article", {
-                                    article: {
-                                        title: "Il Politecnico di Milano è partner del progetto ANSELMUS",
-                                        subtitle:
-                                            "Il prestigioso riconoscimento assegnato dalla Società Chimica Italiana",
-                                        latitude: undefined,
-                                        longitude: undefined,
-                                        // eslint-disable-next-line @typescript-eslint/naming-convention
-                                        publish_time:
-                                            "2022-11-18T15:02:17.000Z",
-                                        // eslint-disable-next-line @typescript-eslint/naming-convention
-                                        target_time: undefined,
-                                        content:
-                                            // eslint-disable-next-line prettier/prettier, quotes
-                                            '["<strong>TU Delft University of Technology</strong>, <strong>Gdańsk University of Technology </strong>e <strong>ETH Zurich</strong> si uniscono alla Alleanza ENHANCE&nbsp;nel suo percorso verso un’università europea.&nbsp;","L’Alleanza ENHANCE&nbsp;è lieta di dare il benvenuto a TU Delft University of Technology (Paesi Bassi), Gdańsk University of Technology (Polonia) e ETH Zurich (Svizzera) come nuovi membri.&nbsp;<br />Rappresentanti di alto livello di tutte e tre le istituzioni hanno aderito al ENHANCE Leadership Meeting, tenutosi venerdì 25 novembre 2022 presso l’RWTH .&nbsp;","Per maggiori informazioni: <a href=\\"https://enhanceuniversity.eu/\\" target=\\"_blank\\" rel=\\"noreferrer\\">https://enhanceuniversity.eu/</a>&nbsp;","<strong>TU Delft University of Technology</strong>, <strong>Gdańsk University of Technology </strong>e <strong>ETH Zurich</strong> si uniscono alla Alleanza ENHANCE&nbsp;nel suo percorso verso un’università europea.&nbsp;","L’Alleanza ENHANCE&nbsp;è lieta di dare il benvenuto a TU Delft University of Technology (Paesi Bassi), Gdańsk University of Technology (Polonia) e ETH Zurich (Svizzera) come nuovi membri.&nbsp;<br />Rappresentanti di alto livello di tutte e tre le istituzioni hanno aderito al ENHANCE Leadership Meeting, tenutosi venerdì 25 novembre 2022 presso l’RWTH .&nbsp;","Per maggiori informazioni: <a href=\\"https://enhanceuniversity.eu/\\" target=\\"_blank\\" rel=\\"noreferrer\\">https://enhanceuniversity.eu/</a>&nbsp;"]',
-                                        image: "https://polimi.it/fileadmin/user_upload/HOME/Slider-evidenza/Copertine/maestri_500x320.jpg",
-                                        author: {
-                                            name: "Politecnico di Milano",
-                                            link: "https://polimi.it",
-                                            image: "https://upload.wikimedia.org/wikiFpedia/it/b/be/Logo_Politecnico_Milano.png",
-                                        },
-                                    },
-                                }) */
                                 navigate("Error404")
                             }
                         }}

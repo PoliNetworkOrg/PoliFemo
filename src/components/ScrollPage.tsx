@@ -101,7 +101,7 @@ export const ScrollPage: FC<{
                     borderTopRightRadius: 30,
                     marginTop: 192,
                     paddingHorizontal: 24,
-                    paddingTop: 8,
+                    paddingTop: 30,
                     zIndex: 2,
                 }}
             >
@@ -116,7 +116,7 @@ export const ScrollPage: FC<{
                         ) : undefined
                     }
                 >
-                    <View style={{ paddingHorizontal: 4 }}>
+                    <View style={{ paddingHorizontal: 4, paddingBottom: 12 }}>
                         <Title
                             style={{
                                 fontSize: 42,

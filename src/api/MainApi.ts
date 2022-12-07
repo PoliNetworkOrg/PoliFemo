@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios"
+import { getIsoStringFromDaysPassed } from "utils/dates"
 import { Articles } from "./Article"
 import { RetryType } from "./RetryType"
 import { Tags } from "./Tag"
@@ -31,6 +32,7 @@ declare module "axios" {
  * ```
  * import { api } from "api"
  * ```
+ * for additional request options see {@link RequestOptions}
  *
  * Call a public method on the instance object in order to make a request.
  * @param retryType
@@ -40,15 +42,10 @@ declare module "axios" {
  * - no retry ---> `RetryType.NO_RETRY`
  *
  *
- * You can also specify additional params to a request:
- * @param maxRetries maximum number of retries if `RetryType.RETRY_N_TIMES` is selected
- * @param waitingTime seconds to wait before retrying request
- * @param days see {@link getArticlesFromDate}
- * @param retryCount how many retries have already been done, this param shouldn't be changed. its purpose is only to keep track of the retry count and is kept up to date by the MainApi object
  *
  * @example
  * ```ts
- *       api.getTags(RetryType.RETRY_N_TIMES, 5, 3)
+ *       api.getTags({retryType : RetryType.RETRY_N_TIMES, maxRetries : 5})
  *           .then(response => {
  *               //maxRetries = 5
  *               //waitingTime = 3s
@@ -181,20 +178,14 @@ export default class MainApi {
      * Retrieves articles from PoliNetwork server. Specify param `days` to select
      * articles published in the last n days. Defaults to 7 days.
      *
-     * @param retryType
-     * @default retryType.RETRY_INDEFINETELY
-     * @param maxRetries maximum number of retries if `RetryType.RETRY_N_TIMES` is selected
-     * @default DEFAULT_MAX_RETRIES
-     * @param waitingTime seconds to wait before retrying request
-     * @default DEFAULT_WAITING_TIME
      * @param days starting point
      * @param end ending date
-     * @param retryCount how many retries have already been done, don't change this.
-     * @default 0
+     *
+     * @param options see {@link RequestOptions}
      *
      * @example
      * ```ts
-     *  api.getArticlesFromDaysAgoTillDate(RetryType.RETRY_N_TIMES, 5, 3, 7, isoDate)
+     *  api.getArticlesFromDaysAgoTillDate(7, new Date().toISOString())
      *      //maxRetries = 5
      *      //waitingTime = 3s
      *      //days = 7
@@ -208,12 +199,9 @@ export default class MainApi {
      * ```
      * */
     public getArticlesFromDaysAgoTillDate = async (
-        retryType: RetryType = RetryType.RETRY_INDEFINETELY,
-        maxRetries = DEFAULT_MAX_RETRIES,
-        waitingTime = 3,
         days: number,
         end: string,
-        retryCount = 0
+        options?: RequestOptions
     ) => {
         const start: string = getIsoStringFromDaysPassed(days)
 
@@ -222,10 +210,10 @@ export default class MainApi {
         const response = await this.instance.get<Articles>(
             `/v1/articles/timerange/${start}/${end}`,
             {
-                retryType: retryType,
-                maxRetries: maxRetries,
-                waitingTime: waitingTime,
-                retryCount: retryCount,
+                retryType: options?.retryType ?? RetryType.RETRY_INDEFINETELY,
+                maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
+                waitingTime: options?.waitingTime ?? 3,
+                retryCount: options?.retryCount ?? 0,
             }
         )
         return response.data.results
@@ -236,20 +224,17 @@ export default class MainApi {
      *
      */
     public getArticlesFromDateTillDate = async (
-        retryType: RetryType = RetryType.RETRY_INDEFINETELY,
-        maxRetries = DEFAULT_MAX_RETRIES,
-        waitingTime = 3,
         start: string,
         end: string,
-        retryCount = 0
+        options?: RequestOptions
     ) => {
         const response = await this.instance.get<Articles>(
             `/v1/articles/timerange/${start}/${end}`,
             {
-                retryType: retryType,
-                maxRetries: maxRetries,
-                waitingTime: waitingTime,
-                retryCount: retryCount,
+                retryType: options?.retryType ?? RetryType.RETRY_INDEFINETELY,
+                maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
+                waitingTime: options?.waitingTime ?? 3,
+                retryCount: options?.retryCount ?? 0,
             }
         )
 
@@ -259,10 +244,11 @@ export default class MainApi {
     /**
      * Retrieves Tags (news categories) from PoliNetwork server.
      *
+     * @param options see {@link RequestOptions}
      *
      * @example
      * ```ts
-     *  api.getTags(RetryType.RETRY_N_TIMES, 5, 3)
+     *  api.getTags()
      *      //maxRetries = 5
      *      //waitingTime = 3s
      *     .then(response => {
@@ -272,41 +258,33 @@ export default class MainApi {
      * }
      * ```
      * */
-    public getTags = async (
-        retryType: RetryType = RetryType.RETRY_INDEFINETELY,
-        maxRetries = DEFAULT_MAX_RETRIES,
-        waitingTime = 3,
-        retryCount = 0
-    ) => {
+    public getTags = async (options?: RequestOptions) => {
         const response = await this.instance.get<Tags>("/v1/tags", {
-            retryType: retryType,
-            maxRetries: maxRetries,
-            waitingTime: waitingTime,
-            retryCount: retryCount,
+            retryType: options?.retryType ?? RetryType.RETRY_INDEFINETELY,
+            maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
+            waitingTime: options?.waitingTime ?? 3,
+            retryCount: options?.retryCount ?? 0,
         })
         return response.data.tags
     }
 }
 
 /**
- * takes as input a number, let's say "n".
- * Returns the ISO date string of "n" days ago
+ * default options for api requests
  *
- * the name of this function can improve D:
+ * @param retryType
+ * @default retryType.RETRY_INDEFINETELY
+ * @param maxRetries maximum number of retries if `RetryType.RETRY_N_TIMES` is selected
+ * @default DEFAULT_MAX_RETRIES
+ * @param waitingTime seconds to wait before retrying request
+ * @default DEFAULT_WAITING_TIME
+ * @param retryCount how many retries have already been done, don't change this.
+ * @default 0
+ *
  */
-export function getIsoStringFromDaysPassed(n: number): string {
-    //todays'date
-    const today = new Date()
-    //today's date in milliseconds from the beginning of time
-    const time = today.getTime()
-
-    //milliseconds in n days
-    const timeToSubtract = n * 24 * 60 * 60 * 1000
-
-    //n-days-ago's date in milliseconds from the beginning of time
-    const newTime = time - timeToSubtract
-    //n-days-ago's date
-    const newDate = new Date(newTime)
-
-    return newDate.toISOString()
+export interface RequestOptions {
+    retryType?: RetryType
+    maxRetries?: number
+    waitingTime?: number
+    retryCount?: number
 }

@@ -7,9 +7,10 @@ import { Text } from "components/Text"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import { deleteSvg as icon } from "assets/modal"
 import { useNavigation } from "navigation/NavigationTypes"
+import { NavBar } from "components/NavBar"
 
 export const Error404: RootStackScreen<"Error404"> = () => {
-    const { background, homeBackground, primary, isLight } = usePalette()
+    const { background, homeBackground, isLight } = usePalette()
     const deleteSvg = useSVG(icon.svg)
     const navigation = useNavigation()
     return (
@@ -89,6 +90,7 @@ export const Error404: RootStackScreen<"Error404"> = () => {
                 </Text>
                 <View style={{ flex: 1 }} />
             </View>
+            <NavBar />
         </View>
     )
 }

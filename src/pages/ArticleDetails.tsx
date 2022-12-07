@@ -38,19 +38,10 @@ export const Article: RootStackScreen<"Article"> = props => {
                     }}
                 />
             }
-            refreshControl={{
-                refreshing,
-                onRefresh: () => {
-                    setRefreshing(true)
-                    setTimeout(() => {
-                        setRefreshing(false)
-                    }, 2000)
-                },
-            }}
+            refreshControl={undefined}
         >
             <WebView
                 onMessage={event => {
-                    console.log(event)
                     setWebHeight(parseInt(event.nativeEvent.data))
                 }}
                 /* Questo dovrebbe reindirizzare i link nel browser,
