@@ -2,7 +2,7 @@ import React, { FC, useEffect } from "react"
 import { View } from "react-native"
 import { PoliCarousel, WidgetType } from "./PoliCarousel"
 import lectures from "./lectures.json"
-import { api } from "api"
+import { api, Lecture } from "api"
 
 //ideally this is the object we want to pass to the carousel
 //this might be expansed in the future
@@ -70,7 +70,7 @@ const getTimetable = () => {
         .catch(err => console.log(err))
 }
 
-const findNextLecture = () => {
+const findNextLecture = (timetable: Lecture[]) => {
     /**
      * sorting dates in ascending order, priority is the 'date_start' field.If there are two lecture with the same
      * 'date_start' we check the 'date_end' field!
@@ -79,7 +79,7 @@ const findNextLecture = () => {
      * lecture 2{date_start: "2022-12-04T08:15:00",date_end: "2022-12-04T14:00:00"}
      * So in this case lecture 1 has more priority than lecture 2
      */
-    const sorted = lectures.sort((a, b) => {
+    const sorted = timetable.sort((a, b) => {
         //unary (+) operator converts an operand (new Date()) into a number
         if (+new Date(a.date_start) != +new Date(b.date_start)) {
             return +new Date(a.date_start) - +new Date(b.date_start)
@@ -130,7 +130,7 @@ const addItem = (item: CarouselItem) => {
  * the correct data to the PolimiCarousel
  */
 export const HighlightsManager: FC = () => {
-    useEffect(() => findNextLecture(), [])
+    useEffect(() => findNextLecture(lectures), [])
 
     return (
         <View>

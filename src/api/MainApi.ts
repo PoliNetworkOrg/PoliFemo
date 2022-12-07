@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios"
 import { Article } from "./Article"
+import { Lecture } from "./Lecture"
 import { RetryType } from "./RetryType"
 import { Tags } from "./Tag"
 
@@ -268,7 +269,7 @@ export default class MainApi {
      *      //maxRetries = 5
      *      //waitingTime = 3s
      *     .then(response => {
-     *          const timetable: Article[] = response
+     *          const timetable: Lecture[] = response
      *          //do something
      *      })
      *      .catch(err => console.log(err))
@@ -281,9 +282,7 @@ export default class MainApi {
         waitingTime = 3,
         retryCount = 0
     ) => {
-        //the lectures and the articles have the same fields
-        //temporarily solution
-        const response = await this.instance.get<Article[]>(
+        const response = await this.instance.get<Lecture[]>(
             "/v1/mock/timetable",
             {
                 retryType: retryType,
