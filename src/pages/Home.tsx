@@ -9,6 +9,7 @@ import {
     PoliSearchBar,
 } from "components/Home"
 import { usePalette } from "utils/colors"
+import { HighlightsManager } from "components/Home/Highlights/HighlightsManager"
 
 /**
  * Home page containing the POLIFEMO logo, search bar, main horizontal scroll menu and the entry
@@ -59,6 +60,7 @@ export const Home: RootStackScreen<"Home"> = () => {
                         onChange={searchKey => setSearch(searchKey)}
                     />
                     <MainMenu filter={search} />
+                    <HighlightsManager />
                 </View>
             </View>
             <NewsBottomSheet />

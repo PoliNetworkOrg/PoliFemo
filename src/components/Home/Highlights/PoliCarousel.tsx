@@ -78,6 +78,7 @@ export const PoliCarousel: FC<{ dataToShow: CarouselItem[] }> = ({
                                         width: width - 80,
                                         height: 77,
                                         borderRadius: 10,
+                                        overflow: "hidden",
                                     }}
                                     source={
                                         item.type === WidgetType.LECTURES
@@ -159,7 +160,7 @@ export const PoliCarousel: FC<{ dataToShow: CarouselItem[] }> = ({
                 }}
                 viewabilityConfig={viewAbilityConfig}
                 onViewableItemsChanged={handleViewableItemsChanged}
-            ></Animated.FlatList>
+            />
             <PaginationCarousel
                 dataToShow={dataToShow}
                 scrollX={scrollX}

@@ -63,7 +63,11 @@ export const PaginationCarousel: FC<{
                                     backgroundColor:
                                         index === currentIndex
                                             ? (interpolateColors(scrollX, {
-                                                  inputRange,
+                                                  inputRange: [
+                                                      (index - 0.5) * width,
+                                                      index * width,
+                                                      (index + 0.5) * width,
+                                                  ],
                                                   outputColorRange:
                                                       colorOutputRange,
                                               }) as never)
@@ -78,7 +82,7 @@ export const PaginationCarousel: FC<{
                         </View>
                     )
                 }}
-            ></Animated.FlatList>
+            />
         </View>
     )
 }
