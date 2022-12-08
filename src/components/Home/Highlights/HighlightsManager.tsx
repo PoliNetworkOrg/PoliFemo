@@ -64,6 +64,12 @@ export const HighlightsManager: FC = () => {
         },
     ])
 
+    const pad = (n: number) => {
+        return n < 10 ? "0" + n : n
+    }
+
+    const days = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"]
+
     const findNextLecture = (timetable: Lecture[]) => {
         /**
          * sorting dates in ascending order, priority is the 'date_start' field.If there are two lecture with the same
@@ -95,18 +101,19 @@ export const HighlightsManager: FC = () => {
                     new Date(now) < new Date(sorted[i].date_end))
             ) {
                 const currentObject = sorted[i]
+                const dateObj = new Date(currentObject.date_start)
+                const resultDate =
+                    days[(dateObj.getDay() - 1 + 7) % 7] +
+                    " " +
+                    pad(dateObj.getDate()) +
+                    "/" +
+                    (dateObj.getMonth() + 1) +
+                    "/" +
+                    dateObj.getFullYear()
                 const nextLecture: CarouselItem = {
                     id: currentObject.event_id,
                     type: WidgetType.LECTURES,
-                    date: new Date(currentObject.date_start).toLocaleDateString(
-                        "it-IT",
-                        {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                            weekday: "short", //problem: it is not capitalized!
-                        }
-                    ),
+                    date: resultDate,
                     time: currentObject.date_start.toString().slice(11, 16),
                     title: currentObject.title.it,
                     room: currentObject.room.acronym_dn,
