@@ -1,34 +1,12 @@
 import React, { FC } from "react"
-import { Dimensions, Pressable, View, StyleSheet } from "react-native"
+import { Pressable, View, StyleSheet } from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { Text } from "components/Text"
 import { useNavigation } from "navigation/NavigationTypes"
 import { usePalette } from "utils/colors"
 import { NavbarIcon, navbarIcons } from "assets/navbar"
-
-const styles = StyleSheet.create({
-    button: {
-        height: 32,
-        minWidth: 32,
-
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.23,
-        shadowRadius: 2.62,
-        elevation: 4,
-
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-
-        borderRadius: 50,
-        margin: 10, // TODO: check dimensions
-    },
-})
 
 export interface NavbarProps {
     /**
@@ -75,6 +53,7 @@ export interface NavbarProps {
  * download button
  */
 export const NavBar: FC<NavbarProps> = props => {
+    const insets = useSafeAreaInsets()
     const navigation = useNavigation()
     const { buttonFill, background } = usePalette()
 
@@ -89,36 +68,16 @@ export const NavBar: FC<NavbarProps> = props => {
     return (
         <View
             style={[
+                styles.wrapper,
                 {
                     backgroundColor: background,
-                    position: "absolute",
-                    width: Dimensions.get("window").width,
-                    bottom: 0,
-
-                    zIndex: 3,
-                    padding: 14,
-                    paddingBottom: 36,
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
+                    paddingBottom: insets.bottom
+                        ? insets.bottom + 10
+                        : undefined,
                 },
-                elevated
-                    ? {
-                          borderTopLeftRadius: 30,
-                          borderTopRightRadius: 30,
-
-                          shadowColor: "#000",
-                          shadowOffset: {
-                              width: 0,
-                              height: 0,
-                          },
-                          shadowOpacity: 0.2,
-                          shadowRadius: 8.3,
-                          elevation: 13,
-                      }
-                    : {},
+                elevated ? styles.wrapperElevated : {},
             ]}
         >
-            {/* TODO: substitute with actual buttons */}
             {back && (
                 <Pressable
                     onPress={
@@ -129,15 +88,14 @@ export const NavBar: FC<NavbarProps> = props => {
                         styles.button,
                         {
                             backgroundColor: buttonFill,
-                            // justifyContent: "flex-end",
-                            position: "relative",
                             width: 103,
+                            marginRight: 19,
                         },
                     ]}
                 >
                     <Canvas
                         style={{
-                            marginLeft: 12,
+                            marginLeft: 9,
                             marginRight: "auto",
                             width: navbarIcons.back.width,
                             height: navbarIcons.back.heigth,
@@ -153,7 +111,15 @@ export const NavBar: FC<NavbarProps> = props => {
                             />
                         )}
                     </Canvas>
-                    <Text style={{ marginLeft: "auto", marginRight: 20 }}>
+                    <Text
+                        style={{
+                            fontWeight: "900",
+                            marginRight: 20,
+                            marginLeft: "auto",
+                            lineHeight: 19,
+                            height: 19,
+                        }}
+                    >
                         Back
                     </Text>
                 </Pressable>
@@ -169,6 +135,8 @@ export const NavBar: FC<NavbarProps> = props => {
                 >
                     <Canvas
                         style={{
+                            marginLeft: 8,
+                            marginRight: "auto",
                             width: navbarIcons.home.width,
                             height: navbarIcons.home.heigth,
                         }}
@@ -186,42 +154,82 @@ export const NavBar: FC<NavbarProps> = props => {
                 </Pressable>
             )}
 
-            {props.customButtons
-                ? props.customButtons.map(({ icon, onPress }, i) => {
-                      const iconSVG = navbarIcons[icon]
-                      const svg = useSVG(iconSVG.svg)
-                      return (
-                          <Pressable
-                              key={"navbar-custom-button-" + i}
-                              style={[
-                                  styles.button,
-                                  {
-                                      backgroundColor: buttonFill,
-                                      marginLeft: "auto",
-                                  },
-                              ]}
-                              onPress={onPress}
-                          >
-                              <Canvas
-                                  style={{
-                                      width: iconSVG.width,
-                                      height: iconSVG.heigth,
-                                  }}
-                              >
-                                  {svg && (
-                                      <ImageSVG
-                                          svg={svg}
-                                          x={0}
-                                          y={0}
-                                          width={iconSVG.width}
-                                          height={iconSVG.heigth}
-                                      />
-                                  )}
-                              </Canvas>
-                          </Pressable>
-                      )
-                  })
-                : undefined}
+            <View
+                // wrapper for right buttons
+                style={{ flexDirection: "row", marginLeft: "auto" }}
+            >
+                {!!props.customButtons &&
+                    props.customButtons.map(({ icon, onPress }, i) => {
+                        const iconSVG = navbarIcons[icon]
+                        const svg = useSVG(iconSVG.svg)
+                        return (
+                            <Pressable
+                                key={"navbar-custom-button-" + i}
+                                style={[
+                                    styles.button,
+                                    {
+                                        backgroundColor: buttonFill,
+                                        marginLeft: 19,
+                                    },
+                                ]}
+                                onPress={onPress}
+                            >
+                                <Canvas
+                                    style={{
+                                        width: iconSVG.width,
+                                        height: iconSVG.heigth,
+                                    }}
+                                >
+                                    {svg && (
+                                        <ImageSVG
+                                            svg={svg}
+                                            x={0}
+                                            y={0}
+                                            width={iconSVG.width}
+                                            height={iconSVG.heigth}
+                                        />
+                                    )}
+                                </Canvas>
+                            </Pressable>
+                        )
+                    })}
+            </View>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    wrapper: {
+        position: "absolute",
+        width: "100%",
+        bottom: 0,
+        zIndex: 3,
+        paddingHorizontal: 25,
+        paddingVertical: 30,
+
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center",
+    },
+    wrapperElevated: {
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 0,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 8.3,
+        elevation: 13,
+    },
+    button: {
+        height: 32,
+        minWidth: 33,
+        borderRadius: 16,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+})
