@@ -87,6 +87,16 @@ export interface ColorTheme {
     modalBarrier: string
 
     /**
+     * Color for article title
+     */
+    articleTitle: string
+
+    /**
+     * Color for article subtitle
+     */
+    articleSubtitle: string
+
+    /**
      * Dark blue used for the title in cards with a background image and a yellowish gradient.
      */
     cardTitle: string
@@ -166,6 +176,8 @@ export const usePalette: () => ColorTheme &
         fieldText: palette.primary, //"#424967",
         fieldBackground: "#F6F7FC",
         modalBarrier: "rgba(1, 27, 41, 0.45)",
+        articleTitle: palette.darker,
+        articleSubtitle: palette.primary,
         cardTitle: palette.variant2, // "#010B40"
     }
 
@@ -180,6 +192,8 @@ export const usePalette: () => ColorTheme &
         fieldText: "#D4D4D4",
         fieldBackground: "#343E5A",
         modalBarrier: "rgba(1, 27, 41, 0.6)",
+        articleTitle: "#FFFFFF",
+        articleSubtitle: palette.lighter,
         cardTitle: palette.variant2, // "#010B40"
     }
 

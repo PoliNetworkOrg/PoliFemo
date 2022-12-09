@@ -163,8 +163,9 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                             if (isDeleting) setIsDeleting(false)
                             if (buttonIcon.id === 9) setModalVisible(true)
                             // TODO: actual navigation
-                            if (!isDeleting && buttonIcon.id !== 9)
-                                navigate("Saluti", { defaultName: "Ciao" })
+                            if (!isDeleting && buttonIcon.id !== 9) {
+                                navigate("Error404")
+                            }
                         }}
                         onLongPress={() => {
                             if (buttonIcon.id !== 9) setIsDeleting(!isDeleting)

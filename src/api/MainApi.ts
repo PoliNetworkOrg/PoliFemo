@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios"
-import { Article } from "./Article"
+import { getIsoStringFromDaysPassed } from "utils/dates"
+import { Articles } from "./Article"
 import { RetryType } from "./RetryType"
 import { Tags } from "./Tag"
 
@@ -31,27 +32,17 @@ declare module "axios" {
  * ```
  * import { api } from "api"
  * ```
+ * for additional request options see {@link RequestOptions}
  *
  * Call a public method on the instance object in order to make a request.
- * @param retryType
- * You can have specific behaviour in case of errors, namely:
- * - retry until request succeds ---> `RetryType.RETRY_INDEFINETELY`
- * - retry n times ---> `RetryType.RETRY_N_TIMES`
- * - no retry ---> `RetryType.NO_RETRY`
  *
  *
- * You can also specify additional params to a request:
- * @param maxRetries maximum number of retries if `RetryType.RETRY_N_TIMES` is selected
- * @param waitingTime seconds to wait before retrying request
- * @param retryCount how many retries have already been done, this param shouldn't be changed. its purpose is only to keep track of the retry count and is kept up to date by the MainApi object
  *
  * @example
  * ```ts
- *       api.getArticles(RetryType.RETRY_N_TIMES, 5, 3)
+ *       api.getTags({retryType : RetryType.RETRY_N_TIMES, maxRetries : 5})
  *           .then(response => {
- *               //maxRetries = 5
- *               //waitingTime = 3s
- *               const articles: Article[] = response
+ *               const tags: Tag[] = response
  *               //do something
  *           })
  *           .catch(err => console.log(err))
@@ -177,22 +168,17 @@ export default class MainApi {
     }
 
     /**
-     * Retrieves mock articles from PoliNetwork server.
+     * Retrieves articles from PoliNetwork server. Specify param `days` to select
+     * articles published in the last n days. Defaults to 7 days.
      *
-     * @param retryType
-     * @default retryType.RETRY_INDEFINETELY
-     * @param maxRetries maximum number of retries if `RetryType.RETRY_N_TIMES` is selected
-     * @default DEFAULT_MAX_RETRIES
-     * @param waitingTime seconds to wait before retrying request
-     * @default DEFAULT_WAITING_TIME
-     * @param retryCount how many retries have already been done, don't change this.
-     * @default 0
+     * @param days starting point
+     * @param end ending date
+     *
+     * @param options see {@link RequestOptions}
      *
      * @example
      * ```ts
-     *  api.getArticles(RetryType.RETRY_N_TIMES, 5, 3)
-     *      //maxRetries = 5
-     *      //waitingTime = 3s
+     *  api.getArticlesFromDaysAgoTillDate(7, new Date().toISOString())
      *     .then(response => {
      *          const articles: Article[] = response
      *          //do something
@@ -201,33 +187,51 @@ export default class MainApi {
      * }
      * ```
      * */
-    public getArticles = async (
-        retryType: RetryType = RetryType.RETRY_INDEFINETELY,
-        maxRetries = DEFAULT_MAX_RETRIES,
-        waitingTime = 3,
-        retryCount = 0
+    public getArticlesFromDaysAgoTillDate = async (
+        days: number,
+        end: string,
+        options?: RequestOptions
     ) => {
-        const response = await this.instance.get<Article[]>(
-            "/v1/mock/articles",
-            {
-                retryType: retryType,
-                maxRetries: maxRetries,
-                waitingTime: waitingTime,
-                retryCount: retryCount,
-            }
-        )
-        return response.data
+        const start: string = getIsoStringFromDaysPassed(days)
+        const response = await this.instance.get<Articles>("/v1/articles", {
+            retryType: options?.retryType ?? RetryType.RETRY_INDEFINETELY,
+            maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
+            waitingTime: options?.waitingTime ?? 3,
+            retryCount: options?.retryCount ?? 0,
+            params: { start: start, end: end },
+        })
+        return response.data.results
+    }
+
+    /**
+     * Retrieves articles from PoliNetwork server, given a starting and ending ISO date.
+     *
+     * @param options see {@link RequestOptions}
+     */
+    public getArticlesFromDateTillDate = async (
+        start: string,
+        end: string,
+        options?: RequestOptions
+    ) => {
+        const response = await this.instance.get<Articles>("/v1/articles", {
+            retryType: options?.retryType ?? RetryType.RETRY_INDEFINETELY,
+            maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
+            waitingTime: options?.waitingTime ?? 3,
+            retryCount: options?.retryCount ?? 0,
+            params: { start: start, end: end },
+        })
+
+        return response.data.results
     }
 
     /**
      * Retrieves Tags (news categories) from PoliNetwork server.
      *
+     * @param options see {@link RequestOptions}
      *
      * @example
      * ```ts
-     *  api.getTags(RetryType.RETRY_N_TIMES, 5, 3)
-     *      //maxRetries = 5
-     *      //waitingTime = 3s
+     *  api.getTags()
      *     .then(response => {
      *          const tags: Tag[] = response
      *      })
@@ -235,18 +239,37 @@ export default class MainApi {
      * }
      * ```
      * */
-    public getTags = async (
-        retryType: RetryType = RetryType.RETRY_INDEFINETELY,
-        maxRetries = DEFAULT_MAX_RETRIES,
-        waitingTime = 3,
-        retryCount = 0
-    ) => {
+    public getTags = async (options?: RequestOptions) => {
         const response = await this.instance.get<Tags>("/v1/tags", {
-            retryType: retryType,
-            maxRetries: maxRetries,
-            waitingTime: waitingTime,
-            retryCount: retryCount,
+            retryType: options?.retryType ?? RetryType.RETRY_INDEFINETELY,
+            maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
+            waitingTime: options?.waitingTime ?? 3,
+            retryCount: options?.retryCount ?? 0,
         })
         return response.data.tags
     }
+}
+
+/**
+ * default options for api requests
+ *
+ * @param retryType
+ * You can have specific behaviour in case of errors, namely:
+ * - retry until request succeds ---> `RetryType.RETRY_INDEFINETELY`
+ * - retry n times ---> `RetryType.RETRY_N_TIMES`
+ * - no retry ---> `RetryType.NO_RETRY`
+ * @default retryType.RETRY_INDEFINETELY
+ * @param maxRetries maximum number of retries if `RetryType.RETRY_N_TIMES` is selected
+ * @default DEFAULT_MAX_RETRIES
+ * @param waitingTime seconds to wait before retrying request
+ * @default DEFAULT_WAITING_TIME
+ * @param retryCount how many retries have already been done, don't change this.
+ * @default 0
+ *
+ */
+export interface RequestOptions {
+    retryType?: RetryType
+    maxRetries?: number
+    waitingTime?: number
+    retryCount?: number
 }
