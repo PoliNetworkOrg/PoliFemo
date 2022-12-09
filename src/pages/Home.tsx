@@ -40,7 +40,6 @@ export const Home: RootStackScreen<"Home"> = () => {
                     style={{
                         marginTop: 35,
                         paddingBottom: 190,
-                        flex: 1,
                         backgroundColor: background,
                         borderTopLeftRadius: 30,
                         borderTopRightRadius: 30,

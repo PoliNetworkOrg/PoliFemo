@@ -98,94 +98,91 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
         }, [] as ButtonInterface[][])
 
     return (
-        <View>
-            <ScrollView
-                ref={scrollView}
-                horizontal
-                contentContainerStyle={{ paddingHorizontal: 21, marginTop: 5 }}
-                showsHorizontalScrollIndicator={false}
+        <ScrollView
+            ref={scrollView}
+            horizontal
+            contentContainerStyle={{ paddingHorizontal: 21, marginTop: 5 }}
+            showsHorizontalScrollIndicator={false}
+        >
+            <ModalCustom
+                centerText={false}
+                title={"Aggiungi features"}
+                subTitle={"Personalizza la tua bacheca"}
+                isShowing={isModalVisible}
+                onClose={() => setModalVisible(false)}
             >
-                <ModalCustom
-                    centerText={false}
-                    title={"Aggiungi features"}
-                    subTitle={"Personalizza la tua bacheca"}
-                    isShowing={isModalVisible}
-                    onClose={() => setModalVisible(false)}
+                <View
+                    style={{
+                        alignItems: "center",
+                        marginTop: 6,
+                    }}
                 >
-                    <View
-                        style={{
-                            alignItems: "center",
-                            marginTop: 6,
-                        }}
-                    >
-                        {triplets.map((triplet, i) => (
-                            <View
-                                key={"menu_add_row" + i}
-                                style={{
-                                    flexDirection: "row",
-                                    marginVertical: 2,
-                                    width: 288,
-                                }}
-                            >
-                                {triplet.map(buttonIcon => (
-                                    <MenuButton
-                                        onPress={() => {
-                                            setIcons(
-                                                icons.map(i =>
-                                                    i.id === buttonIcon.id
-                                                        ? { ...i, shown: true }
-                                                        : i
-                                                )
+                    {triplets.map((triplet, i) => (
+                        <View
+                            key={"menu_add_row" + i}
+                            style={{
+                                flexDirection: "row",
+                                marginVertical: 2,
+                                width: 288,
+                            }}
+                        >
+                            {triplet.map(buttonIcon => (
+                                <MenuButton
+                                    onPress={() => {
+                                        setIcons(
+                                            icons.map(i =>
+                                                i.id === buttonIcon.id
+                                                    ? { ...i, shown: true }
+                                                    : i
                                             )
-                                        }}
-                                        buttonIcon={buttonIcon}
-                                        isDeleting={false}
-                                        key={"menu_add_icon" + buttonIcon.id}
-                                        inMenu
-                                    />
-                                ))}
-                            </View>
-                        ))}
-                    </View>
-                </ModalCustom>
-                {icons
-                    .filter(i => i.shown)
-                    .filter(
-                        i =>
-                            i.id === 9 ||
-                            (filter
-                                ? i.title
-                                      .toLowerCase()
-                                      .includes(filter.toLowerCase())
-                                : true)
-                    )
-                    .map(buttonIcon => (
-                        <MenuButton
-                            onPress={() => {
-                                if (isDeleting) setIsDeleting(false)
-                                if (buttonIcon.id === 9) setModalVisible(true)
-                                // TODO: actual navigation
-                                if (!isDeleting && buttonIcon.id !== 9)
-                                    navigate("Saluti", { defaultName: "Ciao" })
-                            }}
-                            onLongPress={() => {
-                                if (buttonIcon.id !== 9)
-                                    setIsDeleting(!isDeleting)
-                            }}
-                            buttonIcon={buttonIcon}
-                            isDeleting={isDeleting}
-                            onDelete={() => {
-                                const { id } = buttonIcon
-                                setIcons(
-                                    icons.map(i =>
-                                        i.id === id ? { ...i, shown: false } : i
-                                    )
-                                )
-                            }}
-                            key={"menu_" + buttonIcon.id}
-                        />
+                                        )
+                                    }}
+                                    buttonIcon={buttonIcon}
+                                    isDeleting={false}
+                                    key={"menu_add_icon" + buttonIcon.id}
+                                    inMenu
+                                />
+                            ))}
+                        </View>
                     ))}
-            </ScrollView>
-        </View>
+                </View>
+            </ModalCustom>
+            {icons
+                .filter(i => i.shown)
+                .filter(
+                    i =>
+                        i.id === 9 ||
+                        (filter
+                            ? i.title
+                                  .toLowerCase()
+                                  .includes(filter.toLowerCase())
+                            : true)
+                )
+                .map(buttonIcon => (
+                    <MenuButton
+                        onPress={() => {
+                            if (isDeleting) setIsDeleting(false)
+                            if (buttonIcon.id === 9) setModalVisible(true)
+                            // TODO: actual navigation
+                            if (!isDeleting && buttonIcon.id !== 9)
+                                navigate("Saluti", { defaultName: "Ciao" })
+                        }}
+                        onLongPress={() => {
+                            if (buttonIcon.id !== 9) setIsDeleting(!isDeleting)
+                        }}
+                        buttonIcon={buttonIcon}
+                        isDeleting={isDeleting}
+                        onDelete={() => {
+                            const { id } = buttonIcon
+                            setIcons(
+                                icons.map(i =>
+                                    i.id === id ? { ...i, shown: false } : i
+                                )
+                            )
+                        }}
+                        key={"menu_" + buttonIcon.id}
+                    />
+                ))}
+        </ScrollView>
     )
 }
