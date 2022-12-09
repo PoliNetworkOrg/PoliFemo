@@ -27,15 +27,17 @@ export const Article: RootStackScreen<"Article"> = props => {
             title={article.title}
             subtitle={article.subtitle}
             backdropElement={
-                <Image
-                    source={{
-                        uri: article.image,
-                    }}
-                    style={{
-                        width: "100%",
-                        height: "100%",
-                    }}
-                />
+                article.image ? (
+                    <Image
+                        source={{
+                            uri: article.image,
+                        }}
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                        }}
+                    />
+                ) : undefined
             }
         >
             <WebView

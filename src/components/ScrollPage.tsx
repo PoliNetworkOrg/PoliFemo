@@ -40,7 +40,7 @@ export const ScrollPage: FC<{
     }
     children: React.ReactNode
 }> = props => {
-    const { background, isLight } = usePalette()
+    const { background, isLight, primary } = usePalette()
 
     const navbar = !props.hideNavbar
 
@@ -48,7 +48,12 @@ export const ScrollPage: FC<{
 
     const { articleTitle, articleSubtitle } = usePalette()
     return (
-        <View style={{ flex: 1 }}>
+        <View
+            style={{
+                flex: 1,
+                backgroundColor: isLight ? primary : background,
+            }}
+        >
             {isLight && (
                 <LinearGradient
                     colors={[
@@ -99,7 +104,7 @@ export const ScrollPage: FC<{
                     backgroundColor: background,
                     borderTopLeftRadius: 30,
                     borderTopRightRadius: 30,
-                    marginTop: 192,
+                    marginTop: props.backdropElement ? 192 : 106,
                     paddingHorizontal: 24,
                     paddingTop: 30,
                     zIndex: 2,
