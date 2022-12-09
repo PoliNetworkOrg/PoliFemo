@@ -84,7 +84,7 @@ export const NewsBottomSheet: FC = () => {
             index={isNewsClosed ? 0 : 1}
             snapPoints={[
                 // 0 is at the bottom of the screen
-                getUsableScreenHeight() - distanceFromTop.closed,
+                Math.max(getUsableScreenHeight() - distanceFromTop.closed, 42),
                 getUsableScreenHeight() - distanceFromTop.opened,
             ]}
             animateOnMount={false} // app should begin stationary
