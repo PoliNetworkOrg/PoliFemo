@@ -90,9 +90,7 @@ export const HighlightsManager: FC = () => {
                 return dateA - dateB
             }
         })
-        const currentDate = new Date().toISOString().slice(0, 10)
-        const currentTime = new Date().toLocaleTimeString() //in order to get the current local time
-        const now = currentDate + "T" + currentTime
+        const now = new Date()
 
         for (let i = 0; i < sorted.length; i++) {
             if (

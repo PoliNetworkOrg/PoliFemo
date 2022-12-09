@@ -609,8 +609,8 @@
     },
     {
        "event_id":43499,
-       "date_start":"2022-12-04T16:15:00",
-       "date_end":"2022-12-04T17:15:00",
+       "date_start":"2022-12-09T16:15:00",
+       "date_end":"2022-12-09T16:30:00",
        "favourite":false,
        "show_agenda":true,
        "matricola":"211834",
@@ -641,8 +641,8 @@
     },
     {
        "event_id":52697,
-       "date_start":"2022-12-13T16:15:00",
-       "date_end":"2022-12-13T17:00:00",
+       "date_start":"2022-12-09T17:15:00",
+       "date_end":"2022-12-09T18:00:00",
        "favourite":false,
        "show_agenda":true,
        "matricola":"211834",
