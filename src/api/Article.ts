@@ -1,33 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+export interface Articles {
+    results: Article[]
+}
 export interface Article {
-    event_id: number
-    date_start: Date
-    date_end: Date
-    favourite: boolean
-    show_agenda: boolean
-    matricola: number
-    title: {
-        it: string
-        en: string
-    }
-    event_type: {
-        typeId: string
-        type_dn: {
-            it: string
-            en: string
-        }
-    }
-    calendar: {
-        calendar_id: number
-        calendar_dn: {
-            it: string
-            en: string
-        }
-    }
-    room: {
-        room_id: number
-        acronym_dn: number
-        classroom_id: number
-        room_dn: string
-    }
+    title: string
+    subtitle?: string
+    latitude?: number
+    longitude?: number
+    publish_time?: string
+    target_time?: string
+    content: string
+    image?: string
+    author?: { name?: string; link?: string; image?: string }
 }
