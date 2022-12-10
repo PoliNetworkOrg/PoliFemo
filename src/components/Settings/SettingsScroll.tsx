@@ -1,6 +1,6 @@
 import React, { FC } from "react"
 import { ScrollView, View } from "react-native"
-import { Text, Title } from "components/Text"
+import { Text } from "components/Text"
 import { NavBar, NavbarProps } from "components/NavBar"
 import { usePalette } from "utils/colors"
 

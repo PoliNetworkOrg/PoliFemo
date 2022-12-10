@@ -1,5 +1,5 @@
 import React from "react"
-import { View, Image, ImageSourcePropType, ScrollView } from "react-native"
+import { View, Image, ScrollView } from "react-native"
 
 import { Text } from "components/Text"
 
@@ -9,10 +9,6 @@ import { RootStackScreen } from "navigation/NavigationTypes"
 import { SettingsScroll } from "components/Settings/SettingsScroll"
 import { TouchableRipple } from "components/TouchableRipple"
 import { Divider } from "components/Divider"
-import help from "assets/settings/help.svg"
-import notifiche from "assets/settings/notifiche.svg"
-import modify from "assets/settings/modify.svg"
-import disconnect from "assets/settings/disconnect.svg"
 import { SettingTile } from "components/Settings/SettingTile"
 import { IconProps, settingsIcons } from "assets/settings"
 
@@ -46,7 +42,7 @@ export interface Setting {
  * Settings Page
  */
 export const SettingsPage: RootStackScreen<"Settings"> = props => {
-    const { background, isLight, primary } = usePalette()
+    const { isLight } = usePalette()
     const user = props.route.params.user
     return (
         <SettingsScroll title="Settings">
