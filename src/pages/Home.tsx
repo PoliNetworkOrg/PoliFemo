@@ -9,6 +9,7 @@ import {
     PoliSearchBar,
 } from "components/Home"
 import { usePalette } from "utils/colors"
+import { HighlightsManager } from "components/Home/Highlights/HighlightsManager"
 import openNavSVG from "assets/menu/open-nav.svg"
 import { api, RetryType } from "api"
 import AsyncStorage from "@react-native-async-storage/async-storage"
@@ -121,8 +122,7 @@ export const Home: RootStackScreen<"Home"> = () => {
                     // section containing the search bar and the main menu
                     style={{
                         marginTop: 35,
-                        paddingBottom: 50,
-                        flex: 1,
+                        paddingBottom: 190,
                         backgroundColor: background,
                         borderTopLeftRadius: 30,
                         borderTopRightRadius: 30,
@@ -142,9 +142,9 @@ export const Home: RootStackScreen<"Home"> = () => {
                         onChange={searchKey => setSearch(searchKey)}
                     />
                     <MainMenu filter={search} />
+                    <HighlightsManager />
                 </View>
             </View>
-
             <NewsBottomSheet />
         </View>
     )
