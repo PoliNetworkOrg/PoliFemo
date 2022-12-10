@@ -44,32 +44,37 @@ export const HighlightsManager: FC = () => {
         {
             id: 0,
             type: WidgetType.ISEE,
-            date: "mer 22/10/2022",
+            date: "Mer 22/10/2022",
             time: "8:00",
             title: "Scadenza ISEE 2023",
         },
         {
             id: 1,
             type: WidgetType.ISEE,
-            date: "mer 22/10/2022",
+            date: "Mer 22/10/2022",
             time: "8:00",
             title: "Scadenza ISEE 2023",
         },
         {
             id: 2,
             type: WidgetType.ISEE,
-            date: "mer 22/10/2022",
+            date: "Mer 22/10/2022",
             time: "8:00",
             title: "Scadenza ISEE 2023",
         },
     ])
 
+    //function used to add a "0" to the day is this one is lower than 10 (ex. n=8 -> res=08)
     const pad = (n: number) => {
         return n < 10 ? "0" + n : n
     }
 
     const days = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"]
 
+    /**
+     * function to determine which is the next lesson according to the current date and time
+     * @param timetable is the API response
+     */
     const findNextLecture = (timetable: Lecture[]) => {
         /**
          * sorting dates in ascending order, priority is the 'date_start' field.If there are two lecture with the same
@@ -90,6 +95,7 @@ export const HighlightsManager: FC = () => {
                 return dateA - dateB
             }
         })
+
         const now = new Date()
 
         for (let i = 0; i < sorted.length; i++) {
