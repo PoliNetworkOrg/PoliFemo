@@ -21,6 +21,7 @@ import {
     useNavigation as nativeUseNav,
 } from "@react-navigation/native"
 import { Article } from "api"
+import { User } from "components/Settings/User"
 
 /**
  * interface containing the info about the params for each page of the stack navigator
@@ -36,6 +37,7 @@ export type RootStackNavigatorParams = {
     Article: { article: Article }
     NewsList: { categoryName: string }
     Error404: undefined
+    Settings: { user: User }
     /* eslint-enable @typescript-eslint/naming-convention */
 }
 
