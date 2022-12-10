@@ -23,7 +23,11 @@ export const NewsList: RootStackScreen<"NewsList"> = props => {
     // TODO: get only the articles of the given category
     const updateArticles = async (retryType: RetryType) => {
         try {
-            const response = await api.getArticles(retryType)
+            const response = await api.getArticlesFromDaysAgoTillDate(
+                3,
+                new Date().toISOString(),
+                { retryType: retryType }
+            )
             setArticles(response)
         } catch (error) {
             console.log(error)
@@ -54,11 +58,11 @@ export const NewsList: RootStackScreen<"NewsList"> = props => {
                     return (
                         <CardWithGradient
                             key={index} // TODO: update with article id
-                            title={article.title.it}
+                            title={article.title}
                             imageURL={undefined} // TODO: update with correct article image
                             onClick={() => {
                                 // TODO: here navigate to the article page
-                                console.log(article.title.it)
+                                console.log(article.title)
                             }}
                             style={{ height: 220, marginBottom: 13 }}
                         />
