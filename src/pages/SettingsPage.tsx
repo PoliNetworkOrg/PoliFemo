@@ -1,16 +1,12 @@
 import React from "react"
-import { View, Image, ScrollView } from "react-native"
-
-import { Text } from "components/Text"
-
-import { usePalette } from "utils/colors"
-
+import { ScrollView } from "react-native"
 import { RootStackScreen } from "navigation/NavigationTypes"
 import { SettingsScroll } from "components/Settings/SettingsScroll"
-import { TouchableRipple } from "components/TouchableRipple"
 import { Divider } from "components/Divider"
 import { SettingTile } from "components/Settings/SettingTile"
 import { IconProps, settingsIcons } from "assets/settings"
+import { UserDetailsTile } from "components/Settings/UserDetailsTile"
+import { FormCarriere } from "components/Settings/FormCarriere"
 
 export const settingsList: Setting[] = [
     {
@@ -42,55 +38,16 @@ export interface Setting {
  * Settings Page
  */
 export const SettingsPage: RootStackScreen<"Settings"> = props => {
-    const { isLight } = usePalette()
     const user = props.route.params.user
     return (
         <SettingsScroll title="Settings">
-            <TouchableRipple isRoundedTopCorners={true}>
-                <View style={{ paddingHorizontal: 28, paddingVertical: 30 }}>
-                    <View style={{ flex: 1, flexDirection: "row" }}>
-                        <View
-                            style={{
-                                width: 80,
-                                height: 80,
-                            }}
-                        >
-                            <Image
-                                source={{
-                                    uri: user.profilePic,
-                                }}
-                                style={{
-                                    width: "100%",
-                                    height: "100%",
-                                    resizeMode: "cover",
-
-                                    borderRadius: 40,
-                                }}
-                            />
-                        </View>
-                        <View style={{ marginLeft: 14, paddingTop: 8 }}>
-                            <Text
-                                style={{
-                                    color: isLight ? "#000" : "#fff",
-                                    fontSize: 22,
-                                    fontWeight: "900",
-                                }}
-                            >
-                                {user.nome} {user.cognome}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: isLight ? "#000" : "#fff",
-                                    fontSize: 16,
-                                    fontWeight: "400",
-                                }}
-                            >
-                                Codice persona {user.codPersona}
-                            </Text>
-                        </View>
-                    </View>
-                </View>
-            </TouchableRipple>
+            <UserDetailsTile
+                codPersona={user.codPersona}
+                profilePic={user.profilePic}
+                nome={user.nome}
+                cognome={user.cognome}
+            ></UserDetailsTile>
+            <FormCarriere carriere={user.carriere}></FormCarriere>
             <Divider />
             <ScrollView>
                 {settingsList.map((setting, index) => {
