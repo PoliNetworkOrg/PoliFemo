@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 import { View } from "react-native"
 
 import { Tray } from "components/Tray"
@@ -16,7 +16,7 @@ import { mockedUser } from "components/Settings/User"
 export const AppContainer: FC = () => {
     const { homeBackground } = usePalette()
     const { navigate } = useNavigation()
-
+    const [isTrayShowing, setIsTrayShowing] = useState(true)
     return (
         <View
             style={{
@@ -24,18 +24,20 @@ export const AppContainer: FC = () => {
                 backgroundColor: homeBackground,
             }}
         >
-            <RootStack />
-            <Tray
-                onDownloads={() => {
-                    console.log("downloads")
-                }}
-                onNotifications={() => {
-                    console.log("notifications")
-                }}
-                onSettings={() => {
-                    navigate("Settings", { user: mockedUser })
-                }}
-            />
+            <RootStack onShowTray={setIsTrayShowing} />
+            {isTrayShowing && (
+                <Tray
+                    onDownloads={() => {
+                        console.log("downloads")
+                    }}
+                    onNotifications={() => {
+                        console.log("notifications")
+                    }}
+                    onSettings={() => {
+                        navigate("Settings", { user: mockedUser })
+                    }}
+                />
+            )}
         </View>
     )
 }
