@@ -1,20 +1,38 @@
-import { Setting } from "pages/SettingsPage"
-import React, { FC } from "react"
+import React, { FC, useMemo } from "react"
 import { View } from "react-native"
 import { TouchableRipple } from "../TouchableRipple"
-import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
+import {
+    BlendMode,
+    Canvas,
+    Group,
+    ImageSVG,
+    Skia,
+    useSVG,
+} from "@shopify/react-native-skia"
 import { Text } from "components/Text"
 import { Divider } from "components/Divider"
 import { usePalette } from "utils/colors"
+import { Setting } from "./Setting"
 
 export interface SettingTileProps {
     setting: Setting
 }
 
 export const SettingTile: FC<SettingTileProps> = props => {
-    const icon = props.setting.icon
-    const iconSvg = useSVG(icon.svg)
+    const icon = props.setting.icon ?? null
+    const iconSvg = useSVG(icon?.svg)
     const { isLight, palette } = usePalette()
+
+    //changing icon color
+    //from: https://github.com/Shopify/react-native-skia/issues/462
+    const paint = useMemo(() => Skia.Paint(), [])
+    paint.setColorFilter(
+        Skia.ColorFilter.MakeBlend(
+            Skia.Color(isLight ? palette.primary : palette.lighter),
+            BlendMode.SrcIn
+        )
+    )
+
     return (
         <View>
             {props.setting.title === "Disconnetti" && <Divider />}
@@ -31,34 +49,36 @@ export const SettingTile: FC<SettingTileProps> = props => {
                         alignItems: "center",
                     }}
                 >
-                    <View
-                        style={{
-                            width: 24, // max icon width
-                            height: 24, // max icon height
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <Canvas
+                    {iconSvg && icon && (
+                        <View
                             style={{
-                                flex: 1,
-                                width: icon.width,
-                                height: icon.heigth,
+                                width: 24, // max icon width
+                                height: 24, // max icon height
+                                alignItems: "center",
+                                justifyContent: "center",
                             }}
                         >
-                            {iconSvg && (
-                                <ImageSVG
-                                    svg={iconSvg}
-                                    x={0}
-                                    y={0}
-                                    width={icon.width}
-                                    height={icon.heigth}
-                                />
-                            )}
-                        </Canvas>
-                    </View>
+                            <Canvas
+                                style={{
+                                    flex: 1,
+                                    width: icon?.width,
+                                    height: icon?.heigth,
+                                }}
+                            >
+                                <Group layer={paint}>
+                                    <ImageSVG
+                                        svg={iconSvg}
+                                        x={0}
+                                        y={0}
+                                        width={icon.width}
+                                        height={icon.heigth}
+                                    />
+                                </Group>
+                            </Canvas>
+                        </View>
+                    )}
 
-                    <View style={{ marginLeft: 20 }}>
+                    <View style={{ marginLeft: icon ? 20 : 0 }}>
                         <Text
                             style={{
                                 fontSize: 16,

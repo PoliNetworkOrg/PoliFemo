@@ -11,9 +11,11 @@ import { Home } from "pages/Home"
 import { Article } from "pages/ArticleDetails"
 import { NewsList } from "pages/NewsList"
 import { Error404 } from "pages/Error404"
-import { SettingsPage } from "pages/SettingsPage"
+import { SettingsPage } from "pages/Settings"
 import { NavigationState } from "@react-navigation/native"
 import { getCurrentRouteName } from "utils/navigation"
+import { Notifications } from "pages/Notifications"
+import { Help } from "pages/Help"
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const RootStackNavigator = createStackNavigator<RootStackNavigatorParams>()
 
@@ -28,8 +30,8 @@ export const RootStack: FC<{
                 state: e => {
                     const event = e.data as { state: NavigationState }
                     const route = getCurrentRouteName(event.state.routes)
-                    //if current route is "Settings" hide tray
-                    if (route === "Settings") {
+                    //if current route is (see below) hide tray
+                    if (["Settings", "Notifications", "Help"].includes(route)) {
                         props.onShowTray(false)
                     } else {
                         props.onShowTray(true)
@@ -45,6 +47,11 @@ export const RootStack: FC<{
                 name="Settings"
                 component={SettingsPage}
             />
+            <RootStackNavigator.Screen
+                name="Notifications"
+                component={Notifications}
+            />
+            <RootStackNavigator.Screen name="Help" component={Help} />
         </RootStackNavigator.Navigator>
     )
 }

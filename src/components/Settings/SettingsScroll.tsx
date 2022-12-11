@@ -44,7 +44,7 @@ export const SettingsScroll: FC<{
             >
                 <Text
                     style={{
-                        color: !isLight ? "#fff" : background,
+                        color: isLight ? "#fff" : primary,
                         fontSize: 24,
                         fontWeight: "900",
                     }}

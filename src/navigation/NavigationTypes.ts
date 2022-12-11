@@ -38,6 +38,8 @@ export type RootStackNavigatorParams = {
     NewsList: { categoryName: string }
     Error404: undefined
     Settings: { user: User }
+    Notifications: undefined
+    Help: undefined
     /* eslint-enable @typescript-eslint/naming-convention */
 }
 

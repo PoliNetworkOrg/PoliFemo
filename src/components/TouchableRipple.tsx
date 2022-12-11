@@ -4,8 +4,9 @@ import { usePalette } from "utils/colors"
 
 export interface TouchableRippleProps {
     onClick?: () => void
-    isRoundedTopCorners?: boolean
     children: React.ReactNode
+    isRoundedTopCorners?: boolean
+    showRipple?: boolean
 }
 
 export const TouchableRipple: FC<TouchableRippleProps> = props => {
@@ -25,10 +26,14 @@ export const TouchableRipple: FC<TouchableRippleProps> = props => {
             ]}
         >
             <TouchableNativeFeedback
-                background={TouchableNativeFeedback.Ripple(
-                    isLight ? "#d2d2d2" : "#343E5A",
-                    false
-                )}
+                background={
+                    props.showRipple
+                        ? TouchableNativeFeedback.Ripple(
+                              isLight ? "#d2d2d2" : "#343E5A",
+                              false
+                          )
+                        : undefined
+                }
                 style={{}}
                 onPress={props.onClick ?? undefined}
             >
