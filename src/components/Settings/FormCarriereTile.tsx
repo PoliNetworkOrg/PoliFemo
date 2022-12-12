@@ -3,8 +3,8 @@ import { View } from "react-native"
 import { TouchableRipple } from "../TouchableRipple"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
-import { RadioButtonCustom } from "./RadioButtonCustom"
-import { RadioButtonContext } from "./RadioButtonContext"
+import { RadioButtonCustom } from "./RadioButton/RadioButtonCustom"
+import { RadioButtonContext } from "./RadioButton/RadioButtonContext"
 
 export interface CarrieraTileProps {
     matricola: number

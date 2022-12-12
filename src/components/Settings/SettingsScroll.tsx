@@ -38,8 +38,6 @@ export const SettingsScroll: FC<{
                     top: 42,
                     left: 26,
                     zIndex: 6,
-                    height: 30,
-                    width: 100,
                 }}
             >
                 <Text

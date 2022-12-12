@@ -1,12 +1,8 @@
 import React from "react"
-import { ScrollView, View } from "react-native"
+import { View } from "react-native"
 import { RootStackScreen } from "navigation/NavigationTypes"
 import { SettingsScroll } from "components/Settings/SettingsScroll"
-import { Divider } from "components/Divider"
 import { SettingTile } from "components/Settings/SettingTile"
-import { IconProps, settingsIcons } from "assets/settings"
-import { UserDetailsTile } from "components/Settings/UserDetailsTile"
-
 import { Setting } from "components/Settings/Setting"
 
 export const settingsList: Setting[] = [
@@ -30,9 +26,9 @@ export const settingsList: Setting[] = [
 /**
  * Notifications Settings Page
  */
-export const Help: RootStackScreen<"Help"> = props => {
+export const Help: RootStackScreen<"Help"> = () => {
     return (
-        <SettingsScroll title="Notifiche">
+        <SettingsScroll title="Aiuto">
             <View style={{ paddingTop: 32 }}>
                 {settingsList.map((setting, index) => {
                     return <SettingTile setting={setting} key={index} />

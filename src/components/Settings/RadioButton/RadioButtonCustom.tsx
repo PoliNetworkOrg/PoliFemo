@@ -3,11 +3,19 @@ import { View, Animated, StyleSheet } from "react-native"
 import { usePalette } from "utils/colors"
 
 export interface RadioButtonCustomProps {
+    status: boolean
     width?: number
     height?: number
     fillWidth?: number
     fillHeight?: number
-    status: boolean
+    /**
+     * to ovveride default color on LightMode
+     */
+    lightColor?: string
+    /**
+     * to ovveride default color on DarkMode
+     */
+    darkColor?: string
 }
 /**
  * Custom RadioButton
@@ -65,7 +73,9 @@ export const RadioButtonCustom: FC<RadioButtonCustomProps> = props => {
         <Animated.View
             style={{
                 backgroundColor: "#fff",
-                borderColor: isLight ? "#232A3E" : "#424968",
+                borderColor: isLight
+                    ? props.lightColor ?? "#232A3E"
+                    : props.darkColor ?? "#424968",
                 borderWidth: borderAnim,
                 height: height,
                 width: width,
@@ -79,7 +89,9 @@ export const RadioButtonCustom: FC<RadioButtonCustomProps> = props => {
                             height: fillHeight,
                             width: fillWidth,
                             borderRadius: fillWidth,
-                            backgroundColor: isLight ? "#232A3E" : "#424968",
+                            backgroundColor: isLight
+                                ? props.lightColor ?? "#232A3E"
+                                : props.darkColor ?? "#424968",
                             transform: [{ scale: radioAnim }],
                         }}
                     />

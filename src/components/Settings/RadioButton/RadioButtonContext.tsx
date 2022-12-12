@@ -25,7 +25,7 @@ export type RadioButtonContextType = {
 export const RadioButtonContext = React.createContext<RadioButtonContextType>({
     value: 0,
     onValueChange: () => {
-        console.log("prova")
+        console.log("debug")
     },
 })
 

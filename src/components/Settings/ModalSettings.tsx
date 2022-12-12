@@ -2,6 +2,7 @@ import React, { FC } from "react"
 import { View, Modal, StyleSheet, Pressable } from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
+import { ButtonCustom } from "./ButtonCustom"
 
 export interface ModalCustomSettingsProps {
     /**
@@ -24,10 +25,12 @@ export interface ModalCustomSettingsProps {
      * @default false
      */
     centerText?: boolean
+
+    onOK: () => void
 }
 
 /**
- * custom modal component
+ * Custom Modal Component with two buttons at the bottom.
  *
  */
 export const ModalCustomSettings: FC<ModalCustomSettingsProps> = props => {
@@ -47,29 +50,53 @@ export const ModalCustomSettings: FC<ModalCustomSettingsProps> = props => {
                 onPress={props.onClose}
                 style={[styles.pageWrapper, { backgroundColor: modalBarrier }]}
             >
-                <View>
-                    <Pressable
-                        // this is a pressable just to prevent the modal from closing when clicking
-                        // on the content
-                        style={[
-                            styles.contentWrapper,
-                            { backgroundColor: backgroundSecondary },
-                        ]}
-                    >
+                <Pressable
+                    // this is a pressable just to prevent the modal from closing when clicking
+                    // on the content
+                    style={[
+                        styles.contentWrapper,
+                        { backgroundColor: backgroundSecondary },
+                    ]}
+                >
+                    <View>
                         <Text
                             style={[
                                 styles.title,
-                                { color: isLight ? homeBackground : "#ffffff" },
-                                { textAlign: "center" },
-                                { marginTop: 22 },
+                                {
+                                    color: isLight ? homeBackground : "#ffffff",
+                                },
+                                {
+                                    textAlign: "center",
+                                    marginTop: 22,
+                                    marginBottom: 12,
+                                },
                             ]}
                         >
                             {props.title}
                         </Text>
 
-                        <View>{props.children}</View>
-                    </Pressable>
-                </View>
+                        {props.children}
+                    </View>
+
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-evenly",
+                            marginBottom: 32,
+                        }}
+                    >
+                        <ButtonCustom
+                            light={true}
+                            text={"Annulla"}
+                            onPress={props.onClose}
+                        />
+                        <ButtonCustom
+                            light={false}
+                            text={"OK"}
+                            onPress={props.onOK}
+                        />
+                    </View>
+                </Pressable>
             </Pressable>
         </Modal>
     )
@@ -82,6 +109,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     contentWrapper: {
+        flexDirection: "column",
+        justifyContent: "space-between",
         width: 320,
         height: 320,
         borderRadius: 12,
@@ -108,12 +137,12 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 32,
-        marginHorizontal: 27,
+
         fontWeight: "900",
     },
     subTitle: {
         fontSize: 13,
-        marginHorizontal: 27,
+
         fontWeight: "600",
     },
 })

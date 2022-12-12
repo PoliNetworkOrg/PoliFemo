@@ -1,10 +1,9 @@
 import React, { FC } from "react"
-import { View } from "react-native"
-import { TouchableRipple } from "../TouchableRipple"
+import { Pressable, View } from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
-import { RadioButtonCustom } from "./RadioButtonCustom"
-import { RadioButtonContext } from "./RadioButtonContext"
+import { RadioButtonCustom } from "./RadioButton/RadioButtonCustom"
+import { RadioButtonContext } from "./RadioButton/RadioButtonContext"
 
 export interface SelectModeTileProps {
     name?: string
@@ -13,44 +12,48 @@ export interface SelectModeTileProps {
 }
 
 export const SelectModeTile: FC<SelectModeTileProps> = props => {
-    const { isLight } = usePalette()
+    const { isLight, palette } = usePalette()
     return (
         <RadioButtonContext.Consumer>
             {context => {
                 return (
-                    <TouchableRipple
-                        onClick={() => {
-                            context.onValueChange(props.index)
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            paddingVertical: 12,
+                            paddingLeft: 36,
+                            paddingRight: 46,
                         }}
                     >
-                        <View
-                            style={{
-                                flex: 1,
-                                flexDirection: "row",
-                                justifyContent: "flex-start",
-                                alignItems: "center",
-                                paddingVertical: 10,
-                                paddingLeft: 36,
-                                paddingRight: 46,
-                            }}
+                        <Pressable
+                            onPress={() => context.onValueChange(props.index)}
                         >
                             <RadioButtonCustom
                                 status={props.index === context.value}
-                            ></RadioButtonCustom>
-                            <View>
+                                darkColor={palette.darker}
+                            />
+                        </Pressable>
+                        <View>
+                            <Pressable
+                                onPress={() =>
+                                    context.onValueChange(props.index)
+                                }
+                            >
                                 <Text
                                     style={{
-                                        fontSize: 12,
+                                        fontSize: 20,
                                         fontWeight: "400",
                                         color: isLight ? "#000" : "#fff",
-                                        textAlign: "right",
+                                        textAlign: "left",
+                                        paddingLeft: 16,
                                     }}
                                 >
-                                    {props.name}
+                                    {props.name ?? "CIao"}
                                 </Text>
-                            </View>
+                            </Pressable>
                         </View>
-                    </TouchableRipple>
+                    </View>
                 )
             }}
         </RadioButtonContext.Consumer>
