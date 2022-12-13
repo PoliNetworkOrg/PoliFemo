@@ -1,9 +1,11 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios"
+import qs from "qs"
 import { Lecture } from "./Lecture"
 import { getIsoStringFromDaysPassed } from "utils/dates"
 import { Articles } from "./Article"
 import { RetryType } from "./RetryType"
 import { Tags } from "./Tag"
+import { PolimiToken } from "utils/login"
 
 /*Docs used to make this:
 Singleton:
@@ -291,6 +293,39 @@ export default class MainApi {
             }
         )
         return response.data
+    }
+
+    getPolimiToken = async (code: string) => {
+        const postData = {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            grant_type: "authorization_code",
+            code,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            client_id: "9978142015",
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            client_secret: "61760",
+        }
+        try {
+            const response = await axios.post<PolimiToken | { error: string }>(
+                "https://oauthidp.polimi.it/oauthidp/oauth2/token",
+                qs.stringify(postData)
+            )
+            console.log(response.config, response.data)
+            if ("error" in response.data) {
+                throw new Error(response.data.error)
+            } else return response.data
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            console.error("Error response:")
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            console.error(err.response.data) // ***
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            console.error(err.response.status) // ***
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            console.error(err.response.config) // ***
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            console.error(err.response.headers) // ***
+        }
     }
 }
 

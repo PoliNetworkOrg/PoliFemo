@@ -4,6 +4,7 @@ import { View } from "react-native"
 import { Tray } from "components/Tray"
 import { RootStack } from "navigation/RootStackNavigator"
 import { usePalette } from "utils/colors"
+import { useNavigation } from "navigation/NavigationTypes"
 
 /**
  * The main app container.
@@ -13,6 +14,7 @@ import { usePalette } from "utils/colors"
  */
 export const AppContainer: FC = () => {
     const { homeBackground } = usePalette()
+    const { navigate } = useNavigation()
     return (
         <View
             style={{
@@ -23,7 +25,7 @@ export const AppContainer: FC = () => {
             <RootStack />
             <Tray
                 onDownloads={() => {
-                    console.log("downloads")
+                    navigate("Login")
                 }}
                 onNotifications={() => {
                     console.log("notifications")

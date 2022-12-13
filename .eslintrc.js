@@ -68,5 +68,11 @@ module.exports = {
             },
         ],
         "@typescript-eslint/restrict-plus-operands": "off",
+        "@typescript-eslint/no-misused-promises": [
+            "error",
+            {
+                checksVoidReturn: false,
+            },
+        ],
     },
 }
