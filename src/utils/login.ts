@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-export interface PolinetworkToken {
+export interface PoliNetworkToken {
     access_token: string
     expires_in: number
     ext_expires_in: number
