@@ -21,6 +21,8 @@ export default function App() {
     const [themeIsReady, setThemeIsReady] = useState(false)
     const [theme, setTheme] = useState("Predefinito")
     const state = { theme, setTheme }
+
+    // docs: https://docs.expo.dev/versions/latest/sdk/splash-screen/
     useEffect(() => {
         async function prepare() {
             try {
