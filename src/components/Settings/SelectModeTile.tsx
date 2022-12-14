@@ -6,9 +6,7 @@ import { RadioButtonCustom } from "./RadioButton/RadioButtonCustom"
 import { RadioButtonContext } from "./RadioButton/RadioButtonContext"
 
 export interface SelectModeTileProps {
-    name?: string
-    default?: boolean
-    index: number
+    name: string
 }
 
 export const SelectModeTile: FC<SelectModeTileProps> = props => {
@@ -27,17 +25,17 @@ export const SelectModeTile: FC<SelectModeTileProps> = props => {
                         }}
                     >
                         <Pressable
-                            onPress={() => context.onValueChange(props.index)}
+                            onPress={() => context.onValueChange(props.name)}
                         >
                             <RadioButtonCustom
-                                status={props.index === context.value}
+                                status={props.name === context.value}
                                 darkColor={palette.darker}
                             />
                         </Pressable>
                         <View>
                             <Pressable
                                 onPress={() =>
-                                    context.onValueChange(props.index)
+                                    context.onValueChange(props.name)
                                 }
                             >
                                 <Text
@@ -49,7 +47,7 @@ export const SelectModeTile: FC<SelectModeTileProps> = props => {
                                         paddingLeft: 16,
                                     }}
                                 >
-                                    {props.name ?? "CIao"}
+                                    {props.name}
                                 </Text>
                             </Pressable>
                         </View>

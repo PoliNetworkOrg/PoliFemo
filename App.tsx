@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useEffect } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { NavigationContainer } from "@react-navigation/native"
 import { hideAsync } from "expo-splash-screen"
 import { useFonts } from "@expo-google-fonts/roboto"
@@ -14,7 +14,43 @@ import { AppContainer } from "./src/AppContainer"
 
 import { OutsideClickProvider } from "utils/outsideClick"
 
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { AppStateProvider } from "./src/context/state"
+
 export default function App() {
+    const [themeIsReady, setThemeIsReady] = useState(false)
+    const [theme, setTheme] = useState("Predefinito")
+    const state = { theme, setTheme }
+    useEffect(() => {
+        async function prepare() {
+            try {
+                await AsyncStorage.getItem("theme")
+                    .then(themeJSON => {
+                        if (themeJSON) {
+                            console.log("Loading theme")
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                            const theme: string = JSON.parse(themeJSON)
+                            console.log("loaded theme: " + theme)
+                            setTheme(theme)
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            } catch (e) {
+                console.warn(e)
+            } finally {
+                setTheme("Chiaro")
+                console.log("loaded theme: " + theme)
+
+                // Tell the application to render
+                setThemeIsReady(true)
+            }
+        }
+
+        void prepare()
+    }, [])
+
     const [fontsLoaded] = useFonts({
         Roboto_300Light,
         Roboto_400Regular,
@@ -23,17 +59,22 @@ export default function App() {
         Roboto_900Black,
     })
 
-    useEffect(() => {
-        if (fontsLoaded) void hideAsync()
-    }, [fontsLoaded])
+    useCallback(async () => {
+        if (themeIsReady && fontsLoaded) {
+            // This tells the splash screen to hide immediately!
+            await hideAsync()
+        }
+    }, [themeIsReady, fontsLoaded])
 
-    if (!fontsLoaded) return null
+    if (!fontsLoaded || !themeIsReady) return null
 
     return (
         <NavigationContainer>
-            <OutsideClickProvider>
-                <AppContainer />
-            </OutsideClickProvider>
+            <AppStateProvider state={state}>
+                <OutsideClickProvider>
+                    <AppContainer />
+                </OutsideClickProvider>
+            </AppStateProvider>
         </NavigationContainer>
     )
 }

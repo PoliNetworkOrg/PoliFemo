@@ -26,7 +26,9 @@ export interface ModalCustomSettingsProps {
      */
     centerText?: boolean
 
-    onOK: () => void
+    onOK: (value: string) => void
+
+    selectedValue: string
 }
 
 /**
@@ -93,7 +95,9 @@ export const ModalCustomSettings: FC<ModalCustomSettingsProps> = props => {
                         <ButtonCustom
                             light={false}
                             text={"OK"}
-                            onPress={props.onOK}
+                            onPress={() => {
+                                props.onOK(props.selectedValue)
+                            }}
                         />
                     </View>
                 </Pressable>

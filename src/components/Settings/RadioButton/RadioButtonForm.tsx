@@ -1,17 +1,21 @@
-import React, { FC, useState } from "react"
+import React, { FC } from "react"
 import { View } from "react-native"
 import { RadioButtonGroup } from "./RadioButtonContext"
 
 export interface RadioButtonFormProps {
     children?: React.ReactNode
     showRipple?: boolean
+    selectedValue: string
+    setSelectedValue: React.Dispatch<React.SetStateAction<string>>
 }
 
 export const RadioButtonForm: FC<RadioButtonFormProps> = props => {
-    const [value, setValue] = useState(0)
     return (
         <View>
-            <RadioButtonGroup value={value} onValueChange={setValue}>
+            <RadioButtonGroup
+                value={props.selectedValue}
+                onValueChange={props.setSelectedValue}
+            >
                 {props.children}
             </RadioButtonGroup>
         </View>

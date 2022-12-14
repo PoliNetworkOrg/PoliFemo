@@ -5,11 +5,11 @@ export interface RadioButtonGroupProps {
     /**
      * Function to execute on selection change.
      */
-    onValueChange: React.Dispatch<React.SetStateAction<number>>
+    onValueChange: React.Dispatch<React.SetStateAction<string>>
     /**
      * Value of the currently selected radio button.
      */
-    value: number
+    value: string
     /**
      * React elements containing radio buttons.
      */
@@ -17,13 +17,13 @@ export interface RadioButtonGroupProps {
 }
 
 export type RadioButtonContextType = {
-    value: number
-    onValueChange: React.Dispatch<React.SetStateAction<number>>
+    value: string
+    onValueChange: React.Dispatch<React.SetStateAction<string>>
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RadioButtonContext = React.createContext<RadioButtonContextType>({
-    value: 0,
+    value: "prova",
     onValueChange: () => {
         console.log("debug")
     },
@@ -37,6 +37,6 @@ export const RadioButtonGroup = ({
     <RadioButtonContext.Provider
         value={{ value: value, onValueChange: onValueChange }}
     >
-        <View accessibilityRole="radiogroup">{children}</View>
+        <View>{children}</View>
     </RadioButtonContext.Provider>
 )

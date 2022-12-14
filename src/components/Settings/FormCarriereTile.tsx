@@ -9,8 +9,6 @@ import { RadioButtonContext } from "./RadioButton/RadioButtonContext"
 export interface CarrieraTileProps {
     matricola: number
     type?: string
-    default?: boolean
-    index: number
 }
 
 export const CarrieraTile: FC<CarrieraTileProps> = props => {
@@ -21,7 +19,7 @@ export const CarrieraTile: FC<CarrieraTileProps> = props => {
                 return (
                     <TouchableRipple
                         onClick={() => {
-                            context.onValueChange(props.index)
+                            context.onValueChange(props.matricola.toString())
                         }}
                     >
                         <View
@@ -36,7 +34,9 @@ export const CarrieraTile: FC<CarrieraTileProps> = props => {
                             }}
                         >
                             <RadioButtonCustom
-                                status={props.index === context.value}
+                                status={
+                                    props.matricola.toString() === context.value
+                                }
                             ></RadioButtonCustom>
                             <View>
                                 <Text

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import { View } from "react-native"
 import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { SettingsScroll } from "components/Settings/SettingsScroll"
@@ -11,6 +11,7 @@ import { Setting } from "components/Settings/Setting"
 import { ModalCustomSettings } from "components/Settings/ModalSettings"
 import { CarrieraTile } from "components/Settings/FormCarriereTile"
 import { SelectModeTile } from "components/Settings/SelectModeTile"
+import { AppContext } from "../context/state"
 
 const themeMods: string[] = ["Predefinito", "Scuro", "Chiaro"]
 
@@ -18,6 +19,17 @@ const themeMods: string[] = ["Predefinito", "Scuro", "Chiaro"]
  * Settings Page
  */
 export const SettingsPage: RootStackScreen<"Settings"> = props => {
+    const user = props.route.params.user
+
+    const theme = useContext(AppContext).state.theme
+    const setTheme = useContext(AppContext).state.setTheme
+
+    const [modalTheme, setModalTheme] = useState(theme)
+
+    const [carriera, setCarriera] = useState(
+        user.carriere[0].matricola.toString()
+    )
+
     const [isModalVisible, setModalVisible] = useState(false)
     const { navigate } = useNavigation()
     const settingsList: Setting[] = [
@@ -47,7 +59,7 @@ export const SettingsPage: RootStackScreen<"Settings"> = props => {
         },
         { title: "Disconnetti", icon: settingsIcons.disconnect },
     ]
-    const user = props.route.params.user
+
     return (
         <View style={{ flex: 1 }}>
             <SettingsScroll title="Impostazioni">
@@ -57,14 +69,16 @@ export const SettingsPage: RootStackScreen<"Settings"> = props => {
                     nome={user.nome}
                     cognome={user.cognome}
                 />
-                <RadioButtonForm>
+                <RadioButtonForm
+                    selectedValue={carriera}
+                    setSelectedValue={setCarriera}
+                >
                     {user.carriere?.map((carriera, index) => {
                         return (
                             <CarrieraTile
                                 key={index}
                                 matricola={carriera.matricola}
                                 type={carriera.type}
-                                index={index}
                             />
                         )
                     })}
@@ -75,27 +89,26 @@ export const SettingsPage: RootStackScreen<"Settings"> = props => {
                     return <SettingTile setting={setting} key={index} />
                 })}
             </SettingsScroll>
-            <ModalCustomSettings
-                centerText={true}
-                title={"Scegli Tema"}
-                isShowing={isModalVisible}
-                onClose={() => setModalVisible(false)}
-                onOK={() => {
-                    setModalVisible(false)
-                }}
+            <RadioButtonForm
+                selectedValue={modalTheme}
+                setSelectedValue={setModalTheme}
             >
-                <RadioButtonForm>
+                <ModalCustomSettings
+                    centerText={true}
+                    title={"Scegli Tema"}
+                    isShowing={isModalVisible}
+                    onClose={() => setModalVisible(false)}
+                    onOK={(theme: string) => {
+                        setTheme(theme)
+                        setModalVisible(false)
+                    }}
+                    selectedValue={modalTheme}
+                >
                     {themeMods?.map((theme, index) => {
-                        return (
-                            <SelectModeTile
-                                key={index}
-                                name={theme}
-                                index={index}
-                            />
-                        )
+                        return <SelectModeTile key={index} name={theme} />
                     })}
-                </RadioButtonForm>
-            </ModalCustomSettings>
+                </ModalCustomSettings>
+            </RadioButtonForm>
         </View>
     )
 }
