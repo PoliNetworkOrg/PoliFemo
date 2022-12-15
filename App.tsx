@@ -15,12 +15,13 @@ import { AppContainer } from "./src/AppContainer"
 import { OutsideClickProvider } from "utils/outsideClick"
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { AppStateProvider } from "./src/context/state"
+import { AppStateProvider } from "./src/state"
+import { AppState } from "./src/state"
 
 export default function App() {
     const [themeIsReady, setThemeIsReady] = useState(false)
-    const [theme, setTheme] = useState("Predefinito")
-    const state = { theme, setTheme }
+    const [theme, setTheme] = useState("predefined")
+    const state = new AppState({ theme: theme, setTheme: setTheme })
 
     // docs: https://docs.expo.dev/versions/latest/sdk/splash-screen/
     useEffect(() => {
@@ -29,11 +30,10 @@ export default function App() {
                 await AsyncStorage.getItem("theme")
                     .then(themeJSON => {
                         if (themeJSON) {
-                            console.log("Loading theme")
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                            const theme: string = JSON.parse(themeJSON)
+                            const parsedTheme: string = JSON.parse(themeJSON)
                             console.log("loaded theme: " + theme)
-                            setTheme(theme)
+                            setTheme(parsedTheme)
                         }
                     })
                     .catch(err => {
@@ -42,10 +42,6 @@ export default function App() {
             } catch (e) {
                 console.warn(e)
             } finally {
-                setTheme("Chiaro")
-                console.log("loaded theme: " + theme)
-
-                // Tell the application to render
                 setThemeIsReady(true)
             }
         }

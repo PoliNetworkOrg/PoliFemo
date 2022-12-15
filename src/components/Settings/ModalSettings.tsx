@@ -9,8 +9,9 @@ export interface ModalCustomSettingsProps {
      * content of the modal
      */
     children: React.ReactNode
+
     title: string
-    subTitle?: string
+
     /**
      * whether ot not to show the modal
      */
@@ -21,13 +22,14 @@ export interface ModalCustomSettingsProps {
     onClose: () => void
 
     /**
-     * whether ot not to center title and subtitle and apply different margins
-     * @default false
+     * function called when button "OK" is pressed
      */
-    centerText?: boolean
-
     onOK: (value: string) => void
 
+    /**
+     * input value of `onOk` function.
+     * Usually the current state value of a {@link RadioButtonGroup}
+     */
     selectedValue: string
 }
 
@@ -129,24 +131,8 @@ const styles = StyleSheet.create({
         shadowRadius: 4.65,
         elevation: 6,
     },
-    circle: {
-        width: 30,
-        height: 30,
-        backgroundColor: "#ffffff",
-        borderRadius: 15,
-        marginTop: 96,
-        marginBottom: 8,
-        justifyContent: "center",
-        alignItems: "center",
-    },
     title: {
         fontSize: 32,
-
         fontWeight: "900",
-    },
-    subTitle: {
-        fontSize: 13,
-
-        fontWeight: "600",
     },
 })

@@ -3,17 +3,24 @@ import { View, Animated, StyleSheet } from "react-native"
 import { usePalette } from "utils/colors"
 
 export interface RadioButtonCustomProps {
-    status: boolean
-    width?: number
-    height?: number
-    fillWidth?: number
-    fillHeight?: number
     /**
-     * to ovveride default color on LightMode
+     * if is checked
+     */
+    status: boolean
+    /**
+     * override outer circle diameter
+     */
+    outerDiameter?: number
+    /**
+     * override inner circle diameter height
+     */
+    innerDiameter?: number
+    /**
+     * ovveride default color on LightMode
      */
     lightColor?: string
     /**
-     * to ovveride default color on DarkMode
+     * ovveride default color on DarkMode
      */
     darkColor?: string
 }
@@ -23,10 +30,10 @@ export interface RadioButtonCustomProps {
  * made following this: https://github.com/callstack/react-native-paper/blob/main/src/components/RadioButton/RadioButtonAndroid.tsx
  */
 export const RadioButtonCustom: FC<RadioButtonCustomProps> = props => {
-    const width = props.width ?? 24
-    const height = props.height ?? 24
-    const fillHeight = props.fillHeight ?? 12
-    const fillWidth = props.fillWidth ?? 12
+    const width = props.outerDiameter ?? 24
+    const height = props.outerDiameter ?? 24
+    const fillHeight = props.innerDiameter ?? 12
+    const fillWidth = props.innerDiameter ?? 12
     const status = props.status
 
     const { isLight } = usePalette()

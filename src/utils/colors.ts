@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { useColorScheme, ColorSchemeName } from "react-native"
-import { AppContext } from "../context/state"
+import { AppContext } from "../state/AppContext"
 
 export interface Palette {
     primary: string
@@ -168,9 +168,9 @@ export const usePalette: () => ColorTheme &
     // ? deve sempre essere chiamato per le regole di
     // ? react in render successivi ??? :(
     let colorScheme = useColorScheme() ?? "light"
-    if (context.state.theme === "Scuro") {
+    if (context.state.theme === "dark") {
         colorScheme = "dark"
-    } else if (context.state.theme === "Chiaro") {
+    } else if (context.state.theme === "light") {
         colorScheme = "light"
     }
 

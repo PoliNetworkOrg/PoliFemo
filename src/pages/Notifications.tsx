@@ -1,13 +1,10 @@
 import React from "react"
-import { ScrollView, View, StyleSheet } from "react-native"
+import { View, StyleSheet } from "react-native"
 import { RootStackScreen } from "navigation/NavigationTypes"
-import { SettingsScroll } from "components/Settings/SettingsScroll"
+import { SettingsScroll } from "components/Settings"
 import { Divider } from "components/Divider"
-import { SettingTile } from "components/Settings/SettingTile"
-import { IconProps, settingsIcons } from "assets/settings"
-import { UserDetailsTile } from "components/Settings/UserDetailsTile"
-
-import { Setting } from "components/Settings/Setting"
+import { SettingTile } from "components/Settings"
+import { Setting } from "components/Settings"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 
@@ -49,7 +46,7 @@ const settingsListGruppi: Setting[] = [
 /**
  * Notifications Settings Page
  */
-export const Notifications: RootStackScreen<"Notifications"> = props => {
+export const Notifications: RootStackScreen<"Notifications"> = () => {
     const { isLight, palette } = usePalette()
     return (
         <SettingsScroll title="Notifiche">

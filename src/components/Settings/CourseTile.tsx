@@ -4,14 +4,17 @@ import { TouchableRipple } from "../TouchableRipple"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import { RadioButtonCustom } from "./RadioButton/RadioButtonCustom"
-import { RadioButtonContext } from "./RadioButton/RadioButtonContext"
+import { RadioButtonContext } from "./RadioButton/RadioButtonGroup"
 
-export interface CarrieraTileProps {
+export interface CourseTileProps {
     matricola: number
     type?: string
 }
 
-export const CarrieraTile: FC<CarrieraTileProps> = props => {
+/**
+ * Custom Tile component designed to show a "Course of studies".
+ */
+export const CourseTile: FC<CourseTileProps> = props => {
     const { isLight } = usePalette()
     return (
         <RadioButtonContext.Consumer>
@@ -19,7 +22,7 @@ export const CarrieraTile: FC<CarrieraTileProps> = props => {
                 return (
                     <TouchableRipple
                         onClick={() => {
-                            context.onValueChange(props.matricola.toString())
+                            context.setValue(props.matricola.toString())
                         }}
                     >
                         <View

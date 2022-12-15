@@ -3,13 +3,23 @@ import { Pressable, View } from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import { RadioButtonCustom } from "./RadioButton/RadioButtonCustom"
-import { RadioButtonContext } from "./RadioButton/RadioButtonContext"
+import { RadioButtonContext } from "./RadioButton/RadioButtonGroup"
 
-export interface SelectModeTileProps {
+export interface SelectTileProps {
+    /**
+     * label shown on screen beside radio button
+     */
     name: string
+    /**
+     * value who will be update RadioButton context state
+     */
+    storageValue: string
 }
 
-export const SelectModeTile: FC<SelectModeTileProps> = props => {
+/**
+ * A tile designed to use in conjunction with {@link RadioButtonGroup}
+ */
+export const SelectTile: FC<SelectTileProps> = props => {
     const { isLight, palette } = usePalette()
     return (
         <RadioButtonContext.Consumer>
@@ -25,17 +35,17 @@ export const SelectModeTile: FC<SelectModeTileProps> = props => {
                         }}
                     >
                         <Pressable
-                            onPress={() => context.onValueChange(props.name)}
+                            onPress={() => context.setValue(props.storageValue)}
                         >
                             <RadioButtonCustom
-                                status={props.name === context.value}
+                                status={props.storageValue === context.value}
                                 darkColor={palette.darker}
                             />
                         </Pressable>
                         <View>
                             <Pressable
                                 onPress={() =>
-                                    context.onValueChange(props.name)
+                                    context.setValue(props.storageValue)
                                 }
                             >
                                 <Text
