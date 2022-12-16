@@ -9,12 +9,13 @@ export interface UserDetailsTileProps {
     nome?: string
     cognome?: string
     codPersona?: number
+    onPress?: () => void
 }
 
 export const UserDetailsTile: FC<UserDetailsTileProps> = props => {
     const { isLight } = usePalette()
     return (
-        <TouchableRipple isRoundedTopCorners={true}>
+        <TouchableRipple isRoundedTopCorners={true} onClick={props.onPress}>
             <View
                 style={{
                     paddingHorizontal: 28,

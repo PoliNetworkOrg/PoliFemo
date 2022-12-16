@@ -7,11 +7,11 @@ import { RadioButtonContext } from "./RadioButton/RadioButtonGroup"
 
 export interface SelectTileProps {
     /**
-     * label shown on screen beside radio button
+     * label shown on screen besides radio button
      */
     name: string
     /**
-     * value who will be update RadioButton context state
+     * value who will update RadioButton context state
      */
     storageValue: string
 }

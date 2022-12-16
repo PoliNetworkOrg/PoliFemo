@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { View, TouchableNativeFeedback } from "react-native"
+import { View, Pressable } from "react-native"
 import { usePalette } from "utils/colors"
 
 export interface TouchableRippleProps {
@@ -25,20 +25,16 @@ export const TouchableRipple: FC<TouchableRippleProps> = props => {
                     : {},
             ]}
         >
-            <TouchableNativeFeedback
-                background={
-                    props.showRipple
-                        ? TouchableNativeFeedback.Ripple(
-                              isLight ? "#d2d2d2" : "#343E5A",
-                              false
-                          )
+            <Pressable
+                android_ripple={
+                    props.showRipple === undefined || props.showRipple === true
+                        ? { color: isLight ? "#d2d2d2" : "#343E5A" }
                         : undefined
                 }
-                style={{}}
                 onPress={props.onClick ?? undefined}
             >
                 {props.children}
-            </TouchableNativeFeedback>
+            </Pressable>
         </View>
     )
 }

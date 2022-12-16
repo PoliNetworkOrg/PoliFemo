@@ -13,6 +13,7 @@ import { SelectTile } from "components/Settings"
 import { AppContext } from "../state/AppContext"
 import { RadioButtonGroup } from "components/Settings"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { UserAnonymousTile } from "components/Settings/UserAnonymousTile"
 
 const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
 const themesToSave: string[] = ["predefined", "dark", "light"]
@@ -37,6 +38,9 @@ export const SettingsPage: RootStackScreen<"Settings"> = props => {
     const [carriera, setCarriera] = useState(
         user.carriere[0].matricola.toString()
     )
+
+    //for testing logged in/out view
+    const [logged, setLogged] = useState(false)
 
     const [isModalVisible, setModalVisible] = useState(false)
     const { navigate } = useNavigation()
@@ -80,23 +84,33 @@ export const SettingsPage: RootStackScreen<"Settings"> = props => {
     return (
         <View style={{ flex: 1 }}>
             <SettingsScroll title="Impostazioni">
-                <UserDetailsTile
-                    codPersona={user.codPersona}
-                    profilePic={user.profilePic}
-                    nome={user.nome}
-                    cognome={user.cognome}
-                />
-                <RadioButtonGroup value={carriera} setValue={setCarriera}>
-                    {user.carriere?.map((carriera, index) => {
-                        return (
-                            <CourseTile
-                                key={index}
-                                matricola={carriera.matricola}
-                                type={carriera.type}
-                            />
-                        )
-                    })}
-                </RadioButtonGroup>
+                {logged ? (
+                    <UserDetailsTile
+                        codPersona={user.codPersona}
+                        profilePic={user.profilePic}
+                        nome={user.nome}
+                        cognome={user.cognome}
+                        onPress={() => setLogged(false)}
+                    />
+                ) : (
+                    <UserAnonymousTile
+                        showRipple={false}
+                        onLogin={() => setLogged(true)}
+                    />
+                )}
+                {logged && (
+                    <RadioButtonGroup value={carriera} setValue={setCarriera}>
+                        {user.carriere?.map((carriera, index) => {
+                            return (
+                                <CourseTile
+                                    key={index}
+                                    matricola={carriera.matricola}
+                                    type={carriera.type}
+                                />
+                            )
+                        })}
+                    </RadioButtonGroup>
+                )}
                 <Divider />
 
                 {settingsList.map((setting, index) => {
