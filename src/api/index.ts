@@ -1,13 +1,6 @@
-import MainApi from "./MainApi"
-
-export const api = MainApi.getInstance()
-
-export { RetryType } from "./RetryType"
-
-export { Article } from "./Article"
-
-export { Tag } from "./Tag"
-
-export { Lecture } from "./Lecture"
-
-export { RequestOptions } from "./MainApi"
+export * from "./MainApi"
+export * from "./RetryType"
+export * from "./Article"
+export * from "./Tag"
+export * from "./Lecture"
+export * from "./MainApi"

@@ -1,10 +1,11 @@
-import { RootStackScreen } from "navigation/NavigationTypes"
+import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
 import React, { useEffect, useRef, useState } from "react"
 import { View } from "react-native"
 import { Subtitle, Title } from "components/Text"
 import WebView from "react-native-webview"
 import { usePalette } from "utils/colors"
 import { api } from "api"
+import { PolimiToken, PoliNetworkToken } from "utils/login"
 
 const magicLoginUrl =
     "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize?client_id=92602f24-dd8e-448e-a378-b1c575310f9d&scope=openid%20offline_access&response_type=code&login_hint=nome.cognome@mail.polimi.it&state=10010&redirect_uri=https://api.polinetwork.org/v1/auth/code"
@@ -29,15 +30,32 @@ const loginMessage: Record<LoginStage, string> = {
 }
 
 export const Login: RootStackScreen<"Login"> = () => {
+    const navigation = useNavigation()
     const { backgroundSecondary } = usePalette()
     const webview = useRef<WebView>(null)
     const [loginStage, setLoginStage] = useState(LoginStage.LOGGING_IN)
 
     const [currentURL, setCurrentURL] = useState(magicLoginUrl)
 
+    const [poliNetworkToken, setPoliNetworkToken] = useState<
+        PoliNetworkToken | undefined
+    >()
+    const [polimiToken, setPolimiToken] = useState<PolimiToken | undefined>()
+
     useEffect(() => {
         console.log(`Login stage: ${LoginStage[loginStage]}`)
     }, [loginStage])
+
+    useEffect(() => {
+        if (poliNetworkToken && polimiToken) {
+            console.log("Logging in...")
+            void api.setTokens({ poliNetworkToken, polimiToken }).then(() => {
+                setTimeout(() => {
+                    navigation.navigate("Home")
+                }, 2000)
+            })
+        }
+    }, [poliNetworkToken, polimiToken])
 
     return (
         <View style={{ flex: 1, paddingTop: 50 }}>
@@ -64,12 +82,14 @@ export const Login: RootStackScreen<"Login"> = () => {
                     if (!url || !data) return
 
                     if (url.startsWith(polinetworkTargetUrl)) {
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                        setPoliNetworkToken(JSON.parse(data))
                         setCurrentURL(magicTokenUrl)
                     } else if (
                         url.includes(polimiTargetUrl) &&
                         !data.startsWith("ticket")
                     ) {
-                        console.log(await api.getPolimiToken(data))
+                        setPolimiToken(await api.getPolimiToken(data))
                         setLoginStage(LoginStage.GOT_POLIMI_TOKEN)
                     }
                 }}

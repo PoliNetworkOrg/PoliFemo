@@ -5,7 +5,10 @@ import { getIsoStringFromDaysPassed } from "utils/dates"
 import { Articles } from "./Article"
 import { RetryType } from "./RetryType"
 import { Tags } from "./Tag"
-import { PolimiToken } from "utils/login"
+import { PolimiToken, PoliNetworkToken, Tokens } from "utils/login"
+import { EventEmitter } from "react-native"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import React from "react"
 
 /*Docs used to make this:
 Singleton:
@@ -52,10 +55,27 @@ declare module "axios" {
  * ```
  *
  */
-export default class MainApi {
+export declare interface MainApi {
+    /**
+     * fired when login status changes, either because of a login or a logout
+     * */
+    on(event: "login_event", listener: (loggedIn: boolean) => void): this
+    /**
+     * fired when tokens are retrieved and user logs in
+     */
+    on(event: "login", listener: () => void): this
+    /**
+     * fired when tokens get destroyed and user logs out
+     */
+    on(event: "logout", listener: () => void): this
+}
+export class MainApi extends EventEmitter {
     private static classInstance?: MainApi
 
     private readonly instance: AxiosInstance
+
+    private polimiToken?: PolimiToken
+    private poliNetworkToken?: PoliNetworkToken
 
     /**
      * retrieves singleton instance.
@@ -74,6 +94,7 @@ export default class MainApi {
     }
 
     private constructor(baseUrl: string) {
+        super()
         this.instance = axios.create({
             baseURL: baseUrl,
             timeout: 2000,
@@ -327,6 +348,34 @@ export default class MainApi {
             console.error(err.response.headers) // ***
         }
     }
+
+    async setTokens(tokens: Tokens) {
+        this.polimiToken = tokens.polimiToken
+        this.poliNetworkToken = tokens.poliNetworkToken
+        this.emit("login")
+        this.emit("login_event", true)
+        // save the tokens in local storage
+        await AsyncStorage.setItem("api:tokens", JSON.stringify(tokens))
+    }
+
+    async destroyTokens() {
+        this.polimiToken = undefined
+        this.poliNetworkToken = undefined
+        this.emit("logout")
+        this.emit("login_event", false)
+        // remove the tokens from local storage
+        await AsyncStorage.removeItem("api:tokens")
+    }
+
+    async loadTokens() {
+        const tokens = await AsyncStorage.getItem("api:tokens")
+        if (tokens) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            const parsedTokens: Tokens = JSON.parse(tokens)
+            this.polimiToken = parsedTokens.polimiToken
+            this.poliNetworkToken = parsedTokens.poliNetworkToken
+        }
+    }
 }
 
 /**
@@ -351,4 +400,14 @@ export interface RequestOptions {
     maxRetries?: number
     waitingTime?: number
     retryCount?: number
+}
+
+export const api = MainApi.getInstance()
+
+export const useLoadTokens = () => {
+    const [loaded, setLoaded] = React.useState(false)
+    React.useEffect(() => {
+        void api.loadTokens().then(() => setLoaded(true))
+    }, [])
+    return loaded
 }
