@@ -1,6 +1,6 @@
 import React, { FC } from "react"
 import { View } from "react-native"
-import { TouchableRipple } from "../TouchableRipple"
+import { TouchableRipple } from "components/TouchableRipple"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import { RadioButtonCustom } from "./RadioButton/RadioButtonCustom"

@@ -13,7 +13,7 @@ import { SelectTile } from "components/Settings"
 import { AppContext } from "../state/AppContext"
 import { RadioButtonGroup } from "components/Settings"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { UserAnonymousTile } from "components/Settings/UserAnonymousTile"
+import { UserAnonymousTile } from "components/Settings"
 
 const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
 const themesToSave: string[] = ["predefined", "dark", "light"]

@@ -59,7 +59,6 @@ export default function App() {
 
     useCallback(async () => {
         if (themeIsReady && fontsLoaded) {
-            // This tells the splash screen to hide immediately!
             await hideAsync()
         }
     }, [themeIsReady, fontsLoaded])
