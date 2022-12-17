@@ -12,10 +12,9 @@ export interface PoliNetworkToken {
 }
 
 export interface PolimiToken {
-    access_token: string
-    expires_in: number
-    refresh_token: string
-    token_type: string
+    accessToken: string
+    expiresIn: number
+    refreshToken: string
 }
 
 export interface Tokens {

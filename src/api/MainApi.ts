@@ -5,7 +5,6 @@ import axios, {
     AxiosRequestConfig,
     AxiosResponse,
 } from "axios"
-import qs from "qs"
 import { Lecture } from "./Lecture"
 import { getIsoStringFromDaysPassed } from "utils/dates"
 import { Articles } from "./Article"
@@ -132,7 +131,7 @@ export class MainApi extends EventEmitter {
         if (config.authType === AuthType.POLIMI && this.polimiToken) {
             config.headers[
                 "Authorization"
-            ] = `Bearer ${this.polimiToken.access_token}`
+            ] = `Bearer ${this.polimiToken.accessToken}`
         } else if (
             config.authType === AuthType.POLINETWORK &&
             this.poliNetworkToken
@@ -211,6 +210,10 @@ export class MainApi extends EventEmitter {
             console.log(
                 "RetryType.NO_RETRY or maximum numbers of retries reached"
             )
+            return Promise.reject(error)
+        } else if (response?.status === 401) {
+            // TODO: handle token refresh / logout when unauthorized
+            console.log("401 Unauthorized")
             return Promise.reject(error)
         } else {
             if (config == undefined) {
@@ -347,39 +350,27 @@ export class MainApi extends EventEmitter {
         return response.data
     }
 
-    getPolimiToken = async (code: string) => {
-        const postData = {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            grant_type: "authorization_code",
-            code,
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            client_id: "9978142015",
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            client_secret: "61760",
-        }
-        try {
-            const response = await axios.post<PolimiToken | { error: string }>(
-                "https://oauthidp.polimi.it/oauthidp/oauth2/token",
-                qs.stringify(postData)
-            )
-            console.log(response.config, response.data)
-            if ("error" in response.data) {
-                throw new Error(response.data.error)
-            } else return response.data
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (err: any) {
-            console.error("Error response:")
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            console.error(err.response.data) // ***
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            console.error(err.response.status) // ***
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            console.error(err.response.config) // ***
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            console.error(err.response.headers) // ***
-        }
+    /**
+     * gets the OAuth access token given the polimi authcode from the login flow
+     * @param code Polimi AuthCode
+     * @returns polimi accessToken and refreshToken
+     */
+    async getPolimiToken(code: string) {
+        const response = await axios.get<PolimiToken>(
+            `https://polimiapp.polimi.it/polimi_app/rest/jaf/oauth/token/get/${code}`,
+            {
+                headers: {
+                    accept: "application/json",
+                },
+            }
+        )
+        return response.data
     }
 
+    /**
+     * set the tokens and save them to storage
+     * @param tokens both the polinetwork and polimi tokens
+     */
     async setTokens(tokens: Tokens) {
         this.polimiToken = tokens.polimiToken
         this.poliNetworkToken = tokens.poliNetworkToken
@@ -390,6 +381,9 @@ export class MainApi extends EventEmitter {
         console.log("Saved tokens in local storage")
     }
 
+    /**
+     * remove the tokens from storage, essentially log out
+     */
     async destroyTokens() {
         this.polimiToken = undefined
         this.poliNetworkToken = undefined
@@ -399,6 +393,9 @@ export class MainApi extends EventEmitter {
         await AsyncStorage.removeItem("api:tokens")
     }
 
+    /**
+     * load tokens from storage on boot, if they aren't present, do nothing
+     */
     async loadTokens() {
         const tokens = await AsyncStorage.getItem("api:tokens")
         if (tokens) {
@@ -415,6 +412,9 @@ export class MainApi extends EventEmitter {
         }
     }
 
+    /**
+     * test PoliNetwork auth call
+     */
     async getPolinetworkMe() {
         const response = await this.instance.get<{
             id: string
@@ -424,8 +424,14 @@ export class MainApi extends EventEmitter {
         return response.data
     }
 
+    /**
+     * test polimi auth call
+     */
     async getPolimiUserInfo() {
-        const response = await axios.get<{
+        const inst = axios.create()
+        inst.interceptors.request.use(this._handleRequest)
+        inst.interceptors.response.use(this._handleResponse, this._handleError)
+        const response = await inst.get<{
             idPersona: number
             codicePersona: string
             nome: string
@@ -469,6 +475,12 @@ export interface RequestOptions {
 
 export const api = MainApi.getInstance()
 
+/**
+ * Custom Hook used to wait for the tokens to be loaded before booting the app
+ * This will return true once the token are read from storage, wether they are
+ * present or not
+ * @returns true if the promise has returned, false otherwise
+ */
 export const useLoadTokens = () => {
     const [loaded, setLoaded] = React.useState(false)
     React.useEffect(() => {
