@@ -38,7 +38,14 @@ export default function App() {
     }, [])
 
     useEffect(() => {
-        if (fontsLoaded && tokensLoaded) void hideAsync()
+        if (fontsLoaded && tokensLoaded) {
+            void hideAsync().then(async () => {
+                if (loginState.loggedIn) {
+                    console.log(await api.getPolinetworkMe())
+                    console.log(await api.getPolimiUserInfo())
+                }
+            })
+        }
     }, [fontsLoaded, tokensLoaded])
 
     if (!fontsLoaded) return null

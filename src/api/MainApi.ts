@@ -1,4 +1,10 @@
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios"
+import { EventEmitter } from "events"
+import axios, {
+    AxiosError,
+    AxiosInstance,
+    AxiosRequestConfig,
+    AxiosResponse,
+} from "axios"
 import qs from "qs"
 import { Lecture } from "./Lecture"
 import { getIsoStringFromDaysPassed } from "utils/dates"
@@ -6,7 +12,6 @@ import { Articles } from "./Article"
 import { RetryType } from "./RetryType"
 import { Tags } from "./Tag"
 import { PolimiToken, PoliNetworkToken, Tokens } from "utils/login"
-import { EventEmitter } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import React from "react"
 
@@ -28,8 +33,16 @@ declare module "axios" {
         maxRetries?: number
         waitingTime?: number //seconds
         retryCount?: number
+        authType?: AuthType
     }
 }
+
+enum AuthType {
+    NONE,
+    POLIMI,
+    POLINETWORK,
+}
+
 /**
  * Singleton object which manages requests to PoliNetwork Server.
  *
@@ -99,17 +112,36 @@ export class MainApi extends EventEmitter {
             baseURL: baseUrl,
             timeout: 2000,
         })
-        this._initializeResponseInterceptor()
+        this._initializeInterceptors()
     }
 
     /**
      * initialize interceptors functions
      * */
-    private _initializeResponseInterceptor = () => {
+    private _initializeInterceptors = () => {
+        this.instance.interceptors.request.use(this._handleRequest)
         this.instance.interceptors.response.use(
             this._handleResponse,
             this._handleError
         )
+    }
+
+    private _handleRequest = (config: AxiosRequestConfig) => {
+        // TODO: refresh token if expired
+        config.headers = config.headers ?? {}
+        if (config.authType === AuthType.POLIMI && this.polimiToken) {
+            config.headers[
+                "Authorization"
+            ] = `Bearer ${this.polimiToken.access_token}`
+        } else if (
+            config.authType === AuthType.POLINETWORK &&
+            this.poliNetworkToken
+        ) {
+            config.headers[
+                "Authorization"
+            ] = `Bearer ${this.poliNetworkToken.access_token}`
+        }
+        return config
     }
 
     /**
@@ -117,7 +149,6 @@ export class MainApi extends EventEmitter {
      * does (or will do) something before `.then` is called
      * */
     private _handleResponse = (res: AxiosResponse): AxiosResponse => {
-        console.log("successful response intercepted")
         return res
     }
 
@@ -356,6 +387,7 @@ export class MainApi extends EventEmitter {
         this.emit("login_event", true)
         // save the tokens in local storage
         await AsyncStorage.setItem("api:tokens", JSON.stringify(tokens))
+        console.log("Saved tokens in local storage")
     }
 
     async destroyTokens() {
@@ -372,9 +404,42 @@ export class MainApi extends EventEmitter {
         if (tokens) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const parsedTokens: Tokens = JSON.parse(tokens)
+            console.log("Loaded tokens from local storage")
+            console.log(parsedTokens)
             this.polimiToken = parsedTokens.polimiToken
             this.poliNetworkToken = parsedTokens.poliNetworkToken
+            this.emit("login")
+            this.emit("login_event", true)
+        } else {
+            console.log("No tokens found in local storage")
         }
+    }
+
+    async getPolinetworkMe() {
+        const response = await this.instance.get<{
+            id: string
+        }>("/v1/accounts/me", {
+            authType: AuthType.POLINETWORK,
+        })
+        return response.data
+    }
+
+    async getPolimiUserInfo() {
+        const response = await axios.get<{
+            idPersona: number
+            codicePersona: string
+            nome: string
+            cognome: string
+            matricola: string
+            classeCarriera: string
+            description: string
+            initials: string
+            email: string
+            fotoURL: string
+        }>("https://polimiapp.polimi.it/polimi_app/rest/jaf/internal/user", {
+            authType: AuthType.POLIMI,
+        })
+        return response.data
     }
 }
 
@@ -407,7 +472,7 @@ export const api = MainApi.getInstance()
 export const useLoadTokens = () => {
     const [loaded, setLoaded] = React.useState(false)
     React.useEffect(() => {
-        void api.loadTokens().then(() => setLoaded(true))
+        if (!loaded) void api.loadTokens().then(() => setLoaded(true))
     }, [])
     return loaded
 }
