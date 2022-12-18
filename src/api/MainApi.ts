@@ -203,6 +203,23 @@ export default class MainApi {
         return response.data.results
     }
 
+    public getArticlesFromDaysAgoTillDateByTag = async (
+        days: number,
+        end: string,
+        tag: string,
+        options?: RequestOptions
+    ) => {
+        const start: string = getIsoStringFromDaysPassed(days)
+        const response = await this.instance.get<Articles>("/v1/articles", {
+            retryType: options?.retryType ?? RetryType.RETRY_INDEFINETELY,
+            maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
+            waitingTime: options?.waitingTime ?? 3,
+            retryCount: options?.retryCount ?? 0,
+            params: { start: start, end: end, tag: tag },
+        })
+        return response.data.results
+    }
+
     /**
      * Retrieves articles from PoliNetwork server, given a starting and ending ISO date.
      *
@@ -220,7 +237,22 @@ export default class MainApi {
             retryCount: options?.retryCount ?? 0,
             params: { start: start, end: end },
         })
+        return response.data.results
+    }
 
+    public getArticlesFromDateTillDateByTag = async (
+        start: string,
+        end: string,
+        tag: string,
+        options?: RequestOptions
+    ) => {
+        const response = await this.instance.get<Articles>("/v1/articles", {
+            retryType: options?.retryType ?? RetryType.RETRY_INDEFINETELY,
+            maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
+            waitingTime: options?.waitingTime ?? 3,
+            retryCount: options?.retryCount ?? 0,
+            params: { start: start, end: end, tag: tag },
+        })
         return response.data.results
     }
 
