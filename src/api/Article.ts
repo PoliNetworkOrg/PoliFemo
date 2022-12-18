@@ -3,6 +3,8 @@ export interface Articles {
     results: Article[]
 }
 export interface Article {
+    id: number
+    tag_id: string
     title: string
     subtitle?: string
     latitude?: number
