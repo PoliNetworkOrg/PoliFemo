@@ -1,57 +1,29 @@
 /**
  * Root Stack Navigator.
- * Component encapsulating the pages of the app.
+ * Component encapsulating the Navigators of the app.
  */
 
 import React, { FC } from "react"
 import { createStackNavigator } from "@react-navigation/stack"
-
 import { RootStackNavigatorParams } from "navigation/NavigationTypes"
-import { Home } from "pages/Home"
-import { Article } from "pages/ArticleDetails"
-import { NewsList } from "pages/NewsList"
-import { Error404 } from "pages/Error404"
-import { SettingsPage } from "pages/Settings"
-import { NavigationState } from "@react-navigation/native"
-import { getCurrentRouteName } from "utils/navigation"
-import { Notifications } from "pages/Notifications"
-import { Help } from "pages/Help"
+// ! import with absolute path gives error
+import { MainContainer } from "../MainContainer"
+import { SettingsContainer } from "../SettingsContainer"
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const RootStackNavigator = createStackNavigator<RootStackNavigatorParams>()
 
-export const RootStack: FC<{
-    onShowTray: (value: boolean) => void
-}> = props => {
+export const RootStack: FC = () => {
     return (
-        <RootStackNavigator.Navigator
-            screenOptions={{ headerShown: false }}
-            screenListeners={{
-                //this is called every time a new route is pushed or popped
-                state: e => {
-                    const event = e.data as { state: NavigationState }
-                    const route = getCurrentRouteName(event.state.routes)
-                    //if current route is (see below) hide tray
-                    if (["Settings", "Notifications", "Help"].includes(route)) {
-                        props.onShowTray(false)
-                    } else {
-                        props.onShowTray(true)
-                    }
-                },
-            }}
-        >
-            <RootStackNavigator.Screen name="Home" component={Home} />
-            <RootStackNavigator.Screen name="Article" component={Article} />
-            <RootStackNavigator.Screen name="NewsList" component={NewsList} />
-            <RootStackNavigator.Screen name="Error404" component={Error404} />
+        <RootStackNavigator.Navigator screenOptions={{ headerShown: false }}>
             <RootStackNavigator.Screen
-                name="Settings"
-                component={SettingsPage}
+                name="MainNav"
+                component={MainContainer}
             />
             <RootStackNavigator.Screen
-                name="Notifications"
-                component={Notifications}
+                name="SettingsNav"
+                component={SettingsContainer}
             />
-            <RootStackNavigator.Screen name="Help" component={Help} />
         </RootStackNavigator.Navigator>
     )
 }

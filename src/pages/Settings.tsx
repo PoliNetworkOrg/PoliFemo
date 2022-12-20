@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
 import { View } from "react-native"
-import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
+import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { SettingsScroll } from "components/Settings"
 import { Divider } from "components/Divider"
 import { SettingTile } from "components/Settings"
@@ -21,7 +21,7 @@ const themesToSave: string[] = ["predefined", "dark", "light"]
 /**
  * Settings Page
  */
-export const SettingsPage: RootStackScreen<"Settings"> = props => {
+export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
     const user = props.route.params.user
 
     const state = useContext(AppContext).state
@@ -54,14 +54,6 @@ export const SettingsPage: RootStackScreen<"Settings"> = props => {
     }, [theme])
 
     const settingsList: Setting[] = [
-        {
-            title: "Notifiche",
-            subtitle: "Toni messaggi, gruppi",
-            icon: settingsIcons.notifiche,
-            callback: () => {
-                navigate("Notifications")
-            },
-        },
         {
             title: "Aspetto",
             subtitle: "Dark, light mode",

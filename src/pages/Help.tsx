@@ -1,6 +1,6 @@
 import React from "react"
 import { View } from "react-native"
-import { RootStackScreen } from "navigation/NavigationTypes"
+import { SettingsStackScreen } from "navigation/NavigationTypes"
 import { SettingsScroll } from "components/Settings/SettingsScroll"
 import { SettingTile } from "components/Settings/SettingTile"
 import { Setting } from "components/Settings/Setting"
@@ -26,7 +26,7 @@ export const settingsList: Setting[] = [
 /**
  * Notifications Settings Page
  */
-export const Help: RootStackScreen<"Help"> = () => {
+export const Help: SettingsStackScreen<"Help"> = () => {
     return (
         <SettingsScroll title="Aiuto">
             <View style={{ paddingTop: 32 }}>

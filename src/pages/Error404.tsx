@@ -1,15 +1,14 @@
 import React from "react"
-import { RootStackScreen } from "navigation/NavigationTypes"
+import { MainStackScreen } from "navigation/NavigationTypes"
 import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { Text } from "components/Text"
-
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import { deleteSvg as icon } from "assets/modal"
 import { useNavigation } from "navigation/NavigationTypes"
 import { NavBar } from "components/NavBar"
 
-export const Error404: RootStackScreen<"Error404"> = () => {
+export const Error404: MainStackScreen<"Error404"> = () => {
     const { background, homeBackground, isLight } = usePalette()
     const deleteSvg = useSVG(icon.svg)
     const navigation = useNavigation()
