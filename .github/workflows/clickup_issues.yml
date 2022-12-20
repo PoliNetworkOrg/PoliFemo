@@ -18,6 +18,6 @@ jobs:
                   -H 'Content-Type: application/json' \
                   -d '{
                     "name": "${{github.event.issue.title}}",
-                    "description": "${{github.event.issue.body}}",
+                    "description": "${{ toJSON(github.event.issue.body) }}",
                     "status": "to do"
                   }'
