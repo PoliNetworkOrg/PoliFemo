@@ -16,24 +16,26 @@ import { OutsideClickProvider } from "utils/outsideClick"
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { AppStateProvider } from "./src/state"
-import { AppState } from "./src/state"
+import { AppSettings } from "./src/state"
 
 export default function App() {
-    const [themeIsReady, setThemeIsReady] = useState(false)
-    const [theme, setTheme] = useState("predefined")
-    const state = new AppState({ theme: theme, setTheme: setTheme })
+    const [settingsReady, setSettingsReady] = useState(false)
+    const [settings, setSettings] = useState(
+        new AppSettings({ theme: "predefined" })
+    )
 
     // docs: https://docs.expo.dev/versions/latest/sdk/splash-screen/
     useEffect(() => {
         async function prepare() {
             try {
-                await AsyncStorage.getItem("theme")
-                    .then(themeJSON => {
-                        if (themeJSON) {
+                await AsyncStorage.getItem("settings")
+                    .then(settingsJSON => {
+                        if (settingsJSON) {
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                            const parsedTheme: string = JSON.parse(themeJSON)
-                            console.log("loaded theme: " + theme)
-                            setTheme(parsedTheme)
+                            const parsedSettings: AppSettings =
+                                JSON.parse(settingsJSON)
+                            console.log("loaded theme: " + parsedSettings.theme)
+                            setSettings(settings.copyWith(parsedSettings))
                         }
                     })
                     .catch(err => {
@@ -42,7 +44,7 @@ export default function App() {
             } catch (e) {
                 console.warn(e)
             } finally {
-                setThemeIsReady(true)
+                setSettingsReady(true)
             }
         }
 
@@ -58,16 +60,16 @@ export default function App() {
     })
 
     useCallback(async () => {
-        if (themeIsReady && fontsLoaded) {
+        if (settingsReady && fontsLoaded) {
             await hideAsync()
         }
-    }, [themeIsReady, fontsLoaded])
+    }, [settingsReady, fontsLoaded])
 
-    if (!fontsLoaded || !themeIsReady) return null
+    if (!fontsLoaded || !settingsReady) return null
 
     return (
         <NavigationContainer>
-            <AppStateProvider state={state}>
+            <AppStateProvider settings={settings} setSettings={setSettings}>
                 <OutsideClickProvider>
                     <AppContainer />
                 </OutsideClickProvider>

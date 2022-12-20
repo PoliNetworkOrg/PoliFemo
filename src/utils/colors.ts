@@ -163,7 +163,7 @@ export const usePalette: () => ColorTheme &
         darkTheme: ColorTheme
     } = () => {
     const context = useContext(AppContext)
-    const chosenTheme = context.state.theme
+    const chosenTheme = context.settings.theme
 
     // ? come si fa a usare un react hook in modo condizionale se
     // ? deve sempre essere chiamato per le regole di

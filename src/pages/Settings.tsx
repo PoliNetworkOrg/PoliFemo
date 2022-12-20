@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { View } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { SettingsScroll } from "components/Settings"
@@ -24,12 +24,14 @@ const themesToSave: string[] = ["predefined", "dark", "light"]
 export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
     const user = props.route.params.user
 
-    const state = useContext(AppContext).state
+    const context = useContext(AppContext)
+
+    const settings = context.settings
+    const setSettings = context.setSettings
 
     //App state theme
-    const theme = state.theme
-    //App state theme setter
-    const setTheme = state.setTheme
+    const theme = settings.theme
+    //Settings setter
 
     //RadioButtonGroup theme state and setter
     const [selectedTheme, setSelectedTheme] = useState(theme)
@@ -43,14 +45,23 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
     const [logged, setLogged] = useState(false)
 
     const [isModalVisible, setModalVisible] = useState(false)
+
+    //tracking first render
+    const firstRender = useRef(true)
+
     const { navigate } = useNavigation()
 
-    //Update storage as a side effect of app state change
+    //Update storage as a side effect of settings change
     useEffect(() => {
-        AsyncStorage.setItem("theme", JSON.stringify(theme)).catch(err =>
-            console.log(err)
-        )
-        console.log("Set theme " + theme)
+        // ? skip on first render, is it worth it ?
+        if (firstRender.current) {
+            firstRender.current = false
+        } else {
+            AsyncStorage.setItem("settings", JSON.stringify(settings)).catch(
+                err => console.log(err)
+            )
+            console.log("Set theme " + theme)
+        }
     }, [theme])
 
     const settingsList: Setting[] = [
@@ -120,7 +131,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
                         setModalVisible(false)
                     }}
                     onOK={(theme: string) => {
-                        setTheme(theme)
+                        setSettings(settings.copyWith({ theme: theme }))
                         setModalVisible(false)
                     }}
                 >

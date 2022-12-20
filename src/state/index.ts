@@ -1,4 +1,4 @@
 export * from "./AppContext"
-export * from "./AppState"
+export * from "./AppSettings"
 
 // ? should use absolute path in babel config ?
