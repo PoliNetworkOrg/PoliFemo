@@ -4,28 +4,45 @@ import BottomSheet, {
     BottomSheetScrollView,
     BottomSheetScrollViewMethods,
 } from "@gorhom/bottom-sheet"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 
-import { api, RetryType, Tag, Article } from "api"
+import { Article } from "api"
+import { TagWithData } from "./NewsManager"
 import { NewsTagsGrid } from "./NewsTagsGrid"
 import { Title } from "components/Text"
+import { CardWithGradient } from "components/CardWithGradient"
 import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
+import { useNavigation } from "navigation/NavigationTypes"
 import { getUsableScreenHeight } from "utils/height"
 
-export interface Favourites {
-    [key: string]: boolean
-}
-export interface LastArticles {
-    [key: string]: Article
+interface NewsBottomSheetProps {
+    /**
+     * Tags (news categories) in the favourite section
+     */
+    favouriteTags: TagWithData[]
+    /**
+     * All the other tags (new categories), at the bottom of the news section
+     */
+    otherTags: TagWithData[]
+    /**
+     * Article at the top of the news section
+     */
+    highlightArticle: Article
+    /**
+     * Callback function used to update the state in the NewsManager when the preference
+     * of a tag changes (whether it is favourite or not)
+     */
+    updateFavourites: (tagName: string, favourite: boolean) => void
 }
 
 /**
- * Bottom sheet in the home page to access news.
+ * Bottom sheet in the home page to access the news.
  *
+ * This component receives data from the NewsManager and handles the graphic part.
  * Its positioning is absolute.
  */
-export const NewsBottomSheet: FC = () => {
+export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
+    const navigation = useNavigation()
     const { isLight, background } = usePalette()
 
     // modal state
@@ -41,48 +58,6 @@ export const NewsBottomSheet: FC = () => {
         opened: 106,
     }
 
-    // Store the list of news tags
-    const [tags, setTags] = useState<Tag[]>([])
-    // Store wether a tag is marked as favourite or not
-    const [favourites, setFavourites] = useState<Favourites>({})
-    // Store the last article of each tag
-    const [lastArticles, setLastArticles] = useState<LastArticles>({})
-
-    const getLastArticles = async (list: Tag[]) => {
-        const tempLastArticles: LastArticles = {}
-        for (const tag of list) {
-            const article = await api.getLastArticlByTag(tag.name, {
-                retryType: RetryType.NO_RETRY,
-            })
-            tempLastArticles[tag.name] = article
-        }
-        return tempLastArticles
-    }
-
-    useEffect(() => {
-        // Load tags (news categories) and their last article (one for each tag)
-        const fetchData = async () => {
-            const tempTags = await api.getTags()
-            const tempLastArticles = await getLastArticles(tempTags)
-            setTags(tempTags)
-            setLastArticles(tempLastArticles)
-        }
-        fetchData().catch(err => console.log(err))
-    }, [])
-
-    useEffect(() => {
-        console.log("Loading favourite tags from storage")
-        AsyncStorage.getItem("newstags:favourite")
-            .then(favouritesJSON => {
-                if (favouritesJSON) {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                    const data: Favourites = JSON.parse(favouritesJSON)
-                    setFavourites(data)
-                }
-            })
-            .catch(err => console.log(err))
-    }, [])
-
     useEffect(() => {
         // scrolls to the top of the news scrollview when the news bottom sheet is Closed
         if (isNewsClosed && scrollViewRef.current) {
@@ -92,6 +67,7 @@ export const NewsBottomSheet: FC = () => {
         }
     }, [isNewsClosed])
 
+    //TODO: vedere se levare barra di scorrimento laterale
     return (
         <BottomSheet
             ref={bottomSheetRef}
@@ -107,26 +83,6 @@ export const NewsBottomSheet: FC = () => {
                     ]}
                 />
             )}
-            // handleComponent={() => (
-            //     // "News" title top bar component
-            //     <View style={[styles.topBar, { backgroundColor: background }]}>
-            //         <View
-            //             style={[
-            //                 styles.dragBar,
-            //                 {
-            //                     backgroundColor: isLight
-            //                         ? "rgba(135, 145, 189, 0.5)"
-            //                         : "#424967",
-            //                 },
-            //             ]}
-            //         />
-            //         <Title
-            //             style={{ fontFamily: "Roboto_700Bold", fontSize: 48 }}
-            //         >
-            //             News
-            //         </Title>
-            //     </View>
-            // )}
             style={[styles.bottomSheet, { backgroundColor: background }]}
             backgroundStyle={{
                 backgroundColor: background,
@@ -154,11 +110,11 @@ export const NewsBottomSheet: FC = () => {
         >
             <BottomSheetScrollView
                 ref={scrollViewRef}
+                stickyHeaderIndices={[0, 3]}
                 style={{
                     paddingHorizontal: 26,
                     backgroundColor: background,
                 }}
-                stickyHeaderIndices={[0, 2]}
             >
                 <View style={[styles.topBar, { backgroundColor: background }]}>
                     <Title
@@ -167,33 +123,45 @@ export const NewsBottomSheet: FC = () => {
                         News
                     </Title>
                 </View>
+
+                {props.highlightArticle && (
+                    <CardWithGradient
+                        title={"In Evidenza"}
+                        imageURL={props.highlightArticle.image}
+                        onClick={() =>
+                            navigation.navigate("Article", {
+                                article: props.highlightArticle,
+                            })
+                        }
+                        style={{ height: 220 }}
+                    />
+                )}
+
                 <NewsTagsGrid
-                    tags={tags}
-                    favourites={favourites}
-                    lastArticles={lastArticles}
-                    updateFavourites={(categoryName, favourite) => {
-                        const tempFavourites = { ...favourites }
-                        tempFavourites[categoryName] = favourite
-                        setFavourites(tempFavourites)
-                    }}
+                    tags={props.favouriteTags}
+                    updateFavourites={props.updateFavourites}
                 />
-                <View style={[styles.topBar, { backgroundColor: background }]}>
-                    <Title
-                        style={{ fontFamily: "Roboto_700Bold", fontSize: 48 }}
+
+                {props.otherTags.length > 0 && (
+                    <View
+                        style={[styles.topBar, { backgroundColor: background }]}
                     >
-                        Altre Categorie
-                    </Title>
-                </View>
+                        <Title
+                            style={{
+                                fontFamily: "Roboto_700Bold",
+                                fontSize: 42,
+                            }}
+                        >
+                            Altre Categorie
+                        </Title>
+                    </View>
+                )}
+
                 <NewsTagsGrid
-                    tags={tags}
-                    favourites={favourites}
-                    lastArticles={lastArticles}
-                    updateFavourites={(categoryName, favourite) => {
-                        const tempFavourites = { ...favourites }
-                        tempFavourites[categoryName] = favourite
-                        setFavourites(tempFavourites)
-                    }}
+                    tags={props.otherTags}
+                    updateFavourites={props.updateFavourites}
                 />
+
                 <View
                     // So that the scrollable content does not remain behind the NavBar
                     style={{ height: 120 }}
@@ -221,23 +189,16 @@ const styles = StyleSheet.create({
         shadowRadius: 9.51,
         elevation: 20,
     },
-    // topBar: {
-    //     flex: 1,
-    //     justifyContent: "center",
-    //     paddingHorizontal: 26,
-    //     height: 112,
-    //     borderTopLeftRadius: 30,
-    //     borderTopRightRadius: 30,
-    // },
     topBar: {
         flex: 1,
         justifyContent: "center",
-        height: 80,
+        marginBottom: 16,
     },
     dragBar: {
         alignSelf: "center",
         width: 120,
         height: 5,
+        marginVertical: 16,
         borderRadius: 4,
     },
 })

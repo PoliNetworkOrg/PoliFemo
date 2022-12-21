@@ -5,7 +5,7 @@ import { RootStackScreen } from "navigation/NavigationTypes"
 import {
     MainMenu,
     MainTitle,
-    NewsBottomSheet,
+    NewsManager,
     PoliSearchBar,
 } from "components/Home"
 import { usePalette } from "utils/colors"
@@ -122,7 +122,7 @@ export const Home: RootStackScreen<"Home"> = () => {
                     // section containing the search bar and the main menu
                     style={{
                         marginTop: 35,
-                        paddingBottom: 190,
+                        paddingBottom: 300,
                         backgroundColor: background,
                         borderTopLeftRadius: 30,
                         borderTopRightRadius: 30,
@@ -145,7 +145,7 @@ export const Home: RootStackScreen<"Home"> = () => {
                     <HighlightsManager />
                 </View>
             </View>
-            <NewsBottomSheet />
+            <NewsManager />
         </View>
     )
 }
