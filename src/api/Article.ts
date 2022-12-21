@@ -9,7 +9,7 @@ export interface Article {
     subtitle?: string
     latitude?: number
     longitude?: number
-    publish_time?: string
+    publish_time: string
     target_time?: string
     content: string
     image?: string
