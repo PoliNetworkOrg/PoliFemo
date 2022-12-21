@@ -20,7 +20,7 @@ export interface CardsPatterns {
     other: { [key: number]: CardsPattern }
 }
 
-export const newsCategoryPatterns: CardsPatterns = {
+export const newsTagsPatterns: CardsPatterns = {
     // first batch of news category cards
     first: {
         [1]: [[190, "left"]],

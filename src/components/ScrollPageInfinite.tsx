@@ -1,10 +1,11 @@
-import React, { FC, useEffect, useRef } from "react"
+import React, { FC, useEffect, useRef, useState } from "react"
 import {
     RefreshControl,
     FlatList,
     View,
     Animated,
     Switch,
+    ActivityIndicator,
     StyleSheet,
     NativeSyntheticEvent,
     NativeScrollEvent,
@@ -67,6 +68,7 @@ interface PageProps<T> {
         refreshing: boolean
     }
 
+    //TODO: write documentation
     data: T[]
     render: (item: T) => React.ReactElement
     fetchData: () => void
@@ -80,7 +82,11 @@ interface PageProps<T> {
  */
 export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
     const { background, homeBackground, palette } = usePalette()
-    const [isPastTitle, setIsPastTitle] = React.useState(false)
+
+    //TODO implement fetching feature
+    const [fetching, setFetching] = useState<boolean>(false)
+
+    const [isPastTitle, setIsPastTitle] = useState(false)
     const shadowAnim = useRef(new Animated.Value(0)).current
 
     const navbar = !props.hideNavbar
@@ -90,7 +96,7 @@ export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
     const showSwitch = props.showSwitch ?? false
 
     useEffect(() => {
-        // hook called when the shadown needs to be animated
+        // hook called when the shadow needs to be animated
         const duration = 100
         if (isPastTitle)
             Animated.timing(shadowAnim, {
@@ -142,6 +148,7 @@ export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
                     data={props.data}
                     renderItem={({ item }) => props.render(item)}
                     onEndReached={props.fetchData}
+                    onEndReachedThreshold={0.5}
                     refreshControl={
                         props.refreshControl ? (
                             <RefreshControl
@@ -202,6 +209,9 @@ export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
                             </Animated.View>
                         ) : undefined
                     }
+                    ListFooterComponent={
+                        fetching ? <ActivityIndicator /> : undefined
+                    }
                     contentContainerStyle={{
                         backgroundColor: background,
                         paddingTop: !showHeader ? 30 : 0,
@@ -219,6 +229,7 @@ const styles = StyleSheet.create({
         zIndex: 1000,
         paddingHorizontal: 28,
         paddingVertical: 22,
+        marginBottom: 16,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         shadowOffset: {
@@ -238,7 +249,7 @@ const styles = StyleSheet.create({
     switch: {
         position: "absolute",
         alignSelf: "center",
-        right: 8,
+        right: 5,
         transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
     },
 })

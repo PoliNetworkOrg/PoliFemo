@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios"
 import { Lecture } from "./Lecture"
-import { getIsoStringFromDaysPassed } from "utils/dates"
 import { Articles } from "./Article"
 import { RetryType } from "./RetryType"
 import { Tags } from "./Tag"
@@ -168,79 +167,51 @@ export default class MainApi {
         }
     }
 
-    /**
-     * Retrieves articles from PoliNetwork server. Specify param `days` to select
-     * articles published in the last n days. Defaults to 7 days.
-     *
-     * @param days starting point
-     * @param end ending date
-     *
-     * @param options see {@link RequestOptions}
-     *
-     * @example
-     * ```ts
-     *  api.getArticlesFromDaysAgoTillDate(7, new Date().toISOString())
-     *     .then(response => {
-     *          const articles: Article[] = response
-     *          //do something
-     *      })
-     *      .catch(err => console.log(err))
-     * }
-     * ```
-     * */
-    public getArticlesFromDaysAgoTillDate = async (
-        days: number,
-        end: string,
-        options?: RequestOptions
-    ) => {
-        const start: string = getIsoStringFromDaysPassed(days)
-        const response = await this.instance.get<Articles>("/v1/articles", {
-            retryType: options?.retryType ?? RetryType.RETRY_INDEFINETELY,
-            maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
-            waitingTime: options?.waitingTime ?? 3,
-            retryCount: options?.retryCount ?? 0,
-            params: { start: start, end: end },
-        })
-        return response.data.results
-    }
-
-    public getArticlesFromDaysAgoTillDateByTag = async (
-        days: number,
-        end: string,
-        tag: string,
-        options?: RequestOptions
-    ) => {
-        const start: string = getIsoStringFromDaysPassed(days)
-        const response = await this.instance.get<Articles>("/v1/articles", {
-            retryType: options?.retryType ?? RetryType.RETRY_INDEFINETELY,
-            maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
-            waitingTime: options?.waitingTime ?? 3,
-            retryCount: options?.retryCount ?? 0,
-            params: { start: start, end: end, tag: tag },
-        })
-        return response.data.results
-    }
+    // /**
+    //  * Retrieves articles from PoliNetwork server. Specify param `days` to select
+    //  * articles published in the last n days. Defaults to 7 days.
+    //  *
+    //  * @param days starting point
+    //  * @param end ending date
+    //  *
+    //  * @param options see {@link RequestOptions}
+    //  *
+    //  * @example
+    //  * ```ts
+    //  *  api.getArticlesFromDaysAgoTillDate(7, new Date().toISOString())
+    //  *     .then(response => {
+    //  *          const articles: Article[] = response
+    //  *          //do something
+    //  *      })
+    //  *      .catch(err => console.log(err))
+    //  * }
+    //  * ```
+    //  * */
+    // public getArticlesFromDaysAgoTillDate = async (
+    //     days: number,
+    //     end: string,
+    //     options?: RequestOptions
+    // ) => {
+    //     const start: string = getIsoStringFromDaysPassed(days)
+    //     const response = await this.instance.get<Articles>("/v1/articles", {
+    //         retryType: options?.retryType ?? RetryType.RETRY_INDEFINETELY,
+    //         maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
+    //         waitingTime: options?.waitingTime ?? 3,
+    //         retryCount: options?.retryCount ?? 0,
+    //         params: { start: start, end: end },
+    //     })
+    //     return response.data.results
+    // }
 
     /**
-     * Retrieves articles from PoliNetwork server, given a starting and ending ISO date.
+     * Retrieves articles of a given tag from PoliNetwork server, from a starting to an ending ISO date.
+     *
+     * @param start starting ISO date
+     * @param end ending ISO date
+     * @param tag the news category
      *
      * @param options see {@link RequestOptions}
      */
-    public getArticlesFromDateTillDate = async (
-        start: string,
-        end: string,
-        options?: RequestOptions
-    ) => {
-        const response = await this.instance.get<Articles>("/v1/articles", {
-            retryType: options?.retryType ?? RetryType.RETRY_INDEFINETELY,
-            maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
-            waitingTime: options?.waitingTime ?? 3,
-            retryCount: options?.retryCount ?? 0,
-            params: { start: start, end: end },
-        })
-        return response.data.results
-    }
-
     public getArticlesFromDateTillDateByTag = async (
         start: string,
         end: string,
@@ -255,6 +226,27 @@ export default class MainApi {
             params: { start: start, end: end, tag: tag },
         })
         return response.data.results
+    }
+
+    /**
+     * Retrieves the last article of a given tag from PoliNetwork server.
+     *
+     * @param tag the news category
+     *
+     * @param options see {@link RequestOptions}
+     */
+    public getLastArticlByTag = async (
+        tag: string,
+        options?: RequestOptions
+    ) => {
+        const response = await this.instance.get<Articles>("/v1/articles", {
+            retryType: options?.retryType ?? RetryType.RETRY_INDEFINETELY,
+            maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
+            waitingTime: options?.waitingTime ?? 3,
+            retryCount: options?.retryCount ?? 0,
+            params: { tag: tag, limit: 1 },
+        })
+        return response.data.results[0]
     }
 
     /**

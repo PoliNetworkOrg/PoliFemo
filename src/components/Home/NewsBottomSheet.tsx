@@ -4,15 +4,24 @@ import BottomSheet, {
     BottomSheetScrollView,
     BottomSheetScrollViewMethods,
 } from "@gorhom/bottom-sheet"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
-import { NewsCategoriesGrid } from "./NewsCategoriesGrid"
+import { api, RetryType, Tag, Article } from "api"
+import { NewsTagsGrid } from "./NewsTagsGrid"
 import { Title } from "components/Text"
 import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
 import { getUsableScreenHeight } from "utils/height"
 
+export interface Favourites {
+    [key: string]: boolean
+}
+export interface LastArticles {
+    [key: string]: Article
+}
+
 /**
- * Bottom sheet in the home page to access news highlights and news categories.
+ * Bottom sheet in the home page to access news.
  *
  * Its positioning is absolute.
  */
@@ -31,6 +40,48 @@ export const NewsBottomSheet: FC = () => {
         closed: 666,
         opened: 106,
     }
+
+    // Store the list of news tags
+    const [tags, setTags] = useState<Tag[]>([])
+    // Store wether a tag is marked as favourite or not
+    const [favourites, setFavourites] = useState<Favourites>({})
+    // Store the last article of each tag
+    const [lastArticles, setLastArticles] = useState<LastArticles>({})
+
+    const getLastArticles = async (list: Tag[]) => {
+        const tempLastArticles: LastArticles = {}
+        for (const tag of list) {
+            const article = await api.getLastArticlByTag(tag.name, {
+                retryType: RetryType.NO_RETRY,
+            })
+            tempLastArticles[tag.name] = article
+        }
+        return tempLastArticles
+    }
+
+    useEffect(() => {
+        // Load tags (news categories) and their last article (one for each tag)
+        const fetchData = async () => {
+            const tempTags = await api.getTags()
+            const tempLastArticles = await getLastArticles(tempTags)
+            setTags(tempTags)
+            setLastArticles(tempLastArticles)
+        }
+        fetchData().catch(err => console.log(err))
+    }, [])
+
+    useEffect(() => {
+        console.log("Loading favourite tags from storage")
+        AsyncStorage.getItem("newstags:favourite")
+            .then(favouritesJSON => {
+                if (favouritesJSON) {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    const data: Favourites = JSON.parse(favouritesJSON)
+                    setFavourites(data)
+                }
+            })
+            .catch(err => console.log(err))
+    }, [])
 
     useEffect(() => {
         // scrolls to the top of the news scrollview when the news bottom sheet is Closed
@@ -96,7 +147,16 @@ export const NewsBottomSheet: FC = () => {
                     backgroundColor: background,
                 }}
             >
-                <NewsCategoriesGrid />
+                <NewsTagsGrid
+                    tags={tags}
+                    favourites={favourites}
+                    lastArticles={lastArticles}
+                    updateFavourites={(categoryName, favourite) => {
+                        const tempFavourites = { ...favourites }
+                        tempFavourites[categoryName] = favourite
+                        setFavourites(tempFavourites)
+                    }}
+                />
             </BottomSheetScrollView>
             <NavBar
                 overrideBackBehavior={() => setIsNewsClosed(true)}

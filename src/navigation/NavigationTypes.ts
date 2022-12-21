@@ -34,7 +34,11 @@ export type RootStackNavigatorParams = {
     /* eslint-disable @typescript-eslint/naming-convention */
     Home: undefined
     Article: { article: Article }
-    NewsList: { categoryName: string }
+    ArticlesList: {
+        tagName: string
+        isFavourite: boolean
+        onFavouriteChange: (isFavourite: boolean) => void
+    }
     Error404: undefined
     /* eslint-enable @typescript-eslint/naming-convention */
 }

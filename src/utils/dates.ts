@@ -1,12 +1,12 @@
 /**
- * takes as input a number, let's say "n".
- * Returns the ISO date string of "n" days ago
+ * @param date reference date
+ * @param n number
+ *
+ * @returns the date of "n" days before the reference date
  */
-export function getIsoStringFromDaysPassed(n: number): string {
-    //todays'date
-    const today = new Date()
+export function getDateFromDaysBefore(date: Date, n: number): Date {
     //today's date in milliseconds from the beginning of time
-    const time = today.getTime()
+    const time = date.getTime()
 
     //milliseconds in n days
     const timeToSubtract = n * 24 * 60 * 60 * 1000
@@ -16,5 +16,6 @@ export function getIsoStringFromDaysPassed(n: number): string {
     //n-days-ago's date
     const newDate = new Date(newTime)
 
-    return newDate.toISOString()
+    return newDate
+    // return newDate.toISOString()
 }
