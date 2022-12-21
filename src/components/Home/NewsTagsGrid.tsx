@@ -139,49 +139,46 @@ export const NewsTagsGrid: FC<NewsTagsGridProps> = props => {
     }, [props.tags, props.lastArticles])
 
     return (
-        <View style={{ paddingBottom: 120 }}>
-            <>
-                {lastArticle && (
-                    <CardWithGradient
-                        title={lastArticle.title}
-                        imageURL={lastArticle.image}
-                        onClick={() =>
-                            navigation.navigate("Article", {
-                                article: lastArticle,
-                            })
-                        }
-                        style={{ height: 220 }}
-                    />
-                )}
-                {tagsWithData.length === 1 ? (
-                    // if there is only 1 news tag, display its card at full width
-                    getTagCard(tagsWithData[0], 0)
-                ) : (
-                    <View style={{ flexDirection: "row" }}>
-                        <View style={{ flex: 17, marginRight: 17 }}>
-                            {tagsWithData
-                                .filter(tag => tag.column === "left")
-                                .map((tag, index) => getTagCard(tag, index))}
-                        </View>
-
-                        <View style={{ flex: 14 }}>
-                            {tagsWithData
-                                .filter(tag => tag.column === "right")
-                                .map((tag, index) => getTagCard(tag, index))}
-                        </View>
-                    </View>
-                )}
-                <Button
-                    title={
-                        seeFavourites
-                            ? "Altre categorie"
-                            : "Categorie preferite"
+        <>
+            {/* Spostare articlo in evidenza nel news bottom sheet */}
+            {lastArticle && (
+                <CardWithGradient
+                    title={"In Evidenza"}
+                    imageURL={lastArticle.image}
+                    onClick={() =>
+                        navigation.navigate("Article", {
+                            article: lastArticle,
+                        })
                     }
-                    onPress={() => {
-                        setSeeFavourites(value => !value)
-                    }}
+                    style={{ height: 220 }}
                 />
-            </>
-        </View>
+            )}
+            {tagsWithData.length === 1 ? (
+                // if there is only 1 news tag, display its card at full width
+                getTagCard(tagsWithData[0], 0)
+            ) : (
+                <View style={{ flexDirection: "row" }}>
+                    <View style={{ flex: 17, marginRight: 17 }}>
+                        {tagsWithData
+                            .filter(tag => tag.column === "left")
+                            .map((tag, index) => getTagCard(tag, index))}
+                    </View>
+
+                    <View style={{ flex: 14 }}>
+                        {tagsWithData
+                            .filter(tag => tag.column === "right")
+                            .map((tag, index) => getTagCard(tag, index))}
+                    </View>
+                </View>
+            )}
+            <Button
+                title={
+                    seeFavourites ? "Altre categorie" : "Categorie preferite"
+                }
+                onPress={() => {
+                    setSeeFavourites(value => !value)
+                }}
+            />
+        </>
     )
 }

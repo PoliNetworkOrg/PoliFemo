@@ -96,25 +96,37 @@ export const NewsBottomSheet: FC = () => {
         <BottomSheet
             ref={bottomSheetRef}
             handleComponent={() => (
-                // "News" title top bar component
-                <View style={[styles.topBar, { backgroundColor: background }]}>
-                    <View
-                        style={[
-                            styles.dragBar,
-                            {
-                                backgroundColor: isLight
-                                    ? "rgba(135, 145, 189, 0.5)"
-                                    : "#424967",
-                            },
-                        ]}
-                    />
-                    <Title
-                        style={{ fontFamily: "Roboto_700Bold", fontSize: 48 }}
-                    >
-                        News
-                    </Title>
-                </View>
+                <View
+                    style={[
+                        styles.dragBar,
+                        {
+                            backgroundColor: isLight
+                                ? "rgba(135, 145, 189, 0.5)"
+                                : "#424967",
+                        },
+                    ]}
+                />
             )}
+            // handleComponent={() => (
+            //     // "News" title top bar component
+            //     <View style={[styles.topBar, { backgroundColor: background }]}>
+            //         <View
+            //             style={[
+            //                 styles.dragBar,
+            //                 {
+            //                     backgroundColor: isLight
+            //                         ? "rgba(135, 145, 189, 0.5)"
+            //                         : "#424967",
+            //                 },
+            //             ]}
+            //         />
+            //         <Title
+            //             style={{ fontFamily: "Roboto_700Bold", fontSize: 48 }}
+            //         >
+            //             News
+            //         </Title>
+            //     </View>
+            // )}
             style={[styles.bottomSheet, { backgroundColor: background }]}
             backgroundStyle={{
                 backgroundColor: background,
@@ -146,7 +158,15 @@ export const NewsBottomSheet: FC = () => {
                     paddingHorizontal: 26,
                     backgroundColor: background,
                 }}
+                stickyHeaderIndices={[0, 2]}
             >
+                <View style={[styles.topBar, { backgroundColor: background }]}>
+                    <Title
+                        style={{ fontFamily: "Roboto_700Bold", fontSize: 48 }}
+                    >
+                        News
+                    </Title>
+                </View>
                 <NewsTagsGrid
                     tags={tags}
                     favourites={favourites}
@@ -157,6 +177,27 @@ export const NewsBottomSheet: FC = () => {
                         setFavourites(tempFavourites)
                     }}
                 />
+                <View style={[styles.topBar, { backgroundColor: background }]}>
+                    <Title
+                        style={{ fontFamily: "Roboto_700Bold", fontSize: 48 }}
+                    >
+                        Altre Categorie
+                    </Title>
+                </View>
+                <NewsTagsGrid
+                    tags={tags}
+                    favourites={favourites}
+                    lastArticles={lastArticles}
+                    updateFavourites={(categoryName, favourite) => {
+                        const tempFavourites = { ...favourites }
+                        tempFavourites[categoryName] = favourite
+                        setFavourites(tempFavourites)
+                    }}
+                />
+                <View
+                    // So that the scrollable content does not remain behind the NavBar
+                    style={{ height: 120 }}
+                ></View>
             </BottomSheetScrollView>
             <NavBar
                 overrideBackBehavior={() => setIsNewsClosed(true)}
@@ -180,13 +221,18 @@ const styles = StyleSheet.create({
         shadowRadius: 9.51,
         elevation: 20,
     },
+    // topBar: {
+    //     flex: 1,
+    //     justifyContent: "center",
+    //     paddingHorizontal: 26,
+    //     height: 112,
+    //     borderTopLeftRadius: 30,
+    //     borderTopRightRadius: 30,
+    // },
     topBar: {
         flex: 1,
         justifyContent: "center",
-        paddingHorizontal: 26,
-        height: 112,
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
+        height: 80,
     },
     dragBar: {
         alignSelf: "center",
