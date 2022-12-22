@@ -223,7 +223,7 @@ export default class MainApi {
             maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
             waitingTime: options?.waitingTime ?? 3,
             retryCount: options?.retryCount ?? 0,
-            params: { start: start, end: end, tag: tag },
+            params: { start: start, end: end, tag: tag, sort: "date" },
         })
         return response.data.results
     }
@@ -244,7 +244,7 @@ export default class MainApi {
             maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
             waitingTime: options?.waitingTime ?? 3,
             retryCount: options?.retryCount ?? 0,
-            params: { tag: tag, limit: 1 },
+            params: { tag: tag, limit: 1, sort: "date" },
         })
         return response.data.results[0]
     }

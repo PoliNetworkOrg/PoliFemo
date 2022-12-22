@@ -37,6 +37,7 @@ export const ArticlesList: RootStackScreen<"ArticlesList"> = props => {
     )
 
     //TODO: MainApi fa retry se error 500, mentre se error 404 non fa retry
+    //TODO: aggiornare codice se e quando backend farà quella roba
 
     const slideDateRange = () => {
         // console.log(startDate.current)
@@ -83,7 +84,7 @@ export const ArticlesList: RootStackScreen<"ArticlesList"> = props => {
             slideDateRange()
 
             if (keep) {
-                setArticles([...articles, ...response.reverse()])
+                setArticles([...articles, ...response])
             } else {
                 setArticles(response.reverse())
             }
