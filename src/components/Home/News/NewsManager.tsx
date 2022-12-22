@@ -158,7 +158,7 @@ export const NewsManager = () => {
 
     const getHighlightedArticle = () => {
         const favouriteTags = tags.filter(tag => favourites[tag.name] !== false)
-        // If there are no favourite tags, choose hte highlighted article from all the other tags
+        // If there are no favourite tags, choose the highlighted article from all the other tags
         const tagsToAnalyze = favouriteTags.length > 0 ? favouriteTags : tags
         let tempHighlighted: Article | undefined = undefined
 
