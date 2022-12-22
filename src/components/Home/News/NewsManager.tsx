@@ -17,7 +17,7 @@ export type TagWithData = Tag & {
 /**
  * Interface of an object that maps a tag name to whether that tag is favourite or not
  *
- * TODO: use tag id if there will be one
+ * TODO: use tag id if and when there will be one
  */
 export interface Favourites {
     [key: string]: boolean
@@ -26,7 +26,7 @@ export interface Favourites {
 /**
  * Interface of an object that maps a tag name to an article.
  *
- * TODO: use tag id if there will be one
+ * TODO: use tag id if and when there will be one
  */
 export interface LastArticles {
     [key: string]: Article
@@ -56,7 +56,6 @@ export const NewsManager = () => {
                         retryType: RetryType.NO_RETRY,
                     })
                     .then(article => {
-                        // TODO: use tag id if and when it will exists
                         tempArticles[tag.name] = article
                     })
                     .catch(err => {
@@ -83,21 +82,22 @@ export const NewsManager = () => {
 
     useEffect(() => {
         // Load tags (news categories) and their last article (one for each tag)
-        const testTags = [
-            { name: "TEST 1", image: "" },
-            { name: "TEST 2", image: "" },
-            { name: "TEST 3", image: "" },
-            { name: "TEST 4", image: "" },
-            { name: "TEST 5", image: "" },
-            { name: "TEST 6", image: "" },
-            { name: "TEST 7", image: "" },
-            { name: "TEST 8", image: "" },
-            { name: "TEST 9", image: "" },
-        ]
+        // const testTags = [
+        //     { name: "TEST 1", image: "" },
+        //     { name: "TEST 2", image: "" },
+        //     { name: "TEST 3", image: "" },
+        //     { name: "TEST 4", image: "" },
+        //     { name: "TEST 5", image: "" },
+        //     { name: "TEST 6", image: "" },
+        //     { name: "TEST 7", image: "" },
+        //     { name: "TEST 8", image: "" },
+        //     { name: "TEST 9", image: "" },
+        // ]
         const fetchData = async () => {
             const responseTags = await api.getTags()
             const responseArticles = await getLastArticles(responseTags)
-            setTags([...responseTags, ...testTags])
+            // setTags([...responseTags, ...testTags])
+            setTags(responseTags)
             setLastArticles(responseArticles)
         }
         fetchData().catch(err => console.log(err))
@@ -169,15 +169,12 @@ export const NewsManager = () => {
                 const article = lastArticles[tag.name]
                 const articleDate = new Date(article?.publish_time)
                 const highlightedDate = new Date(tempHighlighted.publish_time)
-                if (
-                    // TODO immagine di default per Highlighted
-                    articleDate > highlightedDate
-                ) {
+                if (articleDate > highlightedDate) {
                     tempHighlighted = article
                 }
             }
         }
-        return tempHighlighted as Article
+        return tempHighlighted
     }
 
     return (

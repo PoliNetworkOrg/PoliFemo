@@ -5,7 +5,6 @@ import {
     View,
     Animated,
     Switch,
-    ActivityIndicator,
     StyleSheet,
     NativeSyntheticEvent,
     NativeScrollEvent,
@@ -45,21 +44,20 @@ interface PageProps<T> {
     /**
      * Whether or not to show a toggle switch on the right of the title.
      *
-     * If true, provide also these 2 properties:
-     * - switchValue: boolean
-     * - onSwitchToggle: (value: booelan) => void
+     * If true, provide also the `switchControl` prop
      *
      * @default false
      */
     showSwitch?: boolean
     /**
-     * Used to draw the switch in the correct state (on / off).
+     * Props for the toggle switch
      */
-    switchValue?: boolean
-    /**
-     * Function fired when the switch changes its state (on / off).
-     */
-    onSwitchToggle?: (value: boolean) => void
+    switchControl?: {
+        /** State of the switch */
+        toggled: boolean
+        /** Function fired when the state of the switch changes */
+        onToggle: (value: boolean) => void
+    }
     /**
      * props for the refresh control
      */
@@ -73,6 +71,13 @@ interface PageProps<T> {
     render: (item: T) => React.ReactElement
     fetchData: () => void
 
+    /**
+     * Number from 0 to 1 to control the `onEndReachedThreshold` prop of the flat list
+     *
+     * @default 0.4
+     */
+    endThreshold?: number
+
     children?: React.ReactNode
 }
 
@@ -83,9 +88,6 @@ interface PageProps<T> {
 export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
     const { background, homeBackground, palette } = usePalette()
 
-    //TODO implement fetching feature
-    const [fetching, setFetching] = useState<boolean>(false)
-
     const [isPastTitle, setIsPastTitle] = useState(false)
     const shadowAnim = useRef(new Animated.Value(0)).current
 
@@ -94,6 +96,8 @@ export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
     const showHeader = props.title !== undefined
 
     const showSwitch = props.showSwitch ?? false
+
+    const endThreshold = props.endThreshold ?? 0.4
 
     useEffect(() => {
         // hook called when the shadow needs to be animated
@@ -148,7 +152,7 @@ export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
                     data={props.data}
                     renderItem={({ item }) => props.render(item)}
                     onEndReached={props.fetchData}
-                    onEndReachedThreshold={0.5}
+                    onEndReachedThreshold={endThreshold}
                     refreshControl={
                         props.refreshControl ? (
                             <RefreshControl
@@ -192,11 +196,17 @@ export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
 
                                     {showSwitch && (
                                         <Switch
-                                            value={props.switchValue}
-                                            onValueChange={value =>
-                                                props.onSwitchToggle &&
-                                                props.onSwitchToggle(value)
-                                            }
+                                            value={props.switchControl?.toggled}
+                                            onValueChange={value => {
+                                                if (
+                                                    props.switchControl
+                                                        ?.onToggle
+                                                ) {
+                                                    props.switchControl.onToggle(
+                                                        value
+                                                    )
+                                                }
+                                            }}
                                             trackColor={{
                                                 false: homeBackground, // TODO: ask the design team which is the correct color
                                                 true: palette.accent,
@@ -208,9 +218,6 @@ export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
                                 </View>
                             </Animated.View>
                         ) : undefined
-                    }
-                    ListFooterComponent={
-                        fetching ? <ActivityIndicator /> : undefined
                     }
                     contentContainerStyle={{
                         backgroundColor: background,

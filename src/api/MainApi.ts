@@ -203,19 +203,60 @@ export default class MainApi {
     //     return response.data.results
     // }
 
+    // /**
+    //  * Retrieves articles of a given tag from PoliNetwork server, from a starting to an ending ISO date.
+    //  *
+    //  * @param start starting ISO date
+    //  * @param end ending ISO date
+    //  * @param tag the news category
+    //  *
+    //  * @param options see {@link RequestOptions}
+    //  */
+    // public getArticlesFromDateTillDateByTag = async (
+    //     start: string,
+    //     end: string,
+    //     tag: string,
+    //     options?: RequestOptions
+    // ) => {
+    //     const response = await this.instance.get<Articles>("/v1/articles", {
+    //         retryType: options?.retryType ?? RetryType.RETRY_INDEFINETELY,
+    //         maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
+    //         waitingTime: options?.waitingTime ?? 3,
+    //         retryCount: options?.retryCount ?? 0,
+    //         params: { start: start, end: end, tag: tag, sort: "date" },
+    //     })
+    //     return response.data.results
+    // }
+
     /**
-     * Retrieves articles of a given tag from PoliNetwork server, from a starting to an ending ISO date.
+     * Retrieves at most `limit` articles of a given tag from PoliNetwork server.
      *
-     * @param start starting ISO date
-     * @param end ending ISO date
+     * If offset is `0` the newest `limit` articles are returned;
+     * if offset is `1` the next `limit` articles are returned, and so on.
+     *
+     * In the last group there might be less than `limit` articles.
+     *
      * @param tag the news category
+     * @param limit maximum number of articles retrieved
+     * @param offset the page offset parameter
      *
      * @param options see {@link RequestOptions}
+     *
+     * @example
+     * ```ts
+     *  api.getArticlesFromOffsetByTag("TAG", 10, 2)
+     *     .then(response => {
+     *          const articles: Article[] = response
+     *          //do something
+     *      })
+     *      .catch(err => console.log(err))
+     * }
+     * ```
      */
-    public getArticlesFromDateTillDateByTag = async (
-        start: string,
-        end: string,
+    public getArticlesFromOffsetByTag = async (
         tag: string,
+        limit: number,
+        offset: number,
         options?: RequestOptions
     ) => {
         const response = await this.instance.get<Articles>("/v1/articles", {
@@ -223,25 +264,14 @@ export default class MainApi {
             maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
             waitingTime: options?.waitingTime ?? 3,
             retryCount: options?.retryCount ?? 0,
-            params: { start: start, end: end, tag: tag, sort: "date" },
+            params: {
+                limit: limit,
+                pageOffset: offset,
+                tag: tag,
+                sort: "date",
+            },
         })
         return response.data.results
-    }
-
-    /**
-     * Retrieves the last article from PoliNetwork server.
-     *
-     * @param options see {@link RequestOptions}
-     */
-    public getLastArticle = async (options?: RequestOptions) => {
-        const response = await this.instance.get<Articles>("/v1/articles", {
-            retryType: options?.retryType ?? RetryType.RETRY_INDEFINETELY,
-            maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
-            waitingTime: options?.waitingTime ?? 3,
-            retryCount: options?.retryCount ?? 0,
-            params: { limit: 1, sort: "date" },
-        })
-        return response.data.results[0]
     }
 
     /**

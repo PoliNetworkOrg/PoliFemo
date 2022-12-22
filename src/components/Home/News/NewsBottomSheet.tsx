@@ -27,7 +27,7 @@ interface NewsBottomSheetProps {
     /**
      * Article at the top of the news section
      */
-    highlightedArticle: Article
+    highlightedArticle?: Article
     /**
      * Callback function used to update the state in the NewsManager when the preference
      * of a tag changes (whether it is favourite or not)
@@ -60,6 +60,10 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
         closed: 666,
         opened: 106,
     }
+
+    const showHighlighted = props.highlightedArticle !== undefined
+
+    const showButtonToOtherTags = props.otherTags.length > 0
 
     useEffect(() => {
         // scrolls to the top of the news scrollview
@@ -131,13 +135,20 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
             >
                 {showFavourites ? (
                     <>
-                        {props.highlightedArticle && (
+                        {showHighlighted && (
                             <CardWithGradient
                                 title={"In Evidenza"}
-                                imageURL={props.highlightedArticle.image}
+                                imageURL={
+                                    props.highlightedArticle?.image &&
+                                    props.highlightedArticle.image.length > 0
+                                        ? props.highlightedArticle.image
+                                        : ""
+                                    // : "http://rl.airlab.deib.polimi.it/wp-content/uploads/2022/06/1-PolimiCampus_2.jpg"
+                                }
                                 onClick={() =>
                                     navigation.navigate("Article", {
-                                        article: props.highlightedArticle,
+                                        article:
+                                            props.highlightedArticle as Article,
                                     })
                                 }
                                 style={{ height: 220, marginBottom: 34 }}
@@ -149,7 +160,7 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
                             updateFavourites={props.updateFavourites}
                         />
 
-                        {props.otherTags.length > 0 && (
+                        {showButtonToOtherTags && (
                             <CardWithGradient
                                 title={"Altre Categorie"}
                                 onClick={() => setShowFavourites(false)}
