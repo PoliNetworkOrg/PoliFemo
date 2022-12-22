@@ -12,8 +12,6 @@ export type TagWithData = Tag & {
     height: number
     /** Whether the tag is favourite or not */
     isFavourite: boolean
-    /** Image used if the tag had no primary image */
-    reserveImage?: string
 }
 
 /**
@@ -26,7 +24,7 @@ export interface Favourites {
 }
 
 /**
- * Interface of an object that maps a tag name to an article
+ * Interface of an object that maps a tag name to an article.
  *
  * TODO: use tag id if there will be one
  */
@@ -43,19 +41,31 @@ export interface LastArticles {
 export const NewsManager = () => {
     const [tags, setTags] = useState<Tag[]>([])
     const [favourites, setFavourites] = useState<Favourites>({})
-    const [lastArticles, setLastArticles] = useState<LastArticles>({})
+    const [lastArticles, setLastArticles] = useState<LastArticles>(
+        {} as LastArticles
+    )
 
     // TODO: sicuro di lasciare no retry?
-    // TODO: se backend mette sempre foto per i tag, eliminare questa logica
-    const getLastArticles = async (list: Tag[]) => {
-        const tempLastArticles: LastArticles = {}
-        for (const tag of list) {
-            const article = await api.getLastArticlByTag(tag.name, {
-                retryType: RetryType.NO_RETRY,
-            })
-            tempLastArticles[tag.name] = article
+    const getLastArticles = async (tags: Tag[]) => {
+        const tempArticles = {} as LastArticles
+        const promises = []
+        for (const tag of tags) {
+            promises.push(
+                api
+                    .getLastArticleByTag(tag.name, {
+                        retryType: RetryType.NO_RETRY,
+                    })
+                    .then(article => {
+                        // TODO: use tag id if and when it will exists
+                        tempArticles[tag.name] = article
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            )
         }
-        return tempLastArticles
+        await Promise.allSettled(promises)
+        return tempArticles
     }
 
     useEffect(() => {
@@ -73,27 +83,27 @@ export const NewsManager = () => {
 
     useEffect(() => {
         // Load tags (news categories) and their last article (one for each tag)
+        const testTags = [
+            { name: "TEST 1", image: "" },
+            { name: "TEST 2", image: "" },
+            { name: "TEST 3", image: "" },
+            { name: "TEST 4", image: "" },
+            { name: "TEST 5", image: "" },
+            { name: "TEST 6", image: "" },
+            { name: "TEST 7", image: "" },
+            { name: "TEST 8", image: "" },
+            { name: "TEST 9", image: "" },
+        ]
         const fetchData = async () => {
-            const testTags = [
-                { name: "TEST 1", image: "" },
-                { name: "TEST 2", image: "" },
-                { name: "TEST 3", image: "" },
-                { name: "TEST 4", image: "" },
-                { name: "TEST 5", image: "" },
-                { name: "TEST 6", image: "" },
-                { name: "TEST 7", image: "" },
-                { name: "TEST 8", image: "" },
-                { name: "TEST 9", image: "" },
-            ]
-            const tempTags = await api.getTags()
-            const tempLastArticles = await getLastArticles(tempTags)
-            setTags([...tempTags, ...testTags])
-            setLastArticles(tempLastArticles)
+            const responseTags = await api.getTags()
+            const responseArticles = await getLastArticles(responseTags)
+            setTags([...responseTags, ...testTags])
+            setLastArticles(responseArticles)
         }
         fetchData().catch(err => console.log(err))
     }, [])
 
-    // Function that calculates heights and columns of the tag cards using hardcoded patterns.
+    // Function that calculates heights and columns of tag cards using hardcoded patterns.
     // Then it returns a new list of tags with that and other usefull data.
     const getTagsWithData = (favourite: boolean) => {
         const tempTagsWithData: TagWithData[] = []
@@ -138,45 +148,43 @@ export const NewsManager = () => {
                     column: column,
                     height: height,
                     isFavourite: favourite,
-                    reserveImage: lastArticles[tagsToShow[index].name]?.image,
                 })
                 index++
                 remaining--
             }
         }
-
         return tempTagsWithData
     }
 
-    //TODO review this function
-    //TODO prendere solo da categorie preferite
-    //TODO se non ci sono categorie preferite, prendere il più recente
-    //TODO forse usare max function
-    const getHighlightArticle = () => {
-        let tempHighlight: Article | undefined = undefined
-        for (const tag of tags) {
-            if (!tempHighlight) {
-                tempHighlight = lastArticles[tag.name]
+    const getHighlightedArticle = () => {
+        const favouriteTags = tags.filter(tag => favourites[tag.name] !== false)
+        // If there are no favourite tags, choose hte highlighted article from all the other tags
+        const tagsToAnalyze = favouriteTags.length > 0 ? favouriteTags : tags
+        let tempHighlighted: Article | undefined = undefined
+
+        for (const tag of tagsToAnalyze) {
+            if (!tempHighlighted) {
+                tempHighlighted = lastArticles[tag.name]
             } else {
                 const article = lastArticles[tag.name]
-                const lastDate = new Date(tempHighlight.publish_time)
-                const date = new Date(article?.publish_time)
+                const articleDate = new Date(article?.publish_time)
+                const highlightedDate = new Date(tempHighlighted.publish_time)
                 if (
-                    (!tempHighlight.image && article.image) || // TODO pensare se articolo in evidenza deve per forza avere un immagine
-                    date.getTime() > lastDate.getTime()
+                    // TODO immagine di default per Highlighted
+                    articleDate > highlightedDate
                 ) {
-                    tempHighlight = article
+                    tempHighlighted = article
                 }
             }
         }
-        return tempHighlight as Article
+        return tempHighlighted as Article
     }
 
     return (
         <NewsBottomSheet
             favouriteTags={getTagsWithData(true)}
             otherTags={getTagsWithData(false)}
-            highlightArticle={getHighlightArticle()}
+            highlightedArticle={getHighlightedArticle()}
             updateFavourites={(categoryName, favourite) => {
                 const tempFavourites = { ...favourites }
                 tempFavourites[categoryName] = favourite

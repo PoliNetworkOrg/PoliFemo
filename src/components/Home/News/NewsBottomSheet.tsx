@@ -27,7 +27,7 @@ interface NewsBottomSheetProps {
     /**
      * Article at the top of the news section
      */
-    highlightArticle: Article
+    highlightedArticle: Article
     /**
      * Callback function used to update the state in the NewsManager when the preference
      * of a tag changes (whether it is favourite or not)
@@ -131,13 +131,13 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
             >
                 {showFavourites ? (
                     <>
-                        {props.highlightArticle && (
+                        {props.highlightedArticle && (
                             <CardWithGradient
                                 title={"In Evidenza"}
-                                imageURL={props.highlightArticle.image}
+                                imageURL={props.highlightedArticle.image}
                                 onClick={() =>
                                     navigation.navigate("Article", {
-                                        article: props.highlightArticle,
+                                        article: props.highlightedArticle,
                                     })
                                 }
                                 style={{ height: 220, marginBottom: 34 }}

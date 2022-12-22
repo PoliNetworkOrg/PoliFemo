@@ -229,13 +229,29 @@ export default class MainApi {
     }
 
     /**
+     * Retrieves the last article from PoliNetwork server.
+     *
+     * @param options see {@link RequestOptions}
+     */
+    public getLastArticle = async (options?: RequestOptions) => {
+        const response = await this.instance.get<Articles>("/v1/articles", {
+            retryType: options?.retryType ?? RetryType.RETRY_INDEFINETELY,
+            maxRetries: options?.maxRetries ?? DEFAULT_MAX_RETRIES,
+            waitingTime: options?.waitingTime ?? 3,
+            retryCount: options?.retryCount ?? 0,
+            params: { limit: 1, sort: "date" },
+        })
+        return response.data.results[0]
+    }
+
+    /**
      * Retrieves the last article of a given tag from PoliNetwork server.
      *
      * @param tag the news category
      *
      * @param options see {@link RequestOptions}
      */
-    public getLastArticlByTag = async (
+    public getLastArticleByTag = async (
         tag: string,
         options?: RequestOptions
     ) => {
