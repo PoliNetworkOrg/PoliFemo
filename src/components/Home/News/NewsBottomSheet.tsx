@@ -21,7 +21,7 @@ interface NewsBottomSheetProps {
      */
     favouriteTags: TagWithData[]
     /**
-     * All the other tags (new categories), at the bottom of the news section
+     * All the other tags (new categories)
      */
     otherTags: TagWithData[]
     /**
@@ -45,6 +45,9 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
     const navigation = useNavigation()
     const { isLight, background } = usePalette()
 
+    // Whether to show only the favourite section or only other tags
+    const [showFavourites, setShowFavourites] = useState<boolean>(true)
+
     // modal state
     const [isNewsClosed, setIsNewsClosed] = useState(true)
     // the ref for the News bottom sheet, used to open and close it programmatically
@@ -59,29 +62,35 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
     }
 
     useEffect(() => {
-        // scrolls to the top of the news scrollview when the news bottom sheet is Closed
-        if (isNewsClosed && scrollViewRef.current) {
+        // scrolls to the top of the news scrollview
+        if (scrollViewRef.current) {
             // "scrollTo" is deprecated but works fine.
             // "scrollToEnd" doesn't work when the news scrollview is fully expanded downwards
-            scrollViewRef.current.scrollTo({ y: 0, animated: true })
+            scrollViewRef.current.scrollTo({ y: 0, animated: false })
         }
-    }, [isNewsClosed])
+    }, [isNewsClosed, showFavourites])
 
-    //TODO: vedere se levare barra di scorrimento laterale
     return (
         <BottomSheet
             ref={bottomSheetRef}
             handleComponent={() => (
-                <View
-                    style={[
-                        styles.dragBar,
-                        {
-                            backgroundColor: isLight
-                                ? "rgba(135, 145, 189, 0.5)"
-                                : "#424967",
-                        },
-                    ]}
-                />
+                <View style={[styles.topBar, { backgroundColor: background }]}>
+                    <View
+                        style={[
+                            styles.dragBar,
+                            {
+                                backgroundColor: isLight
+                                    ? "rgba(135, 145, 189, 0.5)"
+                                    : "#424967",
+                            },
+                        ]}
+                    />
+                    <Title
+                        style={{ fontFamily: "Roboto_700Bold", fontSize: 48 }}
+                    >
+                        {showFavourites ? "News" : "Altre Categorie"}
+                    </Title>
+                </View>
             )}
             style={[styles.bottomSheet, { backgroundColor: background }]}
             backgroundStyle={{
@@ -94,13 +103,16 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
                 // fires when the bottom sheet changes position index, keeps track of when the sheet is open/close.
                 // More responsive than onChange
                 setIsNewsClosed(fromIndex === 1)
+                setShowFavourites(true)
             }}
             onChange={index => {
                 // fires when the bottom sheet changes position index, keeps track of when the sheet is open/close.
                 // In certain cases, onAnimate fails
+                // setShowFavourites(true)
                 setIsNewsClosed(index === 0)
+                setShowFavourites(true)
             }}
-            index={isNewsClosed ? 0 : 1}
+            index={isNewsClosed ? 0 : 1} // close = 0 and open = 1
             snapPoints={[
                 // 0 is at the bottom of the screen
                 Math.max(getUsableScreenHeight() - distanceFromTop.closed, 42),
@@ -110,57 +122,47 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
         >
             <BottomSheetScrollView
                 ref={scrollViewRef}
-                stickyHeaderIndices={[0, 3]}
+                showsVerticalScrollIndicator={false}
                 style={{
                     paddingHorizontal: 26,
                     backgroundColor: background,
+                    paddingTop: 16,
                 }}
             >
-                <View style={[styles.topBar, { backgroundColor: background }]}>
-                    <Title
-                        style={{ fontFamily: "Roboto_700Bold", fontSize: 48 }}
-                    >
-                        News
-                    </Title>
-                </View>
+                {showFavourites ? (
+                    <>
+                        {props.highlightArticle && (
+                            <CardWithGradient
+                                title={"In Evidenza"}
+                                imageURL={props.highlightArticle.image}
+                                onClick={() =>
+                                    navigation.navigate("Article", {
+                                        article: props.highlightArticle,
+                                    })
+                                }
+                                style={{ height: 220, marginBottom: 34 }}
+                            />
+                        )}
 
-                {props.highlightArticle && (
-                    <CardWithGradient
-                        title={"In Evidenza"}
-                        imageURL={props.highlightArticle.image}
-                        onClick={() =>
-                            navigation.navigate("Article", {
-                                article: props.highlightArticle,
-                            })
-                        }
-                        style={{ height: 220 }}
+                        <NewsTagsGrid
+                            tags={props.favouriteTags}
+                            updateFavourites={props.updateFavourites}
+                        />
+
+                        {props.otherTags.length > 0 && (
+                            <CardWithGradient
+                                title={"Altre Categorie"}
+                                onClick={() => setShowFavourites(false)}
+                                style={{ height: 80, marginTop: 17 }}
+                            />
+                        )}
+                    </>
+                ) : (
+                    <NewsTagsGrid
+                        tags={props.otherTags}
+                        updateFavourites={props.updateFavourites}
                     />
                 )}
-
-                <NewsTagsGrid
-                    tags={props.favouriteTags}
-                    updateFavourites={props.updateFavourites}
-                />
-
-                {props.otherTags.length > 0 && (
-                    <View
-                        style={[styles.topBar, { backgroundColor: background }]}
-                    >
-                        <Title
-                            style={{
-                                fontFamily: "Roboto_700Bold",
-                                fontSize: 42,
-                            }}
-                        >
-                            Altre Categorie
-                        </Title>
-                    </View>
-                )}
-
-                <NewsTagsGrid
-                    tags={props.otherTags}
-                    updateFavourites={props.updateFavourites}
-                />
 
                 <View
                     // So that the scrollable content does not remain behind the NavBar
@@ -168,8 +170,17 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
                 ></View>
             </BottomSheetScrollView>
             <NavBar
-                overrideBackBehavior={() => setIsNewsClosed(true)}
-                overrideHomeBehavior={() => setIsNewsClosed(true)}
+                overrideBackBehavior={() => {
+                    if (showFavourites) {
+                        setIsNewsClosed(true)
+                    } else {
+                        setShowFavourites(true)
+                    }
+                }}
+                overrideHomeBehavior={() => {
+                    setShowFavourites(true)
+                    setIsNewsClosed(true)
+                }}
             />
         </BottomSheet>
     )
@@ -192,7 +203,10 @@ const styles = StyleSheet.create({
     topBar: {
         flex: 1,
         justifyContent: "center",
-        marginBottom: 16,
+        paddingHorizontal: 26,
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        paddingBottom: 8,
     },
     dragBar: {
         alignSelf: "center",
