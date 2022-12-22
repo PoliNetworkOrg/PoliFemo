@@ -26,13 +26,11 @@ export const NewsTagsGrid: FC<NewsTagsGridProps> = props => {
 
     // Function used when displaying a tag card
     const getTagCard = (tag: TagWithData, index: number) => {
-        const image =
-            tag.image && tag.image.length > 0 ? tag.image : tag.reserveImage
         return (
             <CardWithGradient
                 key={index}
                 title={tag.name}
-                imageURL={image}
+                imageURL={tag.image}
                 onClick={() =>
                     navigation.navigate("ArticlesList", {
                         tagName: tag.name,
