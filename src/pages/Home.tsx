@@ -2,14 +2,10 @@ import React, { useState } from "react"
 import { View } from "react-native"
 
 import { RootStackScreen } from "navigation/NavigationTypes"
-import {
-    MainMenu,
-    MainTitle,
-    NewsManager,
-    PoliSearchBar,
-} from "components/Home"
-import { usePalette } from "utils/colors"
+import { MainMenu, MainTitle, PoliSearchBar } from "components/Home"
+import { NewsManager } from "components/Home/News"
 import { HighlightsManager } from "components/Home/Highlights/HighlightsManager"
+import { usePalette } from "utils/colors"
 import openNavSVG from "assets/menu/open-nav.svg"
 import { api, RetryType } from "api"
 import AsyncStorage from "@react-native-async-storage/async-storage"

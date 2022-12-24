@@ -6,7 +6,7 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet"
 
 import { Article } from "api"
-import { TagWithData } from "./NewsManager"
+import { TagWithData } from "./newsTypes"
 import { NewsTagsGrid } from "./NewsTagsGrid"
 import { Title } from "components/Text"
 import { CardWithGradient } from "components/CardWithGradient"
@@ -28,11 +28,6 @@ interface NewsBottomSheetProps {
      * Article at the top of the news section
      */
     highlightedArticle?: Article
-    /**
-     * Callback function used to update the state in the NewsManager when the preference
-     * of a tag changes (whether it is favourite or not)
-     */
-    updateFavourites: (tagName: string, favourite: boolean) => void
 }
 
 /**
@@ -112,7 +107,6 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
             onChange={index => {
                 // fires when the bottom sheet changes position index, keeps track of when the sheet is open/close.
                 // In certain cases, onAnimate fails
-                // setShowFavourites(true)
                 setIsNewsClosed(index === 0)
                 setShowFavourites(true)
             }}
@@ -155,10 +149,7 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
                             />
                         )}
 
-                        <NewsTagsGrid
-                            tags={props.favouriteTags}
-                            updateFavourites={props.updateFavourites}
-                        />
+                        <NewsTagsGrid tags={props.favouriteTags} />
 
                         {showButtonToOtherTags && (
                             <CardWithGradient
@@ -169,10 +160,7 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
                         )}
                     </>
                 ) : (
-                    <NewsTagsGrid
-                        tags={props.otherTags}
-                        updateFavourites={props.updateFavourites}
-                    />
+                    <NewsTagsGrid tags={props.otherTags} />
                 )}
 
                 <View

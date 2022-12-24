@@ -21,6 +21,7 @@ import {
     useNavigation as nativeUseNav,
 } from "@react-navigation/native"
 import { Article } from "api"
+import { Preference } from "components/Home/News"
 
 /**
  * interface containing the info about the params for each page of the stack navigator
@@ -34,11 +35,7 @@ export type RootStackNavigatorParams = {
     /* eslint-disable @typescript-eslint/naming-convention */
     Home: undefined
     Article: { article: Article }
-    ArticlesList: {
-        tagName: string
-        isFavourite: boolean
-        onFavouriteChange: (isFavourite: boolean) => void
-    }
+    ArticlesList: { tagName: string; tagPreference: Preference }
     Error404: undefined
     /* eslint-enable @typescript-eslint/naming-convention */
 }

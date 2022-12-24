@@ -1,36 +1,23 @@
 import React, { useEffect, useState } from "react"
+import { DeviceEventEmitter } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 import { api, RetryType, Tag, Article } from "api"
+import {
+    TagWithData,
+    Preference,
+    Preferences,
+    LastArticles,
+    UpdatePreferenceEventArgs,
+} from "./newsTypes"
 import { NewsBottomSheet } from "./NewsBottomSheet"
 import { newsTagsPatterns, CardsPattern } from "utils/cardsPatterns"
 
-export type TagWithData = Tag & {
-    /** The column in which the card has to be inserted */
-    column: "left" | "right"
-    /** The height of the card */
-    height: number
-    /** Whether the tag is favourite or not */
-    isFavourite: boolean
-}
-
 /**
- * Interface of an object that maps a tag name to whether that tag is favourite or not
- *
- * TODO: use tag id if and when there will be one
+ * Name of the event that has to be fired in order to update the preference
+ * of a tag (favourite or not) in the state of the NewsManager component
  */
-export interface Favourites {
-    [key: string]: boolean
-}
-
-/**
- * Interface of an object that maps a tag name to an article.
- *
- * TODO: use tag id if and when there will be one
- */
-export interface LastArticles {
-    [key: string]: Article
-}
+export const UPDATE_PREFERENCE_EVENT_NAME = "update-preference"
 
 /**
  * Bottom sheet in the home page to access the news.
@@ -40,12 +27,38 @@ export interface LastArticles {
  */
 export const NewsManager = () => {
     const [tags, setTags] = useState<Tag[]>([])
-    const [favourites, setFavourites] = useState<Favourites>({})
+
+    // Object to store the preference of each tag
+    const [preferences, setPreferences] = useState<Preferences>({})
+    // Object to store the last article of each tag
     const [lastArticles, setLastArticles] = useState<LastArticles>(
         {} as LastArticles
     )
 
+    useEffect(() => {
+        console.log("Loading tags preferences from storage")
+        AsyncStorage.getItem("newstags:preferences")
+            .then(preferencesJSON => {
+                if (preferencesJSON) {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    const data: Preferences = JSON.parse(preferencesJSON)
+                    setPreferences(data)
+                }
+            })
+            .catch(err => console.log(err))
+    }, [])
+
+    useEffect(() => {
+        console.log("Saving tags preferences to storage")
+        AsyncStorage.setItem(
+            "newstags:preferences",
+            JSON.stringify(preferences)
+        ).catch(err => console.log(err))
+    }, [preferences])
+
     // TODO: sicuro di lasciare no retry?
+    // Download the last published article of each tag (news category) in parallel
+    // and wait until each one has finished
     const getLastArticles = async (tags: Tag[]) => {
         const tempArticles = {} as LastArticles
         const promises = []
@@ -68,53 +81,50 @@ export const NewsManager = () => {
     }
 
     useEffect(() => {
-        console.log("Loading favourite tags from storage")
-        AsyncStorage.getItem("newstags:favourite")
-            .then(favouritesJSON => {
-                if (favouritesJSON) {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                    const data: Favourites = JSON.parse(favouritesJSON)
-                    setFavourites(data)
-                }
-            })
-            .catch(err => console.log(err))
-    }, [])
-
-    useEffect(() => {
         // Load tags (news categories) and their last article (one for each tag)
-        // const testTags = [
-        //     { name: "TEST 1", image: "" },
-        //     { name: "TEST 2", image: "" },
-        //     { name: "TEST 3", image: "" },
-        //     { name: "TEST 4", image: "" },
-        //     { name: "TEST 5", image: "" },
-        //     { name: "TEST 6", image: "" },
-        //     { name: "TEST 7", image: "" },
-        //     { name: "TEST 8", image: "" },
-        //     { name: "TEST 9", image: "" },
-        // ]
         const fetchData = async () => {
             const responseTags = await api.getTags()
             const responseArticles = await getLastArticles(responseTags)
-            // setTags([...responseTags, ...testTags])
             setTags(responseTags)
             setLastArticles(responseArticles)
         }
         fetchData().catch(err => console.log(err))
     }, [])
 
-    // Function that calculates heights and columns of tag cards using hardcoded patterns.
-    // Then it returns a new list of tags with that and other usefull data.
-    const getTagsWithData = (favourite: boolean) => {
-        const tempTagsWithData: TagWithData[] = []
-        const tagsToShow = tags.filter(tag => {
-            if (!favourite) {
-                return favourites[tag.name] === false
+    useEffect(() => {
+        // Set up the event listener to update the preference of a tag in the state of this component
+        // when the corresponding event is emitted in ArticlesList
+        DeviceEventEmitter.addListener(
+            UPDATE_PREFERENCE_EVENT_NAME,
+            (arg: UpdatePreferenceEventArgs) => {
+                setPreferences({
+                    ...preferences,
+                    [arg.tagName]: arg.preference,
+                })
+            }
+        )
+        return () => {
+            DeviceEventEmitter.removeAllListeners(UPDATE_PREFERENCE_EVENT_NAME)
+        }
+    }, [preferences])
+
+    const filterTags = (tags: Tag[], preference: Preference) => {
+        return tags.filter(tag => {
+            if (preference === Preference.OTHER) {
+                return preferences[tag.name] === Preference.OTHER
             } else {
                 // If undefined, the tag is marked as favourite by default
-                return favourites[tag.name] !== false
+                return preferences[tag.name] !== Preference.OTHER
             }
         })
+    }
+
+    // Function that calculates heights and columns of tag cards using hardcoded patterns.
+    // Then it returns a new list of tags with that and other usefull data.
+    const getTagsWithData = (preference: Preference) => {
+        const tempTagsWithData: TagWithData[] = []
+        const tagsToShow = filterTags(tags, preference)
+
         // store the pattern data of the current batch of cards
         let pattern: CardsPattern
         // index of the current news tag
@@ -147,7 +157,7 @@ export const NewsManager = () => {
                     ...tagsToShow[index],
                     column: column,
                     height: height,
-                    isFavourite: favourite,
+                    preference: preference,
                 })
                 index++
                 remaining--
@@ -157,7 +167,7 @@ export const NewsManager = () => {
     }
 
     const getHighlightedArticle = () => {
-        const favouriteTags = tags.filter(tag => favourites[tag.name] !== false)
+        const favouriteTags = filterTags(tags, Preference.FAVOURITE)
         // If there are no favourite tags, choose the highlighted article from all the other tags
         const tagsToAnalyze = favouriteTags.length > 0 ? favouriteTags : tags
         let tempHighlighted: Article | undefined = undefined
@@ -179,14 +189,9 @@ export const NewsManager = () => {
 
     return (
         <NewsBottomSheet
-            favouriteTags={getTagsWithData(true)}
-            otherTags={getTagsWithData(false)}
+            favouriteTags={getTagsWithData(Preference.FAVOURITE)}
+            otherTags={getTagsWithData(Preference.OTHER)}
             highlightedArticle={getHighlightedArticle()}
-            updateFavourites={(categoryName, favourite) => {
-                const tempFavourites = { ...favourites }
-                tempFavourites[categoryName] = favourite
-                setFavourites(tempFavourites)
-            }}
         />
     )
 }

@@ -1,7 +1,7 @@
 import React, { FC } from "react"
 import { View } from "react-native"
 
-import { TagWithData } from "./NewsManager"
+import { TagWithData } from "./newsTypes"
 import { CardWithGradient } from "components/CardWithGradient"
 import { useNavigation } from "navigation/NavigationTypes"
 
@@ -10,11 +10,6 @@ interface NewsTagsGridProps {
      * Tags to be displayed
      */
     tags: TagWithData[]
-    /**
-     * Callback function used to update the state in the NewsManager when the preference
-     * of a tag changes (whether it is favourite or not)
-     */
-    updateFavourites: (tagName: string, favourite: boolean) => void
 }
 
 /**
@@ -34,9 +29,7 @@ export const NewsTagsGrid: FC<NewsTagsGridProps> = props => {
                 onClick={() =>
                     navigation.navigate("ArticlesList", {
                         tagName: tag.name,
-                        isFavourite: tag.isFavourite,
-                        onFavouriteChange: favourite =>
-                            props.updateFavourites(tag.name, favourite),
+                        tagPreference: tag.preference,
                     })
                 }
                 closerToCorner={true}

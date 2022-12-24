@@ -1,31 +1,33 @@
 import React, { useState, useEffect, useRef } from "react"
-import { View } from "react-native"
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import { View, DeviceEventEmitter } from "react-native"
 
 import { api, Article, RetryType } from "api"
+import { Preference, UPDATE_PREFERENCE_EVENT_NAME } from "components/Home/News"
 import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ScrollPageInfinite } from "components/ScrollPageInfinite"
 import { CardWithGradient } from "components/CardWithGradient"
+
+const MAX_ARTICLES_PER_REQUEST = 8
 
 /**
  * News page containing the articles of a specific tag.
  */
 export const ArticlesList: RootStackScreen<"ArticlesList"> = props => {
     const navigation = useNavigation()
-    const { tagName, isFavourite, onFavouriteChange } = props.route.params
+    const { tagName, tagPreference } = props.route.params
 
     const [articles, setArticles] = useState<Article[]>([])
-    const [toggled, setToggled] = useState<boolean>(isFavourite)
+    const [toggled, setToggled] = useState<boolean>(
+        tagPreference === Preference.FAVOURITE
+    )
 
     const [refresh, setRefresh] = useState<boolean>(false)
-    const isFetching = useRef<boolean>(false)
+    const [isFetching, setIsFetching] = useState<boolean>(true)
 
-    const MAX_ARTICLES_PER_REQUEST = 8
     const offset = useRef<number>(0)
 
     // TODO: forse mettere un po' di retry indefinetely, ma modificando mainApi
     // per fare in modo che dopo errore 404 non tenta di scaricare di nuovo
-
     const fetchArticles = async (
         retryType: RetryType,
         keepArticles: boolean
@@ -52,25 +54,10 @@ export const ArticlesList: RootStackScreen<"ArticlesList"> = props => {
     }
 
     useEffect(() => {
-        void fetchArticles(RetryType.NO_RETRY, false)
+        fetchArticles(RetryType.NO_RETRY, false).finally(() =>
+            setIsFetching(false)
+        )
     }, [])
-
-    useEffect(() => {
-        AsyncStorage.getItem("newstags:favourite")
-            .then(iconJSON => {
-                console.log("Saving tag as favourite to storage")
-                let data: { [key: string]: boolean } = {}
-                if (iconJSON) {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                    data = JSON.parse(iconJSON)
-                }
-                AsyncStorage.setItem(
-                    "newstags:favourite",
-                    JSON.stringify({ ...data, [tagName]: toggled })
-                ).catch(err => console.log(err))
-            })
-            .catch(err => console.log(err))
-    }, [toggled])
 
     return (
         <ScrollPageInfinite
@@ -93,18 +80,21 @@ export const ArticlesList: RootStackScreen<"ArticlesList"> = props => {
                     </View>
                 )
             }}
-            fetchData={() => {
-                if (!refresh && !isFetching.current) {
-                    isFetching.current = true
-                    fetchArticles(RetryType.NO_RETRY, true).finally(() => {
-                        isFetching.current = false
-                    })
-                }
+            fetchControl={{
+                fetching: isFetching,
+                onFetch: () => {
+                    if (!refresh && !isFetching) {
+                        setIsFetching(true)
+                        fetchArticles(RetryType.NO_RETRY, true).finally(() => {
+                            setIsFetching(false)
+                        })
+                    }
+                },
             }}
             refreshControl={{
                 refreshing: refresh,
                 onRefresh: () => {
-                    if (!refresh && !isFetching.current) {
+                    if (!refresh && !isFetching) {
                         setRefresh(true)
                         offset.current = 0
                         fetchArticles(RetryType.NO_RETRY, false).finally(() => {
@@ -118,7 +108,12 @@ export const ArticlesList: RootStackScreen<"ArticlesList"> = props => {
                 toggled: toggled,
                 onToggle: value => {
                     setToggled(value)
-                    onFavouriteChange(value)
+                    DeviceEventEmitter.emit(UPDATE_PREFERENCE_EVENT_NAME, {
+                        tagName: tagName,
+                        preference: value
+                            ? Preference.FAVOURITE
+                            : Preference.OTHER,
+                    })
                 },
             }}
         />

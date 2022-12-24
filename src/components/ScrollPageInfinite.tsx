@@ -5,6 +5,7 @@ import {
     View,
     Animated,
     Switch,
+    ActivityIndicator,
     StyleSheet,
     NativeSyntheticEvent,
     NativeScrollEvent,
@@ -65,16 +66,23 @@ interface PageProps<T> {
         onRefresh: () => void
         refreshing: boolean
     }
+    /**
+     * props to control the fetch of new data
+     */
+    fetchControl: {
+        onFetch: () => void
+        /** @default false */
+        fetching?: boolean
+    }
 
     //TODO: write documentation
     data: T[]
     render: (item: T) => React.ReactElement
-    fetchData: () => void
 
     /**
      * Number from 0 to 1 to control the `onEndReachedThreshold` prop of the flat list
      *
-     * @default 0.4
+     * @default 0.05
      */
     endThreshold?: number
 
@@ -86,7 +94,8 @@ interface PageProps<T> {
  * It provides a navbar and a flatlist with margin and rounded corners.
  */
 export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
-    const { background, homeBackground, palette } = usePalette()
+    const { background, homeBackground, primary, buttonFill, palette } =
+        usePalette()
 
     const [isPastTitle, setIsPastTitle] = useState(false)
     const shadowAnim = useRef(new Animated.Value(0)).current
@@ -97,7 +106,9 @@ export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
 
     const showSwitch = props.showSwitch ?? false
 
-    const endThreshold = props.endThreshold ?? 0.4
+    const fetching = props.fetchControl.fetching ?? false
+
+    const endThreshold = props.endThreshold ?? 0.05
 
     useEffect(() => {
         // hook called when the shadow needs to be animated
@@ -151,7 +162,7 @@ export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
                 <FlatList
                     data={props.data}
                     renderItem={({ item }) => props.render(item)}
-                    onEndReached={props.fetchData}
+                    onEndReached={props.fetchControl.onFetch}
                     onEndReachedThreshold={endThreshold}
                     refreshControl={
                         props.refreshControl ? (
@@ -208,7 +219,7 @@ export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
                                                 }
                                             }}
                                             trackColor={{
-                                                false: homeBackground, // TODO: ask the design team which is the correct color
+                                                false: buttonFill,
                                                 true: palette.accent,
                                             }}
                                             thumbColor={background}
@@ -218,6 +229,13 @@ export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
                                 </View>
                             </Animated.View>
                         ) : undefined
+                    }
+                    ListFooterComponent={
+                        <ActivityIndicator
+                            size={"large"}
+                            animating={fetching}
+                            color={primary}
+                        />
                     }
                     contentContainerStyle={{
                         backgroundColor: background,
