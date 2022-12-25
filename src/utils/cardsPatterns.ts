@@ -29,9 +29,9 @@ export const newsTagsPatterns: CardsPatterns = {
             [274, "right"],
         ],
         [3]: [
+            [130, "left"],
+            [130, "left"],
             [277, "right"],
-            [130, "left"],
-            [130, "left"],
         ],
         [4]: [
             [274, "left"],
