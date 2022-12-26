@@ -9,15 +9,10 @@ import {
     Preferences,
     LastArticles,
     UpdatePreferenceEventArgs,
+    UPDATE_PREFERENCE_EVENT_NAME,
 } from "./newsTypes"
 import { NewsBottomSheet } from "./NewsBottomSheet"
 import { newsTagsPatterns, CardsPattern } from "utils/cardsPatterns"
-
-/**
- * Name of the event that has to be fired in order to update the preference
- * of a tag (favourite or not) in the state of the NewsManager component
- */
-export const UPDATE_PREFERENCE_EVENT_NAME = "update-preference"
 
 /**
  * Bottom sheet in the home page to access the news.

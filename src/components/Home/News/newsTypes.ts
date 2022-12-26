@@ -1,5 +1,11 @@
 import { Tag, Article } from "api"
 
+/**
+ * Name of the event that has to be fired in order to update the preference
+ * of a tag (favourite or not) in the state of the NewsManager component
+ */
+export const UPDATE_PREFERENCE_EVENT_NAME = "update-preference"
+
 /** Enum to represent whether a tag is favourite or not */
 export enum Preference {
     OTHER,
@@ -21,7 +27,7 @@ export type TagWithData = Tag & {
  * TODO: use tag id if and when there will be one
  */
 export interface Preferences {
-    [key: string]: Preference
+    [key: Tag["name"]]: Preference
 }
 
 /**
@@ -30,7 +36,7 @@ export interface Preferences {
  * TODO: use tag id if and when there will be one
  */
 export interface LastArticles {
-    [key: string]: Article
+    [key: Tag["name"]]: Article
 }
 
 /**
@@ -38,6 +44,6 @@ export interface LastArticles {
  * when the `update-preference` event is fired.
  */
 export interface UpdatePreferenceEventArgs {
-    tagName: string
+    tagName: Tag["name"]
     preference: Preference
 }

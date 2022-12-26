@@ -4,12 +4,12 @@ import {
     FlatList,
     View,
     Animated,
-    Switch,
     ActivityIndicator,
     StyleSheet,
     NativeSyntheticEvent,
     NativeScrollEvent,
 } from "react-native"
+import { Switch } from "react-native-switch"
 
 import { Title, Subtitle } from "components/Text"
 import { NavBar, NavbarProps } from "components/NavBar"
@@ -94,8 +94,14 @@ interface PageProps<T> {
  * It provides a navbar and a flatlist with margin and rounded corners.
  */
 export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
-    const { background, homeBackground, primary, buttonFill, palette } =
-        usePalette()
+    const {
+        background,
+        backgroundSecondary,
+        homeBackground,
+        primary,
+        palette,
+        isLight,
+    } = usePalette()
 
     const [isPastTitle, setIsPastTitle] = useState(false)
     const shadowAnim = useRef(new Animated.Value(0)).current
@@ -204,27 +210,52 @@ export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
                                             </Subtitle>
                                         )}
                                     </View>
-
                                     {showSwitch && (
-                                        <Switch
-                                            value={props.switchControl?.toggled}
-                                            onValueChange={value => {
-                                                if (
-                                                    props.switchControl
-                                                        ?.onToggle
-                                                ) {
-                                                    props.switchControl.onToggle(
+                                        // Toggle switch
+                                        <View style={styles.switch}>
+                                            <Switch
+                                                value={
+                                                    props.switchControl?.toggled
+                                                }
+                                                onValueChange={value => {
+                                                    props.switchControl?.onToggle(
                                                         value
                                                     )
+                                                }}
+                                                changeValueImmediately={true}
+                                                renderActiveText={false}
+                                                renderInActiveText={false}
+                                                barHeight={27}
+                                                switchWidthMultiplier={3}
+                                                circleSize={18}
+                                                circleActiveColor={
+                                                    backgroundSecondary
                                                 }
-                                            }}
-                                            trackColor={{
-                                                false: buttonFill,
-                                                true: palette.accent,
-                                            }}
-                                            thumbColor={background}
-                                            style={styles.switch}
-                                        />
+                                                circleInActiveColor={
+                                                    palette.accent
+                                                }
+                                                circleBorderWidth={0}
+                                                innerCircleStyle={{
+                                                    borderWidth: 1,
+                                                    borderColor: !props
+                                                        .switchControl?.toggled
+                                                        ? palette.accent
+                                                        : isLight
+                                                        ? "#EBEBEB"
+                                                        : "#3A4257",
+                                                }}
+                                                backgroundActive={
+                                                    palette.accent
+                                                }
+                                                backgroundInactive={"#FFF"}
+                                                containerStyle={{
+                                                    borderWidth: 1,
+                                                    borderColor: palette.accent,
+                                                }}
+                                                switchLeftPx={1.5}
+                                                switchRightPx={1.3}
+                                            />
+                                        </View>
                                     )}
                                 </View>
                             </Animated.View>
@@ -275,6 +306,5 @@ const styles = StyleSheet.create({
         position: "absolute",
         alignSelf: "center",
         right: 5,
-        transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
     },
 })

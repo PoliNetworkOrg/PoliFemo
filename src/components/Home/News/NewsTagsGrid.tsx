@@ -4,6 +4,7 @@ import { View } from "react-native"
 import { TagWithData } from "./newsTypes"
 import { CardWithGradient } from "components/CardWithGradient"
 import { useNavigation } from "navigation/NavigationTypes"
+import { capitalize } from "utils/strings"
 
 interface NewsTagsGridProps {
     /**
@@ -20,11 +21,11 @@ export const NewsTagsGrid: FC<NewsTagsGridProps> = props => {
     const navigation = useNavigation()
 
     // Function used when displaying a tag card
-    const getTagCard = (tag: TagWithData, index: number) => {
+    const getTagCard = (tag: TagWithData) => {
         return (
             <CardWithGradient
-                key={index}
-                title={tag.name}
+                key={tag.name}
+                title={capitalize(tag.name, 3)}
                 imageURL={tag.image}
                 onClick={() =>
                     navigation.navigate("ArticlesList", {
@@ -42,19 +43,19 @@ export const NewsTagsGrid: FC<NewsTagsGridProps> = props => {
         <>
             {props.tags.length === 1 ? (
                 // if there is only 1 news tag, display its card at full width
-                getTagCard(props.tags[0], 0)
+                getTagCard(props.tags[0])
             ) : (
                 <View style={{ flexDirection: "row" }}>
                     <View style={{ flex: 17, marginRight: 17 }}>
                         {props.tags
                             .filter(tag => tag.column === "left")
-                            .map((tag, index) => getTagCard(tag, index))}
+                            .map(tag => getTagCard(tag))}
                     </View>
 
                     <View style={{ flex: 14 }}>
                         {props.tags
                             .filter(tag => tag.column === "right")
-                            .map((tag, index) => getTagCard(tag, index))}
+                            .map(tag => getTagCard(tag))}
                     </View>
                 </View>
             )}

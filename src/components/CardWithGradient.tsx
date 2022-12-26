@@ -51,7 +51,7 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
                 { marginBottom: 17, borderRadius: borderRadius },
                 props.style,
             ]}
-            onPress={props.onClick ?? null}
+            onPress={props.onClick}
         >
             <ImageBackground
                 source={props.imageURL ? { uri: props.imageURL } : {}}

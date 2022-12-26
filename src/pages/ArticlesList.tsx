@@ -6,6 +6,7 @@ import { Preference, UPDATE_PREFERENCE_EVENT_NAME } from "components/Home/News"
 import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ScrollPageInfinite } from "components/ScrollPageInfinite"
 import { CardWithGradient } from "components/CardWithGradient"
+import { capitalize } from "utils/strings"
 
 const MAX_ARTICLES_PER_REQUEST = 8
 
@@ -61,7 +62,7 @@ export const ArticlesList: RootStackScreen<"ArticlesList"> = props => {
 
     return (
         <ScrollPageInfinite
-            title={tagName}
+            title={capitalize(tagName, 3)}
             data={articles}
             render={article => {
                 return (
