@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import {
     RefreshControl,
     FlatList,
@@ -14,8 +14,6 @@ import { Switch } from "react-native-switch"
 import { Title, Subtitle } from "components/Text"
 import { NavBar, NavbarProps } from "components/NavBar"
 import { usePalette } from "utils/colors"
-
-import { Article } from "api"
 
 interface PageProps<T> {
     /**
@@ -74,11 +72,17 @@ interface PageProps<T> {
         /** @default false */
         fetching?: boolean
     }
-
-    //TODO: write documentation
-    data: T[]
+    /**
+     * List of items displayed in the flat list
+     */
+    items: T[]
+    /**
+     * Function used to render an item on the screen
+     *
+     * @param item
+     * @return ReactElement created with the data of the item
+     */
     render: (item: T) => React.ReactElement
-
     /**
      * Number from 0 to 1 to control the `onEndReachedThreshold` prop of the flat list
      *
@@ -93,7 +97,7 @@ interface PageProps<T> {
  * General component useful for pages with an infinte scrollable content.
  * It provides a navbar and a flatlist with margin and rounded corners.
  */
-export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
+export const ScrollPageInfinite = <T,>(props: PageProps<T>): JSX.Element => {
     const {
         background,
         backgroundSecondary,
@@ -166,7 +170,7 @@ export const ScrollPageInfinite: FC<PageProps<Article>> = props => {
                 }}
             >
                 <FlatList
-                    data={props.data}
+                    data={props.items}
                     renderItem={({ item }) => props.render(item)}
                     onEndReached={props.fetchControl.onFetch}
                     onEndReachedThreshold={endThreshold}

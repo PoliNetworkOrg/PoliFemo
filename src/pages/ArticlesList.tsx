@@ -58,7 +58,7 @@ export const ArticlesList: RootStackScreen<"ArticlesList"> = props => {
     return (
         <ScrollPageInfinite
             title={capitalize(tagName, 3)}
-            data={articles}
+            items={articles}
             render={article => {
                 return (
                     <View style={{ paddingHorizontal: 28 }}>
