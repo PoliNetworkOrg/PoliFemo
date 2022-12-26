@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { Pressable, View, StyleSheet } from "react-native"
+import { Pressable, View, StyleSheet, DeviceEventEmitter } from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
@@ -129,12 +129,14 @@ export const NavBar: FC<NavbarProps> = props => {
 
             {home && (
                 <Pressable
-                    //TODO: write proper documentation
-                    //TODO: forse levare overrideHomeBehavious come prop
                     onPress={
                         props.overrideHomeBehavior ??
                         (() => {
-                            navigation.navigate("Home", { closeNews: true })
+                            navigation.navigate("Home")
+                            // Emit the event to close the news bottom sheet
+                            DeviceEventEmitter.emit(
+                                CLOSE_BOTTOM_SHEET_EVENT_NAME
+                            )
                         })
                     }
                     style={[styles.button, { backgroundColor: buttonFill }]}

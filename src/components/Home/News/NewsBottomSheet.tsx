@@ -62,24 +62,23 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
 
     useEffect(() => {
         // scrolls to the top of the news scrollview
-        if (scrollViewRef.current) {
+        if (isNewsClosed && scrollViewRef.current) {
             // "scrollTo" is deprecated but works fine.
             // "scrollToEnd" doesn't work when the news scrollview is fully expanded downwards
             scrollViewRef.current.scrollTo({ y: 0, animated: false })
         }
-    }, [isNewsClosed, showFavourites])
+    }, [isNewsClosed])
 
-    // useEffect(() => {
-    //     //TODO: write proper documentation
-    //     // Set up the event listener to update the preference of a tag in the state of this component
-    //     // when the corresponding event is emitted in ArticlesList
-    //     DeviceEventEmitter.addListener(CLOSE_BOTTOM_SHEET_EVENT_NAME, () => {
-    //         setIsNewsClosed(true)
-    //     })
-    //     return () => {
-    //         DeviceEventEmitter.removeAllListeners(CLOSE_BOTTOM_SHEET_EVENT_NAME)
-    //     }
-    // }, [])
+    useEffect(() => {
+        // Set up the event listener to close the NewsBottomSheet
+        // when the home button in the NavBar is clicked
+        DeviceEventEmitter.addListener(CLOSE_BOTTOM_SHEET_EVENT_NAME, () => {
+            setIsNewsClosed(true)
+        })
+        return () => {
+            DeviceEventEmitter.removeAllListeners(CLOSE_BOTTOM_SHEET_EVENT_NAME)
+        }
+    }, [])
 
     return (
         <BottomSheet

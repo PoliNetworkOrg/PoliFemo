@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { DeviceEventEmitter } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
-import { api, RetryType, Tag, Article } from "api"
+import { api, Tag, Article } from "api"
 import {
     TagWithData,
     Preference,
@@ -51,7 +51,6 @@ export const NewsManager = () => {
         ).catch(err => console.log(err))
     }, [preferences])
 
-    // TODO: sicuro di lasciare no retry?
     // Download the last published article of each tag (news category) in parallel
     // and wait until each one has finished
     const getLastArticles = async (tags: Tag[]) => {
@@ -60,9 +59,7 @@ export const NewsManager = () => {
         for (const tag of tags) {
             promises.push(
                 api
-                    .getLastArticleByTag(tag.name, {
-                        retryType: RetryType.NO_RETRY,
-                    })
+                    .getLastArticleByTag(tag.name)
                     .then(article => {
                         tempArticles[tag.name] = article
                     })

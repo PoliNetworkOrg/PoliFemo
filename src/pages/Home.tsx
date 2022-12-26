@@ -21,8 +21,6 @@ export const Home: RootStackScreen<"Home"> = props => {
 
     const [search, setSearch] = useState("")
 
-    // console.log(props.route.params?.closeNews)
-
     /**
      * Lo scopo di questo useEffect è determinare se è passato `DEFAULT_FETCH_INTERVAL`
      * (al momento settato a 1 giorno) dall'ultima volta che è stato eseguito

@@ -33,7 +33,7 @@ import { Preference } from "components/Home/News"
  */
 export type RootStackNavigatorParams = {
     /* eslint-disable @typescript-eslint/naming-convention */
-    Home: { closeNews: boolean }
+    Home: undefined
     Article: { article: Article }
     ArticlesList: { tagName: string; tagPreference: Preference }
     Error404: undefined

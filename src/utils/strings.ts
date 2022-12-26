@@ -7,7 +7,7 @@
  */
 export function capitalize(str: string, notCapitalize = 0): string {
     const arr = str.split(" ")
-    for (var i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
         if (arr[i].length <= notCapitalize) {
             arr[i] = arr[i].toLowerCase()
         } else {

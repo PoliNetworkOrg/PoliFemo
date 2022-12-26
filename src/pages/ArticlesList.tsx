@@ -27,18 +27,13 @@ export const ArticlesList: RootStackScreen<"ArticlesList"> = props => {
 
     const offset = useRef<number>(0)
 
-    // TODO: forse mettere un po' di retry indefinetely, ma modificando mainApi
-    // per fare in modo che dopo errore 404 non tenta di scaricare di nuovo
-    const fetchArticles = async (
-        retryType: RetryType,
-        keepArticles: boolean
-    ) => {
+    const fetchArticles = async (keepArticles: boolean) => {
         try {
             const response = await api.getArticlesFromOffsetByTag(
                 tagName,
                 MAX_ARTICLES_PER_REQUEST,
                 offset.current,
-                { retryType: retryType, maxRetries: 2, waitingTime: 2 }
+                { retryType: RetryType.NO_RETRY }
             )
             if (keepArticles) {
                 // Keep previously downloaded articles
@@ -47,17 +42,17 @@ export const ArticlesList: RootStackScreen<"ArticlesList"> = props => {
                 // Overwrite previously downloaded articles
                 setArticles(response)
             }
-            // Increase the offset so that at the following fetch you get the next articles
-            offset.current += 1
         } catch (error) {
             console.log(error)
         }
     }
 
     useEffect(() => {
-        fetchArticles(RetryType.NO_RETRY, false).finally(() =>
+        fetchArticles(false).finally(() => {
+            // Increase the offset so that at the following fetch you get the next articles
+            offset.current += 1
             setIsFetching(false)
-        )
+        })
     }, [])
 
     return (
@@ -86,7 +81,8 @@ export const ArticlesList: RootStackScreen<"ArticlesList"> = props => {
                 onFetch: () => {
                     if (!refresh && !isFetching) {
                         setIsFetching(true)
-                        fetchArticles(RetryType.NO_RETRY, true).finally(() => {
+                        fetchArticles(true).finally(() => {
+                            offset.current += 1
                             setIsFetching(false)
                         })
                     }
@@ -98,7 +94,8 @@ export const ArticlesList: RootStackScreen<"ArticlesList"> = props => {
                     if (!refresh && !isFetching) {
                         setRefresh(true)
                         offset.current = 0
-                        fetchArticles(RetryType.NO_RETRY, false).finally(() => {
+                        fetchArticles(false).finally(() => {
+                            offset.current += 1
                             setRefresh(false)
                         })
                     }
