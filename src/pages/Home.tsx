@@ -16,10 +16,12 @@ const DEFAULT_FETCH_INTERVAL = 1 * 24 * 60 * 60 * 1000 //1 day
  * Home page containing the POLIFEMO logo, search bar, main horizontal scroll menu and the entry
  * point for the news section (which is a bottom sheet)
  */
-export const Home: RootStackScreen<"Home"> = () => {
+export const Home: RootStackScreen<"Home"> = props => {
     const { homeBackground, background } = usePalette()
 
     const [search, setSearch] = useState("")
+
+    // console.log(props.route.params?.closeNews)
 
     /**
      * Lo scopo di questo useEffect è determinare se è passato `DEFAULT_FETCH_INTERVAL`

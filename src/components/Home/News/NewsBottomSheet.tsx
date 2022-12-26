@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState, useRef } from "react"
-import { StyleSheet, View } from "react-native"
+import { StyleSheet, View, DeviceEventEmitter } from "react-native"
 import BottomSheet, {
     BottomSheetScrollView,
     BottomSheetScrollViewMethods,
@@ -10,7 +10,7 @@ import { TagWithData } from "./newsTypes"
 import { NewsTagsGrid } from "./NewsTagsGrid"
 import { Title } from "components/Text"
 import { CardWithGradient } from "components/CardWithGradient"
-import { NavBar } from "components/NavBar"
+import { NavBar, CLOSE_BOTTOM_SHEET_EVENT_NAME } from "components/NavBar"
 import { usePalette } from "utils/colors"
 import { useNavigation } from "navigation/NavigationTypes"
 import { getUsableScreenHeight } from "utils/height"
@@ -68,6 +68,18 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
             scrollViewRef.current.scrollTo({ y: 0, animated: false })
         }
     }, [isNewsClosed, showFavourites])
+
+    // useEffect(() => {
+    //     //TODO: write proper documentation
+    //     // Set up the event listener to update the preference of a tag in the state of this component
+    //     // when the corresponding event is emitted in ArticlesList
+    //     DeviceEventEmitter.addListener(CLOSE_BOTTOM_SHEET_EVENT_NAME, () => {
+    //         setIsNewsClosed(true)
+    //     })
+    //     return () => {
+    //         DeviceEventEmitter.removeAllListeners(CLOSE_BOTTOM_SHEET_EVENT_NAME)
+    //     }
+    // }, [])
 
     return (
         <BottomSheet

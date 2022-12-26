@@ -8,6 +8,8 @@ import { useNavigation } from "navigation/NavigationTypes"
 import { usePalette } from "utils/colors"
 import { NavbarIcon, navbarIcons } from "assets/navbar"
 
+export const CLOSE_BOTTOM_SHEET_EVENT_NAME = "close-bottom-sheet"
+
 export interface NavbarProps {
     /**
      * render the Back Button
@@ -127,9 +129,13 @@ export const NavBar: FC<NavbarProps> = props => {
 
             {home && (
                 <Pressable
+                    //TODO: write proper documentation
+                    //TODO: forse levare overrideHomeBehavious come prop
                     onPress={
                         props.overrideHomeBehavior ??
-                        (() => navigation.navigate("Home"))
+                        (() => {
+                            navigation.navigate("Home", { closeNews: true })
+                        })
                     }
                     style={[styles.button, { backgroundColor: buttonFill }]}
                 >
