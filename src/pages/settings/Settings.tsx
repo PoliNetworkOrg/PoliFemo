@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react"
+import React, { useContext, useState } from "react"
 import { View } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { SettingsScroll } from "components/Settings"
@@ -6,17 +6,19 @@ import { Divider } from "components/Divider"
 import { SettingTile } from "components/Settings"
 import { settingsIcons } from "assets/settings"
 import { UserDetailsTile } from "components/Settings"
-import { Setting } from "components/Settings"
 import { ModalCustomSettings } from "components/Settings"
 import { CourseTile } from "components/Settings"
 import { SelectTile } from "components/Settings"
-import { AppContext } from "../state/AppContext"
-import { RadioButtonGroup } from "components/Settings"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import { UserAnonymousTile } from "components/Settings"
+import {
+    SettingOptions,
+    SettingsContext,
+    ValidColorSchemeName,
+} from "utils/settings"
+import { RadioButtonGroup, ThemeSelectorContext } from "utils/radioButton"
 
 const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
-const themesToSave: string[] = ["predefined", "dark", "light"]
+const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
 
 /**
  * Settings Page
@@ -24,7 +26,7 @@ const themesToSave: string[] = ["predefined", "dark", "light"]
 export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
     const user = props.route.params.user
 
-    const context = useContext(AppContext)
+    const context = useContext(SettingsContext)
 
     const settings = context.settings
     const setSettings = context.setSettings
@@ -34,7 +36,8 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
     //Settings setter
 
     //RadioButtonGroup theme state and setter
-    const [selectedTheme, setSelectedTheme] = useState(theme)
+    const [selectedTheme, setSelectedTheme] =
+        useState<ValidColorSchemeName>(theme)
 
     //RadioButtonGroup carriere state and setter
     const [carriera, setCarriera] = useState(
@@ -46,25 +49,9 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
 
     const [isModalVisible, setModalVisible] = useState(false)
 
-    //tracking first render
-    const firstRender = useRef(true)
-
     const { navigate } = useNavigation()
 
-    //Update storage as a side effect of settings change
-    useEffect(() => {
-        // ? skip on first render, is it worth it ?
-        if (firstRender.current) {
-            firstRender.current = false
-        } else {
-            AsyncStorage.setItem("settings", JSON.stringify(settings)).catch(
-                err => console.log(err)
-            )
-            console.log("Set theme " + theme)
-        }
-    }, [theme])
-
-    const settingsList: Setting[] = [
+    const settingsList: SettingOptions[] = [
         {
             title: "Aspetto",
             subtitle: "Dark, light mode",
@@ -102,7 +89,9 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
                     />
                 )}
                 {logged && (
-                    <RadioButtonGroup value={carriera} setValue={setCarriera}>
+                    <RadioButtonGroup.Provider
+                        value={{ value: carriera, setValue: setCarriera }}
+                    >
                         {user.carriere?.map((carriera, index) => {
                             return (
                                 <CourseTile
@@ -112,7 +101,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
                                 />
                             )
                         })}
-                    </RadioButtonGroup>
+                    </RadioButtonGroup.Provider>
                 )}
                 <Divider />
 
@@ -120,7 +109,9 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
                     return <SettingTile setting={setting} key={index} />
                 })}
             </SettingsScroll>
-            <RadioButtonGroup value={selectedTheme} setValue={setSelectedTheme}>
+            <ThemeSelectorContext.Provider
+                value={{ theme: selectedTheme, setTheme: setSelectedTheme }}
+            >
                 <ModalCustomSettings
                     title={"Scegli Tema"}
                     isShowing={isModalVisible}
@@ -130,8 +121,8 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
                         setSelectedTheme(theme)
                         setModalVisible(false)
                     }}
-                    onOK={(theme: string) => {
-                        setSettings(settings.copyWith({ theme: theme }))
+                    onOK={() => {
+                        setSettings({ ...settings, theme: selectedTheme })
                         setModalVisible(false)
                     }}
                 >
@@ -145,7 +136,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
                         )
                     })}
                 </ModalCustomSettings>
-            </RadioButtonGroup>
+            </ThemeSelectorContext.Provider>
         </View>
     )
 }

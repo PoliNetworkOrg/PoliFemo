@@ -3,8 +3,8 @@ import { View } from "react-native"
 import { TouchableRipple } from "components/TouchableRipple"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
-import { RadioButtonCustom } from "./RadioButton/RadioButtonCustom"
-import { RadioButtonContext } from "./RadioButton/RadioButtonGroup"
+import { RadioButtonCustom } from "./RadioButtonCustom"
+import { RadioButtonGroup } from "utils/radioButton"
 
 export interface CourseTileProps {
     matricola: number
@@ -17,7 +17,7 @@ export interface CourseTileProps {
 export const CourseTile: FC<CourseTileProps> = props => {
     const { isLight } = usePalette()
     return (
-        <RadioButtonContext.Consumer>
+        <RadioButtonGroup.Consumer>
             {context => {
                 return (
                     <TouchableRipple
@@ -67,6 +67,6 @@ export const CourseTile: FC<CourseTileProps> = props => {
                     </TouchableRipple>
                 )
             }}
-        </RadioButtonContext.Consumer>
+        </RadioButtonGroup.Consumer>
     )
 }

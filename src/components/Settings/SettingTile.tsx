@@ -12,10 +12,10 @@ import {
 import { Text } from "components/Text"
 import { Divider } from "components/Divider"
 import { usePalette } from "utils/colors"
-import { Setting } from "./Setting"
+import { SettingOptions } from "utils/settings"
 
 export interface SettingTileProps {
-    setting: Setting
+    setting: SettingOptions
 }
 
 export const SettingTile: FC<SettingTileProps> = props => {

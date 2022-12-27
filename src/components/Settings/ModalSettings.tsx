@@ -24,7 +24,7 @@ export interface ModalCustomSettingsProps {
     /**
      * function called when button "OK" is pressed
      */
-    onOK: (value: string) => void
+    onOK: () => void
 
     /**
      * input value of `onOk` function.
@@ -97,9 +97,7 @@ export const ModalCustomSettings: FC<ModalCustomSettingsProps> = props => {
                         <ButtonCustom
                             light={false}
                             text={"OK"}
-                            onPress={() => {
-                                props.onOK(props.selectedValue)
-                            }}
+                            onPress={props.onOK}
                         />
                     </View>
                 </Pressable>

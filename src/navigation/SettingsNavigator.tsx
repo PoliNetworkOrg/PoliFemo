@@ -6,8 +6,8 @@
 import React, { FC } from "react"
 import { createStackNavigator } from "@react-navigation/stack"
 import { SettingsStackNavigatorParams } from "navigation/NavigationTypes"
-import { SettingsPage } from "pages/Settings"
-import { Help } from "pages/Help"
+import { SettingsPage } from "pages/settings/Settings"
+import { Help } from "pages/settings/Help"
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const SettingsStackNavigator =
     createStackNavigator<SettingsStackNavigatorParams>()

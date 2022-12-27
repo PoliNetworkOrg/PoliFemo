@@ -3,9 +3,9 @@ import { View } from "react-native"
 import { SettingsStackScreen } from "navigation/NavigationTypes"
 import { SettingsScroll } from "components/Settings/SettingsScroll"
 import { SettingTile } from "components/Settings/SettingTile"
-import { Setting } from "components/Settings/Setting"
+import { SettingOptions } from "utils/settings"
 
-export const settingsList: Setting[] = [
+export const settingsList: SettingOptions[] = [
     {
         title: "Centro Assistenza",
         subtitle: "descrizione placeholder",

@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { useColorScheme, ColorSchemeName } from "react-native"
-import { AppContext } from "../state"
+import { SettingsContext } from "./settings"
 
 export interface Palette {
     primary: string
@@ -162,14 +162,11 @@ export const usePalette: () => ColorTheme &
         /** the colors for the dark theme, see {@link ColorTheme} */
         darkTheme: ColorTheme
     } = () => {
-    const context = useContext(AppContext)
+    const context = useContext(SettingsContext)
     const chosenTheme = context.settings.theme
 
-    // ? come si fa a usare un react hook in modo condizionale se
-    // ? deve sempre essere chiamato per le regole di
-    // ? react in render successivi ??? :(
     let colorScheme = useColorScheme() ?? "light"
-    if (chosenTheme === "dark" || chosenTheme === "light") {
+    if (chosenTheme !== "predefined") {
         colorScheme = chosenTheme
     }
 

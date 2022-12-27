@@ -2,8 +2,9 @@ import React, { FC } from "react"
 import { Pressable, View } from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
-import { RadioButtonCustom } from "./RadioButton/RadioButtonCustom"
-import { RadioButtonContext } from "./RadioButton/RadioButtonGroup"
+import { RadioButtonCustom } from "./RadioButtonCustom"
+import { ThemeSelectorContext } from "utils/radioButton"
+import { ValidColorSchemeName } from "utils/settings"
 
 export interface SelectTileProps {
     /**
@@ -13,7 +14,7 @@ export interface SelectTileProps {
     /**
      * value who will update RadioButton context state
      */
-    storageValue: string
+    storageValue: ValidColorSchemeName
 }
 
 /**
@@ -22,7 +23,7 @@ export interface SelectTileProps {
 export const SelectTile: FC<SelectTileProps> = props => {
     const { isLight, palette } = usePalette()
     return (
-        <RadioButtonContext.Consumer>
+        <ThemeSelectorContext.Consumer>
             {context => {
                 return (
                     <View
@@ -35,17 +36,17 @@ export const SelectTile: FC<SelectTileProps> = props => {
                         }}
                     >
                         <Pressable
-                            onPress={() => context.setValue(props.storageValue)}
+                            onPress={() => context.setTheme(props.storageValue)}
                         >
                             <RadioButtonCustom
-                                status={props.storageValue === context.value}
+                                status={props.storageValue === context.theme}
                                 darkColor={palette.darker}
                             />
                         </Pressable>
                         <View>
                             <Pressable
                                 onPress={() =>
-                                    context.setValue(props.storageValue)
+                                    context.setTheme(props.storageValue)
                                 }
                             >
                                 <Text
@@ -64,6 +65,6 @@ export const SelectTile: FC<SelectTileProps> = props => {
                     </View>
                 )
             }}
-        </RadioButtonContext.Consumer>
+        </ThemeSelectorContext.Consumer>
     )
 }

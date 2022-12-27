@@ -3,7 +3,7 @@ import { View } from "react-native"
 import { Tray } from "components/Tray"
 import { usePalette } from "utils/colors"
 import { useNavigation } from "navigation/NavigationTypes"
-import { mockedUser } from "components/Settings/User"
+import { mockedUser } from "api/User"
 import { MainStack } from "navigation/MainStackNavigator"
 
 /**
