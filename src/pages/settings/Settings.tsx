@@ -15,7 +15,6 @@ import {
     SettingsContext,
     ValidColorSchemeName,
 } from "utils/settings"
-import { RadioButtonGroup, ThemeSelectorContext } from "utils/radioButton"
 
 const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
 const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
@@ -40,8 +39,8 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
         useState<ValidColorSchemeName>(theme)
 
     //RadioButtonGroup carriere state and setter
-    const [carriera, setCarriera] = useState(
-        user.carriere[0].matricola.toString()
+    const [selectedMatricola, setSelectedMatricola] = useState(
+        user.carriere[0].matricola
     )
 
     //for testing logged in/out view
@@ -89,19 +88,23 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
                     />
                 )}
                 {logged && (
-                    <RadioButtonGroup.Provider
-                        value={{ value: carriera, setValue: setCarriera }}
-                    >
+                    <View>
                         {user.carriere?.map((carriera, index) => {
                             return (
                                 <CourseTile
                                     key={index}
                                     matricola={carriera.matricola}
                                     type={carriera.type}
+                                    selected={
+                                        selectedMatricola === carriera.matricola
+                                    }
+                                    onPress={() =>
+                                        setSelectedMatricola(carriera.matricola)
+                                    }
                                 />
                             )
                         })}
-                    </RadioButtonGroup.Provider>
+                    </View>
                 )}
                 <Divider />
 
@@ -109,34 +112,34 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
                     return <SettingTile setting={setting} key={index} />
                 })}
             </SettingsScroll>
-            <ThemeSelectorContext.Provider
-                value={{ theme: selectedTheme, setTheme: setSelectedTheme }}
+
+            <ModalCustomSettings
+                title={"Scegli Tema"}
+                isShowing={isModalVisible}
+                selectedValue={selectedTheme}
+                onClose={() => {
+                    //restore real theme value
+                    setSelectedTheme(theme)
+                    setModalVisible(false)
+                }}
+                onOK={() => {
+                    setSettings({ ...settings, theme: selectedTheme })
+                    setModalVisible(false)
+                }}
             >
-                <ModalCustomSettings
-                    title={"Scegli Tema"}
-                    isShowing={isModalVisible}
-                    selectedValue={selectedTheme}
-                    onClose={() => {
-                        //restore real theme value
-                        setSelectedTheme(theme)
-                        setModalVisible(false)
-                    }}
-                    onOK={() => {
-                        setSettings({ ...settings, theme: selectedTheme })
-                        setModalVisible(false)
-                    }}
-                >
-                    {themes?.map((theme, index) => {
-                        return (
-                            <SelectTile
-                                key={index}
-                                name={theme}
-                                storageValue={themesToSave[index]}
-                            />
-                        )
-                    })}
-                </ModalCustomSettings>
-            </ThemeSelectorContext.Provider>
+                {themes?.map((themeName, index) => {
+                    return (
+                        <SelectTile
+                            key={index}
+                            value={themeName}
+                            selected={selectedTheme === themesToSave[index]}
+                            onPress={() => {
+                                setSelectedTheme(themesToSave[index])
+                            }}
+                        />
+                    )
+                })}
+            </ModalCustomSettings>
         </View>
     )
 }
