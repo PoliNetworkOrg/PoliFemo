@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-import { ImageSourcePropType } from "react-native"
+import { DataSourceParam } from "@shopify/react-native-skia"
 import downloads from "./downloads.svg"
 import notifications from "./notifications.svg"
 import settings from "./settings.svg"
@@ -15,7 +15,7 @@ export type TrayIcon = typeof trayIconList[number]
 
 export const trayIcons: Record<
     TrayIcon,
-    { svg: ImageSourcePropType; width: number; heigth: number }
+    { svg: DataSourceParam; width: number; heigth: number }
 > = {
     downloads: {
         svg: downloads,

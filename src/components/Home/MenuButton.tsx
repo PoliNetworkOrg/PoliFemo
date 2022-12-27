@@ -1,5 +1,6 @@
 import React, { FC, useEffect } from "react"
-import { ImageSourcePropType, Pressable, View, Animated } from "react-native"
+import { DataSourceParam } from "@shopify/react-native-skia"
+import { Pressable, View, Animated } from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 
 import { BodyText } from "components/Text"
@@ -9,7 +10,7 @@ import deleteIcon from "assets/menu/delete.svg"
 export interface ButtonInterface {
     id: number
     title: string
-    icon: ImageSourcePropType
+    icon: DataSourceParam
 }
 
 /**

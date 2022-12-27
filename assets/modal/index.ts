@@ -1,8 +1,8 @@
-import { ImageSourcePropType } from "react-native"
+import { DataSourceParam } from "@shopify/react-native-skia"
 import _delete from "./delete.svg"
 
 export const deleteSvg: {
-    svg: ImageSourcePropType
+    svg: DataSourceParam
     width: number
     heigth: number
 } = {
