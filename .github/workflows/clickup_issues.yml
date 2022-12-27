@@ -1,0 +1,23 @@
+name: Create Problem Task on ClickUp
+
+on:
+    issues:
+        types: [opened]
+
+jobs:
+    problem:
+        name: Create Problem Task on ClickUp
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Calling Clickup API via cURL call
+              run: |
+                  curl -i -X POST \
+                  'https://api.clickup.com/api/v2//list/210431256/task' \
+                  -H 'Authorization: ${{secrets.CLICKUP_TOKEN}}' \
+                  -H 'Content-Type: application/json' \
+                  -d '{
+                    "name": "${{github.event.issue.title}}",
+                    "description": ${{ toJSON(github.event.issue.body) }},
+                    "status": "to do"
+                  }'
