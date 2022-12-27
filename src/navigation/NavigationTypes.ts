@@ -37,6 +37,7 @@ export type RootStackNavigatorParams = {
     NewsList: { categoryName: string }
     Error404: undefined
     FreeClassrooms: undefined
+    CampusChoice: undefined
     /* eslint-enable @typescript-eslint/naming-convention */
 }
 
