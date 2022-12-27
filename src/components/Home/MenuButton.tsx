@@ -84,7 +84,7 @@ export const MenuButton: FC<{
                             justifyContent: "space-between",
                             alignItems: "center",
                             borderRadius: 10,
-                            marginTop: 8, //added margin to the top due to the deleting operation
+                            marginTop: 15, //added margin to the top due to the deleting operation
                         }}
                     >
                         <Canvas style={{ flex: 1, width: 40 }}>
