@@ -6,6 +6,7 @@ import WebView from "react-native-webview"
 import { usePalette } from "utils/colors"
 import { api } from "api"
 import { PolimiToken, PoliNetworkToken } from "utils/login"
+import { NavBar } from "components/NavBar"
 
 // TODO: HANDLE ERRORS, this will break as soon as something goes wrong
 // the flow should be probably stopped when something goes wrong and the user should be prompted
@@ -58,7 +59,7 @@ const loginMessage: Record<LoginStage, string> = {
  */
 export const Login: RootStackScreen<"Login"> = () => {
     const navigation = useNavigation()
-    const { backgroundSecondary } = usePalette()
+    const { backgroundSecondary, homeBackground, palette } = usePalette()
     const webview = useRef<WebView>(null)
 
     // keeps track of wich stage of the login we are on
@@ -91,14 +92,27 @@ export const Login: RootStackScreen<"Login"> = () => {
     }, [poliNetworkToken, polimiToken])
 
     return (
-        <View style={{ flex: 1, paddingTop: 50 }}>
-            <Title>Login</Title>
+        <View
+            style={{
+                flex: 1,
+                paddingTop: 50,
+                backgroundColor: homeBackground,
+            }}
+        >
+            <Title
+                style={{
+                    color: palette.accent,
+                    paddingLeft: 20,
+                }}
+            >
+                Login
+            </Title>
             <WebView
                 ref={webview}
                 containerStyle={{
                     flex: 1,
-                    borderWidth: 4,
-                    borderColor: "red",
+                    borderTopLeftRadius: 30,
+                    borderTopRightRadius: 30,
                     position:
                         loginStage === LoginStage.LOGGING_IN // hide after credentials are set
                             ? "relative"
@@ -155,11 +169,14 @@ export const Login: RootStackScreen<"Login"> = () => {
                         justifyContent: "center",
                         alignItems: "center",
                         backgroundColor: backgroundSecondary,
+                        borderTopLeftRadius: 30,
+                        borderTopRightRadius: 30,
                     }}
                 >
                     <Subtitle>{loginMessage[loginStage]}</Subtitle>
                 </View>
             ) : undefined}
+            <NavBar />
         </View>
     )
 }
