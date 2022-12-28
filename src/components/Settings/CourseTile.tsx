@@ -3,34 +3,38 @@ import { View } from "react-native"
 import { TouchableRipple } from "components/TouchableRipple"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
-import { RadioButtonCustom } from "./RadioButtonCustom"
+import { Course } from "api/User"
+import { ButtonCustom } from "./ButtonCustom"
 
 export interface CourseTileProps {
-    matricola: number
-    selected: boolean
+    course: Course
     onPress: () => void
-    type?: string
 }
 
 /**
- * Custom Tile component designed to show a "Course of studies".
+ * Custom Tile component designed to show a "Course of studies"
+ * and a button to open a modal.
  */
 export const CourseTile: FC<CourseTileProps> = props => {
     const { isLight } = usePalette()
     return (
-        <TouchableRipple onClick={props.onPress}>
+        <TouchableRipple>
             <View
                 style={{
                     flex: 1,
                     flexDirection: "row",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    paddingVertical: 10,
-                    paddingLeft: 36,
+                    paddingVertical: 16,
+                    paddingLeft: 28,
                     paddingRight: 46,
                 }}
             >
-                <RadioButtonCustom status={props.selected}></RadioButtonCustom>
+                <ButtonCustom
+                    onPress={props.onPress}
+                    text={"Cambia matricola"}
+                    buttonStyle={{ paddingHorizontal: 8 }}
+                />
                 <View>
                     <Text
                         style={{
@@ -40,7 +44,7 @@ export const CourseTile: FC<CourseTileProps> = props => {
                             textAlign: "right",
                         }}
                     >
-                        Matricola {props.matricola}
+                        Matricola {props.course.matricola}
                     </Text>
                     <Text
                         style={{
@@ -50,7 +54,7 @@ export const CourseTile: FC<CourseTileProps> = props => {
                             textAlign: "right",
                         }}
                     >
-                        {props.type}
+                        {props.course.type}
                     </Text>
                 </View>
             </View>

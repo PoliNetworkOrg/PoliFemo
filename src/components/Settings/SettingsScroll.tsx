@@ -62,6 +62,7 @@ export const SettingsScroll: FC<{
                     shadowOpacity: 0.2,
                     shadowRadius: 8.3,
                     elevation: 13,
+                    overflow: "hidden",
                 }}
             >
                 <ScrollView showsVerticalScrollIndicator={false}>

@@ -15,6 +15,7 @@ import {
     SettingsContext,
     ValidColorSchemeName,
 } from "utils/settings"
+import { Course } from "api/User"
 
 const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
 const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
@@ -38,15 +39,20 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
     const [selectedTheme, setSelectedTheme] =
         useState<ValidColorSchemeName>(theme)
 
-    //RadioButtonGroup carriere state and setter
-    const [selectedMatricola, setSelectedMatricola] = useState(
-        user.carriere[0].matricola
-    )
+    //actual course and setter. It will be moved in app state eventually.
+    const [course, setCourse] = useState<Course>(user.courses[0])
+
+    //currently selected course and setter.
+    const [selectedCourse, setSelectedCourse] = useState<Course>(course)
 
     //for testing logged in/out view
     const [logged, setLogged] = useState(false)
 
-    const [isModalVisible, setModalVisible] = useState(false)
+    //control theme selector modal's visibility
+    const [isModalThemeVisible, setModalThemeVisible] = useState(false)
+
+    //control course selector modal's visibility
+    const [isModalCourseVisible, setModalCourseVisible] = useState(false)
 
     const { navigate } = useNavigation()
 
@@ -56,7 +62,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
             subtitle: "Dark, light mode",
             icon: settingsIcons.modify,
             callback: () => {
-                setModalVisible(true)
+                setModalThemeVisible(true)
             },
         },
         {
@@ -89,21 +95,10 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
                 )}
                 {logged && (
                     <View>
-                        {user.carriere?.map((carriera, index) => {
-                            return (
-                                <CourseTile
-                                    key={index}
-                                    matricola={carriera.matricola}
-                                    type={carriera.type}
-                                    selected={
-                                        selectedMatricola === carriera.matricola
-                                    }
-                                    onPress={() =>
-                                        setSelectedMatricola(carriera.matricola)
-                                    }
-                                />
-                            )
-                        })}
+                        <CourseTile
+                            course={course}
+                            onPress={() => setModalCourseVisible(true)}
+                        />
                     </View>
                 )}
                 <Divider />
@@ -115,16 +110,16 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
 
             <ModalCustomSettings
                 title={"Scegli Tema"}
-                isShowing={isModalVisible}
+                isShowing={isModalThemeVisible}
                 selectedValue={selectedTheme}
                 onClose={() => {
                     //restore real theme value
                     setSelectedTheme(theme)
-                    setModalVisible(false)
+                    setModalThemeVisible(false)
                 }}
                 onOK={() => {
                     setSettings({ ...settings, theme: selectedTheme })
-                    setModalVisible(false)
+                    setModalThemeVisible(false)
                 }}
             >
                 {themes?.map((themeName, index) => {
@@ -135,6 +130,37 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
                             selected={selectedTheme === themesToSave[index]}
                             onPress={() => {
                                 setSelectedTheme(themesToSave[index])
+                            }}
+                        />
+                    )
+                })}
+            </ModalCustomSettings>
+            <ModalCustomSettings
+                title={"Cambia Matricola"}
+                isShowing={isModalCourseVisible}
+                selectedValue={selectedCourse.matricola.toString()}
+                onClose={() => {
+                    //restore selectedCourse to course
+                    setSelectedCourse(course)
+                    setModalCourseVisible(false)
+                }}
+                onOK={() => {
+                    //change course to selectedCourse
+                    setCourse(selectedCourse)
+                    setModalCourseVisible(false)
+                }}
+            >
+                {user.courses?.map((courseOfIndex, index) => {
+                    return (
+                        <SelectTile
+                            key={index}
+                            value={courseOfIndex.matricola.toString()}
+                            selected={
+                                selectedCourse.matricola ===
+                                courseOfIndex.matricola
+                            }
+                            onPress={() => {
+                                setSelectedCourse(courseOfIndex)
                             }}
                         />
                     )

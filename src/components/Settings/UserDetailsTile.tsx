@@ -20,7 +20,7 @@ export const UserDetailsTile: FC<UserDetailsTileProps> = props => {
                 style={{
                     paddingHorizontal: 28,
                     paddingTop: 30,
-                    paddingBottom: 20,
+                    paddingBottom: 12,
                 }}
             >
                 <View style={{ flex: 1, flexDirection: "row" }}>
