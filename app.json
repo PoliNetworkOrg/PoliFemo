@@ -1,47 +1,8 @@
 {
   "expo": {
-    "name": "polifemo",
     "slug": "polifemo",
-    "owner": "polinetwork-org",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0,
-      "url": "https://u.expo.dev/3279e65d-78fe-4db0-9d4f-368a501f4912"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      },
-      "package": "org.polinetwork.polifemo",
-      "softwareKeyboardLayoutMode": "pan"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "sdkVersion": "46.0.0",
-    "extra": {
-      "eas": {
-        "projectId": "3279e65d-78fe-4db0-9d4f-368a501f4912"
-      }
-    },
-    "runtimeVersion": {
-      "policy": "sdkVersion"
-    }
+    "name": "polifemo",
+    "sdkVersion": "46.0.0"
   },
   "name": "polifemo"
 }

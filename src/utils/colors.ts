@@ -160,7 +160,7 @@ export const usePalette: () => ColorTheme &
         /** the colors for the dark theme, see {@link ColorTheme} */
         darkTheme: ColorTheme
     } = () => {
-    const colorScheme = useColorScheme() ?? "light"
+    const colorScheme = "dark"
 
     const isDark = colorScheme === "dark"
     const isLight = !isDark
