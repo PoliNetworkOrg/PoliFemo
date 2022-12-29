@@ -17,10 +17,13 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { FC } from "react"
 import {
+    CompositeScreenProps,
     NavigationProp,
     useNavigation as nativeUseNav,
 } from "@react-navigation/native"
 import { Article } from "api"
+import { User } from "api/User"
+import { NavigatorScreenParams } from "@react-navigation/native"
 
 /**
  * interface containing the info about the params for each page of the stack navigator
@@ -32,13 +35,26 @@ import { Article } from "api"
  */
 export type RootStackNavigatorParams = {
     /* eslint-disable @typescript-eslint/naming-convention */
+    MainNav: NavigatorScreenParams<MainStackNavigatorParams>
+    SettingsNav: NavigatorScreenParams<SettingsStackNavigatorParams>
+    Login: undefined
+}
+
+export type MainStackNavigatorParams = {
     Home: undefined
     Article: { article: Article }
     NewsList: { categoryName: string }
     Error404: undefined
-    Login: undefined
-    /* eslint-enable @typescript-eslint/naming-convention */
 }
+
+export type SettingsStackNavigatorParams = {
+    Settings: { user: User }
+    Help: undefined
+}
+
+export type GlobalStackNavigatorParams = RootStackNavigatorParams &
+    MainStackNavigatorParams &
+    SettingsStackNavigatorParams
 
 // Here are a couple of magic types, straight from the Underground Realm of Weird Types:
 
@@ -61,6 +77,18 @@ export type RootStackNavigatorParams = {
  */
 export type RootStackProps<T extends keyof RootStackNavigatorParams> =
     StackScreenProps<RootStackNavigatorParams, T>
+
+export type MainStackProps<T extends keyof MainStackNavigatorParams> =
+    CompositeScreenProps<
+        StackScreenProps<MainStackNavigatorParams, T>,
+        StackScreenProps<RootStackNavigatorParams>
+    >
+
+export type SettingsStackProps<T extends keyof SettingsStackNavigatorParams> =
+    CompositeScreenProps<
+        StackScreenProps<SettingsStackNavigatorParams, T>,
+        StackScreenProps<RootStackNavigatorParams>
+    >
 
 /**
  * Type for a component of the root stack navigator, use in place of `FC`.
@@ -86,9 +114,44 @@ export type RootStackScreen<
     P = Record<string, never>
 > = FC<RootStackProps<T> & P>
 
+export type MainStackScreen<
+    T extends keyof MainStackNavigatorParams,
+    P = Record<string, never>
+> = FC<MainStackProps<T> & P>
+
+export type SettingsStackScreen<
+    T extends keyof SettingsStackNavigatorParams,
+    P = Record<string, never>
+> = FC<SettingsStackProps<T> & P>
 /**
  * Hook to access the navigation prop of the parent screen anywhere.
- * With correct typings for the Root Stack Navigator.
+ * With correct typings.
+ *
+ * Currently, there are pages in two navigators (SettingsNav, MainNav)
+ *
+ * To navigate to a screen in the SAME Navigator, do as usual (you can
+ * specify only the page and params if needed):
+ *
+ *```tsx
+ * navigate = useNavigation()
+ *
+ * navigate("Article" , {article : article})
+ *
+ *```
+ * To navigate to a screen in a DIFFERENT Navigator, you need to specify
+ * the navigator hierarchy:
+ *
+ *```tsx
+ * navigate = useNavigation()
+ *
+ * navigate("SettingsNav", {
+ *            screen: "Settings",
+ *            params: { user: mockedUser },
+ *         })
+ *
+ *```
+ * Here, `SettingsNav` is the name of the navigator, which need to be specified.
+ *
  */
 export const useNavigation = () =>
-    nativeUseNav<NavigationProp<RootStackNavigatorParams>>()
+    nativeUseNav<NavigationProp<GlobalStackNavigatorParams>>()

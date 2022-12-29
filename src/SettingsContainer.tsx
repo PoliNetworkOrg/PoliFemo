@@ -1,16 +1,16 @@
 import React, { FC } from "react"
 import { View } from "react-native"
-import { RootStack } from "navigation/RootStackNavigator"
 import { usePalette } from "utils/colors"
+import { SettingsStack } from "navigation/SettingsNavigator"
 
 /**
- * The global app container.
+ * The Settings Container.
  *
- * It's a view that wraps everything else, different from App.tsx cause that contains for non
- * structural components.
+ * It's a view that wraps pages of the Settings Navigator
  */
-export const AppContainer: FC = () => {
+export const SettingsContainer: FC = () => {
     const { homeBackground } = usePalette()
+
     return (
         <View
             style={{
@@ -18,7 +18,7 @@ export const AppContainer: FC = () => {
                 backgroundColor: homeBackground,
             }}
         >
-            <RootStack />
+            <SettingsStack />
         </View>
     )
 }

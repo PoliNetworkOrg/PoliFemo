@@ -1,15 +1,14 @@
 /* eslint-disable prettier/prettier */
 import React, { useState } from "react"
-import { RootStackScreen } from "navigation/NavigationTypes"
+import { MainStackScreen } from "navigation/NavigationTypes"
 import { Image, Linking } from "react-native"
 import { WebView } from "react-native-webview"
 import { ScrollPage } from "components/ScrollPage"
 import { usePalette } from "utils/colors"
-
 import { Asset } from "expo-asset"
 import { Roboto_400Regular } from "@expo-google-fonts/roboto"
 
-export const Article: RootStackScreen<"Article"> = props => {
+export const Article: MainStackScreen<"Article"> = props => {
     const { isLight } = usePalette()
     const article = props.route.params.article
     const [webHeight, setWebHeight] = useState<number>(400)
