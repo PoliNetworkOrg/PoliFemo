@@ -5,7 +5,6 @@ import { Tray } from "components/Tray"
 import { RootStack } from "navigation/RootStackNavigator"
 import { usePalette } from "utils/colors"
 import { useNavigation } from "navigation/NavigationTypes"
-import { api } from "api"
 
 /**
  * The main app container.
@@ -31,9 +30,8 @@ export const AppContainer: FC = () => {
                 onNotifications={() => {
                     console.log("notifications")
                 }}
-                onSettings={async () => {
-                    await api.destroyTokens()
-                    console.log("destroyed tokens")
+                onSettings={() => {
+                    console.log("settings")
                 }}
             />
         </View>
