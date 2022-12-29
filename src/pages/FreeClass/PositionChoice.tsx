@@ -7,6 +7,7 @@ import { BodyText, Title } from "components/Text"
 import { PoliSearchBar } from "components/Home"
 import PositionArrowIcon from "assets/freeClassrooms/positionArrow.svg"
 import { useSVG, Canvas, ImageSVG } from "@shopify/react-native-skia"
+import { FreeClassList } from "components/FreeClass/FreeClassList"
 
 enum ButtonType {
     MAP,
@@ -167,6 +168,7 @@ export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
                             </BodyText>
                         </Pressable>
                     </View>
+                    {status === ButtonType.LIST ? <FreeClassList /> : undefined}
                 </View>
             </View>
             <NavBar />
