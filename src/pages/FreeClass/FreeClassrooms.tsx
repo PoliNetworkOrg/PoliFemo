@@ -85,7 +85,7 @@ export const FreeClassrooms: RootStackScreen<"FreeClassrooms"> = () => {
                         onChange={searchKey => setSearch(searchKey)}
                     />
                     <ScrollView
-                        style={{ height: 500 }}
+                        style={{ height: 700 }}
                         showsVerticalScrollIndicator={false}
                         bounces={true}
                         contentContainerStyle={{
@@ -100,7 +100,7 @@ export const FreeClassrooms: RootStackScreen<"FreeClassrooms"> = () => {
                                     style={{
                                         marginTop: 18,
                                         backgroundColor: primary,
-                                        width: width - 60,
+                                        width: width - 54,
                                         height: 190,
                                         borderRadius: 12,
                                         alignItems: "center",
@@ -108,7 +108,7 @@ export const FreeClassrooms: RootStackScreen<"FreeClassrooms"> = () => {
                                     onPress={
                                         element.type === SearchClassType.CAMPUS
                                             ? () => navigate("CampusChoice")
-                                            : () => navigate("Error404")
+                                            : () => navigate("PositionChoice")
                                     }
                                 >
                                     <Canvas

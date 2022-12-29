@@ -38,6 +38,7 @@ export type RootStackNavigatorParams = {
     Error404: undefined
     FreeClassrooms: undefined
     CampusChoice: undefined
+    PositionChoice: undefined
     /* eslint-enable @typescript-eslint/naming-convention */
 }
 

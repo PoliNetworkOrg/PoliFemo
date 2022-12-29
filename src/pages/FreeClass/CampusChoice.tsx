@@ -1,6 +1,6 @@
-import React from "react"
+import React, { useState } from "react"
 import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { View, Pressable, FlatList } from "react-native"
+import { View, Pressable, FlatList, Dimensions } from "react-native"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
 import { Title, BodyText } from "components/Text"
@@ -10,17 +10,17 @@ export interface CampusItem {
     name: string[]
 }
 
-const data: CampusItem[] = [
-    { id: 0, name: ["Bovisa", "Durando"] },
-    { id: 1, name: ["Bovisa", "La Masa"] },
-    { id: 2, name: ["Leonardo"] },
-    { id: 3, name: ["Colombo"] },
-    { id: 4, name: ["Mancinelli"] },
-]
-
 export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
     const { navigate } = useNavigation()
     const { homeBackground, background, primary } = usePalette()
+
+    const [data, setData] = useState<CampusItem[]>([
+        { id: 0, name: ["Bovisa", "Durando"] },
+        { id: 1, name: ["Bovisa", "La Masa"] },
+        { id: 2, name: ["Leonardo"] },
+        { id: 3, name: ["Colombo"] },
+        { id: 4, name: ["Mancinelli"] },
+    ])
 
     return (
         <View
@@ -73,18 +73,18 @@ export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
                             height: 27,
                             alignSelf: "center",
                         }}
-                    ></View>
+                    >
+                        <BodyText>Data Picker</BodyText>
+                    </View>
                     <FlatList
                         showsVerticalScrollIndicator={false}
                         style={{
                             marginTop: 26,
-                            height: 500,
-                            alignSelf: "center",
+                            height: 700,
                         }}
                         numColumns={2}
                         columnWrapperStyle={{
-                            flex: 1,
-                            justifyContent: "flex-start",
+                            justifyContent: "center",
                         }}
                         data={data}
                         keyExtractor={(_, index) => index.toString()}
@@ -93,7 +93,7 @@ export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
                                 style={{
                                     backgroundColor: primary,
                                     borderRadius: 12,
-                                    width: 159,
+                                    width: "42%",
                                     height: 93,
                                     marginHorizontal: 9,
                                     marginVertical: 27,
