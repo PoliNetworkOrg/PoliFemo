@@ -3,7 +3,6 @@ import { View } from "react-native"
 import { Tray } from "components/Tray"
 import { usePalette } from "utils/colors"
 import { useNavigation } from "navigation/NavigationTypes"
-import { mockedUser } from "api/User"
 import { MainStack } from "navigation/MainStackNavigator"
 
 /**
@@ -35,7 +34,6 @@ export const MainContainer: FC = () => {
                 onSettings={() => {
                     navigate("SettingsNav", {
                         screen: "Settings",
-                        params: { user: mockedUser },
                     })
                 }}
             />

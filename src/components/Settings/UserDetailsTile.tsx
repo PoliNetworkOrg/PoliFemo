@@ -3,19 +3,20 @@ import { View, Image } from "react-native"
 import { TouchableRipple } from "components/TouchableRipple"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
+import { User } from "api"
 
 export interface UserDetailsTileProps {
-    profilePic?: string
-    nome?: string
-    cognome?: string
-    codPersona?: number
+    user: User
     onPress?: () => void
 }
 
-export const UserDetailsTile: FC<UserDetailsTileProps> = props => {
+export const UserDetailsTile: FC<UserDetailsTileProps> = ({
+    user,
+    onPress,
+}) => {
     const { isLight } = usePalette()
     return (
-        <TouchableRipple isRoundedTopCorners={true} onClick={props.onPress}>
+        <TouchableRipple isRoundedTopCorners={true} onClick={onPress}>
             <View
                 style={{
                     paddingHorizontal: 28,
@@ -32,7 +33,7 @@ export const UserDetailsTile: FC<UserDetailsTileProps> = props => {
                     >
                         <Image
                             source={{
-                                uri: props.profilePic,
+                                uri: user.profilePic,
                             }}
                             style={{
                                 width: "100%",
@@ -51,7 +52,7 @@ export const UserDetailsTile: FC<UserDetailsTileProps> = props => {
                                 fontWeight: "900",
                             }}
                         >
-                            {props.nome} {props.cognome}
+                            {user.firstname} {user.lastname}
                         </Text>
                         <Text
                             style={{
@@ -60,7 +61,7 @@ export const UserDetailsTile: FC<UserDetailsTileProps> = props => {
                                 fontWeight: "400",
                             }}
                         >
-                            Codice persona {props.codPersona}
+                            Codice persona {user.codPersona}
                         </Text>
                     </View>
                 </View>

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { NavigationContainer } from "@react-navigation/native"
 import { hideAsync } from "expo-splash-screen"
 import { useFonts } from "@expo-google-fonts/roboto"
@@ -13,6 +13,8 @@ import {
 import { AppContainer } from "./src/AppContainer"
 
 import { OutsideClickProvider } from "utils/outsideClick"
+import { LoginContext, LoginState } from "utils/login"
+import { api, useLoadTokens } from "api"
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { SettingsContext, Settings } from "utils/settings"
@@ -66,24 +68,76 @@ export default function App() {
         Roboto_700Bold,
         Roboto_900Black,
     })
+    const tokensLoaded = useLoadTokens()
 
-    useCallback(async () => {
-        if (settingsReady && fontsLoaded) {
-            await hideAsync()
+    const [loginState, setLoginState] = useState<LoginState>({
+        loggedIn: false,
+    })
+
+    useEffect(() => {
+        // subscribe to the API login events to manage the login state
+        const handleLoginEvent = async (loggedIn: boolean) => {
+            if (loggedIn) {
+                const inf = await api.getPolimiUserInfo()
+                setLoginState({
+                    loggedIn,
+                    userInfo: {
+                        firstname: inf.nome,
+                        lastname: inf.cognome,
+                        careers: [
+                            {
+                                matricola: inf.matricola,
+                                type: "Studente TEMP - " + inf.classeCarriera,
+                            },
+                            { matricola: "222222", type: "Visitatore" },
+                            {
+                                matricola: "333333",
+                                type: "Studente - Titolo Conseguito",
+                            },
+                            {
+                                matricola: "444444",
+                                type: "Studente - Magistrale",
+                            },
+                        ],
+                        codPersona: inf.codicePersona,
+                        profilePic: inf.fotoURL,
+                    },
+                })
+            } else setLoginState({ loggedIn })
         }
-    }, [settingsReady, fontsLoaded])
 
-    if (!fontsLoaded || !settingsReady) return null
+        api.on("login_event", handleLoginEvent)
+        return () => {
+            api.removeListener("login_event", handleLoginEvent)
+        }
+    }, [])
+
+    useEffect(() => {
+        if (settingsReady && fontsLoaded && tokensLoaded) {
+            void hideAsync().then(async () => {
+                if (loginState.loggedIn) {
+                    console.log(await api.getPolinetworkMe())
+                    console.log(await api.getPolimiUserInfo())
+                }
+            })
+        }
+    }, [settingsReady, fontsLoaded, tokensLoaded])
+
+    if (!settingsReady || !fontsLoaded || !tokensLoaded) return null
 
     return (
         <NavigationContainer>
-            <SettingsContext.Provider
-                value={{ settings: settings, setSettings: setSettings }}
-            >
-                <OutsideClickProvider>
-                    <AppContainer />
-                </OutsideClickProvider>
-            </SettingsContext.Provider>
+            <OutsideClickProvider>
+                <SettingsContext.Provider
+                    value={{ settings: settings, setSettings: setSettings }}
+                >
+                    <LoginContext.Provider
+                        value={{ ...loginState, setLoginState }}
+                    >
+                        <AppContainer />
+                    </LoginContext.Provider>
+                </SettingsContext.Provider>
+            </OutsideClickProvider>
         </NavigationContainer>
     )
 }

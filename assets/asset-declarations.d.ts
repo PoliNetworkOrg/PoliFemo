@@ -5,7 +5,7 @@ declare module "*.png" {
 }
 
 declare module "*.svg" {
-    import { ImageSourcePropType } from "react-native"
-    const value: ImageSourcePropType
+    import { DataSourceParam } from "@shopify/react-native-skia"
+    const value: DataSourceParam
     export default value
 }

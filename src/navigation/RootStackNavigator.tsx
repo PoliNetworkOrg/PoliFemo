@@ -9,6 +9,7 @@ import { RootStackNavigatorParams } from "navigation/NavigationTypes"
 // ! import with absolute path gives error
 import { MainContainer } from "../MainContainer"
 import { SettingsContainer } from "../SettingsContainer"
+import { Login } from "pages/Login"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const RootStackNavigator = createStackNavigator<RootStackNavigatorParams>()
@@ -24,6 +25,7 @@ export const RootStack: FC = () => {
                 name="SettingsNav"
                 component={SettingsContainer}
             />
+            <RootStackNavigator.Screen name="Login" component={Login} />
         </RootStackNavigator.Navigator>
     )
 }

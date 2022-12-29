@@ -17,6 +17,8 @@ import {
 } from "utils/settings"
 import { Career } from "api/User"
 import { CareerColumn } from "components/Settings"
+import { LoginContext } from "utils/login"
+import { api } from "api"
 
 const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
 const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
@@ -24,30 +26,28 @@ const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
 /**
  * Settings Page
  */
-export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
-    const user = props.route.params.user
-
-    const context = useContext(SettingsContext)
-
-    const settings = context.settings
-    const setSettings = context.setSettings
-
-    //App state theme
+export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
+    //for testing logged in/out view
+    const { loggedIn, userInfo } = useContext(LoginContext)
+    const { settings, setSettings } = useContext(SettingsContext)
     const theme = settings.theme
-    //Settings setter
 
     //RadioButtonGroup theme state and setter
     const [selectedTheme, setSelectedTheme] =
         useState<ValidColorSchemeName>(theme)
 
     //actual career and setter. It will be moved in app state eventually.
-    const [career, setCareer] = useState<Career>(user.careers[0])
+    const [career, setCareer] = useState<Career | undefined>(
+        userInfo?.careers[0]
+    )
 
     //currently selected career and setter.
-    const [selectedCareer, setSelectedCareer] = useState<Career>(career)
-
-    //for testing logged in/out view
-    const [logged, setLogged] = useState(false)
+    const [selectedCareer, setSelectedCareer] = useState<Career>(
+        career ?? {
+            matricola: "N/A",
+            type: "Nessuna Carriera",
+        }
+    )
 
     //control theme selector modal's visibility
     const [isModalThemeVisible, setModalThemeVisible] = useState(false)
@@ -74,30 +74,30 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
                 navigate("Help")
             },
         },
-        { title: "Disconnetti", icon: settingsIcons.disconnect },
+        {
+            title: "Disconnetti",
+            icon: settingsIcons.disconnect,
+            callback: async () => {
+                await api.destroyTokens()
+            },
+        },
     ]
 
     return (
         <View style={{ flex: 1 }}>
             <SettingsScroll title="Impostazioni">
-                {logged ? (
-                    <UserDetailsTile
-                        codPersona={user.codPersona}
-                        profilePic={user.profilePic}
-                        nome={user.nome}
-                        cognome={user.cognome}
-                        onPress={() => setLogged(false)}
-                    />
+                {loggedIn ? (
+                    <UserDetailsTile user={userInfo} />
                 ) : (
                     <UserAnonymousTile
                         showRipple={false}
-                        onLogin={() => setLogged(true)}
+                        onLogin={() => navigate("Login")}
                     />
                 )}
-                {logged && (
+                {loggedIn && (
                     <View>
                         <CareerTile
-                            career={career}
+                            career={career ?? userInfo.careers[0]}
                             onPress={() => setModalCareerVisible(true)}
                         />
                     </View>
@@ -139,10 +139,10 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
             <ModalCustomSettings
                 title={"Cambia Matricola"}
                 isShowing={isModalCareerVisible}
-                selectedValue={selectedCareer.matricola.toString()}
+                selectedValue={selectedCareer.matricola}
                 onClose={() => {
                     //restore selectedCareer to career
-                    setSelectedCareer(career)
+                    if (career) setSelectedCareer(career)
                     setModalCareerVisible(false)
                 }}
                 onOK={() => {
@@ -151,12 +151,12 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
                     setModalCareerVisible(false)
                 }}
             >
-                {user.careers?.map((careerOfIndex, index) => {
+                {userInfo?.careers?.map((careerOfIndex, index) => {
                     return (
                         <SelectTile
                             key={index}
                             selected={
-                                selectedCareer.matricola ===
+                                selectedCareer?.matricola ===
                                 careerOfIndex.matricola
                             }
                             onPress={() => {

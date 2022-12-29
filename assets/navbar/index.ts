@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-import { ImageSourcePropType } from "react-native"
+import { DataSourceParam } from "@shopify/react-native-skia"
 import home from "./home.svg"
 import back from "./back.svg"
 import sync from "./sync.svg"
@@ -17,7 +17,7 @@ export type NavbarIcon = typeof navbarIconList[number]
 
 export const navbarIcons: Record<
     NavbarIcon,
-    { svg: ImageSourcePropType; width: number; heigth: number }
+    { svg: DataSourceParam; width: number; heigth: number }
 > = {
     home: {
         svg: home,

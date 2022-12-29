@@ -22,7 +22,6 @@ import {
     useNavigation as nativeUseNav,
 } from "@react-navigation/native"
 import { Article } from "api"
-import { User } from "api/User"
 import { NavigatorScreenParams } from "@react-navigation/native"
 
 /**
@@ -37,6 +36,7 @@ export type RootStackNavigatorParams = {
     /* eslint-disable @typescript-eslint/naming-convention */
     MainNav: NavigatorScreenParams<MainStackNavigatorParams>
     SettingsNav: NavigatorScreenParams<SettingsStackNavigatorParams>
+    Login: undefined
 }
 
 export type MainStackNavigatorParams = {
@@ -47,7 +47,7 @@ export type MainStackNavigatorParams = {
 }
 
 export type SettingsStackNavigatorParams = {
-    Settings: { user: User }
+    Settings: undefined
     Help: undefined
 }
 
