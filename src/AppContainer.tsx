@@ -11,6 +11,7 @@ import { usePalette } from "utils/colors"
  */
 export const AppContainer: FC = () => {
     const { homeBackground } = usePalette()
+
     return (
         <View
             style={{

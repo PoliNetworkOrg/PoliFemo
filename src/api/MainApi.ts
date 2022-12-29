@@ -189,8 +189,7 @@ export class MainApi extends EventEmitter {
                 if (success) return this.instance(config)
                 else {
                     console.warn("Error: could not refresh Polimi token")
-                    console.warn("Polimi Token: " + this.polimiToken)
-                    console.warn("Polinet Token: " + this.poliNetworkToken)
+                    console.warn("Should disconnect user")
                     // void this.destroyTokens()
                     throw error
                 }
@@ -199,8 +198,7 @@ export class MainApi extends EventEmitter {
                 if (success) return this.instance(config)
                 else {
                     console.warn("Error: could not refresh PoliNetwork token")
-                    console.warn("Polimi Token: " + this.polimiToken)
-                    console.warn("Polinet Token: " + this.poliNetworkToken)
+                    console.warn("Should disconnect user")
                     // void this.destroyTokens()
                     throw error
                 }
