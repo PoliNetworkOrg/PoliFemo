@@ -14,7 +14,10 @@ const main = async () => {
 
     // get all branches from eas
     const { stdout: json } = await execAsync(
-        "eas branch:list --json --non-interactive"
+        "eas branch:list --json --non-interactive",
+        {
+            maxBuffer: 1024 * 1024 * 10, // 10mb, required for lots of branches
+        }
     )
     const easBranches = JSON.parse(json)
     const easBranchNames = easBranches.map(b => b.name)
