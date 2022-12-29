@@ -1,28 +1,14 @@
 // ! this is to test Settings Page. Likely to change
 
 export interface User {
-    codPersona: number
+    codPersona: string
     careers: Career[]
-    nome: string
-    cognome: string
+    firstname: string
+    lastname: string
     profilePic?: string
 }
 
 export interface Career {
-    matricola: number
+    matricola: string
     type?: string // Visitatore - Studente - Studente - titolo conseguito
-}
-
-export const mockedUser: User = {
-    codPersona: 99999999,
-    careers: [
-        { matricola: 111111, type: "Studente" },
-        { matricola: 222222, type: "Visitatore" },
-        { matricola: 333333, type: "Studente - Titolo Conseguito" },
-        { matricola: 444444, type: "Studente - Magistrale" },
-    ],
-    nome: "Ferruccio",
-    cognome: "Resta",
-    profilePic:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
 }

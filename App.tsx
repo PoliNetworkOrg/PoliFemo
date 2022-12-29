@@ -76,9 +76,40 @@ export default function App() {
 
     useEffect(() => {
         // subscribe to the API login events to manage the login state
-        api.on("login_event", loggedIn => {
-            setLoginState({ loggedIn })
-        })
+        const handleLoginEvent = async (loggedIn: boolean) => {
+            if (loggedIn) {
+                const inf = await api.getPolimiUserInfo()
+                setLoginState({
+                    loggedIn,
+                    userInfo: {
+                        firstname: inf.nome,
+                        lastname: inf.cognome,
+                        careers: [
+                            {
+                                matricola: inf.matricola,
+                                type: "Studente TEMP - " + inf.classeCarriera,
+                            },
+                            { matricola: "222222", type: "Visitatore" },
+                            {
+                                matricola: "333333",
+                                type: "Studente - Titolo Conseguito",
+                            },
+                            {
+                                matricola: "444444",
+                                type: "Studente - Magistrale",
+                            },
+                        ],
+                        codPersona: inf.codicePersona,
+                        profilePic: inf.fotoURL,
+                    },
+                })
+            } else setLoginState({ loggedIn })
+        }
+
+        api.on("login_event", handleLoginEvent)
+        return () => {
+            api.removeListener("login_event", handleLoginEvent)
+        }
     }, [])
 
     useEffect(() => {
@@ -92,7 +123,7 @@ export default function App() {
         }
     }, [settingsReady, fontsLoaded, tokensLoaded])
 
-    if (!fontsLoaded || !settingsReady) return null
+    if (!settingsReady || !fontsLoaded || !tokensLoaded) return null
 
     return (
         <NavigationContainer>

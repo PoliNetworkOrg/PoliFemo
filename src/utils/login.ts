@@ -1,4 +1,5 @@
 import React from "react"
+import { User } from "api"
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface PoliNetworkToken {
@@ -22,11 +23,15 @@ export interface Tokens {
     poliNetworkToken: PoliNetworkToken
 }
 
-export interface LoginState {
-    loggedIn: boolean
-    // TODO: this should be expanded with data connected to the user,
-    // like name, student id, etc.
-}
+export type LoginState =
+    | {
+          loggedIn: false
+          userInfo?: undefined
+      }
+    | {
+          loggedIn: true
+          userInfo: User
+      }
 
 export type ILoginContext = LoginState & {
     setLoginState(newState: LoginState): void

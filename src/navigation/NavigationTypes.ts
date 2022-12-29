@@ -22,7 +22,6 @@ import {
     useNavigation as nativeUseNav,
 } from "@react-navigation/native"
 import { Article } from "api"
-import { User } from "api/User"
 import { NavigatorScreenParams } from "@react-navigation/native"
 
 /**
@@ -48,7 +47,7 @@ export type MainStackNavigatorParams = {
 }
 
 export type SettingsStackNavigatorParams = {
-    Settings: { user: User }
+    Settings: undefined
     Help: undefined
 }
 

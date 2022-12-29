@@ -85,7 +85,7 @@ export const Login: RootStackScreen<"Login"> = () => {
             console.log("Login completed! Registering tokens...")
             void api.setTokens({ poliNetworkToken, polimiToken }).then(() => {
                 setTimeout(() => {
-                    navigation.navigate("Home")
+                    navigation.goBack()
                 }, 1000)
             })
         }
