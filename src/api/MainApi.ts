@@ -67,7 +67,7 @@ enum AuthType {
  * ```
  *
  */
-export declare interface MainApi {
+export declare interface HttpClient {
     /**
      * fired when login status changes, either because of a login or a logout
      * */
@@ -81,10 +81,11 @@ export declare interface MainApi {
      */
     on(event: "logout", listener: () => void): this
 }
-export class MainApi extends EventEmitter {
-    private static classInstance?: MainApi
+export class HttpClient extends EventEmitter {
+    private static classInstance?: HttpClient
 
-    private readonly instance: AxiosInstance
+    private readonly polimiInstance: AxiosInstance
+    private readonly poliNetworkInstance: AxiosInstance
 
     private polimiToken?: PolimiToken
     private poliNetworkToken?: PoliNetworkToken
@@ -101,17 +102,24 @@ export class MainApi extends EventEmitter {
      * */
     public static getInstance() {
         if (!this.classInstance) {
-            this.classInstance = new MainApi("https://api.polinetwork.org:446/")
+            this.classInstance = new HttpClient(
+                "https://api.polinetwork.org:446/",
+                "https://polimiapp.polimi.it/polimi_app/rest/jaf"
+            )
         }
 
         return this.classInstance
     }
 
-    private constructor(baseUrl: string) {
+    private constructor(baseUrlPoliNetwork: string, baseUrlPolimi: string) {
         super()
-        console.log("MainApi constructor called")
-        this.instance = axios.create({
-            baseURL: baseUrl,
+        console.log("HttpClient constructor called")
+        this.poliNetworkInstance = axios.create({
+            baseURL: baseUrlPoliNetwork,
+            timeout: 2000,
+        })
+        this.polimiInstance = axios.create({
+            baseURL: baseUrlPolimi,
             timeout: 2000,
         })
         this._initializeInterceptors()
@@ -121,10 +129,16 @@ export class MainApi extends EventEmitter {
      * initialize interceptors functions
      * */
     private _initializeInterceptors = () => {
-        this.instance.interceptors.request.use(this._handleRequest)
-        this.instance.interceptors.response.use(
-            this._handleResponse,
-            this._handleError
+        this.poliNetworkInstance.interceptors.request.use(this._handleRequest)
+        this.poliNetworkInstance.interceptors.response.use(
+            val => this._handleResponse(val),
+            err =>
+                this._handleError(err as AxiosError, this.poliNetworkInstance)
+        )
+        this.polimiInstance.interceptors.request.use(this._handleRequest)
+        this.polimiInstance.interceptors.response.use(
+            val => this._handleResponse(val),
+            err => this._handleError(err as AxiosError, this.polimiInstance)
         )
     }
 
@@ -155,9 +169,12 @@ export class MainApi extends EventEmitter {
 
     /**
      * intercepts unsuccessful responses before `.catch` is called
-     * and manages retries
+     * and manages retries on proper Axios Instance passed as a parameter
      * */
-    private _handleError = async (error: AxiosError) => {
+    private _handleError = async (
+        error: AxiosError,
+        instance: AxiosInstance
+    ) => {
         const { config, response } = error
         if (!config) throw error
 
@@ -165,7 +182,7 @@ export class MainApi extends EventEmitter {
             if (config.retryType === RetryType.RETRY_INDEFINETELY) {
                 console.log("Retrying until request is successful")
                 await wait(config.waitingTime ?? DEFAULT_WAITING_TIME)
-                return this.instance(config)
+                return instance(config)
             } else if (config.retryType === RetryType.RETRY_N_TIMES) {
                 const retryCount = (config.retryCount ?? 0) + 1
                 if (retryCount <= (config.maxRetries ?? DEFAULT_MAX_RETRIES)) {
@@ -175,7 +192,7 @@ export class MainApi extends EventEmitter {
                         }`
                     )
                     await wait(config.waitingTime ?? DEFAULT_WAITING_TIME)
-                    return this.instance({ ...config, retryCount })
+                    return instance({ ...config, retryCount })
                 }
             }
             console.log(
@@ -186,7 +203,7 @@ export class MainApi extends EventEmitter {
             if (config.authType === AuthType.POLIMI) {
                 const success = await this.refreshPolimiToken()
                 // TODO: should retryCount be increased?
-                if (success) return this.instance(config)
+                if (success) return instance(config)
                 else {
                     console.warn("Error: could not refresh Polimi token")
                     console.warn("Should disconnect user")
@@ -195,7 +212,7 @@ export class MainApi extends EventEmitter {
                 }
             } else if (config.authType === AuthType.POLINETWORK) {
                 const success = await this.refreshPoliNetworkToken()
-                if (success) return this.instance(config)
+                if (success) return instance(config)
                 else {
                     console.warn("Error: could not refresh PoliNetwork token")
                     console.warn("Should disconnect user")
@@ -233,11 +250,15 @@ export class MainApi extends EventEmitter {
         end: string,
         options?: RequestOptions
     ) => {
+        options = options ?? defaultReqOptions
         const start: string = getIsoStringFromDaysPassed(days)
-        const response = await this.instance.get<Articles>("/v1/articles", {
-            ...options,
-            params: { start: start, end: end },
-        })
+        const response = await this.poliNetworkInstance.get<Articles>(
+            "/v1/articles",
+            {
+                ...options,
+                params: { start: start, end: end },
+            }
+        )
         return response.data.results
     }
 
@@ -251,7 +272,8 @@ export class MainApi extends EventEmitter {
         end: string,
         options?: RequestOptions
     ) => {
-        const response = await this.instance.get<Articles>(
+        options = options ?? defaultReqOptions
+        const response = await this.poliNetworkInstance.get<Articles>(
             "/v1/articles",
             options
         )
@@ -275,27 +297,22 @@ export class MainApi extends EventEmitter {
      * ```
      * */
     public getTags = async (options?: RequestOptions) => {
-        const response = await this.instance.get<Tags>("/v1/tags", options)
+        options = options ?? defaultReqOptions
+        const response = await this.poliNetworkInstance.get<Tags>(
+            "/v1/tags",
+            options
+        )
         return response.data.tags
     }
 
     /**
      * Retrieves mock timetable from PoliNetwork server.
      *
-     * @param retryType
-     * @default retryType.RETRY_INDEFINETELY
-     * @param maxRetries maximum number of retries if `RetryType.RETRY_N_TIMES` is selected
-     * @default DEFAULT_MAX_RETRIES
-     * @param waitingTime seconds to wait before retrying request
-     * @default DEFAULT_WAITING_TIME
-     * @param retryCount how many retries have already been done, don't change this.
-     * @default 0
+     * @param options see {@link RequestOptions}
      *
      * @example
      * ```ts
-     *  api.getTimetable(RetryType.RETRY_N_TIMES, 5, 3)
-     *      //maxRetries = 5
-     *      //waitingTime = 3s
+     *  api.getTimetable()
      *     .then(response => {
      *          const timetable: Lecture[] = response
      *          //do something
@@ -304,33 +321,24 @@ export class MainApi extends EventEmitter {
      * }
      * ```
      * */
-    public getTimetable = async (
-        retryType: RetryType = RetryType.RETRY_INDEFINETELY,
-        maxRetries = DEFAULT_MAX_RETRIES,
-        waitingTime = 3,
-        retryCount = 0
-    ) => {
-        const response = await this.instance.get<Lecture[]>(
+    public getTimetable = async (options: RequestOptions) => {
+        options = options ?? defaultReqOptions
+        const response = await this.poliNetworkInstance.get<Lecture[]>(
             "/v1/mock/timetable",
-            {
-                retryType: retryType,
-                maxRetries: maxRetries,
-                waitingTime: waitingTime,
-                retryCount: retryCount,
-            }
+            options
         )
         return response.data
     }
-
     /**
      * gets the OAuth access token given the polimi authcode from the login flow
      * @param code Polimi AuthCode
      * @returns polimi accessToken and refreshToken
      */
-    async getPolimiToken(code: string) {
-        const response = await axios.get<PolimiToken>(
-            `https://polimiapp.polimi.it/polimi_app/rest/jaf/oauth/token/get/${code}`,
+    public getPolimiToken = async (code: string, options?: RequestOptions) => {
+        const response = await this.polimiInstance.get<PolimiToken>(
+            `/oauth/token/get/${code}`,
             {
+                ...options,
                 headers: {
                     accept: "application/json",
                 },
@@ -393,22 +401,18 @@ export class MainApi extends EventEmitter {
      * test PoliNetwork auth call
      */
     async getPolinetworkMe() {
-        const response = await this.instance.get<{
+        const response = await this.poliNetworkInstance.get<{
             id: string
         }>("/v1/accounts/me", {
             authType: AuthType.POLINETWORK,
         })
         return response.data
     }
-
     /**
      * test polimi auth call
      */
-    async getPolimiUserInfo() {
-        const inst = axios.create()
-        inst.interceptors.request.use(this._handleRequest)
-        inst.interceptors.response.use(this._handleResponse, this._handleError)
-        const response = await inst.get<{
+    public getPolimiUserInfo = async () => {
+        const response = await this.polimiInstance.get<{
             idPersona: number
             codicePersona: string
             nome: string
@@ -419,7 +423,7 @@ export class MainApi extends EventEmitter {
             initials: string
             email: string
             fotoURL: string
-        }>("https://polimiapp.polimi.it/polimi_app/rest/jaf/internal/user", {
+        }>("/internal/user", {
             authType: AuthType.POLIMI,
         })
         return response.data
@@ -438,16 +442,9 @@ export class MainApi extends EventEmitter {
             return false
         }
 
-        // TODO: instance to be put somewhere else
-        const inst = axios.create()
-        inst.interceptors.request.use(this._handleRequest)
-        inst.interceptors.response.use(this._handleResponse, this._handleError)
-
-        const url =
-            "https://polimiapp.polimi.it/polimi_app/rest/jaf/oauth/token/refresh/" +
-            this.polimiToken?.refreshToken
+        const url = "/oauth/token/refresh/" + this.polimiToken?.refreshToken
         try {
-            const response = await inst.get<PolimiToken>(url, {
+            const response = await this.polimiInstance.get<PolimiToken>(url, {
                 retryType: RetryType.RETRY_N_TIMES,
             })
             if (typeof response.data.accessToken === "string") {
@@ -483,16 +480,18 @@ export class MainApi extends EventEmitter {
         }
 
         try {
-            const response = await this.instance.get<PoliNetworkToken>(
-                "/v1/auth/refresh",
-                {
-                    headers: {
-                        // eslint-disable-next-line @typescript-eslint/naming-convention
-                        Token: this.poliNetworkToken?.refresh_token,
-                    },
-                    retryType: RetryType.RETRY_N_TIMES,
-                }
-            )
+            const response =
+                await this.poliNetworkInstance.get<PoliNetworkToken>(
+                    "/v1/auth/refresh",
+                    {
+                        headers: {
+                            // eslint-disable-next-line @typescript-eslint/naming-convention
+                            Token: this.poliNetworkToken?.refresh_token,
+                        },
+                        retryType: RetryType.RETRY_N_TIMES,
+                        maxRetries: 5,
+                    }
+                )
             if (typeof response.data.access_token === "string") {
                 console.log("Refreshed polinetwork token")
 
@@ -540,7 +539,13 @@ export interface RequestOptions {
     waitingTime?: number
 }
 
-export const api = MainApi.getInstance()
+const defaultReqOptions: RequestOptions = {
+    retryType: RetryType.RETRY_INDEFINETELY,
+    maxRetries: DEFAULT_MAX_RETRIES,
+    waitingTime: DEFAULT_WAITING_TIME,
+}
+
+export const api = HttpClient.getInstance()
 
 /**
  * Custom Hook used to wait for the tokens to be loaded before booting the app

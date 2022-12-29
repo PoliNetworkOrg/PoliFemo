@@ -109,6 +109,7 @@ export const Login: RootStackScreen<"Login"> = () => {
             </Title>
             <WebView
                 ref={webview}
+                androidLayerType="software"
                 containerStyle={{
                     flex: 1,
                     borderTopLeftRadius: 30,
