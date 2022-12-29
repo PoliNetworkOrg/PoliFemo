@@ -1,4 +1,4 @@
-import { ImageSourcePropType } from "react-native"
+import { DataSourceParam } from "@shopify/react-native-skia"
 import help from "./help.svg"
 import modify from "./modify.svg"
 import disconnect from "./disconnect.svg"
@@ -14,7 +14,7 @@ export const settingsIconList = [
 export type SettingIconNames = typeof settingsIconList[number]
 
 export interface IconProps {
-    svg: ImageSourcePropType
+    svg: DataSourceParam
     width: number
     heigth: number
 }
