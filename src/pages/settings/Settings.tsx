@@ -7,7 +7,7 @@ import { SettingTile } from "components/Settings"
 import { settingsIcons } from "assets/settings"
 import { UserDetailsTile } from "components/Settings"
 import { ModalCustomSettings } from "components/Settings"
-import { CourseTile } from "components/Settings"
+import { CareerTile } from "components/Settings"
 import { SelectTile } from "components/Settings"
 import { UserAnonymousTile } from "components/Settings"
 import {
@@ -15,7 +15,8 @@ import {
     SettingsContext,
     ValidColorSchemeName,
 } from "utils/settings"
-import { Course } from "api/User"
+import { Career } from "api/User"
+import { CareerColumn } from "components/Settings"
 
 const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
 const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
@@ -39,11 +40,11 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
     const [selectedTheme, setSelectedTheme] =
         useState<ValidColorSchemeName>(theme)
 
-    //actual course and setter. It will be moved in app state eventually.
-    const [course, setCourse] = useState<Course>(user.courses[0])
+    //actual career and setter. It will be moved in app state eventually.
+    const [career, setCareer] = useState<Career>(user.careers[0])
 
-    //currently selected course and setter.
-    const [selectedCourse, setSelectedCourse] = useState<Course>(course)
+    //currently selected career and setter.
+    const [selectedCareer, setSelectedCareer] = useState<Career>(career)
 
     //for testing logged in/out view
     const [logged, setLogged] = useState(false)
@@ -51,8 +52,8 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
     //control theme selector modal's visibility
     const [isModalThemeVisible, setModalThemeVisible] = useState(false)
 
-    //control course selector modal's visibility
-    const [isModalCourseVisible, setModalCourseVisible] = useState(false)
+    //control career selector modal's visibility
+    const [isModalCareerVisible, setModalCareerVisible] = useState(false)
 
     const { navigate } = useNavigation()
 
@@ -95,9 +96,9 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
                 )}
                 {logged && (
                     <View>
-                        <CourseTile
-                            course={course}
-                            onPress={() => setModalCourseVisible(true)}
+                        <CareerTile
+                            career={career}
+                            onPress={() => setModalCareerVisible(true)}
                         />
                     </View>
                 )}
@@ -137,32 +138,34 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = props => {
             </ModalCustomSettings>
             <ModalCustomSettings
                 title={"Cambia Matricola"}
-                isShowing={isModalCourseVisible}
-                selectedValue={selectedCourse.matricola.toString()}
+                isShowing={isModalCareerVisible}
+                selectedValue={selectedCareer.matricola.toString()}
                 onClose={() => {
-                    //restore selectedCourse to course
-                    setSelectedCourse(course)
-                    setModalCourseVisible(false)
+                    //restore selectedCareer to career
+                    setSelectedCareer(career)
+                    setModalCareerVisible(false)
                 }}
                 onOK={() => {
-                    //change course to selectedCourse
-                    setCourse(selectedCourse)
-                    setModalCourseVisible(false)
+                    //change career to selectedCareer
+                    setCareer(selectedCareer)
+                    setModalCareerVisible(false)
                 }}
             >
-                {user.courses?.map((courseOfIndex, index) => {
+                {user.careers?.map((careerOfIndex, index) => {
                     return (
                         <SelectTile
                             key={index}
-                            value={courseOfIndex.matricola.toString()}
                             selected={
-                                selectedCourse.matricola ===
-                                courseOfIndex.matricola
+                                selectedCareer.matricola ===
+                                careerOfIndex.matricola
                             }
                             onPress={() => {
-                                setSelectedCourse(courseOfIndex)
+                                setSelectedCareer(careerOfIndex)
                             }}
-                        />
+                            flexStyle={"space-between"}
+                        >
+                            <CareerColumn career={careerOfIndex}></CareerColumn>
+                        </SelectTile>
                     )
                 })}
             </ModalCustomSettings>

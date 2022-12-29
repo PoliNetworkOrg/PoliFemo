@@ -2,20 +2,20 @@
 
 export interface User {
     codPersona: number
-    courses: Course[]
+    careers: Career[]
     nome: string
     cognome: string
     profilePic?: string
 }
 
-export interface Course {
+export interface Career {
     matricola: number
     type?: string // Visitatore - Studente - Studente - titolo conseguito
 }
 
 export const mockedUser: User = {
     codPersona: 99999999,
-    courses: [
+    careers: [
         { matricola: 111111, type: "Studente" },
         { matricola: 222222, type: "Visitatore" },
         { matricola: 333333, type: "Studente - Titolo Conseguito" },
