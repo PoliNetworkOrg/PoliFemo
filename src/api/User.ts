@@ -19,6 +19,7 @@ export const mockedUser: User = {
         { matricola: 111111, type: "Studente" },
         { matricola: 222222, type: "Visitatore" },
         { matricola: 333333, type: "Studente - Titolo Conseguito" },
+        { matricola: 444444, type: "Studente - Magistrale" },
     ],
     nome: "Ferruccio",
     cognome: "Resta",

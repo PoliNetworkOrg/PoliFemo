@@ -31,6 +31,11 @@ export interface ModalCustomSettingsProps {
      * Usually the current state value of a {@link RadioButtonGroup}
      */
     selectedValue: string
+
+    /**
+     * modal wrapper height, specify if height is fixed
+     */
+    height?: number
 }
 
 /**
@@ -60,6 +65,7 @@ export const ModalCustomSettings: FC<ModalCustomSettingsProps> = props => {
                     style={[
                         styles.contentWrapper,
                         { backgroundColor: backgroundSecondary },
+                        { height: props.height },
                     ]}
                 >
                     <View>
@@ -81,12 +87,12 @@ export const ModalCustomSettings: FC<ModalCustomSettingsProps> = props => {
 
                         {props.children}
                     </View>
-
                     <View
                         style={{
                             flexDirection: "row",
                             justifyContent: "space-evenly",
                             marginBottom: 32,
+                            marginTop: 16,
                         }}
                     >
                         <ButtonCustom
@@ -116,7 +122,6 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "space-between",
         width: 320,
-        height: 320,
         borderRadius: 12,
         marginHorizontal: 15,
 
