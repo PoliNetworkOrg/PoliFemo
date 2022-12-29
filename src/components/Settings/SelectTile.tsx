@@ -31,7 +31,8 @@ export interface SelectTileProps {
 export const SelectTile: FC<SelectTileProps> = props => {
     const { isLight, palette } = usePalette()
     return (
-        <View
+        <Pressable
+            onPress={props.onPress}
             style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -41,29 +42,25 @@ export const SelectTile: FC<SelectTileProps> = props => {
                 paddingRight: 36,
             }}
         >
-            <Pressable onPress={props.onPress}>
-                <RadioButtonCustom
-                    status={props.selected}
-                    darkColor={palette.darker}
-                />
-            </Pressable>
-            <Pressable onPress={props.onPress}>
-                {props.children ?? (
-                    <View>
-                        <Text
-                            style={{
-                                fontSize: 20,
-                                fontWeight: "400",
-                                color: isLight ? "#000" : "#fff",
-                                textAlign: "left",
-                                paddingLeft: 16,
-                            }}
-                        >
-                            {props.value}
-                        </Text>
-                    </View>
-                )}
-            </Pressable>
-        </View>
+            <RadioButtonCustom
+                status={props.selected}
+                darkColor={palette.darker}
+            />
+            {props.children ?? (
+                <View>
+                    <Text
+                        style={{
+                            fontSize: 20,
+                            fontWeight: "400",
+                            color: isLight ? "#000" : "#fff",
+                            textAlign: "left",
+                            paddingLeft: 16,
+                        }}
+                    >
+                        {props.value}
+                    </Text>
+                </View>
+            )}
+        </Pressable>
     )
 }
