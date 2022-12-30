@@ -5,10 +5,8 @@ import axios, {
     AxiosRequestConfig,
     AxiosResponse,
 } from "axios"
-import { RetryType } from "./RetryType"
 import { PolimiToken, PoliNetworkToken, Tokens } from "utils/login"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import React from "react"
 import { wait } from "utils/functions"
 
 /*Docs used to make this:
@@ -20,6 +18,19 @@ https://stackblitz.com/edit/retry-api-call-axios-interceptor?file=index.ts
 */
 
 //in this way we can add fields to AxiosRequestConfig for more control in case of errors
+
+export enum AuthType {
+    NONE,
+    POLIMI,
+    POLINETWORK,
+}
+
+export enum RetryType {
+    RETRY_INDEFINETELY,
+    RETRY_N_TIMES,
+    NO_RETRY,
+}
+
 declare module "axios" {
     export interface AxiosRequestConfig {
         retryType?: RetryType
@@ -35,10 +46,9 @@ declare module "axios" {
  * to PoliNetwork Server and Polimi Server.
  *
  * Do not retrieve the instance of HttpClient in order to make a request,
- * instead, check {@link poliNetworkApi} for calls to PoliNetwork Server
- * and {@link authApi} for calls concerning authentication
- *
- *
+ * instead, check {@link api} for making requests.
+ * 
+ * This object also manages tokens.
  */
 export declare interface HttpClient {
     /**
@@ -67,11 +77,6 @@ export class HttpClient extends EventEmitter {
 
     /**
      * retrieves singleton instance.
-     *
-     * @example
-     * ```
-     * const mainApi = MainApi.getInstance()
-     * ```
      * */
     public static getInstance() {
         if (!this.classInstance) {
@@ -148,43 +153,55 @@ export class HttpClient extends EventEmitter {
         error: AxiosError,
         instance: AxiosInstance
     ) => {
-        const { config, response } = error
-        if (!config) throw error
+        if (!error.config) throw error
+
+        const config = {
+            ...defaultOptions,
+            ...error.config,
+        }
+        const response = error.response
 
         if (response?.status === 500) {
             if (config.retryType === RetryType.RETRY_INDEFINETELY) {
                 console.log("Retrying until request is successful")
-                await wait(config.waitingTime ?? DEFAULT_WAITING_TIME)
+                await wait(config.waitingTime)
                 return instance(config)
             } else if (config.retryType === RetryType.RETRY_N_TIMES) {
                 const retryCount = (config.retryCount ?? 0) + 1
-                if (retryCount <= (config.maxRetries ?? DEFAULT_MAX_RETRIES)) {
-                    console.log(
-                        `Try number ${retryCount}/${
-                            config.maxRetries ?? DEFAULT_MAX_RETRIES
-                        }`
-                    )
-                    await wait(config.waitingTime ?? DEFAULT_WAITING_TIME)
+                if (retryCount <= config.maxRetries) {
+                    console.log(`Try number ${retryCount}/${config.maxRetries}`)
+                    await wait(config.waitingTime)
                     return instance({ ...config, retryCount })
                 }
+            } else {
+                console.log("You selected NO_RETRY!")
+                throw error
             }
-            console.log(
-                "RetryType.NO_RETRY or maximum numbers of retries reached"
-            )
+            console.log("Maximum numbers of retries reached!")
             throw error
         } else if (response?.status === 401) {
             if (config.authType === AuthType.POLIMI) {
-                const success = await refreshPolimiToken()
+                const success = await this.refreshPolimiToken()
                 // TODO: should retryCount be increased?
-                if (success) return instance(config)
-                else {
+                // ? Penso che sia meglio non aumentarlo siccome
+                // ? quando il refresh dei token ha successo non facciamo
+                // ? comunque nessun controllo sul tipo di Retry.
+                // ? Sarebbe come considerare la retry successiva
+                // ? come la continuazione di questa, che secondo me ha senso
+                // ? come cosa. Come dire "Questo tentativo ha fallito
+                // ? perchè non avevo il token, ora rifaccio un tentativo uguale
+                // ? ma col token corretto, anche se mi hai detto di non fare retry
+                // ? o di farne solo 5 e questo era il 5 (caso poco probabile)"
+                if (success) {
+                    return instance(config)
+                } else {
                     console.warn("Error: could not refresh Polimi token")
                     console.warn("Should disconnect user")
                     // void this.destroyTokens()
                     throw error
                 }
             } else if (config.authType === AuthType.POLINETWORK) {
-                const success = await refreshPoliNetworkToken()
+                const success = await this.refreshPoliNetworkToken()
                 if (success) return instance(config)
                 else {
                     console.warn("Error: could not refresh PoliNetwork token")
@@ -197,161 +214,159 @@ export class HttpClient extends EventEmitter {
         }
         throw error
     }
-}
-// ? The following functions need to be defined here because they are called
-// ? inside Http Client interceptors. Maybe move interceptors out of
-// ? HttpClient class in a different files? I dont know.
 
-/**
- * refresh the polimi token, returns the success value
- * @returns true if the token was refreshed, false otherwise
- */
-export const refreshPolimiToken = async () => {
-    console.log("Refreshing polimi token")
-    if (!api.polimiToken || !api.poliNetworkToken) {
-        console.log("Tokens went missing while trying to refresh Polimi token")
-        return false
-    }
-
-    const url = "/oauth/token/refresh/" + api.polimiToken?.refreshToken
-    try {
-        const response = await api.polimiInstance.get<PolimiToken>(url, {
-            retryType: RetryType.RETRY_N_TIMES,
-        })
-        if (typeof response.data.accessToken === "string") {
-            console.log("Refreshed polimi token")
-
-            api.polimiToken = response.data
-            const tokens: Tokens = {
-                poliNetworkToken: api.poliNetworkToken,
-                polimiToken: api.polimiToken,
-            }
-            await AsyncStorage.setItem("api:tokens", JSON.stringify(tokens))
-
-            return true
+    /**
+     * refresh the polimi token, returns the success value
+     * @returns true if the token was refreshed, false otherwise
+     */
+    async refreshPolimiToken() {
+        console.log("Refreshing polimi token")
+        if (!this.polimiToken || !this.poliNetworkToken) {
+            console.log(
+                "Tokens went missing while trying to refresh Polimi token"
+            )
+            return false
         }
-        console.warn("Invalid response refreshing polimi token")
-        console.warn(response.status)
-        console.warn(response.data)
-        return false
-    } catch (e) {
-        console.warn("Error refreshing polimi token")
-        console.warn(e)
-        return false
-    }
-}
 
-export const refreshPoliNetworkToken = async () => {
-    console.log("Refreshing polinetwork token")
-    if (!api.polimiToken || !api.poliNetworkToken) {
-        console.log(
-            "Tokens went missing while trying to refresh PoliNetwork token"
-        )
-        return false
-    }
-
-    try {
-        const response = await api.poliNetworkInstance.get<PoliNetworkToken>(
-            "/v1/auth/refresh",
-            {
-                headers: {
-                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                    Token: api.poliNetworkToken?.refresh_token,
-                },
+        const url = "/oauth/token/refresh/" + this.polimiToken?.refreshToken
+        try {
+            const response = await this.polimiInstance.get<PolimiToken>(url, {
                 retryType: RetryType.RETRY_N_TIMES,
-                maxRetries: 5,
+            })
+            if (typeof response.data.accessToken === "string") {
+                console.log("Refreshed polimi token")
+
+                this.polimiToken = response.data
+                const tokens: Tokens = {
+                    poliNetworkToken: this.poliNetworkToken,
+                    polimiToken: this.polimiToken,
+                }
+                await AsyncStorage.setItem("api:tokens", JSON.stringify(tokens))
+
+                return true
             }
-        )
-        if (typeof response.data.access_token === "string") {
-            console.log("Refreshed polinetwork token")
-
-            api.poliNetworkToken = response.data
-
-            // save back the tokens
-            const tokens: Tokens = {
-                poliNetworkToken: api.poliNetworkToken,
-                polimiToken: api.polimiToken,
-            }
-            await AsyncStorage.setItem("api:tokens", JSON.stringify(tokens))
-
-            return true
-        } else {
-            console.warn("Invalid response refreshing polinetwork token")
+            console.warn("Invalid response refreshing polimi token")
             console.warn(response.status)
             console.warn(response.data)
             return false
+        } catch (e) {
+            console.warn("Error refreshing polimi token")
+            console.warn(e)
+            return false
         }
-    } catch (e) {
-        console.warn("Error refreshing polinetwork token")
-        console.warn(e)
-        return false
     }
-}
-/**
- * load tokens from storage on boot, if they aren't present, do nothing
- */
-export const loadTokens = async () => {
-    const tokens = await AsyncStorage.getItem("api:tokens")
-    if (tokens) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const parsedTokens: Tokens = JSON.parse(tokens)
-        console.log("Loaded tokens from local storage")
-        api.polimiToken = parsedTokens.polimiToken
-        api.poliNetworkToken = parsedTokens.poliNetworkToken
-        api.emit("login")
-        api.emit("login_event", true)
-    } else {
-        console.log("No tokens found in local storage")
+
+    async refreshPoliNetworkToken() {
+        console.log("Refreshing polinetwork token")
+        if (!this.polimiToken || !this.poliNetworkToken) {
+            console.log(
+                "Tokens went missing while trying to refresh PoliNetwork token"
+            )
+            return false
+        }
+
+        try {
+            const response =
+                await this.poliNetworkInstance.get<PoliNetworkToken>(
+                    "/v1/auth/refresh",
+                    {
+                        headers: {
+                            // eslint-disable-next-line @typescript-eslint/naming-convention
+                            Token: this.poliNetworkToken?.refresh_token,
+                        },
+                        retryType: RetryType.RETRY_N_TIMES,
+                        maxRetries: 5,
+                    }
+                )
+            if (typeof response.data.access_token === "string") {
+                console.log("Refreshed polinetwork token")
+
+                this.poliNetworkToken = response.data
+
+                // save back the tokens
+                const tokens: Tokens = {
+                    poliNetworkToken: this.poliNetworkToken,
+                    polimiToken: this.polimiToken,
+                }
+                await AsyncStorage.setItem("api:tokens", JSON.stringify(tokens))
+
+                return true
+            } else {
+                console.warn("Invalid response refreshing polinetwork token")
+                console.warn(response.status)
+                console.warn(response.data)
+                return false
+            }
+        } catch (e) {
+            console.warn("Error refreshing polinetwork token")
+            console.warn(e)
+            return false
+        }
+    }
+    /**
+     * load tokens from storage on boot, if they aren't present, do nothing
+     */
+    async loadTokens() {
+        const tokens = await AsyncStorage.getItem("api:tokens")
+        if (tokens) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            const parsedTokens: Tokens = JSON.parse(tokens)
+            console.log("Loaded tokens from local storage")
+            this.polimiToken = parsedTokens.polimiToken
+            this.poliNetworkToken = parsedTokens.poliNetworkToken
+            this.emit("login")
+            this.emit("login_event", true)
+        } else {
+            console.log("No tokens found in local storage")
+        }
+    }
+    /**
+     * set the tokens and save them to storage
+     * @param tokens both the polinetwork and polimi tokens
+     */
+    async setTokens(tokens: Tokens) {
+        client.polimiToken = tokens.polimiToken
+        client.poliNetworkToken = tokens.poliNetworkToken
+
+        client.emit("login")
+        client.emit("login_event", true)
+
+        // save the tokens in local storage
+        await AsyncStorage.setItem("api:tokens", JSON.stringify(tokens))
+        console.log("Saved tokens in local storage")
+    }
+    /**
+     * remove the tokens from storage, essentially log out
+     */
+    async destroyTokens() {
+        console.log("Destroying tokens, logging out")
+
+        client.polimiToken = undefined
+        client.poliNetworkToken = undefined
+
+        client.emit("logout")
+        client.emit("login_event", false)
+
+        // remove the tokens from local storage
+        await AsyncStorage.removeItem("api:tokens")
     }
 }
 
 /**
- * default options for api requests
- *
- * @param retryType
- * You can have specific behaviour in case of errors, namely:
- * - retry until request succeds ---> `RetryType.RETRY_INDEFINETELY`
- * - retry n times ---> `RetryType.RETRY_N_TIMES`
- * - no retry ---> `RetryType.NO_RETRY`
- * @default retryType.RETRY_INDEFINETELY
- * @param maxRetries maximum number of retries if `RetryType.RETRY_N_TIMES` is selected
- * @default DEFAULT_MAX_RETRIES
- * @param waitingTime seconds to wait before retrying request
- * @default DEFAULT_WAITING_TIME
+ * Request options interface
  */
 export interface RequestOptions {
     retryType?: RetryType
     maxRetries?: number
     waitingTime?: number
 }
-
-export enum AuthType {
-    NONE,
-    POLIMI,
-    POLINETWORK,
-}
-
-const DEFAULT_MAX_RETRIES = 5
-const DEFAULT_WAITING_TIME = 3 //seconds
-
-export const defaultReqOptions: RequestOptions = {
-    retryType: RetryType.RETRY_INDEFINETELY,
-    maxRetries: DEFAULT_MAX_RETRIES,
-    waitingTime: DEFAULT_WAITING_TIME,
-}
-
-export const api = HttpClient.getInstance()
-
 /**
- * Custom Hook used to wait for the tokens to be loaded before booting the app
- * This will return true once the token are read from storage, wether they are
- * present or not
- * @returns true if the promise has returned, false otherwise
+ * Default request options for api requests
  */
-export const useLoadTokens = () => {
-    const [loaded, setLoaded] = React.useState(false)
-    React.useEffect(() => {
-        void loadTokens().then(() => setLoaded(true))
-    }, [api]) // this has to be here for hot reload to work
-    return loaded
+export const defaultOptions = {
+    retryType: RetryType.RETRY_INDEFINETELY,
+    maxRetries: 5,
+    waitingTime: 3,
 }
+
+export const client = HttpClient.getInstance()

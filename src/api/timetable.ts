@@ -1,3 +1,5 @@
+import { client, RequestOptions } from "./httpClient"
+
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface Lecture {
     event_id: number
@@ -30,4 +32,22 @@ export interface Lecture {
         classroom_id: number
         room_dn: string
     }
+}
+
+/**
+ * Collection of endpoints related to Timetable.
+ */
+export const timetable = {
+    /**
+     * Retrieves mock timetable from PoliNetwork server.
+     *
+     * @param options see {@link RequestOptions}
+     * */
+    async getTimetable(options?: RequestOptions) {
+        const response = await client.poliNetworkInstance.get<Lecture[]>(
+            "/v1/mock/timetable",
+            options
+        )
+        return response.data
+    },
 }

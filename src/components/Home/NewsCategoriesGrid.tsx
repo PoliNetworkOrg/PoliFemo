@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react"
 import { View } from "react-native"
 
 import { CardWithGradient } from "components/CardWithGradient"
-import { poliNetworkApi, Tag } from "api"
+import { api } from "api"
 import { useNavigation } from "navigation/NavigationTypes"
 import { newsCategoryPatterns, CardsPattern } from "utils/cardsPatterns"
+import { Tag } from "api/tags"
 
 /** Tuple contianing the category object with the height of its card */
 export type CategoryAndHeight = [Tag, number]
@@ -33,7 +34,7 @@ export const NewsCategoriesGrid = () => {
     // patterns to get heights and positions (left / right) of the cards
     const updateNewsCategories = async () => {
         try {
-            const response = await poliNetworkApi.getTags()
+            const response = await api.tags.get()
             const tempCategories: CategoriesColumns = { left: [], right: [] }
 
             // store the pattern data of the current batch of cards

@@ -1,9 +1,9 @@
 import React, { FC } from "react"
 import { View } from "react-native"
 import { TouchableRipple } from "components/TouchableRipple"
-import { Career } from "api/User"
 import { ButtonCustom } from "./ButtonCustom"
 import { CareerColumn } from "./CareerColumn"
+import { Career } from "utils/user"
 
 export interface CareerTileProps {
     career: Career

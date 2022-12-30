@@ -1,5 +1,3 @@
-// ! this is to test Settings Page. Likely to change
-
 export interface User {
     codPersona: string
     careers: Career[]
