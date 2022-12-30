@@ -18,7 +18,7 @@ import {
 import { Career } from "api/User"
 import { CareerColumn } from "components/Settings"
 import { LoginContext } from "utils/login"
-import { api } from "api"
+import { authApi } from "api"
 
 const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
 const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
@@ -78,7 +78,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
             title: "Disconnetti",
             icon: settingsIcons.disconnect,
             callback: async () => {
-                await api.destroyTokens()
+                await authApi.destroyTokens()
             },
         },
     ]

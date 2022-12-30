@@ -4,7 +4,7 @@ import { View } from "react-native"
 import { Subtitle, Title } from "components/Text"
 import WebView from "react-native-webview"
 import { usePalette } from "utils/colors"
-import { api } from "api"
+import { authApi } from "api"
 import { PolimiToken, PoliNetworkToken } from "utils/login"
 import { NavBar } from "components/NavBar"
 
@@ -83,11 +83,13 @@ export const Login: RootStackScreen<"Login"> = () => {
         // the tokens should get registered in the api wrapper to be used in calls
         if (poliNetworkToken && polimiToken) {
             console.log("Login completed! Registering tokens...")
-            void api.setTokens({ poliNetworkToken, polimiToken }).then(() => {
-                setTimeout(() => {
-                    navigation.goBack()
-                }, 1000)
-            })
+            void authApi
+                .setTokens({ poliNetworkToken, polimiToken })
+                .then(() => {
+                    setTimeout(() => {
+                        navigation.goBack()
+                    }, 1000)
+                })
         }
     }, [poliNetworkToken, polimiToken])
 
@@ -156,7 +158,7 @@ export const Login: RootStackScreen<"Login"> = () => {
                         setLoginStage(LoginStage.GOT_POLIMI_CODE)
 
                         // retrieve the access token from the authcode
-                        const token = await api.getPolimiToken(authcode)
+                        const token = await authApi.getPolimiToken(authcode)
                         setPolimiToken(token)
                         setLoginStage(LoginStage.GOT_POLIMI_TOKEN)
                     }

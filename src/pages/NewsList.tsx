@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { View } from "react-native"
-import { api, Article, RetryType } from "api"
+import { Article, poliNetworkApi, RetryType } from "api"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { Page } from "components/Page"
 import { CardWithGradient } from "components/CardWithGradient"
@@ -22,11 +22,12 @@ export const NewsList: MainStackScreen<"NewsList"> = props => {
     // TODO: get only the articles of the given category
     const updateArticles = async (retryType: RetryType) => {
         try {
-            const response = await api.getArticlesFromDaysAgoTillDate(
-                3,
-                new Date().toISOString(),
-                { retryType: retryType }
-            )
+            const response =
+                await poliNetworkApi.getArticlesFromDaysAgoTillDate(
+                    3,
+                    new Date().toISOString(),
+                    { retryType: retryType }
+                )
             setArticles(response)
         } catch (error) {
             console.log(error)
