@@ -18,7 +18,7 @@ import { api, client } from "api"
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { SettingsContext, Settings } from "utils/settings"
-import { useLoadTokens } from "utils/tokens"
+import { useLoadTokens } from "utils/loadTokens"
 
 export default function App() {
     const [settingsReady, setSettingsReady] = useState(false)
@@ -79,7 +79,7 @@ export default function App() {
         // subscribe to the API login events to manage the login state
         const handleLoginEvent = async (loggedIn: boolean) => {
             if (loggedIn) {
-                const inf = await api.auth.getPolimiUserInfo()
+                const inf = await api.user.getPolimiUserInfo()
                 setLoginState({
                     loggedIn,
                     userInfo: {
@@ -117,8 +117,8 @@ export default function App() {
         if (settingsReady && fontsLoaded && tokensLoaded) {
             void hideAsync().then(async () => {
                 if (loginState.loggedIn) {
-                    console.log(await api.auth.getPolinetworkMe())
-                    console.log(await api.auth.getPolimiUserInfo())
+                    console.log(await api.user.getPolinetworkMe())
+                    console.log(await api.user.getPolimiUserInfo())
                 }
             })
         }

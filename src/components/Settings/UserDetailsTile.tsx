@@ -3,7 +3,7 @@ import { View, Image } from "react-native"
 import { TouchableRipple } from "components/TouchableRipple"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
-import { User } from "utils/user"
+import { User } from "api/user"
 
 export interface UserDetailsTileProps {
     user: User

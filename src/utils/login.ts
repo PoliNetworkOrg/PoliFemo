@@ -1,5 +1,6 @@
+import { User } from "api/user"
 import React from "react"
-import { User } from "./user"
+
 
 /* eslint-disable @typescript-eslint/naming-convention */
 

@@ -2,7 +2,7 @@ import React, { FC } from "react"
 import { View } from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
-import { Career } from "utils/user"
+import { Career } from "api/user"
 
 export interface CareerColumnProps {
     career: Career

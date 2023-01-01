@@ -2,6 +2,7 @@ import { articles } from "./articles"
 import { auth } from "./auth"
 import { tags } from "./tags"
 import { timetable } from "./timetable"
+import { user } from "./user"
 export * from "./httpClient"
 
 /**
@@ -18,10 +19,13 @@ export * from "./httpClient"
  *           .catch(err => console.log(err))
  * ```
  *
+ * Check {@link RequestOptions} for additional request parameters
+ * like RetryType, etc...
  */
 export const api = {
     articles,
     auth,
     tags,
     timetable,
+    user,
 }

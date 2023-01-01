@@ -18,7 +18,7 @@ import {
 import { CareerColumn } from "components/Settings"
 import { LoginContext } from "utils/login"
 import { client } from "api"
-import { Career } from "utils/user"
+import { Career } from "api/user"
 
 const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
 const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]

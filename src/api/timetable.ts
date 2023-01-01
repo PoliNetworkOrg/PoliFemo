@@ -40,9 +40,7 @@ export interface Lecture {
 export const timetable = {
     /**
      * Retrieves mock timetable from PoliNetwork server.
-     *
-     * @param options see {@link RequestOptions}
-     * */
+     */
     async getTimetable(options?: RequestOptions) {
         const response = await client.poliNetworkInstance.get<Lecture[]>(
             "/v1/mock/timetable",

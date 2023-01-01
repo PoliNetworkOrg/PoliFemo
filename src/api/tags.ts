@@ -15,8 +15,7 @@ export interface Tag {
 export const tags = {
     /**
      * Retrieves Tags (news categories) from PoliNetwork server.
-     * @param options see {@link RequestOptions}
-     * */
+     */
     async get(options?: RequestOptions) {
         const response = await client.poliNetworkInstance.get<Tags>(
             "/v1/tags",

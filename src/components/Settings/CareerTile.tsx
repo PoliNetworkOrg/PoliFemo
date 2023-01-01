@@ -3,7 +3,7 @@ import { View } from "react-native"
 import { TouchableRipple } from "components/TouchableRipple"
 import { ButtonCustom } from "./ButtonCustom"
 import { CareerColumn } from "./CareerColumn"
-import { Career } from "utils/user"
+import { Career } from "api/user"
 
 export interface CareerTileProps {
     career: Career

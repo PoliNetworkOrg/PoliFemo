@@ -17,8 +17,6 @@ Error retrying:
 https://stackblitz.com/edit/retry-api-call-axios-interceptor?file=index.ts
 */
 
-//in this way we can add fields to AxiosRequestConfig for more control in case of errors
-
 export enum AuthType {
     NONE,
     POLIMI,
@@ -31,6 +29,24 @@ export enum RetryType {
     NO_RETRY,
 }
 
+/**
+ * Request options interface
+ */
+export interface RequestOptions {
+    retryType?: RetryType
+    maxRetries?: number
+    waitingTime?: number
+}
+/**
+ * Default request options for api requests
+ */
+export const defaultOptions = {
+    retryType: RetryType.RETRY_INDEFINETELY,
+    maxRetries: 5,
+    waitingTime: 3,
+}
+
+//in this way we can add fields to AxiosRequestConfig for more control in case of errors
 declare module "axios" {
     export interface AxiosRequestConfig {
         retryType?: RetryType
@@ -47,8 +63,8 @@ declare module "axios" {
  *
  * Do not retrieve the instance of HttpClient in order to make a request,
  * instead, check {@link api} for making requests.
- * 
- * This object also manages tokens.
+ *
+ * This object also manages auth tokens.
  */
 export declare interface HttpClient {
     /**
@@ -70,8 +86,8 @@ export class HttpClient extends EventEmitter {
     readonly polimiInstance: AxiosInstance
     readonly poliNetworkInstance: AxiosInstance
 
-    polimiToken?: PolimiToken
-    poliNetworkToken?: PoliNetworkToken
+    private polimiToken?: PolimiToken
+    private poliNetworkToken?: PoliNetworkToken
 
     // TODO: await for token to refresh before sending multiple requests
 
@@ -325,11 +341,11 @@ export class HttpClient extends EventEmitter {
      * @param tokens both the polinetwork and polimi tokens
      */
     async setTokens(tokens: Tokens) {
-        client.polimiToken = tokens.polimiToken
-        client.poliNetworkToken = tokens.poliNetworkToken
+        this.polimiToken = tokens.polimiToken
+        this.poliNetworkToken = tokens.poliNetworkToken
 
-        client.emit("login")
-        client.emit("login_event", true)
+        this.emit("login")
+        this.emit("login_event", true)
 
         // save the tokens in local storage
         await AsyncStorage.setItem("api:tokens", JSON.stringify(tokens))
@@ -341,32 +357,15 @@ export class HttpClient extends EventEmitter {
     async destroyTokens() {
         console.log("Destroying tokens, logging out")
 
-        client.polimiToken = undefined
-        client.poliNetworkToken = undefined
+        this.polimiToken = undefined
+        this.poliNetworkToken = undefined
 
-        client.emit("logout")
-        client.emit("login_event", false)
+        this.emit("logout")
+        this.emit("login_event", false)
 
         // remove the tokens from local storage
         await AsyncStorage.removeItem("api:tokens")
     }
-}
-
-/**
- * Request options interface
- */
-export interface RequestOptions {
-    retryType?: RetryType
-    maxRetries?: number
-    waitingTime?: number
-}
-/**
- * Default request options for api requests
- */
-export const defaultOptions = {
-    retryType: RetryType.RETRY_INDEFINETELY,
-    maxRetries: 5,
-    waitingTime: 3,
 }
 
 export const client = HttpClient.getInstance()

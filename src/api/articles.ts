@@ -21,6 +21,10 @@ export interface Article {
  * Collection of endpoints related to Articles.
  */
 export const articles = {
+    /**
+     * Retrieves articles from PoliNetwork server, from n-days ago till 
+     * ending ISO date.
+     */
     async getFromDaysAgoTillDate(
         days: number,
         end: string,
@@ -38,8 +42,6 @@ export const articles = {
     },
     /**
      * Retrieves articles from PoliNetwork server, given a starting and ending ISO date.
-     *
-     * @param options see {@link RequestOptions}
      */
     async getFromDateTillDate(
         start: string,
