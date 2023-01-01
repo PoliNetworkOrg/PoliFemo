@@ -117,7 +117,7 @@ export default function App() {
         if (settingsReady && fontsLoaded && tokensLoaded) {
             void hideAsync().then(async () => {
                 if (loginState.loggedIn) {
-                    console.log(await api.user.getPolinetworkMe())
+                    console.log(await api.user.getPoliNetworkMe())
                     console.log(await api.user.getPolimiUserInfo())
                 }
             })
