@@ -38,7 +38,7 @@ export const user = {
     /**
      * test PoliNetwork auth call
      */
-    async getPolinetworkMe() {
+    async getPoliNetworkMe() {
         const response = await client.poliNetworkInstance.get<{
             id: string
         }>("/v1/accounts/me", {
