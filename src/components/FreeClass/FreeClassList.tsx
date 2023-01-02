@@ -38,43 +38,105 @@ export const FreeClassList: FC = () => {
                         borderRadius: 12,
                     }}
                 >
-                    <Canvas
+                    <View
                         style={{
-                            flex: 1,
-                            width: 28,
+                            flexDirection: "row",
+                            width: width - 65,
+                            height: 40,
                             alignSelf: "center",
                             marginTop: 12,
+                            justifyContent: "center",
                         }}
                     >
-                        {timerSVG && (
-                            <ImageSVG
-                                svg={timerSVG}
-                                x={0}
-                                y={0}
-                                width={28}
-                                height={33}
-                            />
-                        )}
-                    </Canvas>
-                    <Canvas
+                        <Canvas
+                            style={{
+                                position: "absolute",
+                                width: 28,
+                                height: 33,
+                                alignSelf: "center",
+                            }}
+                        >
+                            {timerSVG && (
+                                <ImageSVG
+                                    svg={timerSVG}
+                                    x={0}
+                                    y={0}
+                                    width={28}
+                                    height={33}
+                                />
+                            )}
+                        </Canvas>
+                        <BodyText
+                            style={{
+                                position: "absolute",
+                                fontWeight: "300",
+                                fontSize: 12,
+                                color: "white",
+                                textAlign: "left",
+                                paddingLeft: 100,
+                                marginTop: 3,
+                            }}
+                        >
+                            Libera per{"\n"}
+                            <BodyText
+                                style={{
+                                    fontWeight: "700",
+                                    fontSize: 14,
+                                    color: "#414867",
+                                }}
+                            >
+                                2 h 23{"'"}
+                            </BodyText>
+                        </BodyText>
+                    </View>
+                    <View
                         style={{
-                            flex: 1,
-                            width: 24,
-                            alignSelf: "flex-end",
-                            marginRight: 14,
-                            marginTop: 14,
+                            flexDirection: "row",
+                            width: width - 65,
+                            height: 41,
+                            justifyContent: "flex-end",
                         }}
                     >
-                        {overcrowdingSVG && (
-                            <ImageSVG
-                                svg={overcrowdingSVG}
-                                x={0}
-                                y={0}
-                                width={24}
-                                height={19}
-                            />
-                        )}
-                    </Canvas>
+                        <BodyText
+                            style={{
+                                position: "absolute",
+                                fontWeight: "500",
+                                fontSize: 12,
+                                color: "#424967",
+                                textAlign: "right",
+                                paddingRight: 45,
+                                marginTop: 5,
+                            }}
+                        >
+                            Mediamente{"\n"}
+                            <BodyText
+                                style={{
+                                    fontWeight: "300",
+                                    fontSize: 12,
+                                    color: "#414867",
+                                }}
+                            >
+                                affollato
+                            </BodyText>
+                        </BodyText>
+                        <Canvas
+                            style={{
+                                width: 24,
+                                marginRight: 14,
+                                marginTop: 10,
+                            }}
+                        >
+                            {overcrowdingSVG && (
+                                <ImageSVG
+                                    svg={overcrowdingSVG}
+                                    x={0}
+                                    y={0}
+                                    width={24}
+                                    height={19}
+                                />
+                            )}
+                        </Canvas>
+                    </View>
                     <View
                         style={{
                             position: "absolute",
