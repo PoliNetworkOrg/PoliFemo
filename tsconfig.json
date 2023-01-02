@@ -12,6 +12,7 @@
             "utils/*": ["src/utils/*"],
             "api": ["src/api"],
             "api/*": ["src/api/*"]
-        }
+        },
+        "forceConsistentCasingInFileNames": true
     }
 }
