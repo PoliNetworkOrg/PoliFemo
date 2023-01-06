@@ -4,7 +4,8 @@ import { View } from "react-native"
 import { Subtitle, Title } from "components/Text"
 import WebView from "react-native-webview"
 import { usePalette } from "utils/colors"
-import { api, client } from "api"
+import { api } from "api"
+import { HttpClient } from "api/HttpClient"
 import { PolimiToken, PoliNetworkToken } from "utils/login"
 import { NavBar } from "components/NavBar"
 
@@ -49,6 +50,8 @@ const loginMessage: Record<LoginStage, string> = {
     [LoginStage.GOT_POLIMI_CODE]: "Retrieving Polimi access token...",
     [LoginStage.GOT_POLIMI_TOKEN]: "All done!",
 }
+
+const client = HttpClient.getInstance()
 
 /**
  * The login page, has a webview for the login info and logic for managing the login flow

@@ -17,12 +17,13 @@ import {
 } from "utils/settings"
 import { CareerColumn } from "components/Settings"
 import { LoginContext } from "utils/login"
-import { client } from "api"
 import { Career } from "api/user"
+import { HttpClient } from "api/HttpClient"
 
 const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
 const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
 
+const client = HttpClient.getInstance()
 /**
  * Settings Page
  */

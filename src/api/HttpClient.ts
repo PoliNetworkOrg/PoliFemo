@@ -198,16 +198,6 @@ export class HttpClient extends EventEmitter {
         } else if (response?.status === 401) {
             if (config.authType === AuthType.POLIMI) {
                 const success = await this.refreshPolimiToken()
-                // TODO: should retryCount be increased?
-                // ? Penso che sia meglio non aumentarlo siccome
-                // ? quando il refresh dei token ha successo non facciamo
-                // ? comunque nessun controllo sul tipo di Retry.
-                // ? Sarebbe come considerare la retry successiva
-                // ? come la continuazione di questa, che secondo me ha senso
-                // ? come cosa. Come dire "Questo tentativo ha fallito
-                // ? perchè non avevo il token, ora rifaccio un tentativo uguale
-                // ? ma col token corretto, anche se mi hai detto di non fare retry
-                // ? o di farne solo 5 e questo era il 5 (caso poco probabile)"
                 if (success) {
                     return instance(config)
                 } else {
@@ -368,4 +358,3 @@ export class HttpClient extends EventEmitter {
     }
 }
 
-export const client = HttpClient.getInstance()

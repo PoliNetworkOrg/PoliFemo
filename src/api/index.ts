@@ -3,8 +3,7 @@ import { auth } from "./auth"
 import { tags } from "./tags"
 import { timetable } from "./timetable"
 import { user } from "./user"
-export * from "./httpClient"
-
+export { RetryType, AuthType, RequestOptions } from "./HttpClient"
 /**
  * This object groups together all collections of endpoints.
  *

@@ -1,4 +1,4 @@
-import { client, RequestOptions } from "./httpClient"
+import { HttpClient, RequestOptions } from "./HttpClient"
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface Lecture {
@@ -33,6 +33,8 @@ export interface Lecture {
         room_dn: string
     }
 }
+
+const client = HttpClient.getInstance()
 
 /**
  * Collection of endpoints related to Timetable.

@@ -1,5 +1,7 @@
 import { PolimiToken } from "utils/login"
-import { client, RequestOptions } from "./httpClient"
+import { HttpClient, RequestOptions } from "./HttpClient"
+
+const client = HttpClient.getInstance()
 
 /**
  * Collection of endpoints related to authentication

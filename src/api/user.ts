@@ -1,4 +1,4 @@
-import { client, AuthType } from "./httpClient"
+import { HttpClient, AuthType } from "./HttpClient"
 /**
  * Interface of UI User Object.
  */
@@ -30,6 +30,8 @@ export interface PolimiUserData {
     email: string
     fotoURL: string
 }
+
+const client = HttpClient.getInstance()
 
 /**
  * Collection of endpoints related to User

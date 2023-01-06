@@ -1,6 +1,7 @@
-import { client } from "api"
+import { HttpClient } from "api/HttpClient"
 import React from "react"
 
+const client = HttpClient.getInstance()
 /**
  * Custom Hook used to wait for the tokens to be loaded before booting the app
  * This will return true once the token are read from storage, wether they are

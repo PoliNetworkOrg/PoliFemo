@@ -1,5 +1,5 @@
 import { getIsoStringFromDaysPassed } from "utils/functions"
-import { client, RequestOptions } from "./httpClient"
+import { HttpClient, RequestOptions } from "./HttpClient"
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface Articles {
@@ -17,12 +17,14 @@ export interface Article {
     author?: { name?: string; link?: string; image?: string }
 }
 
+const client = HttpClient.getInstance()
+
 /**
  * Collection of endpoints related to Articles.
  */
 export const articles = {
     /**
-     * Retrieves articles from PoliNetwork server, from n-days ago till 
+     * Retrieves articles from PoliNetwork server, from n-days ago till
      * ending ISO date.
      */
     async getFromDaysAgoTillDate(

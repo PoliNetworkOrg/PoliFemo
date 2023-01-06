@@ -1,4 +1,4 @@
-import { client, RequestOptions } from "./httpClient"
+import { HttpClient, RequestOptions } from "./HttpClient"
 
 export interface Tags {
     tags: Tag[]
@@ -9,6 +9,7 @@ export interface Tag {
     image: string
 }
 
+const client = HttpClient.getInstance()
 /**
  * Collection of endpoints related to Tags.
  */
