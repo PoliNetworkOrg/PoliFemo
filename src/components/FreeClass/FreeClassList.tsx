@@ -5,15 +5,16 @@ import { FlatList, View, Pressable, Dimensions } from "react-native"
 import { usePalette } from "utils/colors"
 import timerIcon from "assets/freeClassrooms/timer.svg"
 import overcrowdingIcon from "assets/freeClassrooms/overcrowding.svg"
+import fireIcon from "assets/freeClassrooms/fire.svg"
+import rooms from "pages/FreeClass/Room.json"
 
 const { width } = Dimensions.get("window")
-
-const data: string[] = ["B2.1.1", "B3.1.1", "B4.1.1", "B5.1.1"]
 
 export const FreeClassList: FC = () => {
     const { primary } = usePalette()
     const timerSVG = useSVG(timerIcon)
     const overcrowdingSVG = useSVG(overcrowdingIcon)
+    const fireSVG = useSVG(fireIcon)
 
     return (
         <FlatList
@@ -26,7 +27,7 @@ export const FreeClassList: FC = () => {
                 alignItems: "center",
                 justifyContent: "center",
             }}
-            data={data}
+            data={rooms}
             keyExtractor={(_, index) => index.toString()}
             renderItem={({ item }) => (
                 <Pressable
@@ -42,7 +43,7 @@ export const FreeClassList: FC = () => {
                         style={{
                             flexDirection: "row",
                             width: width - 65,
-                            height: 40,
+                            height: 30,
                             alignSelf: "center",
                             marginTop: 12,
                             justifyContent: "center",
@@ -93,7 +94,7 @@ export const FreeClassList: FC = () => {
                         style={{
                             flexDirection: "row",
                             width: width - 65,
-                            height: 41,
+                            height: 51,
                             justifyContent: "flex-end",
                         }}
                     >
@@ -105,7 +106,7 @@ export const FreeClassList: FC = () => {
                                 color: "#424967",
                                 textAlign: "right",
                                 paddingRight: 45,
-                                marginTop: 5,
+                                marginTop: 12,
                             }}
                         >
                             Mediamente{"\n"}
@@ -119,23 +120,50 @@ export const FreeClassList: FC = () => {
                                 affollato
                             </BodyText>
                         </BodyText>
-                        <Canvas
+                        <View
                             style={{
-                                width: 24,
-                                marginRight: 14,
-                                marginTop: 10,
+                                position: "relative",
+                                width: 40,
+                                height: 51,
                             }}
                         >
-                            {overcrowdingSVG && (
-                                <ImageSVG
-                                    svg={overcrowdingSVG}
-                                    x={0}
-                                    y={0}
-                                    width={24}
-                                    height={19}
-                                />
-                            )}
-                        </Canvas>
+                            <Canvas
+                                style={{
+                                    position: "absolute",
+                                    zIndex: 1,
+                                    width: 40,
+                                    height: 51,
+                                    marginTop: 10,
+                                }}
+                            >
+                                {overcrowdingSVG && (
+                                    <ImageSVG
+                                        svg={overcrowdingSVG}
+                                        x={3}
+                                        y={7}
+                                        width={24}
+                                        height={19}
+                                    />
+                                )}
+                            </Canvas>
+                            <Canvas
+                                style={{
+                                    zIndex: 0,
+                                    width: 40,
+                                    height: 51,
+                                }}
+                            >
+                                {fireSVG && (
+                                    <ImageSVG
+                                        svg={fireSVG}
+                                        x={0}
+                                        y={4}
+                                        width={29}
+                                        height={39}
+                                    />
+                                )}
+                            </Canvas>
+                        </View>
                     </View>
                     <View
                         style={{
@@ -162,7 +190,7 @@ export const FreeClassList: FC = () => {
                                 fontSize: 24,
                             }}
                         >
-                            {item}
+                            {item.name}
                         </BodyText>
                     </View>
                 </Pressable>
