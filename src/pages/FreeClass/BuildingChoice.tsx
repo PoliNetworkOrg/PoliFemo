@@ -1,28 +1,25 @@
-import React, { useState } from "react"
 import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { View, Pressable, FlatList } from "react-native"
+import React, { useState } from "react"
+import { View, FlatList, Pressable } from "react-native"
 import { usePalette } from "utils/colors"
-import { NavBar } from "components/NavBar"
 import { Title, BodyText } from "components/Text"
+import { NavBar } from "components/NavBar"
 
-export interface CampusItem {
-    id: number
-    name: string[]
-}
-
-export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
+export const BuildingChoice: RootStackScreen<"BuildingChoice"> = props => {
+    const { primary, background, homeBackground } = usePalette()
     const { navigate } = useNavigation()
-    const { homeBackground, background, primary } = usePalette()
+
+    const { campus } = props.route.params
+
+    const [buildings, setBuildings] = useState<string[]>([
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+    ])
 
     const [refreshing, setRefreshing] = useState<boolean>(false)
-
-    const [data, setData] = useState<CampusItem[]>([
-        { id: 0, name: ["Bovisa", "Durando"] },
-        { id: 1, name: ["Bovisa", "La Masa"] },
-        { id: 2, name: ["Leonardo"] },
-        { id: 3, name: ["Colombo"] },
-        { id: 4, name: ["Mancinelli"] },
-    ])
 
     return (
         <View
@@ -64,7 +61,26 @@ export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
                             marginBottom: 17,
                         }}
                     >
-                        <Title style={{ fontSize: 40 }}>Campus</Title>
+                        {campus.name.length > 1 ? (
+                            <Title
+                                style={{
+                                    fontSize: 40,
+                                    fontWeight: "300",
+                                    fontFamily: "Roboto_300Light",
+                                }}
+                            >
+                                {campus.name[0]}
+                                <Title
+                                    style={{ fontSize: 40, fontWeight: "900" }}
+                                >
+                                    {" " + campus.name[1]}
+                                </Title>
+                            </Title>
+                        ) : (
+                            <Title style={{ fontSize: 40, fontWeight: "900" }}>
+                                {campus.name}
+                            </Title>
+                        )}
                     </View>
                     <View
                         //this view is for the date and the time
@@ -90,7 +106,7 @@ export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
                         columnWrapperStyle={{
                             justifyContent: "center",
                         }}
-                        data={data}
+                        data={buildings}
                         keyExtractor={(_, index) => index.toString()}
                         renderItem={({ item }) => (
                             <Pressable
@@ -100,11 +116,11 @@ export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
                                     width: "42%",
                                     height: 93,
                                     marginHorizontal: 9,
-                                    marginVertical: 27,
+                                    marginVertical: 17,
                                     alignItems: "center",
                                 }}
                                 onPress={() =>
-                                    navigate("BuildingChoice", { campus: item })
+                                    navigate("ClassChoice", { building: item })
                                 }
                             >
                                 <View
@@ -120,29 +136,14 @@ export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
                                 >
                                     <BodyText
                                         style={{
-                                            fontWeight:
-                                                item.name.length > 1
-                                                    ? "300"
-                                                    : "900",
+                                            fontWeight: "300",
                                             color: "white",
-                                            fontSize: 20,
+                                            fontSize: 36,
                                             textAlign: "center",
                                         }}
                                     >
-                                        {item.name[0]}
+                                        {item}
                                     </BodyText>
-                                    {item.name.length > 1 ? (
-                                        <BodyText
-                                            style={{
-                                                fontWeight: "900",
-                                                color: "white",
-                                                fontSize: 20,
-                                                textAlign: "center",
-                                            }}
-                                        >
-                                            {item.name[1]}
-                                        </BodyText>
-                                    ) : undefined}
                                 </View>
                             </Pressable>
                         )}

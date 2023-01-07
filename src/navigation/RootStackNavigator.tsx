@@ -14,6 +14,8 @@ import { Error404 } from "pages/Error404"
 import { FreeClassrooms } from "pages/FreeClass/FreeClassrooms"
 import { CampusChoice } from "pages/FreeClass/CampusChoice"
 import { PositionChoice } from "pages/FreeClass/PositionChoice"
+import { BuildingChoice } from "pages/FreeClass/BuildingChoice"
+import { ClassChoice } from "pages/FreeClass/ClassChoice"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const RootStackNavigator = createStackNavigator<RootStackNavigatorParams>()
@@ -36,6 +38,14 @@ export const RootStack = () => {
             <RootStackNavigator.Screen
                 name="PositionChoice"
                 component={PositionChoice}
+            />
+            <RootStackNavigator.Screen
+                name="BuildingChoice"
+                component={BuildingChoice}
+            />
+            <RootStackNavigator.Screen
+                name="ClassChoice"
+                component={ClassChoice}
             />
         </RootStackNavigator.Navigator>
     )

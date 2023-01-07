@@ -21,6 +21,7 @@ import {
     useNavigation as nativeUseNav,
 } from "@react-navigation/native"
 import { Article } from "api"
+import { CampusItem } from "pages/FreeClass/CampusChoice"
 
 /**
  * interface containing the info about the params for each page of the stack navigator
@@ -39,6 +40,8 @@ export type RootStackNavigatorParams = {
     FreeClassrooms: undefined
     CampusChoice: undefined
     PositionChoice: undefined
+    BuildingChoice: { campus: CampusItem }
+    ClassChoice: { building: string }
     /* eslint-enable @typescript-eslint/naming-convention */
 }
 
