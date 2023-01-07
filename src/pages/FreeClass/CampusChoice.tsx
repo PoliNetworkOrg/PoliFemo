@@ -4,6 +4,7 @@ import { View, Pressable, FlatList, Dimensions } from "react-native"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
 import { Title, BodyText } from "components/Text"
+import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 
 export interface CampusItem {
     id: number
@@ -12,7 +13,7 @@ export interface CampusItem {
 
 export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
     const { navigate } = useNavigation()
-    const { homeBackground, background, primary } = usePalette()
+    const { homeBackground, background, primary, isLight } = usePalette()
 
     const [data, setData] = useState<CampusItem[]>([
         { id: 0, name: ["Bovisa", "Durando"] },
@@ -21,6 +22,10 @@ export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
         { id: 3, name: ["Colombo"] },
         { id: 4, name: ["Mancinelli"] },
     ])
+
+    //non-ISO format for simplicity (local timezone) and
+    // compatibility with `handleConfirm` function
+    const [date, setDate] = useState<Date>(new Date())
 
     return (
         <View
@@ -64,18 +69,10 @@ export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
                     >
                         <Title style={{ fontSize: 40 }}>Campus</Title>
                     </View>
-                    <View
-                        //this view is for the date and the time
-                        style={{
-                            marginTop: 46,
-                            backgroundColor: "red",
-                            width: 260,
-                            height: 27,
-                            alignSelf: "center",
-                        }}
-                    >
-                        <BodyText>Data Picker</BodyText>
-                    </View>
+                    <DateTimePicker
+                        date={date}
+                        setDate={(date: Date) => setDate(date)}
+                    />
                     <FlatList
                         showsVerticalScrollIndicator={false}
                         style={{
