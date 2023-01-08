@@ -33,5 +33,47 @@
         "power": false,
         "link": "https://www7.ceda.polimi.it/spazi/spazi/controller/Aula.do?evn_init=espandi&idaula=1662",
         "room_id": 1662
+    },
+    {
+        "name": "E.P.3",
+        "building": "Edificio 32.3",
+        "power": false,
+        "link": "https://www7.ceda.polimi.it/spazi/spazi/controller/Aula.do?evn_init=espandi&idaula=4766",
+        "room_id": 5000
+    },
+    {
+        "name": "G.0.1",
+        "building": "Edificio 23",
+        "power": false,
+        "link": "https://www7.ceda.polimi.it/spazi/spazi/controller/Aula.do?evn_init=espandi&idaula=1661",
+        "room_id": 5001
+    },
+    {
+        "name": "G.0.2",
+        "building": "Edificio 23",
+        "power": false,
+        "link": "https://www7.ceda.polimi.it/spazi/spazi/controller/Aula.do?evn_init=espandi&idaula=1662",
+        "room_id": 5002
+    },
+    {
+        "name": "E.P.3",
+        "building": "Edificio 32.3",
+        "power": false,
+        "link": "https://www7.ceda.polimi.it/spazi/spazi/controller/Aula.do?evn_init=espandi&idaula=4766",
+        "room_id": 5003
+    },
+    {
+        "name": "G.0.1",
+        "building": "Edificio 23",
+        "power": false,
+        "link": "https://www7.ceda.polimi.it/spazi/spazi/controller/Aula.do?evn_init=espandi&idaula=1661",
+        "room_id": 5004
+    },
+    {
+        "name": "G.0.2",
+        "building": "Edificio 23",
+        "power": false,
+        "link": "https://www7.ceda.polimi.it/spazi/spazi/controller/Aula.do?evn_init=espandi&idaula=1662",
+        "room_id": 5005
     }
 ]

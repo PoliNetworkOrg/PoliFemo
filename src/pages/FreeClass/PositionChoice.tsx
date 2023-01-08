@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
+import { RootStackScreen } from "navigation/NavigationTypes"
 import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
@@ -16,7 +16,6 @@ enum ButtonType {
 
 export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
     const [search, setSearch] = useState("")
-    const { navigate } = useNavigation()
     const { homeBackground, background, primary } = usePalette()
     const positionArrowSVG = useSVG(PositionArrowIcon)
 
@@ -168,7 +167,17 @@ export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
                             </BodyText>
                         </Pressable>
                     </View>
-                    {status === ButtonType.LIST ? <FreeClassList /> : undefined}
+
+                    {status === ButtonType.LIST ? (
+                        <View
+                            style={{
+                                marginBottom: 100,
+                                paddingBottom: 130,
+                            }}
+                        >
+                            <FreeClassList />
+                        </View>
+                    ) : undefined}
                 </View>
             </View>
             <NavBar />

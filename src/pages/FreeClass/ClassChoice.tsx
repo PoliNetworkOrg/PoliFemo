@@ -1,6 +1,6 @@
 import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
 import React, { useState } from "react"
-import { View, FlatList, Pressable } from "react-native"
+import { View } from "react-native"
 import { usePalette } from "utils/colors"
 import { Title, BodyText } from "components/Text"
 import { NavBar } from "components/NavBar"
@@ -11,8 +11,6 @@ export const ClassChoice: RootStackScreen<"ClassChoice"> = props => {
     const { navigate } = useNavigation()
 
     const { building } = props.route.params
-
-    const [refreshing, setRefreshing] = useState<boolean>(false)
 
     return (
         <View
@@ -71,7 +69,9 @@ export const ClassChoice: RootStackScreen<"ClassChoice"> = props => {
                     >
                         <BodyText>Data Picker</BodyText>
                     </View>
-                    <FreeClassList />
+                    <View style={{ paddingBottom: 63 }}>
+                        <FreeClassList />
+                    </View>
                 </View>
             </View>
             <NavBar />
