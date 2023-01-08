@@ -5,6 +5,7 @@ import { Subtitle, Title } from "components/Text"
 import WebView from "react-native-webview"
 import { usePalette } from "utils/colors"
 import { api } from "api"
+import { HttpClient } from "api/HttpClient"
 import { PolimiToken, PoliNetworkToken } from "utils/login"
 import { NavBar } from "components/NavBar"
 
@@ -50,6 +51,8 @@ const loginMessage: Record<LoginStage, string> = {
     [LoginStage.GOT_POLIMI_TOKEN]: "All done!",
 }
 
+const client = HttpClient.getInstance()
+
 /**
  * The login page, has a webview for the login info and logic for managing the login flow
  *
@@ -83,11 +86,13 @@ export const Login: RootStackScreen<"Login"> = () => {
         // the tokens should get registered in the api wrapper to be used in calls
         if (poliNetworkToken && polimiToken) {
             console.log("Login completed! Registering tokens...")
-            void api.setTokens({ poliNetworkToken, polimiToken }).then(() => {
-                setTimeout(() => {
-                    navigation.goBack()
-                }, 1000)
-            })
+            void client
+                .setTokens({ poliNetworkToken, polimiToken })
+                .then(() => {
+                    setTimeout(() => {
+                        navigation.goBack()
+                    }, 1000)
+                })
         }
     }, [poliNetworkToken, polimiToken])
 
@@ -109,6 +114,7 @@ export const Login: RootStackScreen<"Login"> = () => {
             </Title>
             <WebView
                 ref={webview}
+                androidLayerType="software"
                 containerStyle={{
                     flex: 1,
                     borderTopLeftRadius: 30,
@@ -155,7 +161,7 @@ export const Login: RootStackScreen<"Login"> = () => {
                         setLoginStage(LoginStage.GOT_POLIMI_CODE)
 
                         // retrieve the access token from the authcode
-                        const token = await api.getPolimiToken(authcode)
+                        const token = await api.auth.getPolimiToken(authcode)
                         setPolimiToken(token)
                         setLoginStage(LoginStage.GOT_POLIMI_TOKEN)
                     }

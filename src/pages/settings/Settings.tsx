@@ -15,14 +15,15 @@ import {
     SettingsContext,
     ValidColorSchemeName,
 } from "utils/settings"
-import { Career } from "api/User"
 import { CareerColumn } from "components/Settings"
 import { LoginContext } from "utils/login"
-import { api } from "api"
+import { Career } from "api/user"
+import { HttpClient } from "api/HttpClient"
 
 const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
 const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
 
+const client = HttpClient.getInstance()
 /**
  * Settings Page
  */
@@ -78,7 +79,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
             title: "Disconnetti",
             icon: settingsIcons.disconnect,
             callback: async () => {
-                await api.destroyTokens()
+                await client.destroyTokens()
             },
         },
     ]

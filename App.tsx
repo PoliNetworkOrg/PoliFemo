@@ -14,10 +14,14 @@ import { AppContainer } from "./src/AppContainer"
 
 import { OutsideClickProvider } from "utils/outsideClick"
 import { LoginContext, LoginState } from "utils/login"
-import { api, useLoadTokens } from "api"
+import { api } from "api"
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { SettingsContext, Settings } from "utils/settings"
+import { useLoadTokens } from "utils/loadTokens"
+import { HttpClient } from "api/HttpClient"
+
+const client = HttpClient.getInstance()
 
 export default function App() {
     const [settingsReady, setSettingsReady] = useState(false)
@@ -78,7 +82,7 @@ export default function App() {
         // subscribe to the API login events to manage the login state
         const handleLoginEvent = async (loggedIn: boolean) => {
             if (loggedIn) {
-                const inf = await api.getPolimiUserInfo()
+                const inf = await api.user.getPolimiUserInfo()
                 setLoginState({
                     loggedIn,
                     userInfo: {
@@ -106,9 +110,9 @@ export default function App() {
             } else setLoginState({ loggedIn })
         }
 
-        api.on("login_event", handleLoginEvent)
+        client.on("login_event", handleLoginEvent)
         return () => {
-            api.removeListener("login_event", handleLoginEvent)
+            client.removeListener("login_event", handleLoginEvent)
         }
     }, [])
 
@@ -116,8 +120,8 @@ export default function App() {
         if (settingsReady && fontsLoaded && tokensLoaded) {
             void hideAsync().then(async () => {
                 if (loginState.loggedIn) {
-                    console.log(await api.getPolinetworkMe())
-                    console.log(await api.getPolimiUserInfo())
+                    console.log(await api.user.getPoliNetworkMe())
+                    console.log(await api.user.getPolimiUserInfo())
                 }
             })
         }

@@ -1,7 +1,9 @@
+import { User } from "api/user"
 import React from "react"
-import { User } from "api"
+
 
 /* eslint-disable @typescript-eslint/naming-convention */
+
 export interface PoliNetworkToken {
     access_token: string
     expires_in: number

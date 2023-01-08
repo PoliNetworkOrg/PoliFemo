@@ -21,7 +21,7 @@ import {
     NavigationProp,
     useNavigation as nativeUseNav,
 } from "@react-navigation/native"
-import { Article } from "api"
+import { Article } from "api/articles"
 import { NavigatorScreenParams } from "@react-navigation/native"
 
 /**
