@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react"
 import { View } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { SettingsScroll } from "components/Settings"
+import { ContentWrapperScroll } from "components/Settings"
 import { Divider } from "components/Divider"
 import { SettingTile } from "components/Settings"
 import { settingsIcons } from "assets/settings"
@@ -86,7 +86,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
 
     return (
         <View style={{ flex: 1 }}>
-            <SettingsScroll title="Impostazioni">
+            <ContentWrapperScroll title="Impostazioni">
                 {loggedIn ? (
                     <UserDetailsTile user={userInfo} />
                 ) : (
@@ -108,7 +108,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
                 {settingsList.map((setting, index) => {
                     return <SettingTile setting={setting} key={index} />
                 })}
-            </SettingsScroll>
+            </ContentWrapperScroll>
 
             <ModalCustomSettings
                 title={"Scegli Tema"}
