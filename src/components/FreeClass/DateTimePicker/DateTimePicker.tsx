@@ -38,8 +38,8 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
     }
 
     const handleConfirm = (date: Date) => {
-        props.setDate(date)
         hideDateOrTimePicker()
+        props.setDate(date)
     }
     return (
         <View>
