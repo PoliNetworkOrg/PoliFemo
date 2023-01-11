@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react"
 import { Pressable, View } from "react-native"
-import { BodyText, Text } from "components/Text"
+import { BodyText } from "components/Text"
 import { usePalette } from "utils/colors"
 import { DateTimeBox } from "./DateTimeBox"
 import { destructureDate } from "utils/dates"
@@ -69,9 +69,9 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
                     style={{ flexDirection: "row" }}
                 >
                     <DateTimeBox value={day} />
-                    <Text style={[{ color: isLight ? primary : "#fff" }, styles.dot]}>.</Text>
+                    <BodyText style={[{ color: isLight ? primary : "#fff" }, styles.dot]}>.</BodyText>
                     <DateTimeBox value={month} />
-                    <Text style={[{ color: isLight ? primary : "#fff" }, styles.dot]}>.</Text>
+                    <BodyText style={[{ color: isLight ? primary : "#fff" }, styles.dot]}>.</BodyText>
                     <DateTimeBox value={year} />
                 </Pressable>
                 <View>
@@ -91,7 +91,7 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
                     style={{ flexDirection: "row" }}
                 >
                     <DateTimeBox value={hour} />
-                    <Text style={[{ color: isLight ? primary : "#fff" }, styles.colon]}>:</Text>
+                    <BodyText style={[{ color: isLight ? primary : "#fff" }, styles.colon]}>:</BodyText>
                     <DateTimeBox value={minute} />
                 </Pressable>
             </View>
