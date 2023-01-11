@@ -4,7 +4,7 @@ import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import { ButtonCustom } from "./ButtonCustom"
 
-export interface ModalCustomSettingsProps {
+export interface ModalSelectionProps {
     /**
      * content of the modal
      */
@@ -38,11 +38,13 @@ export interface ModalCustomSettingsProps {
     height?: number
 }
 
+// ? maybe should move this out of Settings folder ?
+
 /**
  * Custom Modal Component with two buttons at the bottom.
  *
  */
-export const ModalCustomSettings: FC<ModalCustomSettingsProps> = props => {
+export const ModalSelection: FC<ModalSelectionProps> = props => {
     const { backgroundSecondary, homeBackground, modalBarrier, isLight } =
         usePalette()
 

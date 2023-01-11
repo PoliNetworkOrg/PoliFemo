@@ -1,5 +1,6 @@
 import { articles } from "./articles"
 import { auth } from "./auth"
+import { groups } from "./groups"
 import { tags } from "./tags"
 import { timetable } from "./timetable"
 import { user } from "./user"
@@ -27,4 +28,5 @@ export const api = {
     tags,
     timetable,
     user,
+    groups,
 }

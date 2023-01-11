@@ -6,7 +6,7 @@ import { Divider } from "components/Divider"
 import { SettingTile } from "components/Settings"
 import { settingsIcons } from "assets/settings"
 import { UserDetailsTile } from "components/Settings"
-import { ModalCustomSettings } from "components/Settings"
+import { ModalSelection } from "components/Settings"
 import { CareerTile } from "components/Settings"
 import { SelectTile } from "components/Settings"
 import { UserAnonymousTile } from "components/Settings"
@@ -110,7 +110,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
                 })}
             </ContentWrapperScroll>
 
-            <ModalCustomSettings
+            <ModalSelection
                 title={"Scegli Tema"}
                 isShowing={isModalThemeVisible}
                 selectedValue={selectedTheme}
@@ -136,8 +136,8 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
                         />
                     )
                 })}
-            </ModalCustomSettings>
-            <ModalCustomSettings
+            </ModalSelection>
+            <ModalSelection
                 title={"Cambia Matricola"}
                 isShowing={isModalCareerVisible}
                 selectedValue={selectedCareer.matricola}
@@ -169,7 +169,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
                         </SelectTile>
                     )
                 })}
-            </ModalCustomSettings>
+            </ModalSelection>
         </View>
     )
 }

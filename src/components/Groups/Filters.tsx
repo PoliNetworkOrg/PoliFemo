@@ -1,8 +1,9 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { View } from "react-native"
 import { OutlinedButton } from "./OutlinedButton"
 import { StyleSheet } from "react-native"
-import { ModalCustomSettings, SelectTile } from "components/Settings"
+import { ModalSelection, SelectTile } from "components/Settings"
+import { api } from "api"
 
 /* export interface FiltersProps {
     prova?: string
@@ -64,6 +65,20 @@ export const Filters: FC = () => {
         setType(all)
         setPlatform(all)
     }
+
+    const searchGroups = async () => {
+        try {
+            //broken
+            const response = await api.groups.get({ name: "Informatica" })
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        void searchGroups()
+    }, [])
     return (
         <View>
             <View
@@ -130,7 +145,7 @@ export const Filters: FC = () => {
                     onPress={reset}
                 />
             </View>
-            <ModalCustomSettings
+            <ModalSelection
                 title={getNameFromMode(modalMode)}
                 isShowing={isModalShowing}
                 onClose={() => {
@@ -161,7 +176,7 @@ export const Filters: FC = () => {
                         />
                     )
                 })}
-            </ModalCustomSettings>
+            </ModalSelection>
         </View>
     )
 }
