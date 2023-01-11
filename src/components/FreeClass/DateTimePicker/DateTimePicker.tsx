@@ -58,7 +58,7 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
                         style={{
                             color: isLight ? primary : "#fff",
                             fontSize: 14,
-                            marginRight: 12
+                            marginRight: 12,
                         }}
                     >
                         Data
@@ -69,9 +69,23 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
                     style={{ flexDirection: "row" }}
                 >
                     <DateTimeBox value={day} />
-                    <BodyText style={[{ color: isLight ? primary : "#fff" }, styles.dot]}>.</BodyText>
+                    <BodyText
+                        style={[
+                            { color: isLight ? primary : "#fff" },
+                            styles.dot,
+                        ]}
+                    >
+                        .
+                    </BodyText>
                     <DateTimeBox value={month} />
-                    <BodyText style={[{ color: isLight ? primary : "#fff" }, styles.dot]}>.</BodyText>
+                    <BodyText
+                        style={[
+                            { color: isLight ? primary : "#fff" },
+                            styles.dot,
+                        ]}
+                    >
+                        .
+                    </BodyText>
                     <DateTimeBox value={year} />
                 </Pressable>
                 <View>
@@ -80,7 +94,7 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
                             color: isLight ? primary : "#fff",
                             fontSize: 14,
                             marginLeft: 28,
-                            marginRight: 12
+                            marginRight: 12,
                         }}
                     >
                         Ora
@@ -91,7 +105,14 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
                     style={{ flexDirection: "row" }}
                 >
                     <DateTimeBox value={hour} />
-                    <BodyText style={[{ color: isLight ? primary : "#fff" }, styles.colon]}>:</BodyText>
+                    <BodyText
+                        style={[
+                            { color: isLight ? primary : "#fff" },
+                            styles.colon,
+                        ]}
+                    >
+                        :
+                    </BodyText>
                     <DateTimeBox value={minute} />
                 </Pressable>
             </View>
@@ -108,8 +129,9 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
 
 const styles = StyleSheet.create({
     dot: {
-        alignSelf: "flex-end", marginHorizontal: 4, fontSize: 14,
+        alignSelf: "flex-end",
+        marginHorizontal: 4,
+        fontSize: 14,
     },
-    colon: { alignSelf: "center", marginHorizontal: 4, fontSize: 14, }
+    colon: { alignSelf: "center", marginHorizontal: 4, fontSize: 14 },
 })
-
