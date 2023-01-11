@@ -22,7 +22,6 @@ export const DateTimeBox: FC<DateTimeBoxProps> = props => {
                 borderRadius: 5,
                 justifyContent: "center",
                 alignItems: "center",
-                marginLeft: 12,
             }}
         >
             <Text

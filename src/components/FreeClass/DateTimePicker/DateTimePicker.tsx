@@ -1,10 +1,11 @@
 import React, { FC, useState } from "react"
 import { Pressable, View } from "react-native"
-import { Text } from "components/Text"
+import { BodyText, Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import { DateTimeBox } from "./DateTimeBox"
 import { destructureDate } from "utils/dates"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
+import { StyleSheet } from "react-native"
 export interface DateTimePickerProps {
     date: Date
     setDate: (date: Date) => void
@@ -38,7 +39,6 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
 
     const handleConfirm = (date: Date) => {
         props.setDate(date)
-        console.log("A date has been picked: ", date)
         hideDateOrTimePicker()
     }
     return (
@@ -54,39 +54,44 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
                 }}
             >
                 <View>
-                    <Text
+                    <BodyText
                         style={{
                             color: isLight ? primary : "#fff",
                             fontSize: 14,
+                            marginRight: 12
                         }}
                     >
-                        Date
-                    </Text>
+                        Data
+                    </BodyText>
                 </View>
                 <Pressable
                     onPress={showDatePicker}
                     style={{ flexDirection: "row" }}
                 >
                     <DateTimeBox value={day} />
+                    <Text style={[{ color: isLight ? primary : "#fff" }, styles.dot]}>.</Text>
                     <DateTimeBox value={month} />
+                    <Text style={[{ color: isLight ? primary : "#fff" }, styles.dot]}>.</Text>
                     <DateTimeBox value={year} />
                 </Pressable>
                 <View>
-                    <Text
+                    <BodyText
                         style={{
                             color: isLight ? primary : "#fff",
                             fontSize: 14,
                             marginLeft: 28,
+                            marginRight: 12
                         }}
                     >
-                        Time
-                    </Text>
+                        Ora
+                    </BodyText>
                 </View>
                 <Pressable
                     onPress={showTimePicker}
                     style={{ flexDirection: "row" }}
                 >
                     <DateTimeBox value={hour} />
+                    <Text style={[{ color: isLight ? primary : "#fff" }, styles.colon]}>:</Text>
                     <DateTimeBox value={minute} />
                 </Pressable>
             </View>
@@ -95,7 +100,16 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
                 mode={dateMode}
                 onConfirm={handleConfirm}
                 onCancel={hideDateOrTimePicker}
+                date={props.date}
             />
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    dot: {
+        alignSelf: "flex-end", marginHorizontal: 4, fontSize: 14,
+    },
+    colon: { alignSelf: "center", marginHorizontal: 4, fontSize: 14, }
+})
+
