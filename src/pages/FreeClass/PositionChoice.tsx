@@ -8,6 +8,8 @@ import { PoliSearchBar } from "components/Home"
 import PositionArrowIcon from "assets/freeClassrooms/positionArrow.svg"
 import { useSVG, Canvas, ImageSVG } from "@shopify/react-native-skia"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
+import MapView from "react-native-maps"
+import { Map } from "components/FreeClass/Map"
 
 enum ButtonType {
     MAP,
@@ -177,7 +179,16 @@ export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
                         >
                             <FreeClassList />
                         </View>
-                    ) : undefined}
+                    ) : (
+                        <View
+                            style={{
+                                marginBottom: 100,
+                                paddingBottom: 130,
+                            }}
+                        >
+                            <Map />
+                        </View>
+                    )}
                 </View>
             </View>
             <NavBar />
