@@ -12,6 +12,7 @@ export const Map: FC = () => {
                 latitudeDelta: 0.01,
                 longitudeDelta: 0.01,
             }}
+            showsUserLocation={true}
         >
             {rooms.map(room => (
                 <Marker

@@ -1,6 +1,6 @@
-import React, { useState } from "react"
-import { RootStackScreen } from "navigation/NavigationTypes"
-import { Pressable, View } from "react-native"
+import React, { useState, useEffect } from "react"
+import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
+import { Pressable, View, Alert } from "react-native"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
 import { BodyText, Title } from "components/Text"
@@ -8,8 +8,9 @@ import { PoliSearchBar } from "components/Home"
 import PositionArrowIcon from "assets/freeClassrooms/positionArrow.svg"
 import { useSVG, Canvas, ImageSVG } from "@shopify/react-native-skia"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
-import MapView from "react-native-maps"
 import { Map } from "components/FreeClass/Map"
+import * as Location from "expo-location"
+import { LocationGeocodedAddress } from "expo-location"
 
 enum ButtonType {
     MAP,
@@ -22,6 +23,38 @@ export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
     const positionArrowSVG = useSVG(PositionArrowIcon)
 
     const [status, setStatus] = useState<ButtonType>(ButtonType.MAP)
+
+    const [location, setLocation] = useState<LocationGeocodedAddress>()
+    const [errorMsg, setErrorMsg] = useState("")
+
+    useEffect(() => {
+        void (async () => {
+            const { status } =
+                await Location.requestForegroundPermissionsAsync()
+            if (status !== "granted") {
+                console.log("Permission to access location denied!")
+                setErrorMsg("Permission to access location denied!")
+                return
+            }
+
+            const { coords } = await Location.getCurrentPositionAsync({})
+            const { latitude, longitude } = coords
+            const response = await Location.reverseGeocodeAsync({
+                latitude,
+                longitude,
+            })
+            setLocation(response[0])
+        })()
+    }, [])
+
+    if (errorMsg) {
+        Alert.alert(
+            "Location Service not enabled",
+            "Please enable your location services to continue",
+            [{ text: "OK" }],
+            { cancelable: false }
+        )
+    }
 
     return (
         <View
@@ -98,7 +131,9 @@ export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
                                     fontSize: 20,
                                 }}
                             >
-                                Via xxx, Milano
+                                {location?.name}
+                                {","}
+                                {location?.city}
                             </BodyText>
                         </View>
                     </View>
