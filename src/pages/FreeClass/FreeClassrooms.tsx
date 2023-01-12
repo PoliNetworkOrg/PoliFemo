@@ -36,7 +36,7 @@ const freeClassButtons: FreeClassInterface[] = [
 export const FreeClassrooms: RootStackScreen<"FreeClassrooms"> = () => {
     const [search, setSearch] = useState("")
     const { navigate } = useNavigation()
-    const { homeBackground, background, primary } = usePalette()
+    const { homeBackground, background, palette } = usePalette()
 
     const campusSVG = useSVG(campusIcon)
     const position1SVG = useSVG(position1Icon)
@@ -121,7 +121,7 @@ export const FreeClassrooms: RootStackScreen<"FreeClassrooms"> = () => {
                                     key={"freeClass_" + element.id}
                                     style={{
                                         marginTop: 18,
-                                        backgroundColor: primary,
+                                        backgroundColor: palette.primary,
                                         width: width - 54,
                                         height: 190,
                                         borderRadius: 12,

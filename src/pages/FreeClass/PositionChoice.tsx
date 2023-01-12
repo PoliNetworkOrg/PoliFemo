@@ -19,7 +19,8 @@ enum ButtonType {
 
 export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
     const [search, setSearch] = useState("")
-    const { homeBackground, background, primary } = usePalette()
+    const { homeBackground, background, primary, isDark, palette } =
+        usePalette()
     const positionArrowSVG = useSVG(PositionArrowIcon)
 
     const [status, setStatus] = useState<ButtonType>(ButtonType.MAP)
@@ -110,7 +111,7 @@ export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
                             <BodyText
                                 style={{
                                     fontWeight: "900",
-                                    color: primary,
+                                    color: isDark ? "white" : "#454773",
                                     fontSize: 20,
                                 }}
                             >
@@ -140,7 +141,9 @@ export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
                                 backgroundColor:
                                     status === ButtonType.MAP
                                         ? primary
-                                        : "#8791BD",
+                                        : isDark
+                                        ? palette.primary
+                                        : palette.lighter,
                                 borderRadius: 22,
                                 alignItems: "center",
                                 justifyContent: "center",
@@ -166,7 +169,9 @@ export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
                                 backgroundColor:
                                     status === ButtonType.LIST
                                         ? primary
-                                        : "#8791BD",
+                                        : isDark
+                                        ? palette.primary
+                                        : palette.lighter,
                                 borderRadius: 22,
                                 marginLeft: 17,
                                 alignItems: "center",

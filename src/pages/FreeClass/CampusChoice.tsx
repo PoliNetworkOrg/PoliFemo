@@ -12,7 +12,7 @@ export interface CampusItem {
 
 export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
     const { navigate } = useNavigation()
-    const { homeBackground, background, primary } = usePalette()
+    const { homeBackground, background, palette } = usePalette()
 
     const [refreshing, setRefreshing] = useState<boolean>(false)
 
@@ -95,7 +95,7 @@ export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
                         renderItem={({ item }) => (
                             <Pressable
                                 style={{
-                                    backgroundColor: primary,
+                                    backgroundColor: palette.primary,
                                     borderRadius: 12,
                                     width: "42%",
                                     height: 93,

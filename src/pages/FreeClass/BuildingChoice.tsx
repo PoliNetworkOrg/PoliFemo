@@ -6,7 +6,7 @@ import { Title, BodyText } from "components/Text"
 import { NavBar } from "components/NavBar"
 
 export const BuildingChoice: RootStackScreen<"BuildingChoice"> = props => {
-    const { primary, background, homeBackground } = usePalette()
+    const { palette, background, homeBackground } = usePalette()
     const { navigate } = useNavigation()
 
     const { campus } = props.route.params
@@ -111,7 +111,7 @@ export const BuildingChoice: RootStackScreen<"BuildingChoice"> = props => {
                         renderItem={({ item }) => (
                             <Pressable
                                 style={{
-                                    backgroundColor: primary,
+                                    backgroundColor: palette.primary,
                                     borderRadius: 12,
                                     width: "42%",
                                     height: 93,
