@@ -1,4 +1,4 @@
-import { Tag, Article } from "api"
+import { Tag, Article } from "api/articles"
 
 /**
  * Name of the event that has to be fired in order to update the preference

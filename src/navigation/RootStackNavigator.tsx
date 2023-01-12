@@ -1,30 +1,31 @@
 /**
  * Root Stack Navigator.
- * Component encapsulating the pages of the app.
+ * Component encapsulating the Navigators of the app.
  */
 
-import React from "react"
+import React, { FC } from "react"
 import { createStackNavigator } from "@react-navigation/stack"
-
 import { RootStackNavigatorParams } from "navigation/NavigationTypes"
-import { Home } from "pages/Home"
-import { Article } from "pages/ArticleDetails"
-import { ArticlesList } from "pages/ArticlesList"
-import { Error404 } from "pages/Error404"
+// ! import with absolute path gives error
+import { MainContainer } from "../MainContainer"
+import { SettingsContainer } from "../SettingsContainer"
+import { Login } from "pages/Login"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const RootStackNavigator = createStackNavigator<RootStackNavigatorParams>()
 
-export const RootStack = () => {
+export const RootStack: FC = () => {
     return (
         <RootStackNavigator.Navigator screenOptions={{ headerShown: false }}>
-            <RootStackNavigator.Screen name="Home" component={Home} />
-            <RootStackNavigator.Screen name="Article" component={Article} />
             <RootStackNavigator.Screen
-                name="ArticlesList"
-                component={ArticlesList}
+                name="MainNav"
+                component={MainContainer}
             />
-            <RootStackNavigator.Screen name="Error404" component={Error404} />
+            <RootStackNavigator.Screen
+                name="SettingsNav"
+                component={SettingsContainer}
+            />
+            <RootStackNavigator.Screen name="Login" component={Login} />
         </RootStackNavigator.Navigator>
     )
 }

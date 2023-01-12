@@ -5,7 +5,7 @@ import BottomSheet, {
     BottomSheetScrollViewMethods,
 } from "@gorhom/bottom-sheet"
 
-import { Article } from "api"
+import { Article } from "api/articles"
 import { TagWithData } from "./newsTypes"
 import { NewsTagsGrid } from "./NewsTagsGrid"
 import { Title } from "components/Text"

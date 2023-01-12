@@ -17,5 +17,12 @@ export function getDateFromDaysBefore(date: Date, n: number): Date {
     const newDate = new Date(newTime)
 
     return newDate
-    // return newDate.toISOString()
+}
+
+/**
+ * waits for "ms" milliseconds
+ * @param ms milliseconds to wait
+ */
+export function wait(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms))
 }

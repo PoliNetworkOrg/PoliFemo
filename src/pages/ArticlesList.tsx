@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react"
 import { View, DeviceEventEmitter } from "react-native"
 
-import { api, Article, RetryType } from "api"
+import { api, RetryType } from "api"
+import { Article } from "api/articles"
 import { Preference, UPDATE_PREFERENCE_EVENT_NAME } from "components/Home/News"
-import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
+import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ScrollPageInfinite } from "components/ScrollPageInfinite"
 import { CardWithGradient } from "components/CardWithGradient"
 import { capitalize } from "utils/strings"
@@ -13,7 +14,7 @@ const MAX_ARTICLES_PER_REQUEST = 8
 /**
  * News page containing the articles of a specific tag.
  */
-export const ArticlesList: RootStackScreen<"ArticlesList"> = props => {
+export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
     const navigation = useNavigation()
     const { tagName, tagPreference } = props.route.params
 
@@ -29,7 +30,7 @@ export const ArticlesList: RootStackScreen<"ArticlesList"> = props => {
 
     const fetchArticles = async (keepArticles: boolean) => {
         try {
-            const response = await api.getArticlesFromOffsetByTag(
+            const response = await api.articles.getFromOffsetByTag(
                 tagName,
                 MAX_ARTICLES_PER_REQUEST,
                 offset.current,

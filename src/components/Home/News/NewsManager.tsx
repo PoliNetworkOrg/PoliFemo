@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react"
 import { DeviceEventEmitter } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
-import { api, Tag, Article } from "api"
+import { api } from "api"
+import { Article, Tag } from "api/articles"
 import {
     TagWithData,
     Preference,
@@ -58,7 +59,7 @@ export const NewsManager = () => {
         const promises = []
         for (const tag of tags) {
             promises.push(
-                api
+                api.articles
                     .getLastArticleByTag(tag.name)
                     .then(article => {
                         tempArticles[tag.name] = article
@@ -75,7 +76,7 @@ export const NewsManager = () => {
     useEffect(() => {
         // Load tags (news categories) and their last article (one for each tag)
         const fetchData = async () => {
-            const responseTags = await api.getTags()
+            const responseTags = await api.articles.getTags()
             const responseArticles = await getLastArticles(responseTags)
             setTags(responseTags)
             setLastArticles(responseArticles)

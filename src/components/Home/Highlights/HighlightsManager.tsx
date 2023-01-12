@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from "react"
 import { View } from "react-native"
 import { PoliCarousel, WidgetType } from "./PoliCarousel"
 import lectures from "./lectures.json"
-import { Lecture } from "api"
+import { Lecture } from "api/timetable"
 
 //ideally this is the object we want to pass to the carousel
 //this might be expansed in the future

@@ -10,14 +10,23 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
+            - name: Prepare Request Body
+              id: prepare
+              uses: actions/github-script@v3
+              with:
+                  result-encoding: string
+                  script: |
+                      const body = {
+                          name: context.payload.issue.title,
+                          description: context.payload.issue.body,
+                          status: "to do"
+                      }
+                      return JSON.stringify(body)
+
             - name: Calling Clickup API via cURL call
               run: |
                   curl -i -X POST \
                   'https://api.clickup.com/api/v2//list/210431256/task' \
                   -H 'Authorization: ${{secrets.CLICKUP_TOKEN}}' \
                   -H 'Content-Type: application/json' \
-                  -d '{
-                    "name": "${{github.event.issue.title}}",
-                    "description": ${{ toJSON(github.event.issue.body) }},
-                    "status": "to do"
-                  }'
+                  -d ${{ toJSON(steps.prepare.outputs.result) }}
