@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { View, Dimensions, Pressable } from "react-native"
+import { View, Dimensions, Pressable, Alert } from "react-native"
 import { PoliSearchBar } from "components/Home"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
@@ -10,6 +10,7 @@ import { Canvas, useSVG, ImageSVG } from "@shopify/react-native-skia"
 import campusIcon from "assets/freeClassrooms/campus.svg"
 import position1Icon from "assets/freeClassrooms/position1.svg"
 import position2Icon from "assets/freeClassrooms/position2.svg"
+import * as Location from "expo-location"
 
 const { width } = Dimensions.get("window")
 
@@ -40,6 +41,27 @@ export const FreeClassrooms: RootStackScreen<"FreeClassrooms"> = () => {
     const campusSVG = useSVG(campusIcon)
     const position1SVG = useSVG(position1Icon)
     const position2SVG = useSVG(position2Icon)
+
+    const [geolocation, setGeoloaction] = useState<boolean>(false)
+
+    const handlePositionPressed = async () => {
+        if (geolocation) {
+            navigate("PositionChoice")
+        } else {
+            const { status } =
+                await Location.requestForegroundPermissionsAsync()
+            if (status !== "granted") {
+                Alert.alert(
+                    "Location Service not enabled",
+                    "Please enable your location services to unlock this feature",
+                    [{ text: "OK" }],
+                    { cancelable: false }
+                )
+            } else {
+                setGeoloaction(true)
+            }
+        }
+    }
 
     return (
         <View
@@ -108,7 +130,7 @@ export const FreeClassrooms: RootStackScreen<"FreeClassrooms"> = () => {
                                     onPress={
                                         element.type === SearchClassType.CAMPUS
                                             ? () => navigate("CampusChoice")
-                                            : () => navigate("PositionChoice")
+                                            : () => handlePositionPressed()
                                     }
                                 >
                                     <Canvas

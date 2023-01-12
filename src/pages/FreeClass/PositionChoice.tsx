@@ -24,37 +24,20 @@ export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
 
     const [status, setStatus] = useState<ButtonType>(ButtonType.MAP)
 
-    const [location, setLocation] = useState<LocationGeocodedAddress>()
-    const [errorMsg, setErrorMsg] = useState("")
+    const [currentLocation, setCurrentLocation] =
+        useState<LocationGeocodedAddress>()
 
     useEffect(() => {
         void (async () => {
-            const { status } =
-                await Location.requestForegroundPermissionsAsync()
-            if (status !== "granted") {
-                console.log("Permission to access location denied!")
-                setErrorMsg("Permission to access location denied!")
-                return
-            }
-
             const { coords } = await Location.getCurrentPositionAsync({})
             const { latitude, longitude } = coords
             const response = await Location.reverseGeocodeAsync({
                 latitude,
                 longitude,
             })
-            setLocation(response[0])
+            setCurrentLocation(response[0])
         })()
     }, [])
-
-    if (errorMsg) {
-        Alert.alert(
-            "Location Service not enabled",
-            "Please enable your location services to continue",
-            [{ text: "OK" }],
-            { cancelable: false }
-        )
-    }
 
     return (
         <View
@@ -131,9 +114,9 @@ export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
                                     fontSize: 20,
                                 }}
                             >
-                                {location?.name}
+                                {currentLocation?.name}
                                 {","}
-                                {location?.city}
+                                {currentLocation?.city}
                             </BodyText>
                         </View>
                     </View>
