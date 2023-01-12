@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC } from "react"
 import MapView, { Marker } from "react-native-maps"
 import rooms from "pages/FreeClass/Room.json"
 

@@ -59,6 +59,7 @@ export const FreeClassrooms: RootStackScreen<"FreeClassrooms"> = () => {
                 )
             } else {
                 setGeoloaction(true)
+                navigate("PositionChoice")
             }
         }
     }
