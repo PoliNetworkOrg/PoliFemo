@@ -1,4 +1,4 @@
-import { Text } from "components/Text"
+import { BodyText } from "components/Text"
 import React, { FC } from "react"
 import { Pressable, StyleProp, ViewStyle } from "react-native"
 import { usePalette } from "utils/colors"
@@ -38,7 +38,7 @@ export const OutlinedButton: FC<OutlinedButtonProps> = props => {
             ]}
             onPress={props.onPress}
         >
-            <Text
+            <BodyText
                 style={{
                     paddingHorizontal: 8,
                     color: isLight
@@ -51,7 +51,7 @@ export const OutlinedButton: FC<OutlinedButtonProps> = props => {
                 }}
             >
                 {props.text}
-            </Text>
+            </BodyText>
         </Pressable>
     )
 }

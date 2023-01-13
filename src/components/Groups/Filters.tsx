@@ -1,13 +1,19 @@
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useState } from "react"
 import { View } from "react-native"
 import { OutlinedButton } from "./OutlinedButton"
 import { StyleSheet } from "react-native"
 import { ModalSelection, SelectTile } from "components/Settings"
-import { api } from "api"
 
-/* export interface FiltersProps {
-    prova?: string
-} */
+export interface FiltersProps {
+    year: string
+    setYear: (value: string) => void
+    course: string
+    setCourse: (value: string) => void
+    type: string
+    setType: (value: string) => void
+    platform: string
+    setPlatform: (value: string) => void
+}
 
 //This is a mess for now
 const yearsList = ["2021/2022", "2020/2021", "2019/2020", "2018/2019"]
@@ -28,7 +34,7 @@ const getNameFromMode = (mode: string) => {
 }
 export type ValidModalType = "year" | "course" | "type" | "platform"
 const all = "Tutti"
-export const Filters: FC = () => {
+export const Filters: FC<FiltersProps> = props => {
     //show or hide modal
     const [isModalShowing, setIsModalShowing] = useState(false)
     //type of modal: year - type - course - platform
@@ -38,47 +44,26 @@ export const Filters: FC = () => {
     //currently selected item inside modal
     const [selectedItem, setSelectedItem] = useState(all)
 
-    const [year, setYear] = useState<string>(all)
-
-    const [course, setCourse] = useState<string>(all)
-
-    const [type, setType] = useState<string>(all)
-
-    const [platform, setPlatform] = useState<string>(all)
-
     //update state when user taps "OK" in modal
     const updateSelectedFilter = () => {
         if (modalMode === "year") {
-            setYear(selectedItem)
+            props.setYear(selectedItem)
         } else if (modalMode === "course") {
-            setCourse(selectedItem)
+            props.setCourse(selectedItem)
         } else if (modalMode === "platform") {
-            setPlatform(selectedItem)
+            props.setPlatform(selectedItem)
         } else {
-            setType(selectedItem)
+            props.setType(selectedItem)
         }
     }
     //reset state on "reset"
     const reset = () => {
-        setYear(all)
-        setCourse(all)
-        setType(all)
-        setPlatform(all)
+        props.setYear(all)
+        props.setCourse(all)
+        props.setType(all)
+        props.setPlatform(all)
     }
 
-    const searchGroups = async () => {
-        try {
-            //broken
-            const response = await api.groups.get({ name: "Informatica" })
-            console.log(response)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    useEffect(() => {
-        void searchGroups()
-    }, [])
     return (
         <View>
             <View
@@ -94,11 +79,11 @@ export const Filters: FC = () => {
                         styles.buttonRightMargin,
                         styles.buttonBottomMargin,
                     ]}
-                    isSelected={year !== all ? true : false}
+                    isSelected={props.year !== all ? true : false}
                     onPress={() => {
                         setModalMode("year")
                         setModalItems(yearsList)
-                        setSelectedItem(year)
+                        setSelectedItem(props.year)
                         setIsModalShowing(true)
                     }}
                 />
@@ -108,33 +93,33 @@ export const Filters: FC = () => {
                         styles.buttonRightMargin,
                         styles.buttonBottomMargin,
                     ]}
-                    isSelected={course !== all ? true : false}
+                    isSelected={props.course !== all ? true : false}
                     onPress={() => {
                         setModalMode("course")
                         setModalItems(coursesList)
-                        setSelectedItem(course)
+                        setSelectedItem(props.course)
                         setIsModalShowing(true)
                     }}
                 />
                 <OutlinedButton
                     text="Tipo"
                     buttonStyle={styles.buttonBottomMargin}
-                    isSelected={type !== all ? true : false}
+                    isSelected={props.type !== all ? true : false}
                     onPress={() => {
                         setModalMode("type")
                         setModalItems(typesList)
-                        setSelectedItem(type)
+                        setSelectedItem(props.type)
                         setIsModalShowing(true)
                     }}
                 />
                 <OutlinedButton
                     text="Piattaforma"
                     buttonStyle={styles.buttonRightMargin}
-                    isSelected={platform !== all ? true : false}
+                    isSelected={props.platform !== all ? true : false}
                     onPress={() => {
                         setModalMode("platform")
                         setModalItems(platformsList)
-                        setSelectedItem(platform)
+                        setSelectedItem(props.platform)
                         setIsModalShowing(true)
                     }}
                 />
