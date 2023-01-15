@@ -20,6 +20,8 @@ export const Groups: MainStackScreen<"Groups"> = () => {
 
     const [isSearching, setIsSearching] = useState(false)
 
+    // ? I'd like to typecheck year, course, etc... but I need dynamic type checking
+    // ? and it's very ugly, and need to use type guards or some library, so maybe it is not worth it?
     const [year, setYear] = useState<string>(all)
 
     const [course, setCourse] = useState<string>(all)
@@ -41,11 +43,11 @@ export const Groups: MainStackScreen<"Groups"> = () => {
     const isMounted = useMounted()
 
     //api call every time user enter a new character
-    const searchGroups = async () => {
+    const searchGroups = () => {
         if (isMounted) {
             try {
                 //mocked
-                const response = await api.groups.getMocked()
+                const response = api.groups.getMocked()
                 console.log(response)
                 setGroups(response)
             } catch (error) {

@@ -3,6 +3,9 @@ import { Animated, Easing, ViewStyle } from "react-native"
 import { usePalette } from "utils/colors"
 
 export interface AnimatedLineProps {
+    /**
+     * animate when this value changes
+     */
     mounted: boolean
     color?: string
     height?: number

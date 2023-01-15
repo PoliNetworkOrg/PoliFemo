@@ -19,8 +19,7 @@ export const GroupTile: FC<GroupTileProps> = props => {
         const supported = await Linking.canOpenURL(props.link)
 
         if (supported) {
-            // Opening the link with some app, if the URL scheme is "http" the web link should be opened
-            // by some browser in the mobile
+            // Opening the link with some app
             await Linking.openURL(props.link)
         }
     }

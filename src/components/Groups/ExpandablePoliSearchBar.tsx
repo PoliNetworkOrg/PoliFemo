@@ -1,6 +1,6 @@
 import { MockedGroup } from "api/groups"
 import { PoliSearchBar } from "components/Home"
-import React, { FC, useState } from "react"
+import React, { FC } from "react"
 import { ScrollView, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { AnimatedLine } from "./AnimatedLine"

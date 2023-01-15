@@ -3,6 +3,7 @@ import { View } from "react-native"
 import { OutlinedButton } from "./OutlinedButton"
 import { StyleSheet } from "react-native"
 import { ModalSelection, SelectTile } from "components/Settings"
+import { getNameFromMode, ValidModalType } from "utils/groups"
 
 export interface FiltersProps {
     year: string
@@ -15,34 +16,42 @@ export interface FiltersProps {
     setPlatform: (value: string) => void
 }
 
-//This is a mess for now
-const yearsList = ["2021/2022", "2020/2021", "2019/2020", "2018/2019"]
-const coursesList = ["Triennale", "Magistrale", "Ciclo unico"]
-const typesList = ["A", "B", "C", "bho"]
-const platformsList = ["Telgram", "Watsapp", "Bho"]
-
-const getNameFromMode = (mode: string) => {
-    if (mode === "year") {
-        return "Anno"
-    } else if (mode === "course") {
-        return "Corso"
-    } else if (mode === "platform") {
-        return "Piattaforma"
-    } else {
-        return "Tipo"
-    }
+interface ModalItemList {
+    itemsToShow: string[]
+    itemsToSave: string[]
 }
-export type ValidModalType = "year" | "course" | "type" | "platform"
+
+const yearsList: ModalItemList = {
+    itemsToShow: ["2021/2022", "2020/2021", "2019/2020", "2018/2019"],
+    itemsToSave: ["2021", "2020", "2019", "2018"],
+}
+const coursesList: ModalItemList = {
+    itemsToShow: ["Triennale", "Magistrale", "Ciclo unico"],
+    itemsToSave: ["LT", "LM", "LU"],
+}
+
+const typesList: ModalItemList = {
+    itemsToShow: ["Scuola", "Corso", "Extra"],
+    itemsToSave: ["S", "C", "E"],
+}
+
+const platformsList: ModalItemList = {
+    itemsToShow: ["Whatsapp", "Facebook", "Telegram"],
+    itemsToSave: ["WA", "FB", "TG"],
+}
+
+//to avoid writing mistakes
 const all = "Tutti"
+
 export const Filters: FC<FiltersProps> = props => {
     //show or hide modal
     const [isModalShowing, setIsModalShowing] = useState(false)
     //type of modal: year - type - course - platform
     const [modalMode, setModalMode] = useState<ValidModalType>("year")
     //items to show inside modal
-    const [modalItems, setModalItems] = useState<string[]>(yearsList)
+    const [modalItems, setModalItems] = useState<ModalItemList>(yearsList)
     //currently selected item inside modal
-    const [selectedItem, setSelectedItem] = useState(all)
+    const [selectedItem, setSelectedItem] = useState<string>(all)
 
     //update state when user taps "OK" in modal
     const updateSelectedFilter = () => {
@@ -149,14 +158,16 @@ export const Filters: FC<FiltersProps> = props => {
                         setSelectedItem(all)
                     }}
                 />
-                {modalItems?.map((itemName, index) => {
+                {modalItems?.itemsToShow.map((itemName, index) => {
                     return (
                         <SelectTile
                             key={index}
                             value={itemName}
-                            selected={selectedItem === modalItems[index]}
+                            selected={
+                                selectedItem === modalItems.itemsToSave[index]
+                            }
                             onPress={() => {
-                                setSelectedItem(modalItems[index])
+                                setSelectedItem(modalItems.itemsToSave[index])
                             }}
                         />
                     )

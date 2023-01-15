@@ -1,4 +1,4 @@
-import { HttpClient, RequestOptions } from "./HttpClient"
+/* import { HttpClient, RequestOptions } from "./HttpClient" */
 
 /* eslint-disable @typescript-eslint/naming-convention */
 
@@ -25,7 +25,7 @@ export interface MockedGroup {
     idLink?: string
 }
 
-const client = HttpClient.getInstance()
+/* const client = HttpClient.getInstance() */
 
 /**
  * Collection of endpoints related to Groups.
@@ -35,6 +35,7 @@ export const groups = {
      * Retrieves groups from PoliNetwork server.
      * Check {@link GroupOptions} for additional parameters.
      */
+    /* 
     // ! temporarily broken
     async get(groupsOptions?: GroupOptions, options?: RequestOptions) {
         const response = await client.poliNetworkInstance.get<any>(
@@ -53,7 +54,7 @@ export const groups = {
             }
         )
         return response.data.results
-    },
+    }, */
     getMocked() {
         return mockedGroups.groups
     },
