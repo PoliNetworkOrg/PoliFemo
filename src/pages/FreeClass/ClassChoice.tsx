@@ -1,5 +1,5 @@
-import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
-import React, { useState } from "react"
+import { RootStackScreen } from "navigation/NavigationTypes"
+import React from "react"
 import { View } from "react-native"
 import { usePalette } from "utils/colors"
 import { Title, BodyText } from "components/Text"
@@ -7,8 +7,7 @@ import { NavBar } from "components/NavBar"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 
 export const ClassChoice: RootStackScreen<"ClassChoice"> = props => {
-    const { primary, background, homeBackground } = usePalette()
-    const { navigate } = useNavigation()
+    const { background, homeBackground } = usePalette()
 
     const { building } = props.route.params
 
@@ -69,7 +68,7 @@ export const ClassChoice: RootStackScreen<"ClassChoice"> = props => {
                     >
                         <BodyText>Data Picker</BodyText>
                     </View>
-                    <View style={{ paddingBottom: 63 }}>
+                    <View style={{ paddingBottom: 70 }}>
                         <FreeClassList />
                     </View>
                 </View>

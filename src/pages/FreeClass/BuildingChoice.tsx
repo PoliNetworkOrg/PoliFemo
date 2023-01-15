@@ -17,6 +17,13 @@ export const BuildingChoice: RootStackScreen<"BuildingChoice"> = props => {
         "B3",
         "B4",
         "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "B10",
+        "B11",
+        "B12",
     ])
 
     const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -94,60 +101,63 @@ export const BuildingChoice: RootStackScreen<"BuildingChoice"> = props => {
                     >
                         <BodyText>Data Picker</BodyText>
                     </View>
-                    <FlatList
-                        refreshing={refreshing}
-                        onRefresh={() => console.log("refreshing!")}
-                        showsVerticalScrollIndicator={false}
-                        style={{
-                            marginTop: 26,
-                            height: 700,
-                        }}
-                        numColumns={2}
-                        columnWrapperStyle={{
-                            justifyContent: "center",
-                        }}
-                        data={buildings}
-                        keyExtractor={(_, index) => index.toString()}
-                        renderItem={({ item }) => (
-                            <Pressable
-                                style={{
-                                    backgroundColor: palette.primary,
-                                    borderRadius: 12,
-                                    width: "42%",
-                                    height: 93,
-                                    marginHorizontal: 9,
-                                    marginVertical: 17,
-                                    alignItems: "center",
-                                }}
-                                onPress={() =>
-                                    navigate("ClassChoice", { building: item })
-                                }
-                            >
-                                <View
+                    <View style={{ marginBottom: 35 }}>
+                        <FlatList
+                            refreshing={refreshing}
+                            onRefresh={() => console.log("refreshing!")}
+                            showsVerticalScrollIndicator={true}
+                            style={{
+                                marginTop: 26,
+                            }}
+                            numColumns={2}
+                            columnWrapperStyle={{
+                                justifyContent: "center",
+                            }}
+                            data={buildings}
+                            keyExtractor={(_, index) => index.toString()}
+                            renderItem={({ item }) => (
+                                <Pressable
                                     style={{
-                                        position: "absolute",
-                                        top: 0,
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 0,
-                                        justifyContent: "center",
+                                        backgroundColor: palette.primary,
+                                        borderRadius: 12,
+                                        width: "42%",
+                                        height: 93,
+                                        marginHorizontal: 9,
+                                        marginVertical: 17,
                                         alignItems: "center",
                                     }}
+                                    onPress={() =>
+                                        navigate("ClassChoice", {
+                                            building: item,
+                                        })
+                                    }
                                 >
-                                    <BodyText
+                                    <View
                                         style={{
-                                            fontWeight: "300",
-                                            color: "white",
-                                            fontSize: 36,
-                                            textAlign: "center",
+                                            position: "absolute",
+                                            top: 0,
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0,
+                                            justifyContent: "center",
+                                            alignItems: "center",
                                         }}
                                     >
-                                        {item}
-                                    </BodyText>
-                                </View>
-                            </Pressable>
-                        )}
-                    />
+                                        <BodyText
+                                            style={{
+                                                fontWeight: "300",
+                                                color: "white",
+                                                fontSize: 36,
+                                                textAlign: "center",
+                                            }}
+                                        >
+                                            {item}
+                                        </BodyText>
+                                    </View>
+                                </Pressable>
+                            )}
+                        />
+                    </View>
                 </View>
             </View>
             <NavBar />

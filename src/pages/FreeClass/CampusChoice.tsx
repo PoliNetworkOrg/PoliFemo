@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { View, Pressable, FlatList } from "react-native"
+import { View, Pressable, FlatList, Platform } from "react-native"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
 import { Title, BodyText } from "components/Text"
@@ -79,12 +79,10 @@ export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
                         <BodyText>Data Picker</BodyText>
                     </View>
                     <FlatList
-                        refreshing={refreshing}
-                        onRefresh={() => console.log("refreshing!")}
-                        showsVerticalScrollIndicator={false}
+                        showsVerticalScrollIndicator={true}
                         style={{
                             marginTop: 26,
-                            height: 700,
+                            height: Platform.OS === "ios" ? 450 : 400,
                         }}
                         numColumns={2}
                         columnWrapperStyle={{

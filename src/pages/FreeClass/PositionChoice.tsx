@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
-import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { Pressable, View, Alert, Platform } from "react-native"
+import { RootStackScreen } from "navigation/NavigationTypes"
+import { Pressable, View, Platform, ActivityIndicator } from "react-native"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
 import { BodyText, Title } from "components/Text"
@@ -115,9 +115,22 @@ export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
                                     fontSize: 20,
                                 }}
                             >
-                                {currentLocation?.name}
-                                {","}
-                                {currentLocation?.city}
+                                {currentLocation === undefined ? (
+                                    <ActivityIndicator
+                                        style={{ marginTop: 5, marginLeft: 5 }}
+                                        size="small"
+                                    />
+                                ) : Platform.OS === "ios" ? (
+                                    currentLocation?.name +
+                                    ", " +
+                                    currentLocation?.city
+                                ) : (
+                                    currentLocation?.street +
+                                    " " +
+                                    currentLocation?.streetNumber +
+                                    ", " +
+                                    currentLocation?.city
+                                )}
                             </BodyText>
                         </View>
                     </View>

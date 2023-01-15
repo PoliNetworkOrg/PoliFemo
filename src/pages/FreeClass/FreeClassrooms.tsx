@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { View, Dimensions, Pressable, Alert } from "react-native"
+import { View, Dimensions, Pressable, Alert, Platform } from "react-native"
 import { PoliSearchBar } from "components/Home"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
@@ -108,7 +108,11 @@ export const FreeClassrooms: RootStackScreen<"FreeClassrooms"> = () => {
                         onChange={searchKey => setSearch(searchKey)}
                     />
                     <ScrollView
-                        style={{ height: 700 }}
+                        style={
+                            Platform.OS === "ios"
+                                ? { marginBottom: 50, paddingBottom: 50 }
+                                : { marginBottom: 93 }
+                        }
                         showsVerticalScrollIndicator={false}
                         bounces={true}
                         contentContainerStyle={{
@@ -126,6 +130,13 @@ export const FreeClassrooms: RootStackScreen<"FreeClassrooms"> = () => {
                                         width: width - 54,
                                         height: 190,
                                         borderRadius: 12,
+                                        shadowColor: "#000",
+                                        shadowOffset: {
+                                            width: 0,
+                                            height: 7,
+                                        },
+                                        shadowOpacity: 0.25,
+                                        shadowRadius: 4,
                                         alignItems: "center",
                                     }}
                                     onPress={

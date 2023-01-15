@@ -12,7 +12,7 @@ import { ScrollView } from "react-native-gesture-handler"
 const { width } = Dimensions.get("window")
 
 export const FreeClassList: FC = () => {
-    const { primary, palette } = usePalette()
+    const { palette } = usePalette()
     const timerSVG = useSVG(timerIcon)
     const overcrowdingSVG = useSVG(overcrowdingIcon)
     const fireSVG = useSVG(fireIcon)
