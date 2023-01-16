@@ -5,7 +5,7 @@ import { PoliSearchBar } from "components/Home"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
 import { Title, BodyText } from "components/Text"
-import { ScrollView } from "react-native-gesture-handler"
+import { FlatList, ScrollView } from "react-native-gesture-handler"
 import { Canvas, useSVG, ImageSVG } from "@shopify/react-native-skia"
 import campusIcon from "assets/freeClassrooms/campus.svg"
 import position1Icon from "assets/freeClassrooms/position1.svg"
@@ -107,115 +107,112 @@ export const FreeClassrooms: RootStackScreen<"FreeClassrooms"> = () => {
                     <PoliSearchBar
                         onChange={searchKey => setSearch(searchKey)}
                     />
-                    <ScrollView
+                    <FlatList
+                        showsVerticalScrollIndicator={true}
                         style={
                             Platform.OS === "ios"
-                                ? { marginBottom: 50, paddingBottom: 50 }
+                                ? {
+                                      height: "100%",
+                                  }
                                 : { marginBottom: 93 }
                         }
-                        showsVerticalScrollIndicator={false}
-                        bounces={true}
                         contentContainerStyle={{
                             width,
                             alignItems: "center",
                         }}
-                    >
-                        {freeClassButtons.map(element => {
-                            return (
-                                <Pressable
-                                    key={"freeClass_" + element.id}
+                        data={freeClassButtons}
+                        keyExtractor={(_, index) => index.toString()}
+                        renderItem={({ item }) => (
+                            <Pressable
+                                key={"freeClass_" + item.id}
+                                style={{
+                                    marginTop: 18,
+                                    backgroundColor: palette.primary,
+                                    width: width - 54,
+                                    height: 190,
+                                    borderRadius: 12,
+                                    shadowColor: "#000",
+                                    shadowOffset: {
+                                        width: 0,
+                                        height: 7,
+                                    },
+                                    shadowOpacity: 0.25,
+                                    shadowRadius: 4,
+                                    alignItems: "center",
+                                }}
+                                onPress={
+                                    item.type === SearchClassType.CAMPUS
+                                        ? () => navigate("CampusChoice")
+                                        : () => handlePositionPressed()
+                                }
+                            >
+                                <Canvas
                                     style={{
-                                        marginTop: 18,
-                                        backgroundColor: palette.primary,
-                                        width: width - 54,
-                                        height: 190,
-                                        borderRadius: 12,
-                                        shadowColor: "#000",
-                                        shadowOffset: {
-                                            width: 0,
-                                            height: 7,
-                                        },
-                                        shadowOpacity: 0.25,
-                                        shadowRadius: 4,
-                                        alignItems: "center",
+                                        flex: 1,
+                                        width:
+                                            item.type === SearchClassType.CAMPUS
+                                                ? 90
+                                                : 80,
+                                        alignSelf: "center",
+                                        marginTop:
+                                            item.type === SearchClassType.CAMPUS
+                                                ? 33
+                                                : 28,
                                     }}
-                                    onPress={
-                                        element.type === SearchClassType.CAMPUS
-                                            ? () => navigate("CampusChoice")
-                                            : () => handlePositionPressed()
-                                    }
                                 >
-                                    <Canvas
-                                        style={{
-                                            flex: 1,
-                                            width:
-                                                element.type ===
-                                                SearchClassType.CAMPUS
-                                                    ? 90
-                                                    : 80,
-                                            alignSelf: "center",
-                                            marginTop:
-                                                element.type ===
-                                                SearchClassType.CAMPUS
-                                                    ? 33
-                                                    : 28,
-                                        }}
-                                    >
-                                        {element.type ===
-                                            SearchClassType.GPS_POSITION &&
-                                            position1SVG && (
-                                                <ImageSVG
-                                                    svg={position1SVG}
-                                                    x={11}
-                                                    y={0}
-                                                    width={54}
-                                                    height={76}
-                                                />
-                                            )}
-                                        {element.type ===
-                                            SearchClassType.GPS_POSITION &&
-                                            position2SVG && (
-                                                <ImageSVG
-                                                    svg={position2SVG}
-                                                    x={0}
-                                                    y={65}
-                                                    width={79}
-                                                    height={27}
-                                                />
-                                            )}
-                                        {element.type ===
-                                            SearchClassType.CAMPUS &&
-                                            campusSVG && (
-                                                <ImageSVG
-                                                    svg={campusSVG}
-                                                    x={0}
-                                                    y={0}
-                                                    width={90}
-                                                    height={85}
-                                                />
-                                            )}
-                                    </Canvas>
+                                    {item.type ===
+                                        SearchClassType.GPS_POSITION &&
+                                        position1SVG && (
+                                            <ImageSVG
+                                                svg={position1SVG}
+                                                x={11}
+                                                y={0}
+                                                width={54}
+                                                height={76}
+                                            />
+                                        )}
+                                    {item.type ===
+                                        SearchClassType.GPS_POSITION &&
+                                        position2SVG && (
+                                            <ImageSVG
+                                                svg={position2SVG}
+                                                x={0}
+                                                y={65}
+                                                width={79}
+                                                height={27}
+                                            />
+                                        )}
+                                    {item.type === SearchClassType.CAMPUS &&
+                                        campusSVG && (
+                                            <ImageSVG
+                                                svg={campusSVG}
+                                                x={0}
+                                                y={0}
+                                                width={90}
+                                                height={85}
+                                            />
+                                        )}
+                                </Canvas>
+                                <BodyText
+                                    style={{
+                                        fontWeight: "300",
+                                        color: "white",
+                                        marginBottom: 23,
+                                    }}
+                                >
+                                    {item.text[0]}{" "}
                                     <BodyText
                                         style={{
-                                            fontWeight: "300",
+                                            fontWeight: "900",
                                             color: "white",
-                                            marginBottom: 23,
                                         }}
                                     >
-                                        {element.text[0]}{" "}
-                                        <BodyText
-                                            style={{
-                                                fontWeight: "900",
-                                                color: "white",
-                                            }}
-                                        >
-                                            {element.text[1]}
-                                        </BodyText>
+                                        {item.text[1]}
                                     </BodyText>
-                                </Pressable>
-                            )
-                        })}
-                    </ScrollView>
+                                </BodyText>
+                            </Pressable>
+                        )}
+                    />
                 </View>
             </View>
             <NavBar />

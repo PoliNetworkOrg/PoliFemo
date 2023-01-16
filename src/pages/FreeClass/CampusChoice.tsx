@@ -78,73 +78,76 @@ export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
                     >
                         <BodyText>Data Picker</BodyText>
                     </View>
-                    <FlatList
-                        showsVerticalScrollIndicator={true}
-                        style={{
-                            marginTop: 26,
-                            height: Platform.OS === "ios" ? 450 : 400,
-                        }}
-                        numColumns={2}
-                        columnWrapperStyle={{
-                            justifyContent: "center",
-                        }}
-                        data={data}
-                        keyExtractor={(_, index) => index.toString()}
-                        renderItem={({ item }) => (
-                            <Pressable
-                                style={{
-                                    backgroundColor: palette.primary,
-                                    borderRadius: 12,
-                                    width: "42%",
-                                    height: 93,
-                                    marginHorizontal: 9,
-                                    marginVertical: 27,
-                                    alignItems: "center",
-                                }}
-                                onPress={() =>
-                                    navigate("BuildingChoice", { campus: item })
-                                }
-                            >
-                                <View
+                    <View style={{ paddingBottom: 35 }}>
+                        <FlatList
+                            showsVerticalScrollIndicator={true}
+                            style={{
+                                marginTop: 26,
+                            }}
+                            numColumns={2}
+                            columnWrapperStyle={{
+                                justifyContent: "center",
+                            }}
+                            data={data}
+                            keyExtractor={(_, index) => index.toString()}
+                            renderItem={({ item }) => (
+                                <Pressable
                                     style={{
-                                        position: "absolute",
-                                        top: 0,
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 0,
-                                        justifyContent: "center",
+                                        backgroundColor: palette.primary,
+                                        borderRadius: 12,
+                                        width: "42%",
+                                        height: 93,
+                                        marginHorizontal: 9,
+                                        marginVertical: 27,
                                         alignItems: "center",
                                     }}
+                                    onPress={() =>
+                                        navigate("BuildingChoice", {
+                                            campus: item,
+                                        })
+                                    }
                                 >
-                                    <BodyText
+                                    <View
                                         style={{
-                                            fontWeight:
-                                                item.name.length > 1
-                                                    ? "300"
-                                                    : "900",
-                                            color: "white",
-                                            fontSize: 20,
-                                            textAlign: "center",
+                                            position: "absolute",
+                                            top: 0,
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0,
+                                            justifyContent: "center",
+                                            alignItems: "center",
                                         }}
                                     >
-                                        {item.name[0]}
-                                    </BodyText>
-                                    {item.name.length > 1 ? (
                                         <BodyText
                                             style={{
-                                                fontWeight: "900",
+                                                fontWeight:
+                                                    item.name.length > 1
+                                                        ? "300"
+                                                        : "900",
                                                 color: "white",
                                                 fontSize: 20,
                                                 textAlign: "center",
                                             }}
                                         >
-                                            {item.name[1]}
+                                            {item.name[0]}
                                         </BodyText>
-                                    ) : undefined}
-                                </View>
-                            </Pressable>
-                        )}
-                    />
+                                        {item.name.length > 1 ? (
+                                            <BodyText
+                                                style={{
+                                                    fontWeight: "900",
+                                                    color: "white",
+                                                    fontSize: 20,
+                                                    textAlign: "center",
+                                                }}
+                                            >
+                                                {item.name[1]}
+                                            </BodyText>
+                                        ) : undefined}
+                                    </View>
+                                </Pressable>
+                            )}
+                        />
+                    </View>
                 </View>
             </View>
             <NavBar />
