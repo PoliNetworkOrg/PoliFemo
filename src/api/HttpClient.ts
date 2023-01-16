@@ -97,7 +97,7 @@ export class HttpClient extends EventEmitter {
     public static getInstance() {
         if (!this.classInstance) {
             this.classInstance = new HttpClient(
-                "https://api.polinetwork.org:446/",
+                "https://api.polinetwork.org/staging/v1/",
                 "https://polimiapp.polimi.it/polimi_app/rest/jaf"
             )
         }
@@ -357,4 +357,3 @@ export class HttpClient extends EventEmitter {
         await AsyncStorage.removeItem("api:tokens")
     }
 }
-
