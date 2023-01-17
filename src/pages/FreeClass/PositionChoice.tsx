@@ -11,7 +11,6 @@ import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { Map } from "components/FreeClass/Map"
 import * as Location from "expo-location"
 import { LocationGeocodedAddress } from "expo-location"
-import PlayServices from "react-native-play-services"
 
 enum ButtonType {
     MAP,

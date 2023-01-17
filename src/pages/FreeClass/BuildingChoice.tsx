@@ -22,8 +22,9 @@ export const BuildingChoice: RootStackScreen<"BuildingChoice"> = props => {
         "B8",
         "B9",
         "B10",
-        "B11",
         "B12",
+        "B13",
+        "B14",
     ])
 
     const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -111,7 +112,8 @@ export const BuildingChoice: RootStackScreen<"BuildingChoice"> = props => {
                             }}
                             numColumns={2}
                             columnWrapperStyle={{
-                                justifyContent: "center",
+                                justifyContent: "space-between",
+                                marginHorizontal: 22,
                             }}
                             data={buildings}
                             keyExtractor={(_, index) => index.toString()}
@@ -120,7 +122,7 @@ export const BuildingChoice: RootStackScreen<"BuildingChoice"> = props => {
                                     style={{
                                         backgroundColor: palette.primary,
                                         borderRadius: 12,
-                                        width: "42%",
+                                        width: "45%",
                                         height: 93,
                                         marginHorizontal: 9,
                                         marginVertical: 17,

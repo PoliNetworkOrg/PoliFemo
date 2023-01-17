@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { View, Pressable, FlatList, Platform } from "react-native"
+import { View, Pressable, FlatList } from "react-native"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
 import { Title, BodyText } from "components/Text"
@@ -13,8 +13,6 @@ export interface CampusItem {
 export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
     const { navigate } = useNavigation()
     const { homeBackground, background, palette } = usePalette()
-
-    const [refreshing, setRefreshing] = useState<boolean>(false)
 
     const [data, setData] = useState<CampusItem[]>([
         { id: 0, name: ["Bovisa", "Durando"] },
@@ -78,15 +76,18 @@ export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
                     >
                         <BodyText>Data Picker</BodyText>
                     </View>
-                    <View style={{ paddingBottom: 35 }}>
+                    <View
+                        style={{
+                            paddingBottom: 35,
+                            marginTop: 26,
+                        }}
+                    >
                         <FlatList
                             showsVerticalScrollIndicator={true}
-                            style={{
-                                marginTop: 26,
-                            }}
                             numColumns={2}
                             columnWrapperStyle={{
-                                justifyContent: "center",
+                                justifyContent: "space-between",
+                                marginHorizontal: 22,
                             }}
                             data={data}
                             keyExtractor={(_, index) => index.toString()}
@@ -95,7 +96,7 @@ export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
                                     style={{
                                         backgroundColor: palette.primary,
                                         borderRadius: 12,
-                                        width: "42%",
+                                        width: "45%",
                                         height: 93,
                                         marginHorizontal: 9,
                                         marginVertical: 27,
