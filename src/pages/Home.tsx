@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { View } from "react-native"
 
-import { RootStackScreen } from "navigation/NavigationTypes"
+import { MainStackScreen } from "navigation/NavigationTypes"
 import {
     MainMenu,
     MainTitle,
@@ -21,7 +21,7 @@ const DEFAULT_FETCH_INTERVAL = 1 * 24 * 60 * 60 * 1000 //1 day
  * Home page containing the POLIFEMO logo, search bar, main horizontal scroll menu and the entry
  * point for the news section (which is a bottom sheet)
  */
-export const Home: RootStackScreen<"Home"> = () => {
+export const Home: MainStackScreen<"Home"> = () => {
     const { homeBackground, background } = usePalette()
 
     const [search, setSearch] = useState("")

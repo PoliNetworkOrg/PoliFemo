@@ -3,10 +3,8 @@
  * Returns the ISO date string of "n" days ago
  */
 export function getIsoStringFromDaysPassed(n: number): string {
-    //todays'date
-    const today = new Date()
     //today's date in milliseconds from the beginning of time
-    const time = today.getTime()
+    const time = Date.now()
 
     //milliseconds in n days
     const timeToSubtract = n * 24 * 60 * 60 * 1000
@@ -30,4 +28,12 @@ export function destructureDate(date: Date) {
     const hour = date.getHours().toString().padStart(2, "0")
     const minute = date.getMinutes().toString().padStart(2, "0")
     return { year, month, day, hour, minute }
+}
+
+/**
+ * waits for "ms" milliseconds
+ * @param ms milliseconds to wait
+ */
+export function wait(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms))
 }

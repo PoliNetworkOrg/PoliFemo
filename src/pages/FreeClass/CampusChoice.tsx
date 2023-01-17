@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
+import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { View, Pressable, FlatList } from "react-native"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
@@ -11,7 +11,7 @@ export interface CampusItem {
     name: string[]
 }
 
-export const CampusChoice: RootStackScreen<"CampusChoice"> = () => {
+export const CampusChoice: MainStackScreen<"CampusChoice"> = () => {
     const { navigate } = useNavigation()
     const { homeBackground, background, palette } = usePalette()
 

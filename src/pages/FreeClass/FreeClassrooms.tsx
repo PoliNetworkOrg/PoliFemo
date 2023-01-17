@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
+import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { View, Dimensions, Pressable, Alert, Platform } from "react-native"
 import { PoliSearchBar } from "components/Home"
 import { usePalette } from "utils/colors"
@@ -33,7 +33,7 @@ const freeClassButtons: FreeClassInterface[] = [
     { id: 1, type: SearchClassType.CAMPUS, text: ["Scegli il tuo", "campus"] },
 ]
 
-export const FreeClassrooms: RootStackScreen<"FreeClassrooms"> = () => {
+export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
     const [search, setSearch] = useState("")
     const { navigate } = useNavigation()
     const { homeBackground, background, palette } = usePalette()

@@ -1,11 +1,11 @@
-import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
+import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import React, { useState } from "react"
 import { View, FlatList, Pressable } from "react-native"
 import { usePalette } from "utils/colors"
 import { Title, BodyText } from "components/Text"
 import { NavBar } from "components/NavBar"
 
-export const BuildingChoice: RootStackScreen<"BuildingChoice"> = props => {
+export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
     const { palette, background, homeBackground } = usePalette()
     const { navigate } = useNavigation()
 

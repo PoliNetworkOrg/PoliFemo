@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { RootStackScreen } from "navigation/NavigationTypes"
+import { MainStackScreen } from "navigation/NavigationTypes"
 import { Pressable, View, Platform, ActivityIndicator } from "react-native"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
@@ -17,7 +17,7 @@ enum ButtonType {
     LIST,
 }
 
-export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
+export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     const [search, setSearch] = useState("")
     const { homeBackground, background, primary, isDark, palette } =
         usePalette()

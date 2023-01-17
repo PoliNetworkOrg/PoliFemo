@@ -1,4 +1,4 @@
-import { RootStackScreen } from "navigation/NavigationTypes"
+import { MainStackScreen } from "navigation/NavigationTypes"
 import React from "react"
 import { View } from "react-native"
 import { usePalette } from "utils/colors"
@@ -6,7 +6,7 @@ import { Title, BodyText } from "components/Text"
 import { NavBar } from "components/NavBar"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 
-export const ClassChoice: RootStackScreen<"ClassChoice"> = props => {
+export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
     const { background, homeBackground } = usePalette()
 
     const { building } = props.route.params

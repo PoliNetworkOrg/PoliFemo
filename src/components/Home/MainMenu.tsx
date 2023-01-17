@@ -63,7 +63,6 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
         AsyncStorage.getItem("menu:icons")
             .then(iconJSON => {
                 if (iconJSON) {
-                    console.log("Loading menu icons from storage")
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     const showns: number[] = JSON.parse(iconJSON)
                     setIcons(
@@ -78,7 +77,6 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
     }, [])
 
     useEffect(() => {
-        console.log("Saving menu icons to storage")
         AsyncStorage.setItem(
             "menu:icons",
             JSON.stringify(icons.filter(i => i.shown).map(i => i.id))

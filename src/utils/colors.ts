@@ -1,4 +1,6 @@
+import { useContext } from "react"
 import { useColorScheme, ColorSchemeName } from "react-native"
+import { SettingsContext } from "./settings"
 
 export interface Palette {
     primary: string
@@ -160,7 +162,13 @@ export const usePalette: () => ColorTheme &
         /** the colors for the dark theme, see {@link ColorTheme} */
         darkTheme: ColorTheme
     } = () => {
-    const colorScheme = useColorScheme() ?? "light"
+    const context = useContext(SettingsContext)
+    const chosenTheme = context.settings.theme
+
+    let colorScheme = useColorScheme() ?? "light"
+    if (chosenTheme !== "predefined") {
+        colorScheme = chosenTheme
+    }
 
     const isDark = colorScheme === "dark"
     const isLight = !isDark

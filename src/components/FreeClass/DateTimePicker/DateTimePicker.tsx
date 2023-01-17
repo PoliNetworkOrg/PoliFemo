@@ -3,9 +3,10 @@ import { Pressable, View } from "react-native"
 import { BodyText } from "components/Text"
 import { usePalette } from "utils/colors"
 import { DateTimeBox } from "./DateTimeBox"
-import { destructureDate } from "utils/dates"
+import { destructureDate } from "utils/functions"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import { StyleSheet } from "react-native"
+
 export interface DateTimePickerProps {
     date: Date
     setDate: (date: Date) => void
