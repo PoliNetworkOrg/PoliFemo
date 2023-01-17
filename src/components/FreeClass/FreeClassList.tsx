@@ -1,36 +1,33 @@
 import { useSVG, Canvas, ImageSVG } from "@shopify/react-native-skia"
 import { BodyText } from "components/Text"
 import React, { FC } from "react"
-import { FlatList, View, Pressable, Dimensions } from "react-native"
+import { View, Pressable, Dimensions } from "react-native"
 import { usePalette } from "utils/colors"
 import timerIcon from "assets/freeClassrooms/timer.svg"
 import overcrowdingIcon from "assets/freeClassrooms/overcrowding.svg"
 import fireIcon from "assets/freeClassrooms/fire.svg"
 import rooms from "pages/FreeClass/Room.json"
+import { ScrollView } from "react-native-gesture-handler"
 
 const { width } = Dimensions.get("window")
 
 export const FreeClassList: FC = () => {
-    const { primary } = usePalette()
+    const { palette } = usePalette()
     const timerSVG = useSVG(timerIcon)
     const overcrowdingSVG = useSVG(overcrowdingIcon)
     const fireSVG = useSVG(fireIcon)
 
     return (
-        <FlatList
-            showsVerticalScrollIndicator={false}
-            style={{
-                marginTop: 23,
-                width,
-            }}
+        <ScrollView
+            style={{ marginTop: 23, width }}
             contentContainerStyle={{
                 alignItems: "center",
                 justifyContent: "center",
             }}
-            data={rooms}
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={({ item }) => (
+        >
+            {rooms.map(room => (
                 <Pressable
+                    key={room.room_id}
                     style={{
                         width: width - 65,
                         height: 93,
@@ -168,7 +165,7 @@ export const FreeClassList: FC = () => {
                     <View
                         style={{
                             position: "absolute",
-                            backgroundColor: primary,
+                            backgroundColor: palette.primary,
                             width: "40%",
                             height: 93,
                             borderRadius: 12,
@@ -190,11 +187,11 @@ export const FreeClassList: FC = () => {
                                 fontSize: 24,
                             }}
                         >
-                            {item.name}
+                            {room.name}
                         </BodyText>
                     </View>
                 </Pressable>
-            )}
-        />
+            ))}
+        </ScrollView>
     )
 }

@@ -1,6 +1,6 @@
-import React, { useState } from "react"
-import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { Pressable, View } from "react-native"
+import React, { useState, useEffect } from "react"
+import { RootStackScreen } from "navigation/NavigationTypes"
+import { Pressable, View, Platform, ActivityIndicator } from "react-native"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
 import { BodyText, Title } from "components/Text"
@@ -8,6 +8,9 @@ import { PoliSearchBar } from "components/Home"
 import PositionArrowIcon from "assets/freeClassrooms/positionArrow.svg"
 import { useSVG, Canvas, ImageSVG } from "@shopify/react-native-skia"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
+import { Map } from "components/FreeClass/Map"
+import * as Location from "expo-location"
+import { LocationGeocodedAddress } from "expo-location"
 
 enum ButtonType {
     MAP,
@@ -16,11 +19,26 @@ enum ButtonType {
 
 export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
     const [search, setSearch] = useState("")
-    const { navigate } = useNavigation()
-    const { homeBackground, background, primary } = usePalette()
+    const { homeBackground, background, primary, isDark, palette } =
+        usePalette()
     const positionArrowSVG = useSVG(PositionArrowIcon)
 
     const [status, setStatus] = useState<ButtonType>(ButtonType.MAP)
+
+    const [currentLocation, setCurrentLocation] =
+        useState<LocationGeocodedAddress>()
+
+    useEffect(() => {
+        void (async () => {
+            const { coords } = await Location.getCurrentPositionAsync({})
+            const { latitude, longitude } = coords
+            const response = await Location.reverseGeocodeAsync({
+                latitude,
+                longitude,
+            })
+            setCurrentLocation(response[0])
+        })()
+    }, [])
 
     return (
         <View
@@ -93,11 +111,26 @@ export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
                             <BodyText
                                 style={{
                                     fontWeight: "900",
-                                    color: primary,
+                                    color: isDark ? "white" : "#454773",
                                     fontSize: 20,
                                 }}
                             >
-                                Via xxx, Milano
+                                {currentLocation === undefined ? (
+                                    <ActivityIndicator
+                                        style={{ marginTop: 5, marginLeft: 5 }}
+                                        size="small"
+                                    />
+                                ) : Platform.OS === "ios" ? (
+                                    currentLocation?.name +
+                                    ", " +
+                                    currentLocation?.city
+                                ) : (
+                                    currentLocation?.street +
+                                    " " +
+                                    currentLocation?.streetNumber +
+                                    ", " +
+                                    currentLocation?.city
+                                )}
                             </BodyText>
                         </View>
                     </View>
@@ -121,7 +154,9 @@ export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
                                 backgroundColor:
                                     status === ButtonType.MAP
                                         ? primary
-                                        : "#8791BD",
+                                        : isDark
+                                        ? palette.primary
+                                        : palette.lighter,
                                 borderRadius: 22,
                                 alignItems: "center",
                                 justifyContent: "center",
@@ -147,7 +182,9 @@ export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
                                 backgroundColor:
                                     status === ButtonType.LIST
                                         ? primary
-                                        : "#8791BD",
+                                        : isDark
+                                        ? palette.primary
+                                        : palette.lighter,
                                 borderRadius: 22,
                                 marginLeft: 17,
                                 alignItems: "center",
@@ -168,7 +205,26 @@ export const PositionChoice: RootStackScreen<"PositionChoice"> = () => {
                             </BodyText>
                         </Pressable>
                     </View>
-                    {status === ButtonType.LIST ? <FreeClassList /> : undefined}
+
+                    {status === ButtonType.LIST ? (
+                        <View
+                            style={{
+                                marginBottom: 100,
+                                paddingBottom: 130,
+                            }}
+                        >
+                            <FreeClassList />
+                        </View>
+                    ) : (
+                        <View
+                            style={{
+                                marginBottom: 100,
+                                paddingBottom: 130,
+                            }}
+                        >
+                            <Map />
+                        </View>
+                    )}
                 </View>
             </View>
             <NavBar />
