@@ -4,9 +4,6 @@ on:
     workflow_dispatch:
     schedule:
         - cron: "42 0 * * *" # ahah funny number
-    push:
-        branches:
-            - feature/CU-867750bea
 
 jobs:
     prune:
