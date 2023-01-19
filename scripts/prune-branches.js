@@ -2,7 +2,7 @@ const { exec } = require("child_process")
 const { promisify } = require("util")
 const execAsync = promisify(exec)
 
-const main = async () => {
+;(async () => {
     const { stdout } = await execAsync("git branch -r")
     const remoteBranches = stdout.split("\n").filter((b, i) => i > 0)
     const currentBranchNames = remoteBranches
@@ -25,20 +25,22 @@ const main = async () => {
         .filter(b => !currentBranchNames.includes(b))
         .filter(b => b !== "main")
 
+    console.log("\nCurrent git branches:\n" + currentBranchNames.join("\n - "))
+    console.log("\nCurrent EAS branches:\n" + easBranchNames.join("\n - "))
+    console.log("\nBranches to be deleted:\n" + branchesToDelete.join("\n - "))
+
     // delete branches from eas
     for (const branch of branchesToDelete) {
         try {
             // delete channel first
             await execAsync(`eas channel:delete ${branch} --non-interactive`)
-            // delete branch
-            await execAsync(`eas branch:delete ${branch} --non-interactive`)
-
-            console.log(`Deleted branch ${branch} from EAS`)
         } catch (e) {
-            console.error(`unable to delete branch ${branch}`)
-            console.error(e)
+            // apparently, it could happen that the channel is already deleted but the branch is not
+            console.error(`unable to delete channel for branch ${branch}`)
         }
-    }
-}
 
-main()
+        // delete branch
+        await execAsync(`eas branch:delete ${branch} --non-interactive`)
+        console.log(`Deleted branch ${branch} from EAS`)
+    }
+})()
