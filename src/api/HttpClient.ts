@@ -37,13 +37,14 @@ export interface RequestOptions {
     maxRetries?: number
     waitingTime?: number
 }
+
 /**
  * Default request options for api requests
  */
 export const defaultOptions = {
     retryType: RetryType.RETRY_INDEFINETELY,
     maxRetries: 5,
-    waitingTime: 3,
+    waitingTime: 3000,
 }
 
 //in this way we can add fields to AxiosRequestConfig for more control in case of errors
@@ -97,7 +98,7 @@ export class HttpClient extends EventEmitter {
     public static getInstance() {
         if (!this.classInstance) {
             this.classInstance = new HttpClient(
-                "https://api.polinetwork.org:446/",
+                "https://api.polinetwork.org/staging/",
                 "https://polimiapp.polimi.it/polimi_app/rest/jaf"
             )
         }
