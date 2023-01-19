@@ -15,6 +15,7 @@ import { CampusChoice } from "pages/FreeClass/CampusChoice"
 import { PositionChoice } from "pages/FreeClass/PositionChoice"
 import { BuildingChoice } from "pages/FreeClass/BuildingChoice"
 import { ClassChoice } from "pages/FreeClass/ClassChoice"
+import { RoomDetails } from "pages/FreeClass/RoomDetails"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const MainStackNavigator = createStackNavigator<MainStackNavigatorParams>()
@@ -44,6 +45,10 @@ export const MainStack: FC = () => {
             <MainStackNavigator.Screen
                 name="ClassChoice"
                 component={ClassChoice}
+            />
+            <MainStackNavigator.Screen
+                name="RoomDetails"
+                component={RoomDetails}
             />
             <MainStackNavigator.Screen name="Error404" component={Error404} />
         </MainStackNavigator.Navigator>
