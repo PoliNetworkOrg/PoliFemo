@@ -1,6 +1,7 @@
 name: Prune EAS branches
 
 on:
+    workflow_dispatch:
     schedule:
         - cron: "42 0 * * *" # ahah funny number
 
@@ -13,6 +14,9 @@ jobs:
             - uses: actions/setup-node@v2
               with:
                   node-version: 16
+
+            - name: Log remote branches
+              run: git branch -r
 
             - name: Install dependencies
               run: yarn install --immutable
