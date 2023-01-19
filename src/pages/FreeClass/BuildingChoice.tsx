@@ -4,6 +4,7 @@ import { View, FlatList, Pressable } from "react-native"
 import { usePalette } from "utils/colors"
 import { Title, BodyText } from "components/Text"
 import { NavBar } from "components/NavBar"
+import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 
 export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
     const { palette, background, homeBackground } = usePalette()
@@ -26,6 +27,10 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
         "B13",
         "B14",
     ])
+
+    //non-ISO format for simplicity (local timezone) and
+    // compatibility with `handleConfirm` function
+    const [date, setDate] = useState<Date>(new Date())
 
     const [refreshing, setRefreshing] = useState<boolean>(false)
 
@@ -66,7 +71,6 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                         style={{
                             paddingHorizontal: 28,
                             marginTop: 28,
-                            marginBottom: 17,
                         }}
                     >
                         {campus.name.length > 1 ? (
@@ -90,26 +94,22 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                             </Title>
                         )}
                     </View>
+                    <DateTimePicker
+                        date={date}
+                        setDate={(date: Date) => setDate(date)}
+                    />
                     <View
-                        //this view is for the date and the time
                         style={{
-                            marginTop: 46,
-                            backgroundColor: "red",
-                            width: 260,
-                            height: 27,
-                            alignSelf: "center",
+                            height: "100%",
+                            marginTop: 26,
+                            //paddingBottom: 48,
                         }}
                     >
-                        <BodyText>Data Picker</BodyText>
-                    </View>
-                    <View style={{ marginBottom: 35 }}>
                         <FlatList
                             refreshing={refreshing}
                             onRefresh={() => console.log("refreshing!")}
                             showsVerticalScrollIndicator={true}
-                            style={{
-                                marginTop: 26,
-                            }}
+                            style={{ marginTop: 27, marginBottom: 35 }}
                             numColumns={2}
                             columnWrapperStyle={{
                                 justifyContent: "space-between",
@@ -125,7 +125,8 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                                         width: "45%",
                                         height: 93,
                                         marginHorizontal: 9,
-                                        marginVertical: 17,
+                                        //marginVertical: 17,
+                                        marginBottom: 34,
                                         alignItems: "center",
                                     }}
                                     onPress={() =>

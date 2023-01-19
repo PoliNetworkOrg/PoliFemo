@@ -64,7 +64,6 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = () => {
                         style={{
                             paddingHorizontal: 28,
                             marginTop: 28,
-                            marginBottom: 17,
                         }}
                     >
                         <Title style={{ fontSize: 40 }}>Campus</Title>
@@ -75,13 +74,14 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = () => {
                     />
                     <View
                         style={{
-                            paddingBottom: 35,
+                            height: "100%",
                             marginTop: 26,
                         }}
                     >
                         <FlatList
                             showsVerticalScrollIndicator={true}
                             numColumns={2}
+                            style={{ marginTop: 27 }}
                             columnWrapperStyle={{
                                 justifyContent: "space-between",
                                 marginHorizontal: 22,
@@ -96,7 +96,7 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = () => {
                                         width: "45%",
                                         height: 93,
                                         marginHorizontal: 9,
-                                        marginVertical: 27,
+                                        marginBottom: 54,
                                         alignItems: "center",
                                     }}
                                     onPress={() =>

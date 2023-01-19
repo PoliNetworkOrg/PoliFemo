@@ -1,15 +1,20 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
-import React from "react"
+import React, { useState } from "react"
 import { View } from "react-native"
 import { usePalette } from "utils/colors"
-import { Title, BodyText } from "components/Text"
+import { Title } from "components/Text"
 import { NavBar } from "components/NavBar"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
+import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 
 export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
     const { background, homeBackground } = usePalette()
 
     const { building } = props.route.params
+
+    //non-ISO format for simplicity (local timezone) and
+    // compatibility with `handleConfirm` function
+    const [date, setDate] = useState<Date>(new Date())
 
     return (
         <View
@@ -48,27 +53,17 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
                         style={{
                             paddingHorizontal: 28,
                             marginTop: 28,
-                            marginBottom: 17,
                         }}
                     >
                         <Title style={{ fontSize: 40, fontWeight: "900" }}>
                             {building}
                         </Title>
                     </View>
-                    <View
-                        //this view is for the date and the time
-                        style={{
-                            marginTop: 46,
-                            marginBottom: 20,
-                            backgroundColor: "red",
-                            width: 260,
-                            height: 27,
-                            alignSelf: "center",
-                        }}
-                    >
-                        <BodyText>Data Picker</BodyText>
-                    </View>
-                    <View style={{ paddingBottom: 70 }}>
+                    <DateTimePicker
+                        date={date}
+                        setDate={(date: Date) => setDate(date)}
+                    />
+                    <View style={{ height: "100%", marginTop: 26 }}>
                         <FreeClassList />
                     </View>
                 </View>

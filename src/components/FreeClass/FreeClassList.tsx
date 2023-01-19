@@ -19,7 +19,7 @@ export const FreeClassList: FC = () => {
 
     return (
         <ScrollView
-            style={{ marginTop: 23, width }}
+            style={{ width, marginBottom: 35, marginTop: 27 }}
             contentContainerStyle={{
                 alignItems: "center",
                 justifyContent: "center",
@@ -32,7 +32,7 @@ export const FreeClassList: FC = () => {
                         width: width - 65,
                         height: 93,
                         backgroundColor: "#8791BD",
-                        marginBottom: 24,
+                        marginBottom: 34,
                         borderRadius: 12,
                     }}
                 >
