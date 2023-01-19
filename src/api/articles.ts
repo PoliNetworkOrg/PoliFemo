@@ -11,7 +11,12 @@ export interface Tag {
 }
 
 export interface Articles {
-    results: Article[]
+    articles: Article[]
+    start: string | null
+    end: string | null
+    tag: string | null
+    author_id: number | null
+    title: string | null
 }
 export interface Article {
     id: number
@@ -76,7 +81,7 @@ export const articles = {
                 },
             }
         )
-        return response.data.results
+        return response.data.articles
     },
 
     /**
@@ -94,7 +99,7 @@ export const articles = {
                 params: { tag: tag, limit: 1, sort: "date" },
             }
         )
-        return response.data.results[0]
+        return response.data.articles[0]
     },
 
     /**
