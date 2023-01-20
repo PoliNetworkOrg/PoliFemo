@@ -8,14 +8,21 @@ import {
     ExpandablePoliSearchBar,
     ValidLanguageType,
 } from "components/Groups/ExpandablePoliSearchBar"
-import { api } from "api"
-import { MockedGroup } from "api/groups"
+import { api, RetryType } from "api"
+import { Group } from "api/groups"
 import { useMounted } from "utils/useMounted"
-import { filterByLanguage } from "utils/groups"
+import { filterByLanguage, msPassedBetween } from "utils/groups"
+import { wait } from "utils/functions"
 
 const all = "Tutti"
 
 export const Groups: MainStackScreen<"Groups"> = () => {
+    const [lastSearchTime, setLastSearchTime] = useState<undefined | Date>(
+        undefined
+    )
+
+    const [needSearching, setNeedSearching] = useState<number>(0)
+
     const [search, setSearch] = useState("")
 
     const [isSearching, setIsSearching] = useState(false)
@@ -30,26 +37,50 @@ export const Groups: MainStackScreen<"Groups"> = () => {
 
     const [platform, setPlatform] = useState<string>(all)
 
-    const [groups, setGroups] = useState<MockedGroup[] | undefined>(undefined)
+    const [groups, setGroups] = useState<Group[] | undefined>(undefined)
 
     const [language, setLanguage] = useState<ValidLanguageType>()
 
     //when user selects "ITA" or "ENG"
-    const [filteredGroups, setFilteredGroups] = useState<
-        MockedGroup[] | undefined
-    >(undefined)
+    const [filteredGroups, setFilteredGroups] = useState<Group[] | undefined>(
+        undefined
+    )
 
     //tracking first render
     const isMounted = useMounted()
 
-    //api call every time user enter a new character
-    const searchGroups = () => {
+    //serch if len > 5 char and last search was more than 3000ms ago, if not search in (3000ms - time)ms
+    //if the user doesnt search for something else
+    const searchGroups = async () => {
         if (isMounted) {
+            if (search.length < 5) {
+                if (groups !== undefined) {
+                    setGroups(undefined)
+                }
+                return
+            }
             try {
-                //mocked
-                const response = api.groups.getMocked()
-                console.log(response)
-                setGroups(response)
+                const now = new Date()
+                const msPassed = msPassedBetween(lastSearchTime, now)
+                if (msPassed === undefined || msPassed >= 3000) {
+                    console.log("searching")
+                    setLastSearchTime(now)
+                    const response = await api.groups.get(
+                        {
+                            name: search,
+                            year: year === all ? undefined : year,
+                            degree: course === all ? undefined : course,
+                            type: type === all ? undefined : type,
+                            platform: platform === all ? undefined : platform,
+                        },
+                        { maxRetries: 1, retryType: RetryType.RETRY_N_TIMES }
+                    )
+                    console.log("response arrived")
+                    setGroups(response)
+                } else {
+                    console.log(msPassed + " passsed, reschedule research")
+                    await researchIn(3000 - msPassed)
+                }
             } catch (error) {
                 console.log(error)
             }
@@ -57,7 +88,22 @@ export const Groups: MainStackScreen<"Groups"> = () => {
     }
     useEffect(() => {
         void searchGroups()
-    }, [search])
+    }, [search, needSearching])
+
+    /**
+     * reserach in (3000 - time) ms if search string doesnt change in this span of time.
+     * Fired every time a search is canceled because it didnt pass enough time from last search.
+     **/
+    const researchIn = async (time: number) => {
+        const prevSearch = search
+        const prevNeedSearching = needSearching
+        await wait(time)
+        // ! not working properly
+        if (prevSearch === search && prevNeedSearching === needSearching) {
+            setNeedSearching(needSearching + 1)
+            console.log("research fired!!")
+        }
+    }
 
     //filter items every time selected language changes
     useEffect(() => {

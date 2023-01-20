@@ -1,8 +1,9 @@
-import { MockedGroup } from "api/groups"
+import { Group } from "api/groups"
 import { PoliSearchBar } from "components/Home"
 import React, { FC } from "react"
 import { ScrollView, View } from "react-native"
 import { usePalette } from "utils/colors"
+import { createGroupLink } from "utils/groups"
 import { AnimatedLine } from "./AnimatedLine"
 import { GroupTile } from "./GroupTile"
 import { OutlinedButton } from "./OutlinedButton"
@@ -11,7 +12,7 @@ export interface ExpandablePoliSearchBarProps {
     setSearch: (val: string) => void
     isSearching: boolean
     setIsSearching: (val: boolean) => void
-    groups?: MockedGroup[]
+    groups?: Group[]
     language: ValidLanguageType
     setLanguage: (val: ValidLanguageType) => void
 }
@@ -40,6 +41,7 @@ export const ExpandablePoliSearchBar: FC<
                     marginTop: 46,
                     marginBottom: 24,
                     height: props.isSearching ? 268 : undefined,
+                    width: 285,
                     borderBottomRightRadius: 8,
                     borderBottomLeftRadius: 8,
                     borderTopRightRadius: 28,
@@ -104,8 +106,12 @@ export const ExpandablePoliSearchBar: FC<
                             {props.groups.map((group, idx) => {
                                 return (
                                     <GroupTile
-                                        name={group.name}
-                                        link={group.idLink}
+                                        name={`${group.class} ${group.year ?? ""}`}
+                                        /**only create group link is it works ? */
+                                        link={createGroupLink(
+                                            group.id_link,
+                                            group.platform
+                                        )}
                                         key={idx}
                                     />
                                 )
