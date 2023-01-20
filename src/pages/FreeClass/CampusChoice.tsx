@@ -15,7 +15,7 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = () => {
     const { navigate } = useNavigation()
     const { homeBackground, background, palette } = usePalette()
 
-    const [data, setData] = useState<CampusItem[]>([
+    const [campusList, setCampusList] = useState<CampusItem[]>([
         { id: 0, name: ["Bovisa", "Durando"] },
         { id: 1, name: ["Bovisa", "La Masa"] },
         { id: 2, name: ["Leonardo"] },
@@ -86,7 +86,7 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = () => {
                                 justifyContent: "space-between",
                                 marginHorizontal: 22,
                             }}
-                            data={data}
+                            data={campusList}
                             keyExtractor={(_, index) => index.toString()}
                             renderItem={({ item }) => (
                                 <Pressable

@@ -209,8 +209,8 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                     {status === ButtonType.LIST ? (
                         <View
                             style={{
-                                marginBottom: 100,
-                                paddingBottom: 130,
+                                marginBottom: 90,
+                                paddingBottom: 100,
                             }}
                         >
                             <FreeClassList />
