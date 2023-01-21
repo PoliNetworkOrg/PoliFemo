@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { View, Pressable, FlatList } from "react-native"
 import { usePalette } from "utils/colors"
@@ -7,25 +7,35 @@ import { Title, BodyText } from "components/Text"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 
 export interface CampusItem {
-    id: number
     name: string[]
+    acronym: string
 }
 
-export const CampusChoice: MainStackScreen<"CampusChoice"> = () => {
+const campusList: CampusItem[] = [
+    { name: ["Bovisa", "Durando"], acronym: "MIB" },
+    { name: ["Bovisa", "La Masa"], acronym: "MIB" },
+    { name: ["Leonardo"],acronym: "MIA" },
+    { name: ["Colombo"],acronym: "MIA" },
+    { name: ["Mancinelli"],acronym: "MIA" },
+]
+
+export const CampusChoice: MainStackScreen<"CampusChoice"> = props => {
     const { navigate } = useNavigation()
     const { homeBackground, background, palette } = usePalette()
 
-    const [campusList, setCampusList] = useState<CampusItem[]>([
-        { id: 0, name: ["Bovisa", "Durando"] },
-        { id: 1, name: ["Bovisa", "La Masa"] },
-        { id: 2, name: ["Leonardo"] },
-        { id: 3, name: ["Colombo"] },
-        { id: 4, name: ["Mancinelli"] },
-    ])
+    const { currentDate } = props.route.params
 
     //non-ISO format for simplicity (local timezone) and
     // compatibility with `handleConfirm` function
-    const [date, setDate] = useState<Date>(new Date())
+    const [date, setDate] = useState<Date>(
+        new Date(currentDate) !== new Date()
+            ? new Date(currentDate)
+            : new Date()
+    )
+
+    useEffect(() => {
+        setDate(new Date(currentDate))
+    }, [props.route.params.currentDate])
 
     return (
         <View
@@ -102,6 +112,7 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = () => {
                                     onPress={() =>
                                         navigate("BuildingChoice", {
                                             campus: item,
+                                            currentDate: date.toString(),
                                         })
                                     }
                                 >

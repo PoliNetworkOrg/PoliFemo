@@ -46,10 +46,10 @@ export type MainStackNavigatorParams = {
     NewsList: { categoryName: string }
     Error404: undefined
     FreeClassrooms: undefined
-    CampusChoice: undefined
+    CampusChoice: { currentDate: string }
     PositionChoice: undefined
-    BuildingChoice: { campus: CampusItem }
-    ClassChoice: { building: string }
+    BuildingChoice: { campus: CampusItem; currentDate: string }
+    ClassChoice: { building: string; campus: CampusItem; currentDate: string }
 }
 
 export type SettingsStackNavigatorParams = {

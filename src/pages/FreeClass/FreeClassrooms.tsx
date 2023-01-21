@@ -142,7 +142,10 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
                                 }}
                                 onPress={
                                     item.type === SearchClassType.CAMPUS
-                                        ? () => navigate("CampusChoice")
+                                        ? () =>
+                                              navigate("CampusChoice", {
+                                                  currentDate: new Date().toString(),
+                                              })
                                         : () => handlePositionPressed()
                                 }
                             >

@@ -1,36 +1,83 @@
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { View, FlatList, Pressable } from "react-native"
 import { usePalette } from "utils/colors"
 import { Title, BodyText } from "components/Text"
 import { NavBar } from "components/NavBar"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
+import { Room } from "api/Room"
+import { api, RetryType } from "api"
 
 export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
     const { palette, background, homeBackground } = usePalette()
     const { navigate } = useNavigation()
 
-    const { campus } = props.route.params
+    const { campus, currentDate } = props.route.params
 
-    const [buildings, setBuildings] = useState<string[]>([
-        "B1",
-        "B2",
-        "B3",
-        "B4",
-        "B5",
-        "B6",
-        "B7",
-        "B8",
-        "B9",
-        "B10",
-        "B12",
-        "B13",
-        "B14",
-    ])
+    const [roomList, setRoomList] = useState<Room[]>()
+
+    const [buildingList, setBuildingList] = useState<string[]>()
+
+    const [isBuildingListFound, setBuildingListFound] = useState(false)
+
+    const dateEnd = new Date(currentDate).setHours(
+        new Date(currentDate).getHours() + 2
+    )
+
+    const findRoomsAvailable = async () => {
+        try {
+            const response = await api.rooms.getFreeRoomsTimeRange(
+                "MIB",
+                "2022-05-18T12:15:00Z",
+                "2022-05-18T14:15:00Z",
+            )
+            setRoomList(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        if (!isBuildingListFound) {
+            findRoomsAvailable().catch(console.error)
+            if (roomList !== undefined) {
+                const tempBuildings: string[] = []
+                roomList.map(room => {
+                    const currentBuilding = room.building.replace(
+                        "Edificio ",
+                        ""
+                    )
+                    if (!tempBuildings.includes(currentBuilding)) {
+                        tempBuildings.push(currentBuilding)
+                    }
+                })
+                setBuildingList(tempBuildings)
+                setBuildingListFound(true)
+            } else {
+                console.log("roomList empty")
+            }
+        } else {
+            undefined
+        }
+    }, [roomList])
 
     //non-ISO format for simplicity (local timezone) and
     // compatibility with `handleConfirm` function
-    const [date, setDate] = useState<Date>(new Date())
+    const [date, setDate] = useState<Date>(
+        new Date(currentDate) !== new Date()
+            ? new Date(currentDate)
+            : new Date()
+    )
+
+    useEffect(() => {
+        setDate(new Date(currentDate))
+    }, [props.route.params.currentDate])
+
+    const goBack = () => {
+        props.navigation.navigate("CampusChoice", {
+            currentDate: date.toString(),
+        })
+    }
 
     const [refreshing, setRefreshing] = useState<boolean>(false)
 
@@ -102,7 +149,6 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                         style={{
                             height: "100%",
                             marginTop: 26,
-                            //paddingBottom: 48,
                         }}
                     >
                         <FlatList
@@ -115,7 +161,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                                 justifyContent: "space-between",
                                 marginHorizontal: 22,
                             }}
-                            data={buildings}
+                            data={buildingList}
                             keyExtractor={(_, index) => index.toString()}
                             renderItem={({ item }) => (
                                 <Pressable
@@ -132,6 +178,8 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                                     onPress={() =>
                                         navigate("ClassChoice", {
                                             building: item,
+                                            campus: campus,
+                                            currentDate: date.toString(),
                                         })
                                     }
                                 >
@@ -163,7 +211,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                     </View>
                 </View>
             </View>
-            <NavBar />
+            <NavBar overrideBackBehavior={goBack} />
         </View>
     )
 }

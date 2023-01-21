@@ -1,5 +1,5 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { View } from "react-native"
 import { usePalette } from "utils/colors"
 import { Title } from "components/Text"
@@ -10,11 +10,26 @@ import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePick
 export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
     const { background, homeBackground } = usePalette()
 
-    const { building } = props.route.params
+    const { building, campus, currentDate } = props.route.params
 
     //non-ISO format for simplicity (local timezone) and
     // compatibility with `handleConfirm` function
-    const [date, setDate] = useState<Date>(new Date())
+    const [date, setDate] = useState<Date>(
+        new Date(currentDate) !== new Date()
+            ? new Date(currentDate)
+            : new Date()
+    )
+
+    useEffect(() => {
+        setDate(new Date(currentDate))
+    }, [props.route.params.currentDate])
+
+    const goBack = () => {
+        props.navigation.navigate("BuildingChoice", {
+            campus: campus,
+            currentDate: date.toString(),
+        })
+    }
 
     return (
         <View
@@ -68,7 +83,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
                     </View>
                 </View>
             </View>
-            <NavBar />
+            <NavBar overrideBackBehavior={goBack} />
         </View>
     )
 }
