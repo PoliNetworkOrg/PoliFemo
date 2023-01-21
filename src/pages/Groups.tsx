@@ -16,12 +16,23 @@ import { wait } from "utils/functions"
 
 const all = "Tutti"
 
+const sleepTime = 500 //ms
+
 export const Groups: MainStackScreen<"Groups"> = () => {
+    //keep track of latest search request time (successful or not)
     const [lastSearchTime, setLastSearchTime] = useState<undefined | Date>(
         undefined
     )
+    //for forcing api search request if needeed
+    const [needSearching, setNeedSearching] = useState<boolean>(false)
 
-    const [needSearching, setNeedSearching] = useState<number>(0)
+    //for triggering api search request side effect
+    //reason : I want to trigger it only if I set needSearching to True, not to False
+    const [rescheduleSearch, setRescheduleSearch] = useState<number>(0)
+
+    //for triggering api request when user doesnt write in a time span of `sleepTime`
+    //reason: I don't want to send api request on every character change.
+    const [prevSearch, setPrevSearch] = useState("")
 
     const [search, setSearch] = useState("")
 
@@ -49,8 +60,17 @@ export const Groups: MainStackScreen<"Groups"> = () => {
     //tracking first render
     const isMounted = useMounted()
 
-    //serch if len > 5 char and last search was more than 3000ms ago, if not search in (3000ms - time)ms
-    //if the user doesnt search for something else
+    /**
+     * Api search request side effect.
+     *
+     * How this mess works (or should work, actually it seems like it works for now):
+     * 1) gets called every time search text changes or rescheduleSearch is incremented (for forcing search request)
+     * 2) if len(search) < 5 do nothing and delete store groups if any.
+     * 3) if no other searches were done before, send search request to api. Store time of search in `lastSearchTime`.
+     * 4) successive requests are allowed if: last search request time (successful or not) was more than `sleepTime` (500ms) ago
+     * 5) if a request is not allowed, store `lastTimeSearch` anyway, then check `sleepTime` (500ms) later if the user has kept writing.
+     * if he has, then do nothing because side effect will be called again, if he hasn't, then force search request with latest search value.
+     */
     const searchGroups = async () => {
         if (isMounted) {
             if (search.length < 5) {
@@ -62,12 +82,16 @@ export const Groups: MainStackScreen<"Groups"> = () => {
             try {
                 const now = new Date()
                 const msPassed = msPassedBetween(lastSearchTime, now)
-                if (msPassed === undefined || msPassed >= 3000) {
-                    console.log("searching")
+                if (
+                    msPassed === undefined ||
+                    msPassed >= sleepTime ||
+                    needSearching === true
+                ) {
+                    //update last time search
                     setLastSearchTime(now)
                     const response = await api.groups.get(
                         {
-                            name: search,
+                            name: search.trimEnd(),
                             year: year === all ? undefined : year,
                             degree: course === all ? undefined : course,
                             type: type === all ? undefined : type,
@@ -75,11 +99,17 @@ export const Groups: MainStackScreen<"Groups"> = () => {
                         },
                         { maxRetries: 1, retryType: RetryType.RETRY_N_TIMES }
                     )
-                    console.log("response arrived")
                     setGroups(response)
+                    //reset need searching for next render
+                    setNeedSearching(false)
                 } else {
-                    console.log(msPassed + " passsed, reschedule research")
-                    await researchIn(3000 - msPassed)
+                    // ? over optimization maybe: this prevents api request if user keeps writing fast.
+                    // ? maybe I should request every 1 seconds even if user is still writing? debatable
+                    setLastSearchTime(now)
+                    await wait(sleepTime)
+                    //in the next render you have the previous and current search text, and can compare changes
+                    //this triggers Reschedule Search Side Effect
+                    setPrevSearch(search)
                 }
             } catch (error) {
                 console.log(error)
@@ -88,22 +118,25 @@ export const Groups: MainStackScreen<"Groups"> = () => {
     }
     useEffect(() => {
         void searchGroups()
-    }, [search, needSearching])
+    }, [search, rescheduleSearch])
 
     /**
-     * reserach in (3000 - time) ms if search string doesnt change in this span of time.
-     * Fired every time a search is canceled because it didnt pass enough time from last search.
-     **/
-    const researchIn = async (time: number) => {
-        const prevSearch = search
-        const prevNeedSearching = needSearching
-        await wait(time)
-        // ! not working properly
-        if (prevSearch === search && prevNeedSearching === needSearching) {
-            setNeedSearching(needSearching + 1)
-            console.log("research fired!!")
+     * Reschedule Search Side Effect
+     *
+     * evaluate if user stopped writing characters in a time span of `sleepTime` seconds
+     */
+    useEffect(() => {
+        if (isMounted) {
+            if (prevSearch !== search) {
+                //Do nothing
+                return
+            } else {
+                //force search in next frame
+                setRescheduleSearch(rescheduleSearch + 1)
+                setNeedSearching(true)
+            }
         }
-    }
+    }, [prevSearch])
 
     //filter items every time selected language changes
     useEffect(() => {
@@ -120,7 +153,11 @@ export const Groups: MainStackScreen<"Groups"> = () => {
     //load groups to filtered groups every time a new response from api arrives. (language filters ignored)
     useEffect(() => {
         if (isMounted) {
-            setFilteredGroups(groups)
+            let newGroups = groups
+            if (language !== undefined && newGroups) {
+                newGroups = filterByLanguage(newGroups, language)
+            }
+            setFilteredGroups(newGroups)
         }
     }, [groups])
 
