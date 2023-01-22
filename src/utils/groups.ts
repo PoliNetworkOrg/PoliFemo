@@ -24,7 +24,7 @@ export function orderByMostRecentYear(groups: Group[]) {
                     compareBiYear(groups[n].year, groups[n + 1].year) === true
                 ) {
                     //swap
-                    let temp = groups[n]
+                    const temp = groups[n]
                     groups[n] = groups[n + 1]
                     groups[n + 1] = temp
                     hasChanged = true
