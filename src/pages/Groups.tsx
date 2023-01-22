@@ -11,7 +11,11 @@ import {
 import { api, RetryType } from "api"
 import { Group } from "api/groups"
 import { useMounted } from "utils/useMounted"
-import { filterByLanguage, msPassedBetween } from "utils/groups"
+import {
+    filterByLanguage,
+    msPassedBetween,
+    orderByMostRecentYear,
+} from "utils/groups"
 import { wait } from "utils/functions"
 
 const all = "Tutti"
@@ -26,7 +30,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
     //for forcing api search request if needeed
     const [needSearching, setNeedSearching] = useState<boolean>(false)
 
-    //for triggering api search request side effect
+    //for triggering api search request side effect (used in conjunction with `needSearching`)
     //reason : I want to trigger it only if I set needSearching to True, not to False
     const [rescheduleSearch, setRescheduleSearch] = useState<number>(0)
 
@@ -52,7 +56,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
 
     const [language, setLanguage] = useState<ValidLanguageType>()
 
-    //when user selects "ITA" or "ENG"
+    //actually displayed groups (filtered by language)
     const [filteredGroups, setFilteredGroups] = useState<Group[] | undefined>(
         undefined
     )
@@ -63,11 +67,11 @@ export const Groups: MainStackScreen<"Groups"> = () => {
     /**
      * Api search request side effect.
      *
-     * How this mess works (or should work, actually it seems like it works for now):
+     * How this works (general ideas):
      * 1) gets called every time search text changes or rescheduleSearch is incremented (for forcing search request)
-     * 2) if len(search) < 5 do nothing and delete store groups if any.
+     * 2) if len(search) < 5 do nothing and delete stored groups if there are any.
      * 3) if no other searches were done before, send search request to api. Store time of search in `lastSearchTime`.
-     * 4) successive requests are allowed if: last search request time (successful or not) was more than `sleepTime` (500ms) ago
+     * 4) successive requests are allowed if last search request time (successful or not) was more than `sleepTime` (500ms) ago
      * 5) if a request is not allowed, store `lastTimeSearch` anyway, then check `sleepTime` (500ms) later if the user has kept writing.
      * if he has, then do nothing because side effect will be called again, if he hasn't, then force search request with latest search value.
      */
@@ -154,6 +158,10 @@ export const Groups: MainStackScreen<"Groups"> = () => {
     useEffect(() => {
         if (isMounted) {
             let newGroups = groups
+
+            if (year === all && newGroups) {
+                newGroups = orderByMostRecentYear(newGroups)
+            }
             if (language !== undefined && newGroups) {
                 newGroups = filterByLanguage(newGroups, language)
             }

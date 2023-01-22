@@ -106,7 +106,9 @@ export const ExpandablePoliSearchBar: FC<
                             {props.groups.map((group, idx) => {
                                 return (
                                     <GroupTile
-                                        name={`${group.class} ${group.year ?? ""}`}
+                                        name={`${group.class} ${
+                                            group.year ?? ""
+                                        }`}
                                         /**only create group link is it works ? */
                                         link={createGroupLink(
                                             group.id_link,

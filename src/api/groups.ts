@@ -21,7 +21,7 @@ export interface Group {
     id_link: string
     language: string
     type_?: string
-    year?: string
+    year: string | null
     platform: string
     permanent_id?: number
     last_updated?: string
