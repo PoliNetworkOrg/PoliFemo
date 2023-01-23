@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { Linking, ScrollView, View } from "react-native"
-import { BodyText, Title } from "components/Text"
+import { Title } from "components/Text"
 import { Filters } from "components/Groups/Filters"
 import { api, RetryType } from "api"
 import { Group } from "api/groups"
@@ -15,12 +15,12 @@ import { wait } from "utils/functions"
 import { AnimatedPoliSearchBar } from "components/Groups/AnimatedPoliSearchBar"
 import { GroupTile } from "components/Groups/GroupTile"
 import { PageWrapper } from "components/Groups/PageWrapper"
-import { usePalette } from "utils/colors"
 import { ModalGroup } from "components/Groups/ModalGroup"
+import { ModalGroupItem } from "components/Groups/ModalGroupItem"
 
 const all = "Tutti"
 
-const sleepTime = 500 //ms
+const deltaTime = 500 //ms
 
 export const Groups: MainStackScreen<"Groups"> = () => {
     //keep track of latest search request time (successful or not)
@@ -34,7 +34,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
     //reason : I want to trigger it only if I set needSearching to True, not to False
     const [rescheduleSearch, setRescheduleSearch] = useState<number>(0)
 
-    //for triggering api request when user doesnt write in a time span of `sleepTime`
+    //for triggering api request when user doesnt write in a time span of `deltaTime`
     //reason: I don't want to send api request on every character change.
     const [prevSearch, setPrevSearch] = useState("")
 
@@ -54,9 +54,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
 
     const [groups, setGroups] = useState<Group[] | undefined>(undefined)
 
-    /* const [language, setLanguage] = useState<ValidLanguageType>() */
-
-    //actually displayed groups (Ordered by language)
+    //actually displayed groups (Ordered by year)
     const [orderedGroups, setOrderedGroups] = useState<Group[] | undefined>(
         undefined
     )
@@ -75,9 +73,10 @@ export const Groups: MainStackScreen<"Groups"> = () => {
      * 1) gets called every time search text changes or rescheduleSearch is incremented (for forcing search request)
      * 2) if len(search) < 5 do nothing and delete stored groups if there are any.
      * 3) if no other searches were done before, send search request to api. Store time of search in `lastSearchTime`.
-     * 4) successive requests are allowed if last search request time (successful or not) was more than `sleepTime` (500ms) ago
-     * 5) if a request is not allowed, store `lastTimeSearch` anyway, then check `sleepTime` (500ms) later if the user has kept writing.
-     * if he has, then do nothing because side effect will be called again, if he hasn't, then force search request with latest search value.
+     * 4) successive requests are allowed if last search request time (successful or not) was more than `deltaTime` (500ms) ago
+     * 5) if a request is not allowed, store `lastTimeSearch` anyway, then check `deltaTime` (500ms) later if the user has kept writing.
+     * if he has, then do nothing because side effect will be called again, if he hasn't,
+     * then force search request with latest search value.
      */
     const searchGroups = async () => {
         if (isMounted) {
@@ -92,7 +91,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
                 const msPassed = msPassedBetween(lastSearchTime, now)
                 if (
                     msPassed === undefined ||
-                    msPassed >= sleepTime ||
+                    msPassed >= deltaTime ||
                     needSearching === true
                 ) {
                     //update last time search
@@ -111,10 +110,8 @@ export const Groups: MainStackScreen<"Groups"> = () => {
                     //reset need searching for next render
                     setNeedSearching(false)
                 } else {
-                    // ? over optimization maybe: this prevents api request if user keeps writing fast.
-                    // ? maybe I should request every 1 seconds even if user is still writing? debatable
                     setLastSearchTime(now)
-                    await wait(sleepTime)
+                    await wait(deltaTime)
                     //in the next render you have the previous and current search text, and can compare changes
                     //this triggers Reschedule Search Side Effect
                     setPrevSearch(search)
@@ -131,7 +128,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
     /**
      * Reschedule Search Side Effect
      *
-     * evaluate if user stopped writing characters in a time span of `sleepTime` seconds
+     * evaluate if user stopped writing characters in a time span of `deltaTime` seconds
      */
     useEffect(() => {
         if (isMounted) {
@@ -156,7 +153,10 @@ export const Groups: MainStackScreen<"Groups"> = () => {
     useEffect(() => {
         if (isMounted) {
             let newGroups = groups
-
+            //if response from api arrives when we no longer expect it
+            if (newGroups && search.length < 5) {
+                newGroups = undefined
+            }
             if (year === all && newGroups) {
                 newGroups = orderByMostRecentYear(newGroups)
             }
@@ -164,12 +164,12 @@ export const Groups: MainStackScreen<"Groups"> = () => {
         }
     }, [groups])
 
+    //force search in next render
     const forceSearch = () => {
         setRescheduleSearch(rescheduleSearch + 1)
         setNeedSearching(true)
     }
 
-    const { isLight } = usePalette()
     return (
         <PageWrapper>
             <View
@@ -206,15 +206,11 @@ export const Groups: MainStackScreen<"Groups"> = () => {
                         marginBottom: 93,
                     }}
                 >
-                    <ScrollView style={{}}>
+                    <ScrollView>
                         {orderedGroups?.map((group, idx) => {
                             return (
                                 <GroupTile
-                                    link={createGroupLink(
-                                        group.link_id,
-                                        group.platform
-                                    )}
-                                    name={group.class}
+                                    text={group.class}
                                     key={idx}
                                     onClick={() => {
                                         setModalGroup(group)
@@ -247,56 +243,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
                         }
                     }}
                 >
-                    <View
-                        style={{
-                            alignItems: "center",
-                            marginHorizontal: 8,
-                        }}
-                    >
-                        <View
-                            style={{
-                                width: 88,
-                                height: 88,
-                                backgroundColor: isLight ? "#454773" : "#fff",
-                                borderRadius: 44,
-                                marginTop: 16,
-                                marginBottom: 8,
-                            }}
-                        />
-                        <BodyText
-                            style={{
-                                fontSize: 32,
-                                fontWeight: "900",
-                                color: isLight ? "#414867" : "#fff",
-                                textAlign: "center",
-                            }}
-                        >
-                            {modalGroup?.class}
-                        </BodyText>
-                        <View>
-                            <BodyText
-                                style={{
-                                    fontSize: 13,
-                                    fontWeight: "400",
-                                    color: isLight ? "#8791BD" : "#fff",
-                                    textAlign: "center",
-                                }}
-                            >
-                                --:-- members, --:-- online
-                            </BodyText>
-                            <BodyText
-                                style={{
-                                    fontSize: 13,
-                                    fontWeight: "400",
-                                    color: isLight ? "#414867" : "#fff",
-                                    textAlign: "center",
-                                    marginTop: 16,
-                                }}
-                            >
-                                {modalGroup?.year} {modalGroup?.platform}
-                            </BodyText>
-                        </View>
-                    </View>
+                    <ModalGroupItem group={modalGroup} />
                 </ModalGroup>
             </View>
         </PageWrapper>

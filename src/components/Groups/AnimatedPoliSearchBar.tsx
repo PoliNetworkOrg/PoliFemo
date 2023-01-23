@@ -1,12 +1,9 @@
 import { Group } from "api/groups"
 import { PoliSearchBar } from "components/Home"
 import React, { FC } from "react"
-import { ScrollView, View, ViewStyle } from "react-native"
-import { usePalette } from "utils/colors"
-import { createGroupLink } from "utils/groups"
+import { View, ViewStyle } from "react-native"
 import { AnimatedLine } from "./AnimatedLine"
-import { GroupTile } from "./GroupTile"
-import { OutlinedButton } from "./OutlinedButton"
+
 
 export interface AnimatedPoliSearchBarProps {
     setSearch: (val: string) => void
@@ -19,7 +16,6 @@ export interface AnimatedPoliSearchBarProps {
 export const AnimatedPoliSearchBar: FC<
     AnimatedPoliSearchBarProps
 > = props => {
-    const { isLight } = usePalette()
 
     return (
         <View style={props.style}>

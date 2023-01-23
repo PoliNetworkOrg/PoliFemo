@@ -22,7 +22,7 @@ export interface ModalGroupProps {
     onClose: () => void
 
     /**
-     * function called when button "OK" is pressed
+     * function called when button "JOIN GROUP" is pressed
      */
     onJoin: (group?: Group) => void
 
@@ -34,12 +34,11 @@ export interface ModalGroupProps {
 }
 
 /**
- * Custom Modal Component with two buttons at the bottom.
+ * Custom Modal Component for Groups Page.
  *
  */
 export const ModalGroup: FC<ModalGroupProps> = props => {
-    const { backgroundSecondary, homeBackground, modalBarrier, isLight } =
-        usePalette()
+    const { backgroundSecondary, modalBarrier } = usePalette()
 
     const deleteSvg = useSVG(icon.svg)
     return (

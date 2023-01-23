@@ -1,16 +1,6 @@
 import { Group } from "api/groups"
 
 /**
- * return groups filtered by language
- * see {@link Groups} Page
- */
-export function filterByLanguage(groups: Group[], language?: string) {
-    return groups.filter(group => {
-        return group.language === language
-    })
-}
-
-/**
  * return groups ordered by most recent year using a bubble sort algorithm
  * see {@link Groups} Page
  */
@@ -38,14 +28,29 @@ export function orderByMostRecentYear(groups: Group[]) {
 }
 
 function compareBiYear(first: string | null, second: string | null) {
-    if ((first === null || first === "?/?") && second !== null) {
+    //apparently null != undefined :( code breaks if I use undefined instead of null
+    if ((first === "?/?" || first === null) && second !== null) {
         return true
     } else if (second === null || first === null) {
         return false
     }
-    const regex = /^\d{4}\/\d{4}$/
-    if (regex.test(first) && regex.test(second)) {
+    //standard year format "2021/2022"
+    const regexStandard = /^\d{4}\/\d{4}$/
+    //for inconsistencies in the db ex "2021/22"
+    const regexNonStandard = /^\d{4}\/\d{2}$/
+    if (
+        (regexStandard.test(first) && regexStandard.test(second)) ||
+        (regexNonStandard.test(first) && regexNonStandard.test(second))
+    ) {
         if (parseInt(first.substring(5)) < parseInt(second.substring(5))) {
+            return true
+        }
+    } else if (regexNonStandard.test(first) && regexStandard.test(second)) {
+        if (parseInt(first.substring(5)) < parseInt(second.substring(7))) {
+            return true
+        }
+    } else if (regexStandard.test(first) && regexNonStandard.test(second)) {
+        if (parseInt(first.substring(7)) < parseInt(second.substring(5))) {
             return true
         }
     }

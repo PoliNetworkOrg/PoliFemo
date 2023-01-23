@@ -5,8 +5,7 @@ import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 
 export interface GroupTileProps {
-    name?: string
-    link?: string
+    text?: string
     onClick?: () => void
 }
 
@@ -45,7 +44,7 @@ export const GroupTile: FC<GroupTileProps> = props => {
                                 color: isLight ? "#454773" : "#fff",
                             }}
                         >
-                            {props.name}
+                            {props.text}
                         </BodyText>
 
                         <BodyText
