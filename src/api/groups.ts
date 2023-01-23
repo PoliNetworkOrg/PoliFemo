@@ -18,7 +18,7 @@ export interface Group {
     id?: string
     degree?: string
     school?: string
-    id_link: string
+    link_id: string
     language: string
     type_?: string
     year: string | null

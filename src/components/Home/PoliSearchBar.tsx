@@ -5,6 +5,7 @@ import {
     Pressable,
     StyleProp,
     ViewStyle,
+    Keyboard,
 } from "react-native"
 import { usePalette } from "utils/colors"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
@@ -25,6 +26,20 @@ export const PoliSearchBar: FC<{
     const [isFocused, setIsFocused] = useState(false)
     const shadowAnim = useRef(new Animated.Value(0)).current
     const inputText = useRef<TextInput>(null)
+
+    useEffect(() => {
+        const keyboardDidHideListener = Keyboard.addListener(
+            "keyboardDidHide",
+            () => {
+                inputText.current?.blur()
+            }
+        )
+
+        return () => {
+            keyboardDidHideListener.remove()
+        }
+    }, [])
+
     useEffect(() => {
         const duration = 100
         if (isFocused)

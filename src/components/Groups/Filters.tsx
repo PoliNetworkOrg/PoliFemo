@@ -14,6 +14,7 @@ export interface FiltersProps {
     setType: (value: string) => void
     platform: string
     setPlatform: (value: string) => void
+    forceSearch: () => void
 }
 
 interface ModalItemList {
@@ -71,6 +72,7 @@ export const Filters: FC<FiltersProps> = props => {
         props.setCourse(all)
         props.setType(all)
         props.setPlatform(all)
+        props.forceSearch()
     }
 
     return (

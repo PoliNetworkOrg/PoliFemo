@@ -10,6 +10,8 @@ import { usePalette } from "utils/colors"
  * Default margin Top is 86 (proper margin for Settings Page)
  */
 export const ContentWrapperScroll: FC<{
+    children: React.ReactNode
+
     title?: string
     /**
      * Remove the navbar from the bottom of the page.
@@ -20,8 +22,6 @@ export const ContentWrapperScroll: FC<{
      */
     navbarOptions?: NavbarProps
     marginTop?: number
-
-    children: React.ReactNode
 }> = props => {
     const { background, isLight, primary } = usePalette()
 

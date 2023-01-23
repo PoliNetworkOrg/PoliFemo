@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { View } from "react-native"
-import { ContentWrapperScroll } from "components/ContentWrapperScroll"
-import { Title } from "components/Text"
+import { Linking, ScrollView, View } from "react-native"
+import { BodyText, Title } from "components/Text"
 import { Filters } from "components/Groups/Filters"
-import {
-    ExpandablePoliSearchBar,
-    ValidLanguageType,
-} from "components/Groups/ExpandablePoliSearchBar"
 import { api, RetryType } from "api"
 import { Group } from "api/groups"
 import { useMounted } from "utils/useMounted"
 import {
-    filterByLanguage,
+    createGroupLink,
     msPassedBetween,
     orderByMostRecentYear,
 } from "utils/groups"
 import { wait } from "utils/functions"
+import { AnimatedPoliSearchBar } from "components/Groups/AnimatedPoliSearchBar"
+import { GroupTile } from "components/Groups/GroupTile"
+import { PageWrapper } from "components/Groups/PageWrapper"
+import { usePalette } from "utils/colors"
+import { ModalGroup } from "components/Groups/ModalGroup"
 
 const all = "Tutti"
 
@@ -54,12 +54,16 @@ export const Groups: MainStackScreen<"Groups"> = () => {
 
     const [groups, setGroups] = useState<Group[] | undefined>(undefined)
 
-    const [language, setLanguage] = useState<ValidLanguageType>()
+    /* const [language, setLanguage] = useState<ValidLanguageType>() */
 
-    //actually displayed groups (filtered by language)
-    const [filteredGroups, setFilteredGroups] = useState<Group[] | undefined>(
+    //actually displayed groups (Ordered by language)
+    const [orderedGroups, setOrderedGroups] = useState<Group[] | undefined>(
         undefined
     )
+
+    const [isModalShowing, setIsModalShowing] = useState(false)
+
+    const [modalGroup, setModalGroup] = useState<Group | undefined>(undefined)
 
     //tracking first render
     const isMounted = useMounted()
@@ -136,25 +140,19 @@ export const Groups: MainStackScreen<"Groups"> = () => {
                 return
             } else {
                 //force search in next frame
-                setRescheduleSearch(rescheduleSearch + 1)
-                setNeedSearching(true)
+                forceSearch()
             }
         }
     }, [prevSearch])
 
-    //filter items every time selected language changes
+    //if filters are applied after search, search again
     useEffect(() => {
         if (isMounted && groups) {
-            if (language) {
-                const newFilteredGroups = filterByLanguage(groups, language)
-                setFilteredGroups(newFilteredGroups)
-            } else {
-                resetFilterLanguage()
-            }
+            forceSearch()
         }
-    }, [language])
+    }, [course, year, type, platform])
 
-    //load groups to filtered groups every time a new response from api arrives. (language filters ignored)
+    //load groups to Ordered groups every time a new response from api arrives.
     useEffect(() => {
         if (isMounted) {
             let newGroups = groups
@@ -162,45 +160,145 @@ export const Groups: MainStackScreen<"Groups"> = () => {
             if (year === all && newGroups) {
                 newGroups = orderByMostRecentYear(newGroups)
             }
-            if (language !== undefined && newGroups) {
-                newGroups = filterByLanguage(newGroups, language)
-            }
-            setFilteredGroups(newGroups)
+            setOrderedGroups(newGroups)
         }
     }, [groups])
 
-    //helper function to reset language filters
-    const resetFilterLanguage = () => {
-        setFilteredGroups(groups)
+    const forceSearch = () => {
+        setRescheduleSearch(rescheduleSearch + 1)
+        setNeedSearching(true)
     }
-    return (
-        <View style={{ flex: 1 }}>
-            <ContentWrapperScroll marginTop={100}>
-                <View style={{ paddingHorizontal: 26, paddingTop: 56 }}>
-                    <Title>Gruppi Corsi</Title>
-                    <ExpandablePoliSearchBar
-                        isSearching={isSearching}
-                        setIsSearching={val => setIsSearching(val)}
-                        setSearch={val => setSearch(val)}
-                        groups={filteredGroups}
-                        language={language}
-                        setLanguage={val => setLanguage(val)}
-                    />
 
-                    {!isSearching && (
-                        <Filters
-                            year={year}
-                            setYear={val => setYear(val)}
-                            course={course}
-                            setCourse={val => setCourse(val)}
-                            type={type}
-                            setType={val => setType(val)}
-                            platform={platform}
-                            setPlatform={val => setPlatform(val)}
-                        />
-                    )}
+    const { isLight } = usePalette()
+    return (
+        <PageWrapper>
+            <View
+                style={{
+                    flex: 1,
+                    marginHorizontal: 26,
+                    paddingTop: 56,
+                }}
+            >
+                <Title>Gruppi Corsi</Title>
+                <AnimatedPoliSearchBar
+                    isSearching={isSearching}
+                    setIsSearching={val => setIsSearching(val)}
+                    setSearch={val => setSearch(val)}
+                    groups={orderedGroups}
+                    style={{ marginTop: 36, marginBottom: 22 }}
+                />
+                <Filters
+                    year={year}
+                    setYear={val => setYear(val)}
+                    course={course}
+                    setCourse={val => setCourse(val)}
+                    type={type}
+                    setType={val => setType(val)}
+                    platform={platform}
+                    setPlatform={val => setPlatform(val)}
+                    forceSearch={forceSearch}
+                />
+
+                <View
+                    style={{
+                        flex: 1,
+                        marginTop: 40,
+                        marginBottom: 93,
+                    }}
+                >
+                    <ScrollView style={{}}>
+                        {orderedGroups?.map((group, idx) => {
+                            return (
+                                <GroupTile
+                                    link={createGroupLink(
+                                        group.link_id,
+                                        group.platform
+                                    )}
+                                    name={group.class}
+                                    key={idx}
+                                    onClick={() => {
+                                        setModalGroup(group)
+                                        setIsModalShowing(true)
+                                    }}
+                                />
+                            )
+                        })}
+                    </ScrollView>
                 </View>
-            </ContentWrapperScroll>
-        </View>
+                <ModalGroup
+                    group={modalGroup}
+                    isShowing={isModalShowing}
+                    onClose={() => setIsModalShowing(false)}
+                    onJoin={async (group?: Group) => {
+                        if (!group?.link_id) {
+                            return
+                        }
+
+                        const link = createGroupLink(
+                            group.link_id,
+                            group.platform
+                        )
+                        // Checking if the link is supported for links with custom URL scheme.
+                        const supported = await Linking.canOpenURL(link)
+
+                        if (supported) {
+                            // Opening the link with some app
+                            await Linking.openURL(link)
+                        }
+                    }}
+                >
+                    <View
+                        style={{
+                            alignItems: "center",
+                            marginHorizontal: 8,
+                        }}
+                    >
+                        <View
+                            style={{
+                                width: 88,
+                                height: 88,
+                                backgroundColor: isLight ? "#454773" : "#fff",
+                                borderRadius: 44,
+                                marginTop: 16,
+                                marginBottom: 8,
+                            }}
+                        />
+                        <BodyText
+                            style={{
+                                fontSize: 32,
+                                fontWeight: "900",
+                                color: isLight ? "#414867" : "#fff",
+                                textAlign: "center",
+                            }}
+                        >
+                            {modalGroup?.class}
+                        </BodyText>
+                        <View>
+                            <BodyText
+                                style={{
+                                    fontSize: 13,
+                                    fontWeight: "400",
+                                    color: isLight ? "#8791BD" : "#fff",
+                                    textAlign: "center",
+                                }}
+                            >
+                                --:-- members, --:-- online
+                            </BodyText>
+                            <BodyText
+                                style={{
+                                    fontSize: 13,
+                                    fontWeight: "400",
+                                    color: isLight ? "#414867" : "#fff",
+                                    textAlign: "center",
+                                    marginTop: 16,
+                                }}
+                            >
+                                {modalGroup?.year} {modalGroup?.platform}
+                            </BodyText>
+                        </View>
+                    </View>
+                </ModalGroup>
+            </View>
+        </PageWrapper>
     )
 }

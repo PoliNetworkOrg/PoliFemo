@@ -1,36 +1,66 @@
+import { Divider } from "components/Divider"
 import { BodyText } from "components/Text"
 import React, { FC } from "react"
-import { Linking, Pressable } from "react-native"
+import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 
 export interface GroupTileProps {
     name?: string
     link?: string
+    onClick?: () => void
 }
 
 export const GroupTile: FC<GroupTileProps> = props => {
     const { isLight } = usePalette()
 
-    const handlePress = async () => {
-        if (!props.link) {
-            return
-        }
-        // Checking if the link is supported for links with custom URL scheme.
-        const supported = await Linking.canOpenURL(props.link)
-
-        if (supported) {
-            // Opening the link with some app
-            await Linking.openURL(props.link)
-        }
-    }
-
     return (
-        <Pressable onPress={handlePress} style={{ marginBottom: 20 }}>
-            <BodyText
-                style={{ fontSize: 13, color: isLight ? "#424967" : "#fff" }}
+        <View style={{ flex: 1 }}>
+            <Pressable
+                onPress={props.onClick}
+                style={{
+                    marginVertical: 20,
+                    flex: 1,
+                }}
             >
-                {props.name}
-            </BodyText>
-        </Pressable>
+                <View style={{ flex: 1, flexDirection: "row", width: "100%" }}>
+                    <View
+                        style={{
+                            borderRadius: 24,
+                            backgroundColor: isLight ? "#454773" : "#fff",
+                            height: 48,
+                            width: 48,
+                            marginRight: 8,
+                        }}
+                    />
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: "space-evenly",
+                        }}
+                    >
+                        <BodyText
+                            style={{
+                                fontSize: 16,
+                                fontWeight: "700",
+                                color: isLight ? "#454773" : "#fff",
+                            }}
+                        >
+                            {props.name}
+                        </BodyText>
+
+                        <BodyText
+                            style={{
+                                fontSize: 12,
+                                fontWeight: "400",
+                                color: isLight ? "#454773" : "#fff",
+                            }}
+                        >
+                            -:- members
+                        </BodyText>
+                    </View>
+                </View>
+            </Pressable>
+            <Divider color={"#8791BD"} height={1}></Divider>
+        </View>
     )
 }

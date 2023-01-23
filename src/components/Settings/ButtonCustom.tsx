@@ -12,6 +12,8 @@ export interface ButtonCustomProps {
     light?: boolean
     onPress?: () => void
     buttonStyle?: ViewStyle
+    overrideLight?: string
+    overrideDark?: string
 }
 /**
  * Custom button component. Specify param `light` to select button type
@@ -26,8 +28,8 @@ export const ButtonCustom: FC<ButtonCustomProps> = props => {
                 {
                     backgroundColor: props.light
                         ? isLight
-                            ? palette.lighter
-                            : palette.darker
+                            ? (props.overrideLight ?? palette.lighter)
+                            : (props.overrideDark ?? palette.darker)
                         : isLight
                         ? palette.darker
                         : palette.lighter,
