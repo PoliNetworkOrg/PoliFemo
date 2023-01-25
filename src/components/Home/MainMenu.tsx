@@ -122,7 +122,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                             key={"menu_add_row" + i}
                             style={{
                                 flexDirection: "row",
-                                marginVertical: 2,
+                                marginVertical: 6,
                                 width: 288,
                             }}
                         >
