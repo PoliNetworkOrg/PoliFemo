@@ -2,7 +2,6 @@ import React, { FC, useContext, useEffect, useState } from "react"
 import { View } from "react-native"
 import { PoliCarousel } from "./PoliCarousel"
 import { LoginContext } from "utils/login"
-import { RetryType } from "api/HttpClient"
 import { Event } from "api/event"
 import { WidgetType, CarouselItem } from "utils/carousel"
 import { events } from "api/event"
@@ -99,7 +98,6 @@ export const HighlightsManager: FC = () => {
                 matricola,
                 startDate,
                 nEvents,
-                { maxRetries: 1, retryType: RetryType.RETRY_N_TIMES}
             )
             console.log(response) //print the list of events
             extractNextEvents(response)
@@ -115,7 +113,7 @@ export const HighlightsManager: FC = () => {
         if (loggedIn){
             findNextEvents(userInfo.careers[0].matricola, dateStart, 10).finally(()=>console.log("fine"))
         }
-    }, [])
+    }, [loggedIn])
 
     return (
         <View>
