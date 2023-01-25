@@ -99,7 +99,7 @@ export class HttpClient extends EventEmitter {
         if (!this.classInstance) {
             this.classInstance = new HttpClient(
                 "https://api.polinetwork.org/staging/",
-                "https://polimiapp.polimi.it/polimi_app/rest/jaf"
+                "https://polimiapp.polimi.it/polimi_app"
             )
         }
 
@@ -235,7 +235,7 @@ export class HttpClient extends EventEmitter {
             return false
         }
 
-        const url = "/oauth/token/refresh/" + this.polimiToken?.refreshToken
+        const url = "/rest/jaf/oauth/token/refresh/" + this.polimiToken?.refreshToken
         try {
             const response = await this.polimiInstance.get<PolimiToken>(url, {
                 retryType: RetryType.RETRY_N_TIMES,

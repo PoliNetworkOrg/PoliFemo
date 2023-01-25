@@ -14,7 +14,7 @@ export const auth = {
      */
     async getPolimiToken(code: string, options?: RequestOptions) {
         const response = await client.polimiInstance.get<PolimiToken>(
-            `/oauth/token/get/${code}`,
+            `/rest/jaf/oauth/token/get/${code}`,
             {
                 ...options,
                 headers: {

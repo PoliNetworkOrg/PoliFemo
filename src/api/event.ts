@@ -1,13 +1,12 @@
-import { HttpClient, RequestOptions } from "./HttpClient"
+import { AuthType, HttpClient, RequestOptions } from "./HttpClient"
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export interface Lecture {
+export interface Event {
     event_id: number
     date_start: string
     date_end: string
-    favourite: boolean
     show_agenda: boolean
-    matricola: string
+    matricola?: string
     title: {
         it: string
         en: string
@@ -19,6 +18,7 @@ export interface Lecture {
             en: string
         }
     }
+    event_subtype?: string
     calendar: {
         calendar_id: number
         calendar_dn: {
@@ -26,7 +26,7 @@ export interface Lecture {
             en: string
         }
     }
-    room: {
+    room?: {
         room_id: number
         acronym_dn: string
         classroom_id: number
@@ -36,18 +36,19 @@ export interface Lecture {
 
 const client = HttpClient.getInstance()
 
-/**
- * Collection of endpoints related to Timetable.
- */
-export const timetable = {
-    /**
-     * Retrieves mock timetable from PoliNetwork server.
-     */
-    async getTimetable(options?: RequestOptions) {
-        const response = await client.poliNetworkInstance.get<Lecture[]>(
-            "/v1/mock/timetable",
-            options
-        )
+export const events = {
+    async getEvents(
+        matricola: string,
+        start_date: string,
+        n_events: number,
+        options?: RequestOptions
+    ) {
+        const url = "/agenda/api/me/" + matricola + "/events"
+        const response = await client.polimiInstance.get<Event[]>(url, {
+            ...options,
+            params: { start_date: start_date, n_events: n_events },
+            authType: AuthType.POLIMI,
+        })
         return response.data
     },
 }

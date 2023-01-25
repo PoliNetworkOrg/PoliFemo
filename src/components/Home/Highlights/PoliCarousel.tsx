@@ -5,18 +5,10 @@ import Animated from "react-native-reanimated"
 import { PaginationCarousel } from "./PaginationCarousel"
 import lecturesImage from "assets/carousel-lectures.png"
 import iseeImage from "assets/carousel-isee.png"
-import { CarouselItem } from "./HighlightsManager"
+import { useNavigation } from "navigation/NavigationTypes"
+import { WidgetType, CarouselItem, formatTitle } from "utils/carousel"
 
 const { width } = Dimensions.get("window")
-
-/**
- * enum to differentiate the different types of widget we could have
- * different widget types have different background images
- */
-export enum WidgetType {
-    LECTURES,
-    ISEE,
-}
 
 /**
  * custom Carousel component, it receives the data to show from the HighlightsManager
@@ -40,6 +32,8 @@ export const PoliCarousel: FC<{ dataToShow: CarouselItem[] }> = ({
     ).current
 
     const viewAbilityConfig = { viewAreaCoveragePercentThreshold: 50 }
+
+    const { navigate } = useNavigation()
 
     return (
         <View style={{ marginTop: 60 }}>
@@ -69,9 +63,6 @@ export const PoliCarousel: FC<{ dataToShow: CarouselItem[] }> = ({
                                     justifyContent: "center",
                                     alignItems: "center",
                                 }}
-                                onPress={() =>
-                                    console.log("Highlights premuto!")
-                                }
                             >
                                 <ImageBackground
                                     style={{
@@ -81,7 +72,8 @@ export const PoliCarousel: FC<{ dataToShow: CarouselItem[] }> = ({
                                         overflow: "hidden",
                                     }}
                                     source={
-                                        item.type === WidgetType.LECTURES
+                                        item.type === WidgetType.LECTURES ||
+                                        WidgetType.EXAMS
                                             ? lecturesImage
                                             : iseeImage
                                     }
@@ -106,7 +98,7 @@ export const PoliCarousel: FC<{ dataToShow: CarouselItem[] }> = ({
                                                 textAlign: "center",
                                             }}
                                         >
-                                            {item.title}
+                                            {formatTitle(item.title)}
                                         </BodyText>
                                     </View>
                                 </ImageBackground>
@@ -121,11 +113,12 @@ export const PoliCarousel: FC<{ dataToShow: CarouselItem[] }> = ({
                                     flexDirection: "row",
                                 }}
                             >
-                                <Pressable>
+                                <Pressable onPress={()=>navigate("Error404")}>
                                     <BodyText
                                         style={{
                                             fontWeight: "700",
                                             marginLeft: 2,
+                                            fontSize: 12,
                                         }}
                                     >
                                         {item.date}
@@ -133,11 +126,12 @@ export const PoliCarousel: FC<{ dataToShow: CarouselItem[] }> = ({
                                         {item.time}
                                     </BodyText>
                                 </Pressable>
-                                <Pressable>
+                                <Pressable onPress={() => navigate("Error404")}>
                                     <BodyText
                                         style={{
-                                            fontWeight: "700",
+                                            fontWeight: "400",
                                             marginRight: 2,
+                                            fontSize: 12,
                                         }}
                                     >
                                         {item.room}
