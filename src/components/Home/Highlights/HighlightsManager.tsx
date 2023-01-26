@@ -46,22 +46,22 @@ export const HighlightsManager: FC = () => {
         "Dicembre",
     ]
 
-    const extractNextEvents = (events: Event[]) => {
+    /**
+     * This function gets as parameters the list of events extracted and then it filters it.
+     * @param events 
+     */
+    const extractNextEvents = (events: Event[],numEvents: number) => {
         //idk, maybe it's not the best solution
-        function checkEventType(type: string) {
-            return type === "Lezione" || type === "Esame" || type === "Deadline"
+        function checkEventType(typeId: number) {
+            return typeId === WidgetType.LECTURES || WidgetType.EXAMS || WidgetType.DEADLINE
         }
 
         const filteredEvents = events.filter(x =>
-            checkEventType(x.event_type.type_dn.it)
+            checkEventType(x.event_type.typeId)
         )
 
-        //Limit the number of elements of the carousel to 10, could be changed
-        const numOfElements =
-            filteredEvents.length > 10 ? 10 : filteredEvents.length
-
         const tempEvents: CarouselItem[] = []
-        for (let i = 0; i < numOfElements; i++) {
+        for (let i = 0; i < numEvents; i++) {
             const currentObject = filteredEvents[i]
             const dateObj = new Date(currentObject.date_start)
             const resultDate =
@@ -88,6 +88,12 @@ export const HighlightsManager: FC = () => {
         setWidgets(tempEvents)
     }
 
+    /**
+     * This function calls the events API.
+     * @param matricola 
+     * @param startDate 
+     * @param nEvents 
+     */
     const findNextEvents = async (
         matricola: string,
         startDate: string,
@@ -99,19 +105,20 @@ export const HighlightsManager: FC = () => {
                 startDate,
                 nEvents,
             )
-            console.log(response) //print the list of events
-            extractNextEvents(response)
+            if (response.length !== 0){ //we extract the events if there is something
+                extractNextEvents(response,nEvents)
+            }
         } catch (error) {
             console.log(error)
         }
     }
 
     const dateStart = new Date().toISOString().slice(0,10) //it's now
+    const nEvents = 10 //idk, temporary solution
 
     useEffect(() => {
-        console.log("inizio")
         if (loggedIn){
-            findNextEvents(userInfo.careers[0].matricola, dateStart, 10).finally(()=>console.log("fine"))
+            findNextEvents(userInfo.careers[0].matricola, dateStart, nEvents).finally(()=>console.log("Events Retrieved"))
         }
     }, [loggedIn])
 
@@ -126,23 +133,23 @@ export const HighlightsManager: FC = () => {
                         {
                             id: 0,
                             type: WidgetType.DEADLINE,
-                            date: "Mercoledi 22 Ottobre 2022",
+                            date: "Lunedi 22 Ottobre 2022",
                             time: "8:00",
-                            title: "Scadenza ISEE 2023",
+                            title: "Default Widget Missing",
                         },
                         {
                             id: 1,
                             type: WidgetType.DEADLINE,
-                            date: "Mercoledi 22 Ottobre 2022",
+                            date: "Martedi 23 Ottobre 2022",
                             time: "8:00",
-                            title: "Scadenza ISEE 2023",
+                            title: "Default Widget Missing",
                         },
                         {
                             id: 2,
                             type: WidgetType.DEADLINE,
-                            date: "Mercoledi 22 Ottobre 2022",
+                            date: "Mercoledi 24 Ottobre 2022",
                             time: "8:00",
-                            title: "Scadenza ISEE 2023",
+                            title: "Default Widget Missing",
                         },
                     ]}
                 />
