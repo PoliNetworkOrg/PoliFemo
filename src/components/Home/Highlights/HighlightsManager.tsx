@@ -3,8 +3,8 @@ import { View } from "react-native"
 import { PoliCarousel } from "./PoliCarousel"
 import { LoginContext } from "utils/login"
 import { Event } from "api/event"
-import { WidgetType, CarouselItem } from "utils/carousel"
-import { events } from "api/event"
+import { WidgetType, CarouselItem,checkEventType, createWidget } from "utils/carousel"
+import { api } from "api"
 
 
 /**
@@ -17,44 +17,11 @@ export const HighlightsManager: FC = () => {
 
     const [widgets, setWidgets] = useState<CarouselItem[]>([])
 
-    //function used to add a "0" to the day is this one is lower than 10 (ex. n=8 -> res=08)
-    const pad = (n: number) => {
-        return n < 10 ? "0" + n : n
-    }
-
-    const days = [
-        "Lunedi",
-        "Martedi",
-        "Mercoledi",
-        "Giovedi",
-        "Venerdi",
-        "Sabato",
-        "Domenica",
-    ]
-    const months = [
-        "Gennaio",
-        "Febbraio",
-        "Marzo",
-        "Aprile",
-        "Maggio",
-        "Giugno",
-        "Luglio",
-        "Agosto",
-        "Settembre",
-        "Ottobre",
-        "Novembre",
-        "Dicembre",
-    ]
-
     /**
      * This function gets as parameters the list of events extracted and then it filters it.
      * @param events 
      */
     const extractNextEvents = (events: Event[]) => {
-        //idk, maybe it's not the best solution
-        function checkEventType(typeId: number) {
-            return typeId === WidgetType.LECTURES || WidgetType.EXAMS || WidgetType.DEADLINE
-        }
 
         const filteredEvents = events.filter(x =>
             checkEventType(x.event_type.typeId)
@@ -62,28 +29,7 @@ export const HighlightsManager: FC = () => {
 
         const tempEvents: CarouselItem[] = []
         for (let i = 0; i < filteredEvents.length; i++) {
-            const currentObject = filteredEvents[i]
-            const dateObj = new Date(currentObject.date_start)
-            const resultDate =
-                days[(dateObj.getDay() - 1 + 7) % 7] +
-                " " +
-                pad(dateObj.getDate()) +
-                " " +
-                months[dateObj.getMonth()] +
-                " " +
-                dateObj.getFullYear()
-            const nextEvent: CarouselItem = {
-                id: currentObject.event_id,
-                type: currentObject.event_type.typeId,
-                date: resultDate,
-                time: currentObject.date_start.toString().slice(11, 16),
-                title: currentObject.title.it,
-                room:
-                    currentObject.room !== undefined
-                        ? currentObject.room.acronym_dn
-                        : undefined,
-            }
-            tempEvents.push(nextEvent)
+            tempEvents.push(createWidget(filteredEvents[i]))
         }
         setWidgets(tempEvents)
     }
@@ -100,7 +46,7 @@ export const HighlightsManager: FC = () => {
         nEvents: number
     ) => {
         try {
-            const response = await events.getEvents(
+            const response = await api.events.get(
                 matricola,
                 startDate,
                 nEvents,

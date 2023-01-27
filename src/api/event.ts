@@ -37,7 +37,7 @@ export interface Event {
 const client = HttpClient.getInstance()
 
 export const events = {
-    async getEvents(
+    async get(
         matricola: string,
         start_date: string,
         n_events: number,
