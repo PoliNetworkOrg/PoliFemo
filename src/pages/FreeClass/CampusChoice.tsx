@@ -112,7 +112,7 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = props => {
                                     onPress={() =>
                                         navigate("BuildingChoice", {
                                             campus: item,
-                                            currentDate: date.toString(),
+                                            currentDate: date.toISOString(),
                                         })
                                     }
                                 >

@@ -5,8 +5,7 @@ import { usePalette } from "utils/colors"
 import { Title, BodyText } from "components/Text"
 import { NavBar } from "components/NavBar"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
-import { Room } from "api/Room"
-import { api, RetryType } from "api"
+import { api } from "api"
 
 export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
     const { palette, background, homeBackground } = usePalette()
@@ -14,35 +13,36 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
 
     const { campus, currentDate } = props.route.params
 
-    const [roomList, setRoomList] = useState<Room[]>()
-
     const [buildingList, setBuildingList] = useState<string[]>()
 
     const [isBuildingListFound, setBuildingListFound] = useState(false)
 
-    const dateEnd = new Date(currentDate).setHours(
-        new Date(currentDate).getHours() + 2
+    //non-ISO format for simplicity (local timezone) and
+    // compatibility with `handleConfirm` function
+    const [date, setDate] = useState<Date>(
+        new Date(currentDate) !== new Date()
+            ? new Date(currentDate)
+            : new Date()
     )
+
+    function addHours(dateStart: Date, hours: number) {
+        const tempDate= new Date(dateStart.getTime())
+        tempDate.setHours(tempDate.getHours() + hours)
+        return tempDate
+    }
+
+    const dateEnd = addHours(date, 5).toISOString() //5 hours is an example
 
     const findRoomsAvailable = async () => {
         try {
             const response = await api.rooms.getFreeRoomsTimeRange(
-                "MIB",
-                "2022-05-18T12:15:00Z",
-                "2022-05-18T14:15:00Z",
+                campus.acronym,
+                date.toISOString(),
+                dateEnd
             )
-            setRoomList(response)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    useEffect(() => {
-        if (!isBuildingListFound) {
-            findRoomsAvailable().catch(console.error)
-            if (roomList !== undefined) {
+            if (response.length > 0) {
                 const tempBuildings: string[] = []
-                roomList.map(room => {
+                response.map(room => {
                     const currentBuilding = room.building.replace(
                         "Edificio ",
                         ""
@@ -53,21 +53,15 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                 })
                 setBuildingList(tempBuildings)
                 setBuildingListFound(true)
-            } else {
-                console.log("roomList empty")
             }
-        } else {
-            undefined
+        } catch (error) {
+            console.log(error)
         }
-    }, [roomList])
+    }
 
-    //non-ISO format for simplicity (local timezone) and
-    // compatibility with `handleConfirm` function
-    const [date, setDate] = useState<Date>(
-        new Date(currentDate) !== new Date()
-            ? new Date(currentDate)
-            : new Date()
-    )
+    useEffect(() => {
+        findRoomsAvailable().finally(() => console.log("Rooms Retrieved"))
+    }, [isBuildingListFound])
 
     useEffect(() => {
         setDate(new Date(currentDate))
@@ -153,7 +147,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                     >
                         <FlatList
                             refreshing={refreshing}
-                            onRefresh={() => console.log("refreshing!")}
+                            onRefresh={() => console.log("Refreshing!")}
                             showsVerticalScrollIndicator={true}
                             style={{ marginTop: 27, marginBottom: 35 }}
                             numColumns={2}
@@ -171,7 +165,6 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                                         width: "45%",
                                         height: 93,
                                         marginHorizontal: 9,
-                                        //marginVertical: 17,
                                         marginBottom: 34,
                                         alignItems: "center",
                                     }}
