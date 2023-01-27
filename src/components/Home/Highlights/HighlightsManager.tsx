@@ -50,7 +50,7 @@ export const HighlightsManager: FC = () => {
      * This function gets as parameters the list of events extracted and then it filters it.
      * @param events 
      */
-    const extractNextEvents = (events: Event[],numEvents: number) => {
+    const extractNextEvents = (events: Event[]) => {
         //idk, maybe it's not the best solution
         function checkEventType(typeId: number) {
             return typeId === WidgetType.LECTURES || WidgetType.EXAMS || WidgetType.DEADLINE
@@ -61,7 +61,7 @@ export const HighlightsManager: FC = () => {
         )
 
         const tempEvents: CarouselItem[] = []
-        for (let i = 0; i < numEvents; i++) {
+        for (let i = 0; i < filteredEvents.length; i++) {
             const currentObject = filteredEvents[i]
             const dateObj = new Date(currentObject.date_start)
             const resultDate =
@@ -106,7 +106,7 @@ export const HighlightsManager: FC = () => {
                 nEvents,
             )
             if (response.length !== 0){ //we extract the events if there is something
-                extractNextEvents(response,nEvents)
+                extractNextEvents(response)
             }
         } catch (error) {
             console.log(error)
