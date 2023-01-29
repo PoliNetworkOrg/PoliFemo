@@ -3,6 +3,8 @@ import React, { FC } from "react"
 import { View } from "react-native"
 import { usePalette } from "utils/colors"
 import { Group } from "api/groups"
+import { choosePlatformIcon } from "utils/groups"
+import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 
 export interface ModalGroupItemProps {
     /**
@@ -13,6 +15,11 @@ export interface ModalGroupItemProps {
 
 export const ModalGroupItem: FC<ModalGroupItemProps> = props => {
     const { isLight } = usePalette()
+    const icon = choosePlatformIcon(props.group?.platform)
+    const iconSvg = useSVG(icon?.svg)
+
+    const scaleFactor = 2.5
+
     return (
         <View
             style={{
@@ -24,12 +31,33 @@ export const ModalGroupItem: FC<ModalGroupItemProps> = props => {
                 style={{
                     width: 88,
                     height: 88,
-                    backgroundColor: isLight ? "#454773" : "#fff",
                     borderRadius: 44,
                     marginTop: 16,
                     marginBottom: 8,
+                    justifyContent: "center",
+                    alignItems: "center",
                 }}
-            />
+            >
+                {icon && iconSvg && (
+                    <Canvas
+                        style={{
+                            width: icon.width * scaleFactor,
+                            height: icon.heigth * scaleFactor,
+                        }}
+                    >
+                        {iconSvg && (
+                            <ImageSVG
+                                svg={iconSvg}
+                                x={0}
+                                y={0}
+                                width={icon.width}
+                                height={icon.heigth}
+                                transform={[{ scale: scaleFactor }]}
+                            />
+                        )}
+                    </Canvas>
+                )}
+            </View>
             <BodyText
                 style={{
                     fontSize: 32,
@@ -60,7 +88,7 @@ export const ModalGroupItem: FC<ModalGroupItemProps> = props => {
                         marginTop: 16,
                     }}
                 >
-                    {props.group?.year} {props.group?.platform}
+                    {props.group?.year}
                 </BodyText>
             </View>
         </View>

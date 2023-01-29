@@ -1,3 +1,9 @@
+import {
+    Canvas,
+    DataSourceParam,
+    ImageSVG,
+    useSVG,
+} from "@shopify/react-native-skia"
 import { Divider } from "components/Divider"
 import { BodyText } from "components/Text"
 import React, { FC } from "react"
@@ -6,11 +12,15 @@ import { usePalette } from "utils/colors"
 
 export interface GroupTileProps {
     text?: string
+    icon?: { svg: DataSourceParam; width: number; heigth: number }
     onClick?: () => void
 }
 
 export const GroupTile: FC<GroupTileProps> = props => {
     const { isLight } = usePalette()
+
+    const iconSvg = useSVG(props.icon?.svg)
+
 
     return (
         <View style={{ flex: 1 }}>
@@ -25,12 +35,40 @@ export const GroupTile: FC<GroupTileProps> = props => {
                     <View
                         style={{
                             borderRadius: 24,
-                            backgroundColor: isLight ? "#454773" : "#fff",
+                            backgroundColor: "transparent",
                             height: 48,
                             width: 48,
                             marginRight: 8,
+                            justifyContent: "center",
+                            alignItems: "center",
                         }}
-                    />
+                    >
+                        {props.icon && iconSvg && (
+                            <View
+                                style={{
+                                    width: props.icon.width,
+                                    height: props.icon.heigth,
+                                }}
+                            >
+                                <Canvas
+                                    style={{
+                                        width: props.icon.width,
+                                        height: props.icon.heigth,
+                                    }}
+                                >
+                                    {iconSvg && (
+                                        <ImageSVG
+                                            svg={iconSvg}
+                                            x={0}
+                                            y={0}
+                                            width={props.icon.width}
+                                            height={props.icon.heigth}
+                                        />
+                                    )}
+                                </Canvas>
+                            </View>
+                        )}
+                    </View>
                     <View
                         style={{
                             flex: 1,

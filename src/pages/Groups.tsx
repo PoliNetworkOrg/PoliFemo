@@ -7,6 +7,7 @@ import { api, RetryType } from "api"
 import { Group } from "api/groups"
 import { useMounted } from "utils/useMounted"
 import {
+    choosePlatformIcon,
     createGroupLink,
     msPassedBetween,
     orderByMostRecentYear,
@@ -216,6 +217,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
                                         setModalGroup(group)
                                         setIsModalShowing(true)
                                     }}
+                                    icon={choosePlatformIcon(group.platform)}
                                 />
                             )
                         })}

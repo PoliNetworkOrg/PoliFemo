@@ -1,5 +1,5 @@
 import { Group } from "api/groups"
-
+import { platformIcons } from "assets/groups"
 /**
  * return groups ordered by most recent year using a bubble sort algorithm
  * see {@link Groups} Page
@@ -86,4 +86,15 @@ export function msPassedBetween(start: Date | undefined, end: Date) {
         return undefined
     }
     return end.getTime() - start.getTime()
+}
+
+export function choosePlatformIcon(platform? : string){
+    if(platform === "TG"){
+        return platformIcons.telegram
+    }else if(platform ==="FB"){
+        return platformIcons.facebook
+    }else if(platform === "WA"){
+        return platformIcons.whatsapp
+    }
+    return undefined
 }
