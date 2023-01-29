@@ -6,6 +6,14 @@ import { Title, BodyText } from "components/Text"
 import { NavBar } from "components/NavBar"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { api } from "api"
+import { Room } from "api/Room"
+import { CampusItem } from "./CampusChoice"
+
+export interface BuildingItem {
+    campus: CampusItem
+    name: string
+    freeRoomList: string[] 
+}
 
 export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
     const { palette, background, homeBackground } = usePalette()
@@ -13,9 +21,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
 
     const { campus, currentDate } = props.route.params
 
-    const [buildingList, setBuildingList] = useState<string[]>()
-
-    const [isBuildingListFound, setBuildingListFound] = useState(false)
+    const [buildingList, setBuildingList] = useState<BuildingItem[]>()
 
     //non-ISO format for simplicity (local timezone) and
     // compatibility with `handleConfirm` function
@@ -41,18 +47,33 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                 dateEnd
             )
             if (response.length > 0) {
-                const tempBuildings: string[] = []
+
+                const tempBuildingStrings: string[] = []
+                const tempBuildings : BuildingItem[] = []
                 response.map(room => {
-                    const currentBuilding = room.building.replace(
+                    const currentBuildingString = room.building.replace(
                         "Edificio ",
-                        ""
+                        "Ed. "
                     )
-                    if (!tempBuildings.includes(currentBuilding)) {
+                    if (!tempBuildingStrings.includes(currentBuildingString)) {
+                        const currentBuilding : BuildingItem = {
+                            campus: campus,
+                            name: room.building.replace(
+                                "Edificio ",
+                                "Ed. "
+                            ),
+                            freeRoomList: [room.name]
+                        }
+                        tempBuildingStrings.push(currentBuildingString)
                         tempBuildings.push(currentBuilding)
+                    }
+                    else{
+                        //element already present in the list
+                        const indexElement = tempBuildingStrings.indexOf(currentBuildingString)
+                        tempBuildings[indexElement].freeRoomList.push(room.name)
                     }
                 })
                 setBuildingList(tempBuildings)
-                setBuildingListFound(true)
             }
         } catch (error) {
             console.log(error)
@@ -61,7 +82,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
 
     useEffect(() => {
         findRoomsAvailable().finally(() => console.log("Rooms Retrieved"))
-    }, [isBuildingListFound])
+    }, [date])
 
     useEffect(() => {
         setDate(new Date(currentDate))
@@ -72,8 +93,6 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
             currentDate: date.toString(),
         })
     }
-
-    const [refreshing, setRefreshing] = useState<boolean>(false)
 
     return (
         <View
@@ -146,8 +165,6 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                         }}
                     >
                         <FlatList
-                            refreshing={refreshing}
-                            onRefresh={() => console.log("Refreshing!")}
                             showsVerticalScrollIndicator={true}
                             style={{ marginTop: 27, marginBottom: 35 }}
                             numColumns={2}
@@ -171,7 +188,6 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                                     onPress={() =>
                                         navigate("ClassChoice", {
                                             building: item,
-                                            campus: campus,
                                             currentDate: date.toString(),
                                         })
                                     }
@@ -195,7 +211,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                                                 textAlign: "center",
                                             }}
                                         >
-                                            {item}
+                                            {item.name}
                                         </BodyText>
                                     </View>
                                 </Pressable>

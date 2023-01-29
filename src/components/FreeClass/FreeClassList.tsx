@@ -11,7 +11,11 @@ import { ScrollView } from "react-native-gesture-handler"
 
 const { width } = Dimensions.get("window")
 
-export const FreeClassList: FC = () => {
+interface FreeClassListProps {
+    data: string[]
+}
+
+export const FreeClassList: FC<FreeClassListProps> = (props) => {
     const { palette } = usePalette()
     const timerSVG = useSVG(timerIcon)
     const overcrowdingSVG = useSVG(overcrowdingIcon)
@@ -25,9 +29,9 @@ export const FreeClassList: FC = () => {
                 justifyContent: "center",
             }}
         >
-            {rooms.map(room => (
+            {props.data.map((room,index) => (
                 <Pressable
-                    key={room.room_id}
+                    key={index}
                     style={{
                         width: width - 65,
                         height: 93,
@@ -187,7 +191,7 @@ export const FreeClassList: FC = () => {
                                 fontSize: 24,
                             }}
                         >
-                            {room.name}
+                            {room}
                         </BodyText>
                     </View>
                 </Pressable>

@@ -7,10 +7,11 @@ import { NavBar } from "components/NavBar"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 
+
 export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
     const { background, homeBackground } = usePalette()
 
-    const { building, campus, currentDate } = props.route.params
+    const { building, currentDate } = props.route.params
 
     //non-ISO format for simplicity (local timezone) and
     // compatibility with `handleConfirm` function
@@ -26,7 +27,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
 
     const goBack = () => {
         props.navigation.navigate("BuildingChoice", {
-            campus: campus,
+            campus: building.campus,
             currentDate: date.toString(),
         })
     }
@@ -71,7 +72,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
                         }}
                     >
                         <Title style={{ fontSize: 40, fontWeight: "900" }}>
-                            {building}
+                            {building.name.replace("Ed. ","Edificio ")}
                         </Title>
                     </View>
                     <DateTimePicker
@@ -79,7 +80,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
                         setDate={(date: Date) => setDate(date)}
                     />
                     <View style={{ height: "100%", marginTop: 26 }}>
-                        <FreeClassList />
+                        <FreeClassList data={building.freeRoomList}/>
                     </View>
                 </View>
             </View>
