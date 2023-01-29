@@ -213,7 +213,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                                 paddingBottom: 100,
                             }}
                         >
-                            <FreeClassList />
+                            <FreeClassList data={["ciao","ciao","ciao","ciao","ciao"]}/>
                         </View>
                     ) : (
                         <View
