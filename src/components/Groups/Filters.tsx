@@ -23,8 +23,8 @@ interface ModalItemList {
 }
 
 const yearsList: ModalItemList = {
-    itemsToShow: ["2021/2022", "2020/2021", "2019/2020", "2018/2019"],
-    itemsToSave: ["2021/2022", "2020/2021", "2019/2020", "2018/2019"],
+    itemsToShow: [ "2022/2023","2021/2022", "2020/2021", "2019/2020", "2018/2019"],
+    itemsToSave: [ "2022/2023","2021/2022", "2020/2021", "2019/2020", "2018/2019"],
 }
 const coursesList: ModalItemList = {
     itemsToShow: ["Triennale", "Magistrale", "Ciclo unico"],
