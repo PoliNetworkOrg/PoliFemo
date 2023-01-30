@@ -7,7 +7,9 @@ import { NavBar } from "components/NavBar"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 
-
+/**
+ * In this page the user can select finally the free class he wants.
+ */
 export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
     const { background, homeBackground } = usePalette()
 
@@ -25,6 +27,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
         setDate(new Date(currentDate))
     }, [props.route.params.currentDate])
 
+    //custom goBack function in order to maintain the currenyDate
     const goBack = () => {
         props.navigation.navigate("BuildingChoice", {
             campus: building.campus,

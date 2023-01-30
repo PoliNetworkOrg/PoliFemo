@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { Pressable, View } from "react-native"
+import { ActivityIndicator, Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
 import { BodyText, Title } from "components/Text"
@@ -30,6 +30,8 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     const [currentLocation, setCurrentLocation] =
         useState<LocationGeocodedAddress>()
 
+    const [currentCoords, setCurrentCoords] = useState<number[]>([])
+
     useEffect(() => {
         async function getPosition() {
             const { status } =
@@ -45,6 +47,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                     longitude,
                 })
                 setLocationStatus(PermissionStatus.GRANTED)
+                setCurrentCoords([latitude, longitude])
                 setCurrentLocation(response[0])
             }
         }
@@ -98,7 +101,10 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                         <Title style={{ fontSize: 40 }}>
                             Posizione Attuale
                         </Title>
-                        <AddressText currentLocation={currentLocation} locationStatus={locationStatus}/>
+                        <AddressText
+                            currentLocation={currentLocation}
+                            locationStatus={locationStatus}
+                        />
                     </View>
                     <View style={{ marginTop: -35 }}>
                         <PoliSearchBar
@@ -190,7 +196,17 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                                 paddingBottom: 130,
                             }}
                         >
-                            <Map />
+                            {currentCoords.length === 0  ? (
+                                <ActivityIndicator
+                                    style={{ marginTop: 50 }}
+                                    size="large"
+                                />
+                            ) : (
+                                <Map
+                                    latitude={currentCoords[0]}
+                                    longitude={currentCoords[1]}
+                                />
+                            )}
                         </View>
                     )}
                 </View>

@@ -14,6 +14,9 @@ export interface BuildingItem {
     freeRoomList: string[] 
 }
 
+/**
+ * In this page the user can select the building.
+ */
 export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
     const { palette, background, homeBackground } = usePalette()
     const { navigate } = useNavigation()
@@ -36,8 +39,10 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
         return tempDate
     }
 
+    //the dateEnd is the startDate + five hours, the number of hours has not been chosen yet
     const dateEnd = addHours(date, 5).toISOString() //5 hours is an example
 
+    //main function that handles the call to the API in order to obtain the list of freeclassRooms
     const findRoomsAvailable = async () => {
         try {
             const response = await api.rooms.getFreeRoomsTimeRange(
@@ -87,6 +92,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
         setDate(new Date(currentDate))
     }, [props.route.params.currentDate])
 
+    //custom goBack function, in order to maintain the currentDate.
     const goBack = () => {
         props.navigation.navigate("CampusChoice", {
             currentDate: date.toString(),

@@ -19,6 +19,9 @@ const campusList: CampusItem[] = [
     { name: ["Mancinelli"],acronym: "MIA" },
 ]
 
+/**
+ * In this page the user can select the campus. 
+ */
 export const CampusChoice: MainStackScreen<"CampusChoice"> = props => {
     const { navigate } = useNavigation()
     const { homeBackground, background, palette } = usePalette()
