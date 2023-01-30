@@ -45,7 +45,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
     const [geolocation, setGeoloaction] = useState<boolean>(false)
 
     const handlePositionPressed = async () => {
-        if (geolocation) {
+        if (geolocation) { //if the geolocation is active, the user can proceed
             navigate("PositionChoice")
         } else {
             const { status } =

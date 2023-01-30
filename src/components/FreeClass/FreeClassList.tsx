@@ -6,7 +6,6 @@ import { usePalette } from "utils/colors"
 import timerIcon from "assets/freeClassrooms/timer.svg"
 import overcrowdingIcon from "assets/freeClassrooms/overcrowding.svg"
 import fireIcon from "assets/freeClassrooms/fire.svg"
-import rooms from "pages/FreeClass/Room.json"
 import { ScrollView } from "react-native-gesture-handler"
 
 const { width } = Dimensions.get("window")

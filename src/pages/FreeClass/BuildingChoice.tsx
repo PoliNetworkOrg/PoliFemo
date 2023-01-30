@@ -6,7 +6,6 @@ import { Title, BodyText } from "components/Text"
 import { NavBar } from "components/NavBar"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { api } from "api"
-import { Room } from "api/Room"
 import { CampusItem } from "./CampusChoice"
 
 export interface BuildingItem {
