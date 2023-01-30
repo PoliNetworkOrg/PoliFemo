@@ -1,6 +1,5 @@
 import React, { FC } from "react"
-import MapView, { Marker } from "react-native-maps"
-import rooms from "pages/FreeClass/Room.json"
+import MapView from "react-native-maps"
 
 export const Map: FC = () => {
     return (
@@ -14,18 +13,6 @@ export const Map: FC = () => {
             }}
             showsUserLocation={true}
         >
-            {rooms.map(room => (
-                <Marker
-                    key={room.room_id}
-                    coordinate={{
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                        latitude: room.lat,
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                        longitude: room.long,
-                    }}
-                    title={room.name}
-                ></Marker>
-            ))}
         </MapView>
     )
 }
