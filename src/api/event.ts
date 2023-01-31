@@ -37,7 +37,7 @@ export interface Event {
 const client = HttpClient.getInstance()
 
 export const events = {
-    async get(
+    async getEvents(
         matricola: string,
         start_date: string,
         n_events: number,
@@ -46,7 +46,7 @@ export const events = {
         const url = "/agenda/api/me/" + matricola + "/events"
         const response = await client.polimiInstance.get<Event[]>(url, {
             ...options,
-            params: { start_date: start_date, n_events: n_events },
+            params: { start_date, n_events },
             authType: AuthType.POLIMI,
         })
         return response.data

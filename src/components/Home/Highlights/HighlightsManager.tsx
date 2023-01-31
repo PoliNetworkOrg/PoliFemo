@@ -3,12 +3,7 @@ import { View } from "react-native"
 import { PoliCarousel } from "./PoliCarousel"
 import { LoginContext } from "utils/login"
 import { Event } from "api/event"
-import {
-    WidgetType,
-    CarouselItem,
-    checkEventType,
-    createWidget,
-} from "utils/carousel"
+import { CarouselItem, checkEventType, createWidget } from "utils/carousel"
 import { api } from "api"
 
 /**
@@ -29,81 +24,41 @@ export const HighlightsManager: FC = () => {
         const filteredEvents = events.filter(x =>
             checkEventType(x.event_type.typeId)
         )
-
-        const tempEvents: CarouselItem[] = []
-        for (let i = 0; i < filteredEvents.length; i++) {
-            tempEvents.push(createWidget(filteredEvents[i]))
-        }
-        setWidgets(tempEvents)
+        return filteredEvents.map(e => createWidget(e))
     }
 
     /**
      * This function calls the events API.
-     * @param matricola
-     * @param startDate
-     * @param nEvents
      */
-    const findNextEvents = async (
-        matricola: string,
-        startDate: string,
-        nEvents: number
-    ) => {
+    const setNextEvents = async () => {
+        if (!loggedIn) return
         try {
-            const response = await api.events.get(matricola, startDate, nEvents)
+            const { matricola } = userInfo.careers[0]
+            const startDate = new Date().toISOString().substring(0, 10)
+            const response = await api.events.getEvents(
+                matricola,
+                startDate,
+                10 //nEvents 10
+            )
             if (response.length !== 0) {
                 //we extract the events if there is something
-                extractNextEvents(response)
+                const newWidgets = extractNextEvents(response)
+                setWidgets(newWidgets)
             }
         } catch (error) {
             console.log(error)
         }
     }
 
-    const dateStart = new Date().toISOString().slice(0, 10) //it's now
-    const nEvents = 10 //idk, temporary solution
-
     useEffect(() => {
         if (loggedIn) {
-            findNextEvents(
-                userInfo.careers[0].matricola,
-                dateStart,
-                nEvents
-            ).finally(() => console.log("Events Retrieved"))
+            void setNextEvents()
         }
     }, [loggedIn])
 
     return (
         <View>
-            {loggedIn && widgets.length > 0 ? (
-                <PoliCarousel dataToShow={widgets} />
-            ) : (
-                //with static data, just to see it! We need a default widget
-                <PoliCarousel
-                    dataToShow={[
-                        {
-                            id: 0,
-                            type: WidgetType.DEADLINE,
-                            date: "Lunedi 22 Ottobre 2022",
-                            time: "8:00",
-                            title: "Default Widget Missing",
-                        },
-                        {
-                            id: 1,
-                            type: WidgetType.DEADLINE,
-                            date: "Martedi 23 Ottobre 2022",
-                            time: "8:00",
-                            title: "Default Widget Missing",
-                        },
-                        {
-                            id: 2,
-                            type: WidgetType.DEADLINE,
-                            date: "Mercoledi 24 Ottobre 2022",
-                            time: "8:00",
-                            title: "Default Widget Missing",
-                        },
-                    ]}
-                />
-            )}
+            <PoliCarousel dataToShow={widgets} />
         </View>
     )
 }
