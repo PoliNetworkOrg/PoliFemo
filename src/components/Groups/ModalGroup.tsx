@@ -38,7 +38,7 @@ export interface ModalGroupProps {
  *
  */
 export const ModalGroup: FC<ModalGroupProps> = props => {
-    const { backgroundSecondary, modalBarrier } = usePalette()
+    const { backgroundSecondary, modalBarrier, isLight } = usePalette()
 
     const deleteSvg = useSVG(icon.svg)
     return (
@@ -65,7 +65,6 @@ export const ModalGroup: FC<ModalGroupProps> = props => {
                                 height: 30,
                                 backgroundColor: "#ffffff",
                                 borderRadius: 15,
-                                marginTop: 96,
                                 marginBottom: 8,
                                 justifyContent: "center",
                                 alignItems: "center",
@@ -108,8 +107,11 @@ export const ModalGroup: FC<ModalGroupProps> = props => {
                             }}
                         >
                             <ButtonCustom
-                                overrideLight="#424967"
-                                overrideDark="#8791BD"
+                                style={{
+                                    backgroundColor: isLight
+                                        ? "#424967"
+                                        : "#8791BD",
+                                }}
                                 text={"JOIN GROUP"}
                                 onPress={() => props.onJoin(props.group)}
                             />

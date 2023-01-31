@@ -27,12 +27,6 @@ export interface ModalSelectionProps {
     onOK: () => void
 
     /**
-     * input value of `onOk` function.
-     * Usually the current state value of a {@link RadioButtonGroup}
-     */
-    selectedValue: string
-
-    /**
      * modal wrapper height, specify if height is fixed
      */
     height?: number

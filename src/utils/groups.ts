@@ -4,7 +4,10 @@ import { platformIcons } from "assets/groups"
  * return groups ordered by most recent year using a bubble sort algorithm
  * see {@link Groups} Page
  */
-export function orderByMostRecentYear(groups: Group[]) {
+export function orderByMostRecentYear(groups: Group[], isOrdered : boolean) {
+    if(isOrdered){
+        return groups
+    }
     let hasChanged: boolean
     try {
         do {
@@ -81,12 +84,6 @@ export function createGroupLink(idLink: string, platform: string) {
     }
 }
 
-export function msPassedBetween(start: Date | undefined, end: Date) {
-    if (start === undefined) {
-        return undefined
-    }
-    return end.getTime() - start.getTime()
-}
 
 export function choosePlatformIcon(platform? : string){
     if(platform === "TG"){

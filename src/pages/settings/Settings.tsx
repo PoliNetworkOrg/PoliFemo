@@ -113,7 +113,6 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
             <ModalSelection
                 title={"Scegli Tema"}
                 isShowing={isModalThemeVisible}
-                selectedValue={selectedTheme}
                 onClose={() => {
                     //restore real theme value
                     setSelectedTheme(theme)
@@ -140,7 +139,6 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
             <ModalSelection
                 title={"Cambia Matricola"}
                 isShowing={isModalCareerVisible}
-                selectedValue={selectedCareer.matricola}
                 onClose={() => {
                     //restore selectedCareer to career
                     if (career) setSelectedCareer(career)

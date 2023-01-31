@@ -21,7 +21,6 @@ export const GroupTile: FC<GroupTileProps> = props => {
 
     const iconSvg = useSVG(props.icon?.svg)
 
-
     return (
         <View style={{ flex: 1 }}>
             <Pressable

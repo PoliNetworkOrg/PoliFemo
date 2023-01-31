@@ -26,7 +26,7 @@ export const platformIcons: Record<
     },
     facebook: {
         svg: facebook,
-        width: 24,
+        width: 25,
         heigth: 24,
     },
 }
