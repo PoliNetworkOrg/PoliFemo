@@ -101,6 +101,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
                         flex: 1,
                         marginTop: 40,
                         marginBottom: 93,
+                        marginHorizontal: 8,
                     }}
                 >
                     <ScrollView>
