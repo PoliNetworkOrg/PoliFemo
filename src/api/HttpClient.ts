@@ -235,7 +235,8 @@ export class HttpClient extends EventEmitter {
             return false
         }
 
-        const url = "/rest/jaf/oauth/token/refresh/" + this.polimiToken?.refreshToken
+        const url =
+            "/rest/jaf/oauth/token/refresh/" + this.polimiToken?.refreshToken
         try {
             const response = await this.polimiInstance.get<PolimiToken>(url, {
                 retryType: RetryType.RETRY_N_TIMES,

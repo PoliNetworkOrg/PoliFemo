@@ -113,7 +113,7 @@ export const PoliCarousel: FC<{ dataToShow: CarouselItem[] }> = ({
                                     flexDirection: "row",
                                 }}
                             >
-                                <Pressable onPress={()=>navigate("Error404")}>
+                                <Pressable onPress={() => navigate("Error404")}>
                                     <BodyText
                                         style={{
                                             fontWeight: "700",

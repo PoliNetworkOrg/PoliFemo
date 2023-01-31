@@ -3,9 +3,13 @@ import { View } from "react-native"
 import { PoliCarousel } from "./PoliCarousel"
 import { LoginContext } from "utils/login"
 import { Event } from "api/event"
-import { WidgetType, CarouselItem,checkEventType, createWidget } from "utils/carousel"
+import {
+    WidgetType,
+    CarouselItem,
+    checkEventType,
+    createWidget,
+} from "utils/carousel"
 import { api } from "api"
-
 
 /**
  * Component that decides the content of the carousel.
@@ -19,10 +23,9 @@ export const HighlightsManager: FC = () => {
 
     /**
      * This function gets as parameters the list of events extracted and then it filters it.
-     * @param events 
+     * @param events
      */
     const extractNextEvents = (events: Event[]) => {
-
         const filteredEvents = events.filter(x =>
             checkEventType(x.event_type.typeId)
         )
@@ -36,9 +39,9 @@ export const HighlightsManager: FC = () => {
 
     /**
      * This function calls the events API.
-     * @param matricola 
-     * @param startDate 
-     * @param nEvents 
+     * @param matricola
+     * @param startDate
+     * @param nEvents
      */
     const findNextEvents = async (
         matricola: string,
@@ -46,12 +49,9 @@ export const HighlightsManager: FC = () => {
         nEvents: number
     ) => {
         try {
-            const response = await api.events.get(
-                matricola,
-                startDate,
-                nEvents,
-            )
-            if (response.length !== 0){ //we extract the events if there is something
+            const response = await api.events.get(matricola, startDate, nEvents)
+            if (response.length !== 0) {
+                //we extract the events if there is something
                 extractNextEvents(response)
             }
         } catch (error) {
@@ -59,12 +59,16 @@ export const HighlightsManager: FC = () => {
         }
     }
 
-    const dateStart = new Date().toISOString().slice(0,10) //it's now
+    const dateStart = new Date().toISOString().slice(0, 10) //it's now
     const nEvents = 10 //idk, temporary solution
 
     useEffect(() => {
-        if (loggedIn){
-            findNextEvents(userInfo.careers[0].matricola, dateStart, nEvents).finally(()=>console.log("Events Retrieved"))
+        if (loggedIn) {
+            findNextEvents(
+                userInfo.careers[0].matricola,
+                dateStart,
+                nEvents
+            ).finally(() => console.log("Events Retrieved"))
         }
     }, [loggedIn])
 
