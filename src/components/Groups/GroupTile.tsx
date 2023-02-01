@@ -13,6 +13,7 @@ import { usePalette } from "utils/colors"
 export interface GroupTileProps {
     text?: string
     icon?: { svg: DataSourceParam; width: number; heigth: number }
+    members?: string
     onClick?: () => void
 }
 
@@ -84,15 +85,17 @@ export const GroupTile: FC<GroupTileProps> = props => {
                             {props.text}
                         </BodyText>
 
-                        <BodyText
-                            style={{
-                                fontSize: 12,
-                                fontWeight: "400",
-                                color: isLight ? "#454773" : "#fff",
-                            }}
-                        >
-                            -:- members
-                        </BodyText>
+                        {props.members && (
+                            <BodyText
+                                style={{
+                                    fontSize: 12,
+                                    fontWeight: "400",
+                                    color: isLight ? "#454773" : "#fff",
+                                }}
+                            >
+                                {props.members} members
+                            </BodyText>
+                        )}
                     </View>
                 </View>
             </Pressable>

@@ -69,16 +69,18 @@ export const ModalGroupItem: FC<ModalGroupItemProps> = props => {
                 {props.group?.class}
             </BodyText>
             <View>
-                <BodyText
-                    style={{
-                        fontSize: 13,
-                        fontWeight: "400",
-                        color: isLight ? "#8791BD" : "#fff",
-                        textAlign: "center",
-                    }}
-                >
-                    --:-- members, --:-- online
-                </BodyText>
+                {props.group?.members && (
+                    <BodyText
+                        style={{
+                            fontSize: 13,
+                            fontWeight: "400",
+                            color: isLight ? "#8791BD" : "#fff",
+                            textAlign: "center",
+                        }}
+                    >
+                        {props.group.members} members
+                    </BodyText>
+                )}
                 <BodyText
                     style={{
                         fontSize: 13,

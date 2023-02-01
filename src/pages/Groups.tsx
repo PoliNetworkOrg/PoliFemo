@@ -112,6 +112,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
                         renderItem={group => (
                             <GroupTile
                                 text={group.item.class}
+                                members={group.item.members}
                                 onClick={() => {
                                     setModalGroup(group.item)
                                     setIsModalShowing(true)

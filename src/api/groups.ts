@@ -26,6 +26,7 @@ export interface Group {
     permanent_id?: number
     last_updated?: string
     link_is_working?: string
+    members?: string
 }
 
 const client = HttpClient.getInstance()
