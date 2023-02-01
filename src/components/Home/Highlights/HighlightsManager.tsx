@@ -3,7 +3,12 @@ import { View } from "react-native"
 import { PoliCarousel } from "./PoliCarousel"
 import { LoginContext } from "utils/login"
 import { Event } from "api/event"
-import { CarouselItem, checkEventType, createWidget } from "utils/carousel"
+import {
+    CarouselItem,
+    checkEventType,
+    checkFirstLecture,
+    createWidget,
+} from "utils/carousel"
 import { api } from "api"
 
 /**
@@ -24,7 +29,10 @@ export const HighlightsManager: FC = () => {
         const filteredEvents = events.filter(x =>
             checkEventType(x.event_type.typeId)
         )
-        return filteredEvents.map(e => createWidget(e))
+        const filteredEventsWithOneLecture = filteredEvents.filter(x =>
+            checkFirstLecture(filteredEvents, x)
+        )
+        return filteredEventsWithOneLecture.map(e => createWidget(e))
     }
 
     /**

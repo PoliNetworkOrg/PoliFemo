@@ -63,9 +63,21 @@ export function formatTitle(title: string) {
 export function checkEventType(typeId: number) {
     return (
         typeId === WidgetType.LECTURES ||
-        WidgetType.EXAMS ||
-        WidgetType.DEADLINE
+        typeId === WidgetType.EXAMS ||
+        typeId === WidgetType.DEADLINE
     )
+}
+
+export function checkFirstLecture(events: Event[], event: Event) {
+    if (event.event_type.typeId !== WidgetType.LECTURES) {
+        return true
+    } else {
+        for (const e of events) {
+            if (e.event_type.typeId === WidgetType.LECTURES) {
+                return e.event_id === event.event_id
+            }
+        }
+    }
 }
 
 export function createWidget(event: Event) {
