@@ -4,10 +4,7 @@ import { platformIcons } from "assets/groups"
  * return groups ordered by most recent year using a bubble sort algorithm
  * see {@link Groups} Page
  */
-export function orderByMostRecentYear(groups: Group[], isOrdered : boolean) {
-    if(isOrdered){
-        return groups
-    }
+export function orderByMostRecentYear(groups: Group[]) {
     let hasChanged: boolean
     try {
         do {

@@ -15,7 +15,7 @@ export interface GroupOptions {
 export interface Group {
     class: string
     office: string
-    id?: string
+    id: string
     degree?: string
     school?: string
     link_id: string

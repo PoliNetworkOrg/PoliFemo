@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { Linking, ScrollView, View } from "react-native"
+import { FlatList, Linking, View } from "react-native"
 import { Title } from "components/Text"
 import { Filters } from "components/Groups/Filters"
 import { api, RetryType } from "api"
@@ -40,7 +40,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
      */
     const searchGroups = async () => {
         if (isMounted) {
-            if (search.length < 4) {
+            if (search.length < 3) {
                 setGroups([])
                 return
             }
@@ -77,6 +77,9 @@ export const Groups: MainStackScreen<"Groups"> = () => {
         if (isMounted && groups) void searchGroups()
     }, [filters])
 
+    const orderedGroups =
+        filters.year === undefined ? orderByMostRecentYear(groups) : groups
+
     return (
         <PageWrapper>
             <View
@@ -104,24 +107,20 @@ export const Groups: MainStackScreen<"Groups"> = () => {
                         marginHorizontal: 8,
                     }}
                 >
-                    <ScrollView>
-                        {orderByMostRecentYear(
-                            groups,
-                            filters.year !== undefined
-                        )?.map((group, idx) => {
-                            return (
-                                <GroupTile
-                                    text={group.class}
-                                    key={idx}
-                                    onClick={() => {
-                                        setModalGroup(group)
-                                        setIsModalShowing(true)
-                                    }}
-                                    icon={choosePlatformIcon(group.platform)}
-                                />
-                            )
-                        })}
-                    </ScrollView>
+                    <FlatList
+                        data={orderedGroups}
+                        renderItem={group => (
+                            <GroupTile
+                                text={group.item.class}
+                                onClick={() => {
+                                    setModalGroup(group.item)
+                                    setIsModalShowing(true)
+                                }}
+                                icon={choosePlatformIcon(group.item.platform)}
+                            />
+                        )}
+                        keyExtractor={item => item.id}
+                    />
                 </View>
             </View>
             <ModalGroup
