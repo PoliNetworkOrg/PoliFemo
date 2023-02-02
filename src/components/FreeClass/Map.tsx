@@ -1,9 +1,14 @@
-import React, { FC } from "react"
+import React, { FC, useEffect, useState } from "react"
+import { View, ActivityIndicator } from "react-native"
 import MapView from "react-native-maps"
+import { PermissionStatus } from "expo-location"
+import { useNavigation } from "navigation/NavigationTypes"
+import { BodyText } from "components/Text"
 
 interface MapProps {
     latitude: number
     longitude: number
+    locationStatus: PermissionStatus
 }
 
 /**
@@ -12,15 +17,41 @@ interface MapProps {
  */
 export const Map: FC<MapProps> = props => {
     return (
-        <MapView
-            style={{ marginTop: 23, width: "100%", height: "100%" }}
-            initialRegion={{
-                latitude: props.latitude,
-                longitude: props.longitude,
-                latitudeDelta: 0.005,
-                longitudeDelta: 0.005,
+        <View
+            style={{
+                marginBottom: 100,
+                paddingBottom: 130,
             }}
-            showsUserLocation={true}
-        ></MapView>
+        >
+            {props.latitude === undefined || props.longitude === undefined ? (
+                props.locationStatus !== PermissionStatus.GRANTED ? (
+                    <BodyText
+                        style={{
+                            alignSelf: "center",
+                            marginTop: 50,
+                            color: "red",
+                            fontWeight: "900",
+                            fontSize: 30,
+                        }}
+                    >Mappa non Disponibile</BodyText>
+                ) : (
+                    <ActivityIndicator
+                        style={{ marginTop: 50, marginLeft: 3 }}
+                        size="large"
+                    />
+                )
+            ) : (
+                <MapView
+                    style={{ marginTop: 23, width: "100%", height: "100%" }}
+                    initialRegion={{
+                        latitude: props.latitude,
+                        longitude: props.longitude,
+                        latitudeDelta: 0.005,
+                        longitudeDelta: 0.005,
+                    }}
+                    showsUserLocation={true}
+                ></MapView>
+            )}
+        </View>
     )
 }

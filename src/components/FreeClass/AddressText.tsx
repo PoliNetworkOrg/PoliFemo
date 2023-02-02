@@ -61,7 +61,7 @@ export const AddressText: FC<AddressTextProps> = props => {
             >
                 {props.currentLocation === undefined ? (
                     props.locationStatus !== PermissionStatus.GRANTED ? (
-                        "GPS signal missing"
+                        "Segnale GPS mancante"
                     ) : (
                         <ActivityIndicator
                             style={{

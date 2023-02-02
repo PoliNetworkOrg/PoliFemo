@@ -32,29 +32,28 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
 
     const [currentCoords, setCurrentCoords] = useState<number[]>([])
 
-    useEffect(() => {
-        async function getPosition() {
-            const { status } =
-                await Location.requestForegroundPermissionsAsync()
-            if (status !== "granted") {
-                setLocationStatus(PermissionStatus.UNDETERMINED)
-                setCurrentLocation(undefined)
-            } else {
-                const { coords } = await Location.getCurrentPositionAsync({})
-                const { latitude, longitude } = coords
-                const response = await Location.reverseGeocodeAsync({
-                    latitude,
-                    longitude,
-                })
-                setLocationStatus(PermissionStatus.GRANTED)
-                setCurrentCoords([latitude, longitude])
-                setCurrentLocation(response[0])
-            }
+    async function getPosition() {
+        const { status } = await Location.requestForegroundPermissionsAsync()
+        if (status !== "granted") {
+            setLocationStatus(PermissionStatus.UNDETERMINED)
+            setCurrentLocation(undefined)
+        } else {
+            const { coords } = await Location.getCurrentPositionAsync({})
+            const { latitude, longitude } = coords
+            const response = await Location.reverseGeocodeAsync({
+                latitude,
+                longitude,
+            })
+            setLocationStatus(PermissionStatus.GRANTED)
+            setCurrentCoords([latitude, longitude])
+            setCurrentLocation(response[0])
         }
+    }
 
+    useEffect(() => {
         const intervalId = setInterval(() => {
             void getPosition()
-        }, 1000 * 5) // in milliseconds,call every 5 sec(this could be modified)
+        }, 1000 * 2) // in milliseconds,call every 2 sec(this could be modified)
         return () => clearInterval(intervalId)
     }, [])
 
@@ -158,7 +157,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                                         ? palette.primary
                                         : palette.lighter,
                                 borderRadius: 22,
-                                marginLeft: 17,
+                                marginLeft: 18,
                                 alignItems: "center",
                                 justifyContent: "center",
                             }}
@@ -190,24 +189,11 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                             />
                         </View>
                     ) : (
-                        <View
-                            style={{
-                                marginBottom: 100,
-                                paddingBottom: 130,
-                            }}
-                        >
-                            {currentCoords.length === 0  ? (
-                                <ActivityIndicator
-                                    style={{ marginTop: 50 }}
-                                    size="large"
-                                />
-                            ) : (
-                                <Map
-                                    latitude={currentCoords[0]}
-                                    longitude={currentCoords[1]}
-                                />
-                            )}
-                        </View>
+                        <Map
+                            latitude={currentCoords[0]}
+                            longitude={currentCoords[1]}
+                            locationStatus={locationStatus}
+                        />
                     )}
                 </View>
             </View>
