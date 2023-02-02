@@ -1,8 +1,7 @@
-import React, { FC, useEffect, useState } from "react"
+import React, { FC} from "react"
 import { View, ActivityIndicator } from "react-native"
 import MapView from "react-native-maps"
 import { PermissionStatus } from "expo-location"
-import { useNavigation } from "navigation/NavigationTypes"
 import { BodyText } from "components/Text"
 
 interface MapProps {

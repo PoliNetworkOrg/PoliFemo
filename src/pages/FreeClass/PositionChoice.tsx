@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { ActivityIndicator, Pressable, View } from "react-native"
+import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
 import { BodyText, Title } from "components/Text"
