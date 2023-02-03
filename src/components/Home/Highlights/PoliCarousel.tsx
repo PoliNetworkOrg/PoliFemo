@@ -2,7 +2,6 @@ import { BodyText } from "components/Text"
 import React, { FC } from "react"
 import { View, Dimensions, ImageBackground } from "react-native"
 import lecturesImage from "assets/carousel-lectures.png"
-import { useNavigation } from "navigation/NavigationTypes"
 import { CarouselItem } from "utils/carousel"
 import { CustomFlatlist } from "./CustomFlatlist"
 
@@ -14,8 +13,6 @@ const { width } = Dimensions.get("window")
 export const PoliCarousel: FC<{ dataToShow: CarouselItem[] }> = ({
     dataToShow,
 }) => {
-    const { navigate } = useNavigation()
-
     return (
         <View style={{ marginTop: 60 }}>
             {dataToShow === undefined || dataToShow.length === 0 ? (
