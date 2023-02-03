@@ -82,13 +82,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
 
     return (
         <PageWrapper>
-            <View
-                style={{
-                    flex: 1,
-                    marginHorizontal: 28,
-                    paddingTop: 56,
-                }}
-            >
+            <View style={{ paddingHorizontal: 28, paddingTop: 56 }}>
                 <Title>Gruppi Corsi</Title>
                 <AnimatedPoliSearchBar
                     onSearch={val => setSearch(val)}
@@ -98,32 +92,31 @@ export const Groups: MainStackScreen<"Groups"> = () => {
                     onFilterChange={filters => setFilters(filters)}
                     filters={filters}
                 />
-
-                <View
-                    style={{
-                        flex: 1,
-                        marginTop: 40,
-                        marginBottom: 93,
-                        marginHorizontal: 8,
-                    }}
-                >
-                    <FlatList
-                        data={orderedGroups}
-                        renderItem={group => (
-                            <GroupTile
-                                text={group.item.class}
-                                members={group.item.members}
-                                onClick={() => {
-                                    setModalGroup(group.item)
-                                    setIsModalShowing(true)
-                                }}
-                                icon={choosePlatformIcon(group.item.platform)}
-                            />
-                        )}
-                        keyExtractor={item => item.id}
-                    />
-                </View>
             </View>
+            <FlatList
+                style={{
+                    flex: 1,
+                    marginTop: 16,
+                    marginBottom: 93,
+                    paddingHorizontal: 8,
+                }}
+                contentContainerStyle={{
+                    paddingBottom: 20,
+                }}
+                data={orderedGroups}
+                renderItem={({ item }) => (
+                    <GroupTile
+                        key={"__search_group_tile_" + item.id}
+                        text={item.class}
+                        members={item.members}
+                        onClick={() => {
+                            setModalGroup(item)
+                            setIsModalShowing(true)
+                        }}
+                        icon={choosePlatformIcon(item.platform)}
+                    />
+                )}
+            />
             <ModalGroup
                 group={modalGroup}
                 isShowing={isModalShowing}

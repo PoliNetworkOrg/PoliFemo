@@ -23,7 +23,7 @@ export const GroupTile: FC<GroupTileProps> = props => {
     const iconSvg = useSVG(props.icon?.svg)
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, paddingHorizontal: 28 }}>
             <Pressable
                 onPress={props.onClick}
                 style={{
