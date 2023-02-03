@@ -29,7 +29,7 @@ export const defaultIcons: ButtonInterface[] = [
     { id: 2, title: "PoliAssociazioni", icon: association },
     { id: 3, title: "Aule Libere", icon: free_classrooms },
     { id: 4, title: "Materiali", icon: materials },
-    { id: 5, title: "Gruppi WA", icon: groups },
+    { id: 5, title: "Gruppi", icon: groups },
     { id: 6, title: "Valutazioni", icon: marks },
     { id: 7, title: "Libretto", icon: grading_book },
     { id: 8, title: "Test e Prove", icon: tests },
@@ -120,7 +120,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                             key={"menu_add_row" + i}
                             style={{
                                 flexDirection: "row",
-                                marginVertical: 2,
+                                marginVertical: 6,
                                 width: 288,
                             }}
                         >
@@ -162,7 +162,9 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                             if (isDeleting) setIsDeleting(false)
                             if (buttonIcon.id === 9) setModalVisible(true)
                             // TODO: actual navigation
-                            if (!isDeleting && buttonIcon.id !== 9) {
+                            if (buttonIcon.id === 5) {
+                                navigate("Groups")
+                            } else if (!isDeleting && buttonIcon.id !== 9) {
                                 navigate("Error404")
                             }
                         }}

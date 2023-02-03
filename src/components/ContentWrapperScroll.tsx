@@ -7,9 +7,12 @@ import { usePalette } from "utils/colors"
 /**
  * General component useful for pages with a scrollable content.
  * It provides a navbar and a scrollview with margin and rounded corners.
+ * Default margin Top is 86 (proper margin for Settings Page)
  */
-export const SettingsScroll: FC<{
-    title: string
+export const ContentWrapperScroll: FC<{
+    children: React.ReactNode
+
+    title?: string
     /**
      * Remove the navbar from the bottom of the page.
      */
@@ -18,8 +21,7 @@ export const SettingsScroll: FC<{
      * Props for the navbar, see {@link NavBar}
      */
     navbarOptions?: NavbarProps
-
-    children: React.ReactNode
+    marginTop?: number
 }> = props => {
     const { background, isLight, primary } = usePalette()
 
@@ -32,30 +34,33 @@ export const SettingsScroll: FC<{
                 backgroundColor: isLight ? primary : background,
             }}
         >
-            <View
-                style={{
-                    position: "absolute",
-                    top: 42,
-                    left: 26,
-                    zIndex: 6,
-                }}
-            >
-                <Text
+            {props.title && (
+                <View
                     style={{
-                        color: isLight ? "#fff" : primary,
-                        fontSize: 24,
-                        fontWeight: "900",
+                        position: "absolute",
+                        top: 42,
+                        left: 26,
+                        zIndex: 6,
                     }}
                 >
-                    {props.title}
-                </Text>
-            </View>
+                    <Text
+                        style={{
+                            color: isLight ? "#fff" : primary,
+                            fontSize: 24,
+                            fontWeight: "900",
+                        }}
+                    >
+                        {props.title}
+                    </Text>
+                </View>
+            )}
+
             <View
                 style={{
                     backgroundColor: background,
                     borderTopLeftRadius: 30,
                     borderTopRightRadius: 30,
-                    marginTop: 86,
+                    marginTop: props.marginTop ?? 86,
                     zIndex: 2,
                     flex: 1,
                     shadowColor: "#000",
@@ -69,7 +74,6 @@ export const SettingsScroll: FC<{
                     <View>{props.children}</View>
                 </ScrollView>
             </View>
-
             {navbar ? <NavBar {...props.navbarOptions} /> : null}
         </View>
     )

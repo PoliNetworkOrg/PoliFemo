@@ -1,5 +1,12 @@
 import React, { FC, useEffect, useState, useRef } from "react"
-import { TextInput, Animated, Pressable } from "react-native"
+import {
+    TextInput,
+    Animated,
+    Pressable,
+    StyleProp,
+    ViewStyle,
+    Keyboard,
+} from "react-native"
 import { usePalette } from "utils/colors"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import searchLight from "assets/menu/searchLight.svg"
@@ -10,7 +17,8 @@ import searchDark from "assets/menu/searchDark.svg"
  */
 export const PoliSearchBar: FC<{
     onChange: (searchKey: string) => void
-}> = ({ onChange }) => {
+    style?: StyleProp<ViewStyle>
+}> = ({ onChange, style }) => {
     const { fieldBackground, fieldText, bodyText, isLight } = usePalette()
 
     const svg = useSVG(isLight ? searchLight : searchDark)
@@ -18,6 +26,20 @@ export const PoliSearchBar: FC<{
     const [isFocused, setIsFocused] = useState(false)
     const shadowAnim = useRef(new Animated.Value(0)).current
     const inputText = useRef<TextInput>(null)
+
+    useEffect(() => {
+        const keyboardDidHideListener = Keyboard.addListener(
+            "keyboardDidHide",
+            () => {
+                inputText.current?.blur()
+            }
+        )
+
+        return () => {
+            keyboardDidHideListener.remove()
+        }
+    }, [])
+
     useEffect(() => {
         const duration = 100
         if (isFocused)
@@ -36,26 +58,29 @@ export const PoliSearchBar: FC<{
 
     return (
         <Animated.View
-            style={{
-                marginTop: 46,
-                marginBottom: 18,
-                marginHorizontal: 52,
-                borderRadius: 28,
-                backgroundColor: fieldBackground,
-                flexDirection: "row",
-
-                // cross-platform
-                shadowColor: "#000",
-                // iOS only
-                shadowOffset: {
-                    width: 0,
-                    height: 3,
+            style={[
+                {
+                    alignSelf: "center",
+                    marginTop: 46,
+                    marginBottom: 12,
+                    width: 285,
+                    borderRadius: 28,
+                    backgroundColor: fieldBackground,
+                    flexDirection: "row",
+                    // cross-platform
+                    shadowColor: "#000",
+                    // iOS only
+                    shadowOffset: {
+                        width: 0,
+                        height: 3,
+                    },
+                    shadowOpacity: Animated.multiply(shadowAnim, 0.3),
+                    shadowRadius: 4.65,
+                    // android only
+                    elevation: Animated.multiply(shadowAnim, 6),
                 },
-                shadowOpacity: Animated.multiply(shadowAnim, 0.3),
-                shadowRadius: 4.65,
-                // android only
-                elevation: Animated.multiply(shadowAnim, 6),
-            }}
+                style,
+            ]}
         >
             <TextInput
                 style={{

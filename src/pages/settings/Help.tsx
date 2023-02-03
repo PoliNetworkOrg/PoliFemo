@@ -1,7 +1,7 @@
 import React from "react"
 import { View } from "react-native"
 import { SettingsStackScreen } from "navigation/NavigationTypes"
-import { SettingsScroll } from "components/Settings/SettingsScroll"
+import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import { SettingTile } from "components/Settings/SettingTile"
 import { SettingOptions } from "utils/settings"
 
@@ -28,12 +28,12 @@ export const settingsList: SettingOptions[] = [
  */
 export const Help: SettingsStackScreen<"Help"> = () => {
     return (
-        <SettingsScroll title="Aiuto">
+        <ContentWrapperScroll title="Aiuto">
             <View style={{ paddingTop: 32 }}>
                 {settingsList.map((setting, index) => {
                     return <SettingTile setting={setting} key={index} />
                 })}
             </View>
-        </SettingsScroll>
+        </ContentWrapperScroll>
     )
 }
