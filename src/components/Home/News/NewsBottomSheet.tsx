@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useRef } from "react"
+import React, { FC, useEffect, useState, useRef, useContext } from "react"
 import { StyleSheet, View, DeviceEventEmitter } from "react-native"
 import BottomSheet, {
     BottomSheetScrollView,
@@ -6,7 +6,11 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet"
 
 import { Article } from "api/articles"
-import { TagWithData } from "./newsTypes"
+import {
+    NewsPreferencesContext,
+    Preference,
+    TagWithData,
+} from "contexts/newsPreferences"
 import { NewsTagsGrid } from "./NewsTagsGrid"
 import { Title } from "components/Text"
 import { CardWithGradient } from "components/CardWithGradient"
@@ -19,11 +23,7 @@ interface NewsBottomSheetProps {
     /**
      * Tags (news categories) in the favourite section
      */
-    favouriteTags: TagWithData[]
-    /**
-     * All the other tags (new categories)
-     */
-    otherTags: TagWithData[]
+    tags: TagWithData[]
     /**
      * Article at the top of the news section
      */
@@ -40,8 +40,7 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
     const navigation = useNavigation()
     const { isLight, background } = usePalette()
 
-    // Whether to show only the favourite section or only other tags
-    const [showFavourites, setShowFavourites] = useState<boolean>(true)
+    const { preferences } = useContext(NewsPreferencesContext)
 
     // modal state
     const [isNewsClosed, setIsNewsClosed] = useState(true)
@@ -57,8 +56,13 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
     }
 
     const showHighlighted = props.highlightedArticle !== undefined
+    const showButtonToOtherTags = Object.values(preferences).some(
+        p => p === Preference.UNFAVOURITE
+    )
 
-    const showButtonToOtherTags = props.otherTags.length > 0
+    const favTags = props.tags.filter(
+        tag => preferences[tag.name] !== Preference.UNFAVOURITE
+    )
 
     useEffect(() => {
         // scrolls to the top of the news scrollview
@@ -98,7 +102,7 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
                     <Title
                         style={{ fontFamily: "Roboto_700Bold", fontSize: 48 }}
                     >
-                        {showFavourites ? "News" : "Altre Categorie"}
+                        News
                     </Title>
                 </View>
             )}
@@ -113,13 +117,11 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
                 // fires when the bottom sheet changes position index, keeps track of when the sheet is open/close.
                 // More responsive than onChange
                 setIsNewsClosed(fromIndex === 1)
-                setShowFavourites(true)
             }}
             onChange={index => {
                 // fires when the bottom sheet changes position index, keeps track of when the sheet is open/close.
                 // In certain cases, onAnimate fails
                 setIsNewsClosed(index === 0)
-                setShowFavourites(true)
             }}
             index={isNewsClosed ? 0 : 1} // close = 0 and open = 1
             snapPoints={[
@@ -138,59 +140,47 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
                     paddingTop: 16,
                 }}
             >
-                {showFavourites ? (
-                    <>
-                        {showHighlighted && (
-                            <CardWithGradient
-                                title={"In Evidenza"}
-                                imageURL={
-                                    props.highlightedArticle?.image &&
-                                    props.highlightedArticle.image.length > 0
-                                        ? props.highlightedArticle.image
-                                        : ""
-                                    // : "http://rl.airlab.deib.polimi.it/wp-content/uploads/2022/06/1-PolimiCampus_2.jpg"
-                                }
-                                onClick={() =>
-                                    navigation.navigate("Article", {
-                                        article:
-                                            props.highlightedArticle as Article,
-                                    })
-                                }
-                                style={{ height: 220, marginBottom: 34 }}
-                            />
-                        )}
+                {showHighlighted && (
+                    <CardWithGradient
+                        title={"In Evidenza"}
+                        imageURL={
+                            props.highlightedArticle?.image &&
+                            props.highlightedArticle.image.length > 0
+                                ? props.highlightedArticle.image
+                                : ""
+                            // : "http://rl.airlab.deib.polimi.it/wp-content/uploads/2022/06/1-PolimiCampus_2.jpg"
+                        }
+                        onClick={() =>
+                            navigation.navigate("Article", {
+                                article: props.highlightedArticle as Article,
+                            })
+                        }
+                        style={{ height: 220, marginBottom: 34 }}
+                    />
+                )}
 
-                        <NewsTagsGrid tags={props.favouriteTags} />
+                <NewsTagsGrid tags={favTags} />
 
-                        {showButtonToOtherTags && (
-                            <CardWithGradient
-                                title={"Altre Categorie"}
-                                onClick={() => setShowFavourites(false)}
-                                style={{ height: 80, marginTop: 17 }}
-                            />
-                        )}
-                    </>
-                ) : (
-                    <NewsTagsGrid tags={props.otherTags} />
+                {showButtonToOtherTags && (
+                    <CardWithGradient
+                        title={"Altre Categorie"}
+                        onClick={() =>
+                            navigation.navigate("OtherCategories", {
+                                tags: props.tags,
+                            })
+                        }
+                        style={{ height: 80, marginTop: 17 }}
+                    />
                 )}
 
                 <View
                     // So that the scrollable content does not remain behind the NavBar
                     style={{ height: 120 }}
-                ></View>
+                />
             </BottomSheetScrollView>
             <NavBar
-                overrideBackBehavior={() => {
-                    if (showFavourites) {
-                        setIsNewsClosed(true)
-                    } else {
-                        setShowFavourites(true)
-                    }
-                }}
-                overrideHomeBehavior={() => {
-                    setShowFavourites(true)
-                    setIsNewsClosed(true)
-                }}
+                overrideBackBehavior={() => setIsNewsClosed(true)}
+                overrideHomeBehavior={() => setIsNewsClosed(true)}
             />
         </BottomSheet>
     )

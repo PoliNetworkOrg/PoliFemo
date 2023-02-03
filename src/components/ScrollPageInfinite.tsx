@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React from "react"
 import {
     RefreshControl,
     FlatList,
@@ -6,8 +6,6 @@ import {
     Animated,
     ActivityIndicator,
     StyleSheet,
-    NativeSyntheticEvent,
-    NativeScrollEvent,
 } from "react-native"
 import { Switch } from "react-native-switch"
 
@@ -67,7 +65,7 @@ interface PageProps<T> {
     /**
      * props to control the fetch of new data
      */
-    fetchControl: {
+    fetchControl?: {
         onFetch: () => void
         /** @default false */
         fetching?: boolean
@@ -82,7 +80,7 @@ interface PageProps<T> {
      * @param item
      * @return ReactElement created with the data of the item
      */
-    render: (item: T) => React.ReactElement
+    render: (item: T, idx: number) => React.ReactElement
     /**
      * Number from 0 to 1 to control the `onEndReachedThreshold` prop of the flat list
      *
@@ -107,43 +105,15 @@ export const ScrollPageInfinite = <T,>(props: PageProps<T>): JSX.Element => {
         isLight,
     } = usePalette()
 
-    const [isPastTitle, setIsPastTitle] = useState(false)
-    const shadowAnim = useRef(new Animated.Value(0)).current
-
     const navbar = !props.hideNavbar
 
     const showHeader = props.title !== undefined
 
     const showSwitch = props.showSwitch ?? false
 
-    const fetching = props.fetchControl.fetching ?? false
+    const fetching = props.fetchControl?.fetching ?? false
 
     const endThreshold = props.endThreshold ?? 0.05
-
-    useEffect(() => {
-        // hook called when the shadow needs to be animated
-        const duration = 100
-        if (isPastTitle)
-            Animated.timing(shadowAnim, {
-                toValue: 1,
-                duration,
-                useNativeDriver: true,
-            }).start()
-        else
-            Animated.timing(shadowAnim, {
-                toValue: 0,
-                duration,
-                useNativeDriver: true,
-            }).start()
-    }, [isPastTitle, shadowAnim])
-
-    const updatePastTitle = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const scollThreshold = 20 + (props.scrollOffset || 0)
-        if (e.nativeEvent.contentOffset.y >= scollThreshold && !isPastTitle)
-            setIsPastTitle(true)
-        else if (e.nativeEvent.contentOffset.y < scollThreshold && isPastTitle)
-            setIsPastTitle(false)
-    }
 
     return (
         <View style={{ flex: 1, backgroundColor: homeBackground }}>
@@ -171,8 +141,8 @@ export const ScrollPageInfinite = <T,>(props: PageProps<T>): JSX.Element => {
             >
                 <FlatList
                     data={props.items}
-                    renderItem={({ item }) => props.render(item)}
-                    onEndReached={props.fetchControl.onFetch}
+                    renderItem={({ item, index }) => props.render(item, index)}
+                    onEndReached={props.fetchControl?.onFetch}
                     onEndReachedThreshold={endThreshold}
                     refreshControl={
                         props.refreshControl ? (
@@ -183,8 +153,6 @@ export const ScrollPageInfinite = <T,>(props: PageProps<T>): JSX.Element => {
                         ) : undefined
                     }
                     stickyHeaderIndices={props.title ? [0] : undefined} // first child is the sticky header
-                    scrollEventThrottle={100}
-                    onScroll={showHeader ? e => updatePastTitle(e) : undefined}
                     ListHeaderComponent={
                         showHeader ? (
                             // Sticky page header with the title, subtitle and toggle switch
@@ -193,15 +161,6 @@ export const ScrollPageInfinite = <T,>(props: PageProps<T>): JSX.Element => {
                                     styles.header,
                                     {
                                         backgroundColor: background,
-                                        shadowColor: isPastTitle
-                                            ? "#0003"
-                                            : undefined,
-                                        shadowOpacity: Animated.multiply(
-                                            shadowAnim,
-                                            0.27
-                                        ),
-                                        // this creates an unwanted shadow between the title and the content
-                                        // elevation: Animated.multiply(shadowAnim, 6),
                                     },
                                 ]}
                             >

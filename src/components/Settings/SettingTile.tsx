@@ -12,7 +12,7 @@ import {
 import { Text } from "components/Text"
 import { Divider } from "components/Divider"
 import { usePalette } from "utils/colors"
-import { SettingOptions } from "utils/settings"
+import { SettingOptions } from "contexts/settings"
 
 export interface SettingTileProps {
     setting: SettingOptions

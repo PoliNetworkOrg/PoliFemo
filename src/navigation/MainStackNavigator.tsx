@@ -7,21 +7,29 @@ import React, { FC } from "react"
 import { createStackNavigator } from "@react-navigation/stack"
 import { MainStackNavigatorParams } from "navigation/NavigationTypes"
 import { Home } from "pages/Home"
-import { Article } from "pages/ArticleDetails"
-import { ArticlesList } from "pages/ArticlesList"
+import { Article } from "pages/news/ArticleDetails"
+import { ArticlesList } from "pages/news/ArticlesList"
 import { Error404 } from "pages/Error404"
+import { OtherCategories } from "pages/news/OtherCategories"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const MainStackNavigator = createStackNavigator<MainStackNavigatorParams>()
 
 export const MainStack: FC = () => {
     return (
-        <MainStackNavigator.Navigator screenOptions={{ headerShown: false }}>
+        <MainStackNavigator.Navigator
+            screenOptions={{ headerShown: false }}
+            initialRouteName="Home"
+        >
             <MainStackNavigator.Screen name="Home" component={Home} />
             <MainStackNavigator.Screen name="Article" component={Article} />
             <MainStackNavigator.Screen
                 name="ArticlesList"
                 component={ArticlesList}
+            />
+            <MainStackNavigator.Screen
+                name="OtherCategories"
+                component={OtherCategories}
             />
             <MainStackNavigator.Screen name="Error404" component={Error404} />
         </MainStackNavigator.Navigator>

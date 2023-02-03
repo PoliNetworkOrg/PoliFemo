@@ -1,7 +1,7 @@
 import React, { FC } from "react"
 import { View } from "react-native"
 
-import { TagWithData } from "./newsTypes"
+import { TagWithData } from "contexts/newsPreferences"
 import { CardWithGradient } from "components/CardWithGradient"
 import { useNavigation } from "navigation/NavigationTypes"
 import { capitalize } from "utils/strings"
@@ -30,7 +30,6 @@ export const NewsTagsGrid: FC<NewsTagsGridProps> = props => {
                 onClick={() =>
                     navigation.navigate("ArticlesList", {
                         tagName: tag.name,
-                        tagPreference: tag.preference,
                     })
                 }
                 closerToCorner={true}

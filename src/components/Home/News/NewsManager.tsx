@@ -1,17 +1,12 @@
-import React, { useEffect, useState } from "react"
-import { DeviceEventEmitter } from "react-native"
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import React, { useContext, useEffect, useState } from "react"
 
 import { api } from "api"
 import { Article, Tag } from "api/articles"
 import {
     TagWithData,
+    NewsPreferencesContext,
     Preference,
-    Preferences,
-    LastArticles,
-    UpdatePreferenceEventArgs,
-    UPDATE_PREFERENCE_EVENT_NAME,
-} from "./newsTypes"
+} from "contexts/newsPreferences"
 import { NewsBottomSheet } from "./NewsBottomSheet"
 import { newsTagsPatterns, CardsPattern } from "utils/cardsPatterns"
 
@@ -24,38 +19,17 @@ import { newsTagsPatterns, CardsPattern } from "utils/cardsPatterns"
 export const NewsManager = () => {
     const [tags, setTags] = useState<Tag[]>([])
 
-    // Object to store the preference of each tag
-    const [preferences, setPreferences] = useState<Preferences>({})
+    const { preferences } = useContext(NewsPreferencesContext)
+
     // Object to store the last article of each tag
-    const [lastArticles, setLastArticles] = useState<LastArticles>(
-        {} as LastArticles
-    )
-
-    useEffect(() => {
-        console.log("Loading tags preferences from storage")
-        AsyncStorage.getItem("newstags:preferences")
-            .then(preferencesJSON => {
-                if (preferencesJSON) {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                    const data: Preferences = JSON.parse(preferencesJSON)
-                    setPreferences(data)
-                }
-            })
-            .catch(err => console.log(err))
-    }, [])
-
-    useEffect(() => {
-        console.log("Saving tags preferences to storage")
-        AsyncStorage.setItem(
-            "newstags:preferences",
-            JSON.stringify(preferences)
-        ).catch(err => console.log(err))
-    }, [preferences])
+    const [lastArticles, setLastArticles] = useState<
+        Record<Tag["name"], Article>
+    >({})
 
     // Download the last published article of each tag (news category) in parallel
     // and wait until each one has finished
     const getLastArticles = async (tags: Tag[]) => {
-        const tempArticles = {} as LastArticles
+        const tempArticles = {} as typeof lastArticles
         const promises = []
         for (const tag of tags) {
             promises.push(
@@ -84,48 +58,19 @@ export const NewsManager = () => {
         fetchData().catch(err => console.log(err))
     }, [])
 
-    useEffect(() => {
-        // Set up the event listener to update the preference of a tag in the state of this component
-        // when the corresponding event is emitted in ArticlesList
-        DeviceEventEmitter.addListener(
-            UPDATE_PREFERENCE_EVENT_NAME,
-            (arg: UpdatePreferenceEventArgs) => {
-                setPreferences({
-                    ...preferences,
-                    [arg.tagName]: arg.preference,
-                })
-            }
-        )
-        return () => {
-            DeviceEventEmitter.removeAllListeners(UPDATE_PREFERENCE_EVENT_NAME)
-        }
-    }, [preferences])
-
-    const filterTags = (tags: Tag[], preference: Preference) => {
-        return tags.filter(tag => {
-            if (preference === Preference.OTHER) {
-                return preferences[tag.name] === Preference.OTHER
-            } else {
-                // If undefined, the tag is marked as favourite by default
-                return preferences[tag.name] !== Preference.OTHER
-            }
-        })
-    }
-
     // Function that calculates heights and columns of tag cards using hardcoded patterns.
     // Then it returns a new list of tags with that and other usefull data.
-    const getTagsWithData = (preference: Preference) => {
+    const getTagsWithData = () => {
         const tempTagsWithData: TagWithData[] = []
-        const tagsToShow = filterTags(tags, preference)
 
         // store the pattern data of the current batch of cards
         let pattern: CardsPattern
         // index of the current news tag
         let index = 0
         // number of tags remaining
-        let remaining = tagsToShow.length
+        let remaining = tags.length
 
-        while (index < tagsToShow.length) {
+        while (index < tags.length) {
             // choose the dimension of the next batch of tags and get the corresponding pattern
             if (index === 0) {
                 // When first bacth
@@ -147,10 +92,12 @@ export const NewsManager = () => {
 
             for (const [height, column] of pattern) {
                 tempTagsWithData.push({
-                    ...tagsToShow[index],
+                    ...tags[index],
                     column: column,
                     height: height,
-                    preference: preference,
+                    favourite:
+                        preferences[tags[index].name] !==
+                        Preference.UNFAVOURITE,
                 })
                 index++
                 remaining--
@@ -160,7 +107,9 @@ export const NewsManager = () => {
     }
 
     const getHighlightedArticle = () => {
-        const favouriteTags = filterTags(tags, Preference.FAVOURITE)
+        const favouriteTags = tags.filter(
+            tag => preferences[tag.name] !== Preference.UNFAVOURITE
+        )
         // If there are no favourite tags, choose the highlighted article from all the other tags
         const tagsToAnalyze = favouriteTags.length > 0 ? favouriteTags : tags
         let tempHighlighted: Article | undefined = undefined
@@ -182,8 +131,7 @@ export const NewsManager = () => {
 
     return (
         <NewsBottomSheet
-            favouriteTags={getTagsWithData(Preference.FAVOURITE)}
-            otherTags={getTagsWithData(Preference.OTHER)}
+            tags={getTagsWithData()}
             highlightedArticle={getHighlightedArticle()}
         />
     )

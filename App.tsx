@@ -13,11 +13,11 @@ import {
 import { AppContainer } from "./src/AppContainer"
 
 import { OutsideClickProvider } from "utils/outsideClick"
-import { LoginContext, LoginState } from "utils/login"
 import { api } from "api"
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { SettingsContext, Settings } from "utils/settings"
+import { LoginContext, LoginState } from "contexts/login"
+import { SettingsContext, Settings } from "contexts/settings"
 import { useLoadTokens } from "utils/loadTokens"
 import { HttpClient } from "api/HttpClient"
 

@@ -21,9 +21,9 @@ import {
     NavigationProp,
     useNavigation as nativeUseNav,
 } from "@react-navigation/native"
-import { Preference } from "components/Home/News"
 import { Article } from "api/articles"
 import { NavigatorScreenParams } from "@react-navigation/native"
+import { TagWithData } from "contexts/newsPreferences"
 
 /**
  * interface containing the info about the params for each page of the stack navigator
@@ -43,7 +43,8 @@ export type RootStackNavigatorParams = {
 export type MainStackNavigatorParams = {
     Home: undefined
     Article: { article: Article }
-    ArticlesList: { tagName: string; tagPreference: Preference }
+    OtherCategories: { tags: TagWithData[] }
+    ArticlesList: { tagName: string }
     Error404: undefined
 }
 

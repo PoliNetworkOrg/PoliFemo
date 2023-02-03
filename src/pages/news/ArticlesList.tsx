@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from "react"
-import { View, DeviceEventEmitter } from "react-native"
+import React, { useState, useEffect, useRef, useContext } from "react"
+import { View } from "react-native"
 
 import { api, RetryType } from "api"
 import { Article } from "api/articles"
-import { Preference, UPDATE_PREFERENCE_EVENT_NAME } from "components/Home/News"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ScrollPageInfinite } from "components/ScrollPageInfinite"
 import { CardWithGradient } from "components/CardWithGradient"
 import { capitalize } from "utils/strings"
+import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 
 const MAX_ARTICLES_PER_REQUEST = 8
 
@@ -16,11 +16,14 @@ const MAX_ARTICLES_PER_REQUEST = 8
  */
 export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
     const navigation = useNavigation()
-    const { tagName, tagPreference } = props.route.params
+    const { preferences, setArticlesPreferences } = useContext(
+        NewsPreferencesContext
+    )
+    const { tagName } = props.route.params
 
     const [articles, setArticles] = useState<Article[]>([])
     const [toggled, setToggled] = useState<boolean>(
-        tagPreference === Preference.FAVOURITE
+        preferences[tagName] !== Preference.UNFAVOURITE
     )
 
     const [refresh, setRefresh] = useState<boolean>(false)
@@ -60,23 +63,21 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
         <ScrollPageInfinite
             title={capitalize(tagName, 3)}
             items={articles}
-            render={article => {
-                return (
-                    <View style={{ paddingHorizontal: 28 }}>
-                        <CardWithGradient
-                            key={article.id}
-                            title={article.title}
-                            imageURL={article.image}
-                            onClick={() =>
-                                navigation.navigate("Article", {
-                                    article: article,
-                                })
-                            }
-                            style={{ height: 220, marginBottom: 13 }}
-                        />
-                    </View>
-                )
-            }}
+            render={article => (
+                <View style={{ paddingHorizontal: 28 }}>
+                    <CardWithGradient
+                        key={article.id}
+                        title={article.title}
+                        imageURL={article.image}
+                        onClick={() =>
+                            navigation.navigate("Article", {
+                                article: article,
+                            })
+                        }
+                        style={{ height: 220, marginBottom: 13 }}
+                    />
+                </View>
+            )}
             fetchControl={{
                 fetching: isFetching,
                 onFetch: () => {
@@ -107,12 +108,10 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
                 toggled: toggled,
                 onToggle: value => {
                     setToggled(value)
-                    DeviceEventEmitter.emit(UPDATE_PREFERENCE_EVENT_NAME, {
-                        tagName: tagName,
-                        preference: value
-                            ? Preference.FAVOURITE
-                            : Preference.OTHER,
-                    })
+                    const newFavorites = { ...preferences }
+                    if (value) newFavorites[tagName] = Preference.FAVOURITE
+                    else newFavorites[tagName] = Preference.UNFAVOURITE
+                    setArticlesPreferences({ preferences: newFavorites })
                 },
             }}
         />
