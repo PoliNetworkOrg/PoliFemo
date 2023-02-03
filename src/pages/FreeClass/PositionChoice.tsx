@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { MainStackScreen } from "navigation/NavigationTypes"
+import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
@@ -10,6 +10,8 @@ import { Map } from "components/FreeClass/Map"
 import * as Location from "expo-location"
 import { LocationGeocodedAddress, PermissionStatus } from "expo-location"
 import { AddressText } from "components/FreeClass/AddressText"
+import { campusList } from "./CampusChoice"
+import { getDistance } from "geolib"
 
 enum ButtonType {
     MAP,
@@ -32,6 +34,10 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
 
     const [currentCoords, setCurrentCoords] = useState<number[]>([])
 
+    const [currentCampus, setCurrentCampus] = useState<number[]>([])
+
+    const { navigate } = useNavigation()
+
     async function getPosition() {
         const { status } = await Location.requestForegroundPermissionsAsync()
         if (status !== "granted") {
@@ -44,17 +50,43 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                 latitude,
                 longitude,
             })
+            //temporary solution, too inefficient
+            campusList.map(campus => {
+                if (
+                    getDistance(
+                        { latitude: latitude, longitude: longitude },
+                        {
+                            latitude: campus.latitude,
+                            longitude: campus.longitude,
+                        }
+                    ) <= 500 //if the distance between the user and the campus is less than 500m I'll call the API
+                ) {
+                    //call the API,not yet performed
+                    //so far I put a marker on the campus
+                    setCurrentCampus([campus.latitude, campus.longitude])
+                }
+            })
             setLocationStatus(PermissionStatus.GRANTED)
             setCurrentCoords([latitude, longitude])
             setCurrentLocation(response[0])
         }
     }
 
+    async function checkPermission() {
+        const { status } = await Location.requestForegroundPermissionsAsync()
+        if (status !== "granted") {
+            setLocationStatus(PermissionStatus.UNDETERMINED)
+            setCurrentLocation(undefined)
+        }
+    }
+
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            void getPosition()
-        }, 1000 * 2) // in milliseconds,call every 2 sec(this could be modified)
+        const intervalId = setInterval(() => void checkPermission(), 1000 * 2) // in milliseconds,call every 2 sec(this could be modified)
         return () => clearInterval(intervalId)
+    }, [])
+
+    useEffect(() => {
+        void getPosition()
     }, [])
 
     return (
@@ -193,6 +225,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                             latitude={currentCoords[0]}
                             longitude={currentCoords[1]}
                             locationStatus={locationStatus}
+                            currentCampus={currentCampus}
                         />
                     )}
                 </View>

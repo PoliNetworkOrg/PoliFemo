@@ -1,6 +1,6 @@
-import React, { FC} from "react"
+import React, { FC } from "react"
 import { View, ActivityIndicator } from "react-native"
-import MapView from "react-native-maps"
+import MapView, { Marker } from "react-native-maps"
 import { PermissionStatus } from "expo-location"
 import { BodyText } from "components/Text"
 
@@ -8,6 +8,7 @@ interface MapProps {
     latitude: number
     longitude: number
     locationStatus: PermissionStatus
+    currentCampus?: number[]
 }
 
 /**
@@ -32,7 +33,9 @@ export const Map: FC<MapProps> = props => {
                             fontWeight: "900",
                             fontSize: 30,
                         }}
-                    >Mappa non Disponibile</BodyText>
+                    >
+                        Mappa non Disponibile
+                    </BodyText>
                 ) : (
                     <ActivityIndicator
                         style={{ marginTop: 50, marginLeft: 3 }}
@@ -49,7 +52,16 @@ export const Map: FC<MapProps> = props => {
                         longitudeDelta: 0.005,
                     }}
                     showsUserLocation={true}
-                ></MapView>
+                >
+                    {props.currentCampus !== undefined ? (
+                        <Marker
+                            coordinate={{
+                                latitude: props.currentCampus[0],
+                                longitude: props.currentCampus[1],
+                            }}
+                        ></Marker>
+                    ) : undefined}
+                </MapView>
             )}
         </View>
     )

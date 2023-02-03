@@ -9,18 +9,45 @@ import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePick
 export interface CampusItem {
     name: string[]
     acronym: string
+    latitude: number
+    longitude: number
 }
 
-const campusList: CampusItem[] = [
-    { name: ["Bovisa", "Durando"], acronym: "MIB" },
-    { name: ["Bovisa", "La Masa"], acronym: "MIB" },
-    { name: ["Leonardo"],acronym: "MIA" },
-    { name: ["Colombo"],acronym: "MIA" },
-    { name: ["Mancinelli"],acronym: "MIA" },
+export const campusList: CampusItem[] = [
+    {
+        name: ["Bovisa", "Durando"],
+        acronym: "MIB",
+        latitude: 45.504422059752116,
+        longitude: 9.164129368703703,
+    },
+    {
+        name: ["Bovisa", "La Masa"],
+        acronym: "MIB",
+        latitude: 45.50286551603009,
+        longitude: 9.156452626872522,
+    },
+    {
+        name: ["Leonardo"],
+        acronym: "MIA",
+        latitude: 45.47791263153159,
+        longitude: 9.227122387828846,
+    },
+    {
+        name: ["Colombo"],
+        acronym: "MIA",
+        latitude: 45.47190973697382,
+        longitude: 9.227048868730659,
+    },
+    {
+        name: ["Mancinelli"],
+        acronym: "MIA",
+        latitude: 45.49016811534536,
+        longitude: 9.227177297538793,
+    },
 ]
 
 /**
- * In this page the user can select the campus. 
+ * In this page the user can select the campus.
  */
 export const CampusChoice: MainStackScreen<"CampusChoice"> = props => {
     const { navigate } = useNavigation()
