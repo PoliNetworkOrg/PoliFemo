@@ -44,6 +44,7 @@ export type MainStackNavigatorParams = {
     Article: { article: Article }
     NewsList: { categoryName: string }
     Error404: undefined
+    Groups: undefined
 }
 
 export type SettingsStackNavigatorParams = {

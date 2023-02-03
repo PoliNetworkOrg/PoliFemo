@@ -10,6 +10,7 @@ import { Home } from "pages/Home"
 import { Article } from "pages/ArticleDetails"
 import { NewsList } from "pages/NewsList"
 import { Error404 } from "pages/Error404"
+import { Groups } from "pages/Groups"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const MainStackNavigator = createStackNavigator<MainStackNavigatorParams>()
@@ -21,6 +22,7 @@ export const MainStack: FC = () => {
             <MainStackNavigator.Screen name="Article" component={Article} />
             <MainStackNavigator.Screen name="NewsList" component={NewsList} />
             <MainStackNavigator.Screen name="Error404" component={Error404} />
+            <MainStackNavigator.Screen name="Groups" component={Groups} />
         </MainStackNavigator.Navigator>
     )
 }
