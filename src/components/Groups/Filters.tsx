@@ -53,7 +53,6 @@ const platformsList: ModalItemList = {
     itemsToSave: ["WA", "FB", "TG"],
 }
 
-
 export const Filters: FC<FiltersProps> = props => {
     //show or hide modal
     const [isModalShowing, setIsModalShowing] = useState(false)
