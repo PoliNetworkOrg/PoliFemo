@@ -101,16 +101,4 @@ export const articles = {
         )
         return response.data.articles[0]
     },
-
-    /**
-     * Retrieves Tags (news categories) from PoliNetwork server.
-     */
-    async getTags(options?: RequestOptions) {
-        const response = await client.poliNetworkInstance.get<Tags>(
-            "/v1/tags",
-
-            options
-        )
-        return response.data.tags
-    },
 }

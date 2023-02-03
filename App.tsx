@@ -21,6 +21,7 @@ import { SettingsContext, Settings } from "contexts/settings"
 import { useLoadTokens } from "utils/loadTokens"
 import { HttpClient } from "api/HttpClient"
 import { usePalette } from "utils/colors"
+import { StatusBar } from "react-native"
 
 const client = HttpClient.getInstance()
 
@@ -141,6 +142,11 @@ export default function App() {
                 },
             }}
         >
+            <StatusBar
+                barStyle={"light-content"}
+                translucent={true}
+                backgroundColor={"transparent"}
+            />
             <OutsideClickProvider>
                 <SettingsContext.Provider
                     value={{ settings: settings, setSettings: setSettings }}
