@@ -162,7 +162,9 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                             if (isDeleting) setIsDeleting(false)
                             if (buttonIcon.id === 9) setModalVisible(true)
                             // TODO: actual navigation
-                            if (!isDeleting && buttonIcon.id !== 9) {
+                            if (buttonIcon.id === 5) {
+                                navigate("Groups")
+                            } else if (!isDeleting && buttonIcon.id !== 9) {
                                 navigate("Error404")
                             }
                         }}

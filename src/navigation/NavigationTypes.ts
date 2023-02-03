@@ -46,6 +46,7 @@ export type MainStackNavigatorParams = {
     OtherCategories: { tags: TagWithData[] }
     ArticlesList: { tagName: string }
     Error404: undefined
+    Groups: undefined
 }
 
 export type SettingsStackNavigatorParams = {
