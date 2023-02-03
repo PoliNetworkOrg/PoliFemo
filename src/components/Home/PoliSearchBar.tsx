@@ -62,7 +62,7 @@ export const PoliSearchBar: FC<{
                 {
                     alignSelf: "center",
                     marginTop: 46,
-                    marginBottom: 18,
+                    marginBottom: 12,
                     width: 285,
                     borderRadius: 28,
                     backgroundColor: fieldBackground,
