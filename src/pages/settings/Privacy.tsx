@@ -1,5 +1,5 @@
 import React from "react"
-import { View, Linking } from "react-native"
+import { Linking } from "react-native"
 
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ContentWrapperScroll } from "components/ContentWrapperScroll"
@@ -37,7 +37,9 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
         {
             title: "Privacy policy",
             callback: () => {
-                Linking.openURL("https://polinetwork.org/it/learnmore/privacy/")
+                Linking.openURL(
+                    "https://polinetwork.org/it/learnmore/privacy/"
+                ).catch(err => console.log(err))
             },
         },
     ]
