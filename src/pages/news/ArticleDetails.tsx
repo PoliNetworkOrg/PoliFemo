@@ -89,6 +89,22 @@ export const Article: MainStackScreen<"Article"> = props => {
                     a {
                         color: ${isLight ? "black" : "white"};
                       }
+                    h1 {
+                        color: ${isLight ? "black" : "white"};
+                    }
+                    h2 {
+                        color: ${isLight ? "black" : "white"};
+                    }
+                    h3 {
+                        color: ${isLight ? "black" : "white"};
+                        text-align: justify;
+                    }
+                    img { 
+                        display: block; max-width: 100%; height: auto;
+                    }
+                    iframe { 
+                        display: block; max-width: 100%; height: auto;
+                    }
                   </style></head><body><div>${html
                       .map(el => `<p>${el}<p/>`)
                       .join("")}
