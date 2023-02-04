@@ -5,13 +5,13 @@ import { usePalette } from "utils/colors"
 import { Title, BodyText } from "components/Text"
 import { NavBar } from "components/NavBar"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
-import { api } from "api"
+import { api, RetryType } from "api"
 import { CampusItem } from "./CampusChoice"
 
 export interface BuildingItem {
     campus: CampusItem
     name: string
-    freeRoomList: string[] 
+    freeRoomList: number[]
 }
 
 /**
@@ -34,13 +34,13 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
     )
 
     function addHours(dateStart: Date, hours: number) {
-        const tempDate= new Date(dateStart.getTime())
+        const tempDate = new Date(dateStart.getTime())
         tempDate.setHours(tempDate.getHours() + hours)
         return tempDate
     }
 
-    //the dateEnd is the startDate + 24 hours, the number of hours has not been chosen yet
-    const dateEnd = addHours(date, 24).toISOString() //5 hours is an example
+    //the dateEnd is the startDate + 8 hours, the number of hours has not been chosen yet
+    const dateEnd = addHours(date, 8).toISOString() //8 hours is an example
 
     //main function that handles the call to the API in order to obtain the list of freeclassRooms
     const findRoomsAvailable = async () => {
@@ -48,33 +48,36 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
             const response = await api.rooms.getFreeRoomsTimeRange(
                 campus.acronym,
                 date.toISOString(),
-                dateEnd
+                dateEnd,
+                {
+                    maxRetries: 2,
+                    retryType: RetryType.RETRY_N_TIMES,
+                }
             )
             if (response.length > 0) {
-
                 const tempBuildingStrings: string[] = []
-                const tempBuildings : BuildingItem[] = []
+                const tempBuildings: BuildingItem[] = []
                 response.map(room => {
                     const currentBuildingString = room.building.replace(
                         "Edificio ",
                         "Ed. "
                     )
                     if (!tempBuildingStrings.includes(currentBuildingString)) {
-                        const currentBuilding : BuildingItem = {
+                        const currentBuilding: BuildingItem = {
                             campus: campus,
-                            name: room.building.replace(
-                                "Edificio ",
-                                "Ed. "
-                            ),
-                            freeRoomList: [room.name]
+                            name: room.building.replace("Edificio ", "Ed. "),
+                            freeRoomList: [room.room_id],
                         }
                         tempBuildingStrings.push(currentBuildingString)
                         tempBuildings.push(currentBuilding)
-                    }
-                    else{
+                    } else {
                         //element already present in the list
-                        const indexElement = tempBuildingStrings.indexOf(currentBuildingString)
-                        tempBuildings[indexElement].freeRoomList.push(room.name)
+                        const indexElement = tempBuildingStrings.indexOf(
+                            currentBuildingString
+                        )
+                        tempBuildings[indexElement].freeRoomList.push(
+                            room.room_id
+                        )
                     }
                 })
                 setBuildingList(tempBuildings)
@@ -85,7 +88,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
     }
 
     useEffect(() => {
-        findRoomsAvailable().finally(() => console.log("Rooms Retrieved"))
+        void findRoomsAvailable()
     }, [date])
 
     useEffect(() => {

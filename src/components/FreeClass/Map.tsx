@@ -9,6 +9,7 @@ interface MapProps {
     longitude: number
     locationStatus: PermissionStatus
     currentCampus?: number[]
+    onPressMarker: () => void
 }
 
 /**
@@ -59,6 +60,7 @@ export const Map: FC<MapProps> = props => {
                                 latitude: props.currentCampus[0],
                                 longitude: props.currentCampus[1],
                             }}
+                            onPress={() => props.onPressMarker()}
                         ></Marker>
                     ) : undefined}
                 </MapView>

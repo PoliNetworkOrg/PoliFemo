@@ -12,6 +12,14 @@ export interface Room {
     link: string
 }
 
+export interface RoomDetails {
+    name: string
+    capacity: string
+    building: string
+    address: string
+    power: boolean
+}
+
 const client = HttpClient.getInstance()
 
 /**
@@ -42,7 +50,7 @@ export const rooms = {
     },
 
     async getRoomInfo(roomId: number, options?: RequestOptions) {
-        const response = await client.poliNetworkInstance.get<string[]>(
+        const response = await client.poliNetworkInstance.get<RoomDetails[]>(
             "/v1/rooms/" + roomId,
             {
                 ...options,

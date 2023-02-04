@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
+import { MainStackScreen } from "navigation/NavigationTypes"
 import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
@@ -10,8 +10,10 @@ import { Map } from "components/FreeClass/Map"
 import * as Location from "expo-location"
 import { LocationGeocodedAddress, PermissionStatus } from "expo-location"
 import { AddressText } from "components/FreeClass/AddressText"
-import { campusList } from "./CampusChoice"
+import { CampusItem, campusList } from "./CampusChoice"
 import { getDistance } from "geolib"
+import { api } from "api"
+import { BuildingItem } from "./BuildingChoice"
 
 enum ButtonType {
     MAP,
@@ -36,7 +38,59 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
 
     const [currentCampus, setCurrentCampus] = useState<number[]>([])
 
-    const { navigate } = useNavigation()
+    const [roomList, setRoomList] = useState<number[]>([])
+
+    function addHours(dateStart: Date, hours: number) {
+        const tempDate = new Date(dateStart.getTime())
+        tempDate.setHours(tempDate.getHours() + hours)
+        return tempDate
+    }
+
+    //the dateEnd is the startDate + 8 hours, the number of hours has not been chosen yet
+    const dateEnd = addHours(new Date(), 8).toISOString() //8 hours is an example
+
+    //main function that handles the call to the API in order to obtain the list of freeclassRooms
+    const findRoomsAvailable = async (campus: CampusItem) => {
+        try {
+            const response = await api.rooms.getFreeRoomsTimeRange(
+                campus.acronym,
+                new Date().toISOString(),
+                dateEnd,
+            )
+            if (response.length > 0) {
+                const tempBuildingStrings: string[] = []
+                const tempRoomList: number[] = []
+                const tempBuildings: BuildingItem[] = []
+                response.map(room => {
+                    const currentBuildingString = room.building.replace(
+                        "Edificio ",
+                        "Ed. "
+                    )
+                    if (!tempBuildingStrings.includes(currentBuildingString)) {
+                        const currentBuilding: BuildingItem = {
+                            campus: campus,
+                            name: room.building.replace("Edificio ", "Ed. "),
+                            freeRoomList: [room.room_id],
+                        }
+                        tempBuildingStrings.push(currentBuildingString)
+                        tempBuildings.push(currentBuilding)
+                    } else {
+                        //element already present in the list
+                        const indexElement = tempBuildingStrings.indexOf(
+                            currentBuildingString
+                        )
+                        tempBuildings[indexElement].freeRoomList.push(
+                            room.room_id
+                        )
+                    }
+                    tempRoomList.push(room.room_id)
+                })
+                setRoomList(tempRoomList)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     async function getPosition() {
         const { status } = await Location.requestForegroundPermissionsAsync()
@@ -59,10 +113,10 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                             latitude: campus.latitude,
                             longitude: campus.longitude,
                         }
-                    ) <= 500 //if the distance between the user and the campus is less than 500m I'll call the API
+                    ) <= 50000 //if the distance between the user and the campus is less than 500m I'll call the API
                 ) {
-                    //call the API,not yet performed
-                    //so far I put a marker on the campus
+                    //call the API
+                    void findRoomsAvailable(campus)
                     setCurrentCampus([campus.latitude, campus.longitude])
                 }
             })
@@ -216,9 +270,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                                 paddingBottom: 100,
                             }}
                         >
-                            <FreeClassList
-                                data={["ciao", "ciao", "ciao", "ciao", "ciao"]}
-                            />
+                            <FreeClassList data={roomList} />
                         </View>
                     ) : (
                         <Map
@@ -226,6 +278,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                             longitude={currentCoords[1]}
                             locationStatus={locationStatus}
                             currentCampus={currentCampus}
+                            onPressMarker={() => setStatus(ButtonType.LIST)}
                         />
                     )}
                 </View>
