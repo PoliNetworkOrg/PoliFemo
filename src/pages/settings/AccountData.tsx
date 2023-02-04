@@ -33,7 +33,7 @@ export const AccountData: SettingsStackScreen<"AccountData"> = () => {
     }
 
     return (
-        <ContentWrapperScroll title="Dati Account">
+        <ContentWrapperScroll title="Dati account">
             {!loggedIn && (
                 <BodyText style={styles.text}>
                     Nessun dato presente nel database
