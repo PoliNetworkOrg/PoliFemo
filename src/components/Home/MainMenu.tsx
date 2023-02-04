@@ -166,13 +166,14 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                             if (!isDeleting && buttonIcon.id !== 9) {
                                 if (buttonIcon.id == 3) {
                                     navigate("FreeClassrooms")
-                                } else {
+                                } else if (buttonIcon.id === 5) {
+                                    navigate("Groups")
+                                } 
+                                else {
                                     navigate("Error404")
                                 }
                             }
-                            else if (buttonIcon.id === 5) {
-                                navigate("Groups")
-                            } 
+                            
                         }}
                         onLongPress={() => {
                             if (buttonIcon.id !== 9) setIsDeleting(!isDeleting)
