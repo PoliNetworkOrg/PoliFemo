@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { Pressable, View, StyleSheet } from "react-native"
+import { Pressable, View, StyleSheet, DeviceEventEmitter } from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
@@ -7,6 +7,8 @@ import { Text } from "components/Text"
 import { useNavigation } from "navigation/NavigationTypes"
 import { usePalette } from "utils/colors"
 import { NavbarIcon, navbarIcons } from "assets/navbar"
+
+export const CLOSE_BOTTOM_SHEET_EVENT_NAME = "close-bottom-sheet"
 
 export interface NavbarProps {
     /**
@@ -129,7 +131,13 @@ export const NavBar: FC<NavbarProps> = props => {
                 <Pressable
                     onPress={
                         props.overrideHomeBehavior ??
-                        (() => navigation.navigate("Home"))
+                        (() => {
+                            navigation.navigate("Home")
+                            // Emit the event to close the news bottom sheet
+                            DeviceEventEmitter.emit(
+                                CLOSE_BOTTOM_SHEET_EVENT_NAME
+                            )
+                        })
                     }
                     style={[styles.button, { backgroundColor: buttonFill }]}
                 >

@@ -45,33 +45,39 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
 
     const closerToCorner = props.closerToCorner ?? false
 
-    // TODO: what is the default image?
-    const imageURL =
-        props.imageURL ||
-        "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"
-
     return (
         <Pressable
             style={[
                 { marginBottom: 17, borderRadius: borderRadius },
                 props.style,
             ]}
-            onPress={props.onClick ?? null}
+            onPress={props.onClick}
         >
             <ImageBackground
-                source={{ uri: imageURL }}
+                source={props.imageURL ? { uri: props.imageURL } : {}}
                 style={{ width: "100%", height: "100%" }}
                 imageStyle={{ borderRadius: borderRadius }}
             >
                 <LinearGradient
-                    colors={[
-                        "rgba(255, 181, 68, 0.88)",
-                        "rgba(255, 181, 68, 0)",
-                    ]}
-                    locations={[0, 0.5656]}
+                    colors={
+                        props.imageURL
+                            ? [
+                                  "rgba(255, 181, 68, 0.88)",
+                                  "rgba(255, 181, 68, 0)",
+                              ]
+                            : [
+                                  "rgba(255, 181, 68, 0.88)",
+                                  "rgba(255, 181, 68, 0.34)",
+                              ]
+                    }
+                    locations={props.imageURL ? [0, 0.5656] : [0, 1]}
                     style={{ flex: 1, borderRadius: borderRadius }}
                 >
-                    <View style={{ margin: closerToCorner ? 9 : 17 }}>
+                    <View
+                        style={{
+                            margin: closerToCorner ? 9 : 17,
+                        }}
+                    >
                         <CardTitle style={{ lineHeight: 19 }}>
                             {props.title}
                         </CardTitle>

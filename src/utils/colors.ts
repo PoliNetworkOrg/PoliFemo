@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { useColorScheme, ColorSchemeName } from "react-native"
-import { SettingsContext } from "./settings"
+import { SettingsContext } from "contexts/settings"
 
 export interface Palette {
     primary: string

@@ -5,7 +5,7 @@ import axios, {
     AxiosRequestConfig,
     AxiosResponse,
 } from "axios"
-import { PolimiToken, PoliNetworkToken, Tokens } from "utils/login"
+import { PolimiToken, PoliNetworkToken, Tokens } from "contexts/login"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { wait } from "utils/functions"
 

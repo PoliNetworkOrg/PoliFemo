@@ -49,6 +49,10 @@ export const Article: MainStackScreen<"Article"> = props => {
                 il problema dei reindirizzamenti dentro la webview non
                 si presenta sul mio telefono). Da testare su iOS e altri
                 Android.  */
+
+                style={{
+                    backgroundColor: "transparent",
+                }}
                 onShouldStartLoadWithRequest={event => {
                     if (event.url.slice(0, 4) === "http") {
                         void Linking.openURL(event.url)

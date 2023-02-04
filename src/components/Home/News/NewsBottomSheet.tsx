@@ -1,23 +1,46 @@
-import React, { FC, useEffect, useState, useRef } from "react"
-import { StyleSheet, View } from "react-native"
+import React, { FC, useEffect, useState, useRef, useContext } from "react"
+import { StyleSheet, View, DeviceEventEmitter } from "react-native"
 import BottomSheet, {
     BottomSheetScrollView,
     BottomSheetScrollViewMethods,
 } from "@gorhom/bottom-sheet"
 
-import { NewsCategoriesGrid } from "./NewsCategoriesGrid"
+import { Article } from "api/articles"
+import {
+    NewsPreferencesContext,
+    Preference,
+    TagWithData,
+} from "contexts/newsPreferences"
+import { NewsTagsGrid } from "./NewsTagsGrid"
 import { Title } from "components/Text"
-import { NavBar } from "components/NavBar"
+import { CardWithGradient } from "components/CardWithGradient"
+import { NavBar, CLOSE_BOTTOM_SHEET_EVENT_NAME } from "components/NavBar"
 import { usePalette } from "utils/colors"
+import { useNavigation } from "navigation/NavigationTypes"
 import { getUsableScreenHeight } from "utils/height"
 
+interface NewsBottomSheetProps {
+    /**
+     * Tags (news categories) in the favourite section
+     */
+    tags: TagWithData[]
+    /**
+     * Article at the top of the news section
+     */
+    highlightedArticle?: Article
+}
+
 /**
- * Bottom sheet in the home page to access news highlights and news categories.
+ * Bottom sheet in the home page to access the news.
  *
+ * This component receives data from the NewsManager and handles the graphic part.
  * Its positioning is absolute.
  */
-export const NewsBottomSheet: FC = () => {
+export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
+    const navigation = useNavigation()
     const { isLight, background } = usePalette()
+
+    const { preferences } = useContext(NewsPreferencesContext)
 
     // modal state
     const [isNewsClosed, setIsNewsClosed] = useState(true)
@@ -32,20 +55,39 @@ export const NewsBottomSheet: FC = () => {
         opened: 106,
     }
 
+    const showHighlighted = props.highlightedArticle !== undefined
+    const showButtonToOtherTags = Object.values(preferences).some(
+        p => p === Preference.UNFAVOURITE
+    )
+
+    const favTags = props.tags.filter(
+        tag => preferences[tag.name] !== Preference.UNFAVOURITE
+    )
+
     useEffect(() => {
-        // scrolls to the top of the news scrollview when the news bottom sheet is Closed
+        // scrolls to the top of the news scrollview
         if (isNewsClosed && scrollViewRef.current) {
             // "scrollTo" is deprecated but works fine.
             // "scrollToEnd" doesn't work when the news scrollview is fully expanded downwards
-            scrollViewRef.current.scrollTo({ y: 0, animated: true })
+            scrollViewRef.current.scrollTo({ y: 0, animated: false })
         }
     }, [isNewsClosed])
+
+    useEffect(() => {
+        // Set up the event listener to close the NewsBottomSheet
+        // when the home button in the NavBar is clicked
+        DeviceEventEmitter.addListener(CLOSE_BOTTOM_SHEET_EVENT_NAME, () => {
+            setIsNewsClosed(true)
+        })
+        return () => {
+            DeviceEventEmitter.removeAllListeners(CLOSE_BOTTOM_SHEET_EVENT_NAME)
+        }
+    }, [])
 
     return (
         <BottomSheet
             ref={bottomSheetRef}
             handleComponent={() => (
-                // "News" title top bar component
                 <View style={[styles.topBar, { backgroundColor: background }]}>
                     <View
                         style={[
@@ -81,7 +123,7 @@ export const NewsBottomSheet: FC = () => {
                 // In certain cases, onAnimate fails
                 setIsNewsClosed(index === 0)
             }}
-            index={isNewsClosed ? 0 : 1}
+            index={isNewsClosed ? 0 : 1} // close = 0 and open = 1
             snapPoints={[
                 // 0 is at the bottom of the screen
                 Math.max(getUsableScreenHeight() - distanceFromTop.closed, 42),
@@ -91,12 +133,50 @@ export const NewsBottomSheet: FC = () => {
         >
             <BottomSheetScrollView
                 ref={scrollViewRef}
+                showsVerticalScrollIndicator={false}
                 style={{
                     paddingHorizontal: 26,
                     backgroundColor: background,
+                    paddingTop: 16,
                 }}
             >
-                <NewsCategoriesGrid />
+                {showHighlighted && (
+                    <CardWithGradient
+                        title={"In Evidenza"}
+                        imageURL={
+                            props.highlightedArticle?.image &&
+                            props.highlightedArticle.image.length > 0
+                                ? props.highlightedArticle.image
+                                : ""
+                            // : "http://rl.airlab.deib.polimi.it/wp-content/uploads/2022/06/1-PolimiCampus_2.jpg"
+                        }
+                        onClick={() =>
+                            navigation.navigate("Article", {
+                                article: props.highlightedArticle as Article,
+                            })
+                        }
+                        style={{ height: 220, marginBottom: 34 }}
+                    />
+                )}
+
+                <NewsTagsGrid tags={favTags} />
+
+                {showButtonToOtherTags && (
+                    <CardWithGradient
+                        title={"Altre Categorie"}
+                        onClick={() =>
+                            navigation.navigate("OtherCategories", {
+                                tags: props.tags,
+                            })
+                        }
+                        style={{ height: 80, marginTop: 17 }}
+                    />
+                )}
+
+                <View
+                    // So that the scrollable content does not remain behind the NavBar
+                    style={{ height: 120 }}
+                />
             </BottomSheetScrollView>
             <NavBar
                 overrideBackBehavior={() => setIsNewsClosed(true)}
@@ -124,14 +204,15 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         paddingHorizontal: 26,
-        height: 112,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
+        paddingBottom: 8,
     },
     dragBar: {
         alignSelf: "center",
         width: 120,
         height: 5,
+        marginVertical: 16,
         borderRadius: 4,
     },
 })
