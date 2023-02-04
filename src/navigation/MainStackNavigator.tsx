@@ -10,15 +10,12 @@ import { Home } from "pages/Home"
 import { Article } from "pages/ArticleDetails"
 import { NewsList } from "pages/NewsList"
 import { Error404 } from "pages/Error404"
-<<<<<<< HEAD
 import { FreeClassrooms } from "pages/FreeClass/FreeClassrooms"
 import { CampusChoice } from "pages/FreeClass/CampusChoice"
 import { PositionChoice } from "pages/FreeClass/PositionChoice"
 import { BuildingChoice } from "pages/FreeClass/BuildingChoice"
 import { ClassChoice } from "pages/FreeClass/ClassChoice"
-=======
 import { Groups } from "pages/Groups"
->>>>>>> main
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const MainStackNavigator = createStackNavigator<MainStackNavigatorParams>()

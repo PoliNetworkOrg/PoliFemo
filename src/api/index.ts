@@ -29,9 +29,6 @@ export const api = {
     tags,
     timetable,
     user,
-<<<<<<< HEAD
     rooms,
-=======
     groups,
->>>>>>> main
 }
