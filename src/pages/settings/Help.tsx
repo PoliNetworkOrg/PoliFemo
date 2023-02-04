@@ -15,10 +15,6 @@ export const settingsList: SettingOptions[] = [
         subtitle: "descrizione placeholder",
     },
     {
-        title: "Termini e privacy",
-        subtitle: "descrizione plaiceholder",
-    },
-    {
         title: "Informazioni App",
         subtitle: "descrizione placeholder",
     },

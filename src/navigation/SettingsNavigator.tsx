@@ -8,6 +8,8 @@ import { createStackNavigator } from "@react-navigation/stack"
 import { SettingsStackNavigatorParams } from "navigation/NavigationTypes"
 import { SettingsPage } from "pages/settings/Settings"
 import { Help } from "pages/settings/Help"
+import { Privacy } from "pages/settings/Privacy"
+import { AccountData } from "pages/settings/AccountData"
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const SettingsStackNavigator =
     createStackNavigator<SettingsStackNavigatorParams>()
@@ -22,6 +24,11 @@ export const SettingsStack: FC = () => {
                 component={SettingsPage}
             />
             <SettingsStackNavigator.Screen name="Help" component={Help} />
+            <SettingsStackNavigator.Screen name="Privacy" component={Privacy} />
+            <SettingsStackNavigator.Screen
+                name="AccountData"
+                component={AccountData}
+            />
         </SettingsStackNavigator.Navigator>
     )
 }

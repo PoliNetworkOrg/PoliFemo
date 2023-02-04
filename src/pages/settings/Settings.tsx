@@ -69,10 +69,18 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
         },
         {
             title: "Aiuto",
-            subtitle: "Centro assistenza, contattaci, informativa privacy",
+            subtitle: "Centro assistenza, contattaci",
             icon: settingsIcons.help,
             callback: () => {
                 navigate("Help")
+            },
+        },
+        {
+            title: "Privacy",
+            subtitle: "Esporta dati, cancella account",
+            icon: settingsIcons.help,
+            callback: () => {
+                navigate("Privacy")
             },
         },
         {
