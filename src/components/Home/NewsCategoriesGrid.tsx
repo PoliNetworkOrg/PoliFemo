@@ -34,7 +34,7 @@ export const NewsCategoriesGrid = () => {
     // patterns to get heights and positions (left / right) of the cards
     const updateNewsCategories = async () => {
         try {
-            const response = await api.tags.get()
+            const response = await api.tags.getTags()
             const tempCategories: CategoriesColumns = { left: [], right: [] }
 
             // store the pattern data of the current batch of cards
