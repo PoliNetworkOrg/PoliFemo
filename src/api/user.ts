@@ -64,24 +64,19 @@ export const user = {
      * Get a file with all of the user's data
      */
     async exportPoliNetworkMe() {
-        const response = await client.poliNetworkInstance.get(
-            "/v1/accounts/me/export",
-            {
-                authType: AuthType.POLINETWORK,
-            }
-        )
+        const response = await client.poliNetworkInstance.get<
+            Record<string, any>
+        >("/v1/accounts/me/export", {
+            authType: AuthType.POLINETWORK,
+        })
         return response.data
     },
     /**
      * Delete the user's account and data
      */
     async deletePoliNetworkMe() {
-        const response = await client.poliNetworkInstance.delete(
-            "/v1/accounts/me",
-            {
-                authType: AuthType.POLINETWORK,
-            }
-        )
-        return response.data
+        await client.poliNetworkInstance.delete("/v1/accounts/me", {
+            authType: AuthType.POLINETWORK,
+        })
     },
 }

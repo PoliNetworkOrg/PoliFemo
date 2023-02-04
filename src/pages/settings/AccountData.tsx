@@ -24,7 +24,7 @@ export const AccountData: SettingsStackScreen<"AccountData"> = () => {
             setUserData(response)
         }
         if (loggedIn) {
-            fetchUserData()
+            fetchUserData().catch(err => console.log(err))
         }
     }, [])
 
