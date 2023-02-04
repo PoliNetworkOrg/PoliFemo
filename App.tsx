@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useEffect, useRef, useState } from "react"
-import { NavigationContainer } from "@react-navigation/native"
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native"
 import { hideAsync } from "expo-splash-screen"
 import { useFonts } from "@expo-google-fonts/roboto"
 import {
@@ -20,10 +20,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { SettingsContext, Settings } from "utils/settings"
 import { useLoadTokens } from "utils/loadTokens"
 import { HttpClient } from "api/HttpClient"
+import { usePalette } from "utils/colors"
+import { StatusBar } from "react-native"
 
 const client = HttpClient.getInstance()
 
 export default function App() {
+    const { homeBackground } = usePalette()
     const [settingsReady, setSettingsReady] = useState(false)
     const [settings, setSettings] = useState<Settings>({
         theme: "predefined",
@@ -130,7 +133,20 @@ export default function App() {
     if (!settingsReady || !fontsLoaded || !tokensLoaded) return null
 
     return (
-        <NavigationContainer>
+        <NavigationContainer
+            theme={{
+                ...DefaultTheme,
+                colors: {
+                    ...DefaultTheme.colors,
+                    background: homeBackground,
+                },
+            }}
+        >
+            <StatusBar
+                barStyle={"light-content"}
+                translucent={true}
+                backgroundColor={"transparent"}
+            />
             <OutsideClickProvider>
                 <SettingsContext.Provider
                     value={{ settings: settings, setSettings: setSettings }}

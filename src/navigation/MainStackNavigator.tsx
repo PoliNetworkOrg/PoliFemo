@@ -15,6 +15,7 @@ import { CampusChoice } from "pages/FreeClass/CampusChoice"
 import { PositionChoice } from "pages/FreeClass/PositionChoice"
 import { BuildingChoice } from "pages/FreeClass/BuildingChoice"
 import { ClassChoice } from "pages/FreeClass/ClassChoice"
+import { Groups } from "pages/Groups"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const MainStackNavigator = createStackNavigator<MainStackNavigatorParams>()
@@ -46,6 +47,7 @@ export const MainStack: FC = () => {
                 component={ClassChoice}
             />
             <MainStackNavigator.Screen name="Error404" component={Error404} />
+            <MainStackNavigator.Screen name="Groups" component={Groups} />
         </MainStackNavigator.Navigator>
     )
 }

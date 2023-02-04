@@ -51,6 +51,7 @@ export type MainStackNavigatorParams = {
     PositionChoice: undefined
     BuildingChoice: { campus: CampusItem; currentDate: string }
     ClassChoice: { building: BuildingItem; currentDate: string }
+    Groups: undefined
 }
 
 export type SettingsStackNavigatorParams = {

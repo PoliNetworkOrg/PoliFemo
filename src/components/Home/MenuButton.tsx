@@ -85,7 +85,7 @@ export const MenuButton: FC<{
                             justifyContent: "space-between",
                             alignItems: "center",
                             borderRadius: 10,
-                            marginTop: 8, //added margin to the top due to the deleting operation
+                            marginTop: 15, //added margin to the top due to the deleting operation
                         }}
                     >
                         <Canvas style={{ flex: 1, width: 40 }}>
@@ -111,31 +111,29 @@ export const MenuButton: FC<{
                 </Pressable>
                 {isDeleting && buttonIcon.id !== 9 && (
                     <Pressable
+                        style={{
+                            position: "absolute",
+                            width: 25,
+                            height: 25,
+                            right: 0,
+                            bottom: 57,
+                        }}
                         onPress={() => {
                             onDelete && onDelete()
                         }}
+                        hitSlop={10}
                     >
-                        <View
-                            style={{
-                                position: "absolute",
-                                width: 25,
-                                height: 25,
-                                right: 0,
-                                bottom: 57,
-                            }}
-                        >
-                            <Canvas style={{ flex: 1, width: 27 }}>
-                                {delIcon && (
-                                    <ImageSVG
-                                        svg={delIcon}
-                                        x={0}
-                                        y={0}
-                                        width={25}
-                                        height={25}
-                                    />
-                                )}
-                            </Canvas>
-                        </View>
+                        <Canvas style={{ flex: 1, width: 27 }}>
+                            {delIcon && (
+                                <ImageSVG
+                                    svg={delIcon}
+                                    x={0}
+                                    y={0}
+                                    width={25}
+                                    height={25}
+                                />
+                            )}
+                        </Canvas>
                     </Pressable>
                 )}
             </Animated.View>
