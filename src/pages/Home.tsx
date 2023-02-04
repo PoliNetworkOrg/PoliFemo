@@ -13,6 +13,7 @@ import { HighlightsManager } from "components/Home/Highlights/HighlightsManager"
 import openNavSVG from "assets/menu/open-nav.svg"
 import { api, RetryType } from "api"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { Title } from "components/Text"
 
 const DEFAULT_FETCH_INTERVAL = 1 * 24 * 60 * 60 * 1000 //1 day
 
