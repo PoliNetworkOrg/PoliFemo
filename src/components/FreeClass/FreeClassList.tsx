@@ -190,7 +190,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                                 fontSize: 24,
                             }}
                         >
-                            {}
+                            {room}
                         </BodyText>
                     </View>
                 </Pressable>
