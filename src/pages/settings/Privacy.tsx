@@ -1,26 +1,19 @@
-import React, { useState, useContext } from "react"
-import { View } from "react-native"
+import React from "react"
+import { View, Linking } from "react-native"
 
-import { api } from "api"
-import { HttpClient } from "api/HttpClient"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ContentWrapperScroll } from "components/ContentWrapperScroll"
-import { ModalConfirm } from "components/Settings/ModalConfirm"
+import { Divider } from "components/Divider"
 import { SettingTile } from "components/Settings/SettingTile"
+import { BodyText } from "components/Text"
 import { SettingOptions } from "utils/settings"
-import { LoginContext } from "utils/login"
-
-const client = HttpClient.getInstance()
+import { INTRODUCTION } from "utils/privacy"
 
 /**
  * Privacy Settings Page
  */
 export const Privacy: SettingsStackScreen<"Privacy"> = () => {
-    const { loggedIn } = useContext(LoginContext)
-
     const { navigate } = useNavigation()
-
-    const [showModalDeleteData, setShowModalDeletedata] = useState(false)
 
     const settingsList: SettingOptions[] = [
         {
@@ -34,34 +27,38 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
             title: "Cancella account",
             subtitle: "Cancella i dati relativi a questo account e disconnetti",
             callback: () => {
-                if (loggedIn) setShowModalDeletedata(true)
+                navigate("DeleteAccount")
+            },
+        },
+        {
+            title: "Imposta autocancellazione",
+            subtitle: "Imposta un timer per l'eliminazione dell'account",
+        },
+        {
+            title: "Privacy policy",
+            callback: () => {
+                Linking.openURL("https://polinetwork.org/it/learnmore/privacy/")
             },
         },
     ]
 
     return (
-        <>
-            <ContentWrapperScroll title="Privacy">
-                <View style={{ paddingTop: 32 }}>
-                    {settingsList.map((setting, index) => {
-                        return <SettingTile setting={setting} key={index} />
-                    })}
-                </View>
-            </ContentWrapperScroll>
-            <ModalConfirm
-                text={
-                    "Sicuro/a di voler cancellare l'account?\n Quest'azione è irreversibile."
-                }
-                isShowing={showModalDeleteData}
-                onClose={() => setShowModalDeletedata(false)}
-                onOK={async () => {
-                    if (loggedIn) {
-                        await api.user.deletePoliNetworkMe()
-                        await client.destroyTokens()
-                    }
-                    setShowModalDeletedata(false)
+        <ContentWrapperScroll title="Privacy">
+            <BodyText
+                style={{
+                    paddingTop: 50,
+                    paddingBottom: 32,
+                    paddingHorizontal: 32,
                 }}
-            />
-        </>
+            >
+                {INTRODUCTION}
+            </BodyText>
+            <Divider />
+            <SettingTile setting={settingsList[0]} />
+            <SettingTile setting={settingsList[1]} />
+            <SettingTile setting={settingsList[2]} />
+            <Divider />
+            <SettingTile setting={settingsList[3]} />
+        </ContentWrapperScroll>
     )
 }

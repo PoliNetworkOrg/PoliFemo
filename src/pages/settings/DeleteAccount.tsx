@@ -1,52 +1,43 @@
-import React, { useState, useEffect, useContext } from "react"
+import React, { useContext } from "react"
 import { View, TouchableOpacity, StyleSheet } from "react-native"
-import * as Clipboard from "expo-clipboard"
 
 import { api } from "api"
+import { HttpClient } from "api/HttpClient"
 import { SettingsStackScreen } from "navigation/NavigationTypes"
 import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import { Text, BodyText } from "components/Text"
-import { NOT_LOGGED_IN } from "utils/privacy"
+import { DELETE_ACCOUNT, NOT_LOGGED_IN } from "utils/privacy"
 import { usePalette } from "utils/colors"
 import { LoginContext } from "utils/login"
 import { getUsableScreenHeight } from "utils/height"
 
+const client = HttpClient.getInstance()
+
 /**
- * Account data Page
+ * Delete account Page
  */
-export const AccountData: SettingsStackScreen<"AccountData"> = () => {
+export const DeleteAccount: SettingsStackScreen<"DeleteAccount"> = () => {
     const { buttonFill } = usePalette()
     const { loggedIn } = useContext(LoginContext)
 
-    const [userData, setUserData] = useState({})
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            const response = await api.user.exportPoliNetworkMe()
-            setUserData(response)
-        }
-        if (loggedIn) {
-            fetchUserData().catch(err => console.log(err))
-        }
-    }, [])
-
-    const copyToClipboard = async () => {
-        await Clipboard.setStringAsync(JSON.stringify(userData, null, 2))
+    const deleteAccount = async () => {
+        await api.user.deletePoliNetworkMe()
+        await client.destroyTokens()
     }
 
     return (
-        <ContentWrapperScroll title="Dati account">
-            {!loggedIn && (
+        <ContentWrapperScroll title="Cancella account">
+            {!loggedIn ? (
                 <BodyText style={styles.text}>{NOT_LOGGED_IN}</BodyText>
-            )}
-
-            {Object.keys(userData).length > 0 && (
-                <View style={{ flex: 1, alignItems: "center" }}>
-                    <BodyText style={styles.text}>
-                        {JSON.stringify(userData, null, 2)}
-                    </BodyText>
+            ) : (
+                <View
+                    style={{
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <BodyText style={styles.text}>{DELETE_ACCOUNT}</BodyText>
                     <TouchableOpacity
-                        onPress={copyToClipboard}
+                        onPress={deleteAccount}
                         activeOpacity={0.8}
                         style={[
                             styles.button,
@@ -55,7 +46,7 @@ export const AccountData: SettingsStackScreen<"AccountData"> = () => {
                             },
                         ]}
                     >
-                        <Text>Copia negli appunti</Text>
+                        <Text>Conferma</Text>
                     </TouchableOpacity>
                 </View>
             )}

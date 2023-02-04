@@ -71,7 +71,7 @@ export const ContentWrapperScroll: FC<{
                 }}
             >
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    <View>{props.children}</View>
+                    <View style={{ paddingBottom: 160 }}>{props.children}</View>
                 </ScrollView>
             </View>
             {navbar ? <NavBar {...props.navbarOptions} /> : null}

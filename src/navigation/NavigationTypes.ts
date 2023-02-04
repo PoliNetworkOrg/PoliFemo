@@ -52,6 +52,7 @@ export type SettingsStackNavigatorParams = {
     Help: undefined
     Privacy: undefined
     AccountData: undefined
+    DeleteAccount: undefined
 }
 
 export type GlobalStackNavigatorParams = RootStackNavigatorParams &

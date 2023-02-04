@@ -10,6 +10,7 @@ import { SettingsPage } from "pages/settings/Settings"
 import { Help } from "pages/settings/Help"
 import { Privacy } from "pages/settings/Privacy"
 import { AccountData } from "pages/settings/AccountData"
+import { DeleteAccount } from "pages/settings/DeleteAccount"
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const SettingsStackNavigator =
     createStackNavigator<SettingsStackNavigatorParams>()
@@ -28,6 +29,10 @@ export const SettingsStack: FC = () => {
             <SettingsStackNavigator.Screen
                 name="AccountData"
                 component={AccountData}
+            />
+            <SettingsStackNavigator.Screen
+                name="DeleteAccount"
+                component={DeleteAccount}
             />
         </SettingsStackNavigator.Navigator>
     )
