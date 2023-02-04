@@ -10,6 +10,7 @@
             "navigation/*": ["src/navigation/*"],
             "pages/*": ["src/pages/*"],
             "utils/*": ["src/utils/*"],
+            "contexts/*": ["src/contexts/*"],
             "api": ["src/api"],
             "api/*": ["src/api/*"]
         },

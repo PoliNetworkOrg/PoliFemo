@@ -14,9 +14,9 @@ import {
     SettingOptions,
     SettingsContext,
     ValidColorSchemeName,
-} from "utils/settings"
+} from "contexts/settings"
 import { CareerColumn } from "components/Settings"
-import { LoginContext } from "utils/login"
+import { LoginContext } from "contexts/login"
 import { Career } from "api/user"
 import { HttpClient } from "api/HttpClient"
 

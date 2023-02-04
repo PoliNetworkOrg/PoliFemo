@@ -1,4 +1,4 @@
-import { PolimiToken } from "utils/login"
+import { PolimiToken } from "contexts/login"
 import { HttpClient, RequestOptions } from "./HttpClient"
 
 const client = HttpClient.getInstance()
