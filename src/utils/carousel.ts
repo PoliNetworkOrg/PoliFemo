@@ -71,11 +71,11 @@ export function checkEventType(typeId: number) {
 export function createWidget(event: Event) {
     const days = [
         "Domenica",
-        "Lunedi",
-        "Martedi",
-        "Mercoledi",
-        "Giovedi",
-        "Venerdi",
+        "Lunedì",
+        "Martedì",
+        "Mercoledì",
+        "Giovedì",
+        "Venerdì",
         "Sabato",
     ]
     const months = [
