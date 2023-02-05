@@ -15,13 +15,13 @@ import { NavBar } from "components/NavBar"
 // absolute magic url that makes the login go brrr, going to this url prompts the user to log in
 // for microsoft sso using polimi creditials
 const magicLoginUrl =
-    "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize?client_id=92602f24-dd8e-448e-a378-b1c575310f9d&scope=openid%20offline_access&response_type=code&login_hint=nome.cognome@mail.polimi.it&state=10010&redirect_uri=https://api.polinetwork.org/v1/auth/code"
+    "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=92602f24-dd8e-448e-a378-b1c575310f9d&scope=openid%20offline_access&response_type=code&state=10010&redirect_uri=https://api.polinetwork.org/staging/v1/auth/code&login_hint=nome@mail.polimi.it"
 // with a polimi session present, this cascade-redirects to the app page with the authcode attached
 const magicTokenUrl =
     "https://oauthidp.polimi.it/oauthidp/oauth2/auth?client_id=1057407812&redirect_uri=https%3A%2F%2Fpolimiapp.polimi.it%2Fpolimi_app%2Fapp&scope=openid%20polimi_app%20aule%20policard%20incarichi%20orario%20account%20webmail%20faqappmobile%20rubrica%20richass%20guasti%20prenotazione%20code%20carriera%20alumni%20webeep%20teamwork%20esami&access_type=offline&response_type=code"
 
 // if this is reached we have reached the polinework access token
-const polinetworkTargetUrl = "https://api.polinetwork.org/v1/auth/code"
+const polinetworkTargetUrl = "https://api.polinetwork.org/staging/v1/auth/code"
 // once this is reached we can extract polimi authcode from the url
 const polimiTargetUrl = "https://polimiapp.polimi.it/polimi_app/app/?code="
 

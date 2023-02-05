@@ -6,12 +6,15 @@ import { usePalette } from "utils/colors"
 import timerIcon from "assets/freeClassrooms/timer.svg"
 import overcrowdingIcon from "assets/freeClassrooms/overcrowding.svg"
 import fireIcon from "assets/freeClassrooms/fire.svg"
-import rooms from "pages/FreeClass/Room.json"
 import { ScrollView } from "react-native-gesture-handler"
 
 const { width } = Dimensions.get("window")
 
-export const FreeClassList: FC = () => {
+interface FreeClassListProps {
+    data: number[]
+}
+
+export const FreeClassList: FC<FreeClassListProps> = props => {
     const { palette } = usePalette()
     const timerSVG = useSVG(timerIcon)
     const overcrowdingSVG = useSVG(overcrowdingIcon)
@@ -25,9 +28,9 @@ export const FreeClassList: FC = () => {
                 justifyContent: "center",
             }}
         >
-            {rooms.map(room => (
+            {props.data.map((room, index) => (
                 <Pressable
-                    key={room.room_id}
+                    key={index}
                     style={{
                         width: width - 65,
                         height: 93,
@@ -187,7 +190,7 @@ export const FreeClassList: FC = () => {
                                 fontSize: 24,
                             }}
                         >
-                            {room.name}
+                            {room}
                         </BodyText>
                     </View>
                 </Pressable>

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { View, Pressable, FlatList } from "react-native"
 import { usePalette } from "utils/colors"
@@ -7,25 +7,65 @@ import { Title, BodyText } from "components/Text"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 
 export interface CampusItem {
-    id: number
     name: string[]
+    acronym: string
+    latitude: number
+    longitude: number
 }
 
-export const CampusChoice: MainStackScreen<"CampusChoice"> = () => {
+export const campusList: CampusItem[] = [
+    {
+        name: ["Bovisa", "Durando"],
+        acronym: "MIB",
+        latitude: 45.504422059752116,
+        longitude: 9.164129368703703,
+    },
+    {
+        name: ["Bovisa", "La Masa"],
+        acronym: "MIB",
+        latitude: 45.50286551603009,
+        longitude: 9.156452626872522,
+    },
+    {
+        name: ["Leonardo"],
+        acronym: "MIA",
+        latitude: 45.47791263153159,
+        longitude: 9.227122387828846,
+    },
+    {
+        name: ["Colombo"],
+        acronym: "MIA",
+        latitude: 45.47190973697382,
+        longitude: 9.227048868730659,
+    },
+    {
+        name: ["Mancinelli"],
+        acronym: "MIA",
+        latitude: 45.49016811534536,
+        longitude: 9.227177297538793,
+    },
+]
+
+/**
+ * In this page the user can select the campus.
+ */
+export const CampusChoice: MainStackScreen<"CampusChoice"> = props => {
     const { navigate } = useNavigation()
     const { homeBackground, background, palette } = usePalette()
 
-    const [data, setData] = useState<CampusItem[]>([
-        { id: 0, name: ["Bovisa", "Durando"] },
-        { id: 1, name: ["Bovisa", "La Masa"] },
-        { id: 2, name: ["Leonardo"] },
-        { id: 3, name: ["Colombo"] },
-        { id: 4, name: ["Mancinelli"] },
-    ])
+    const { currentDate } = props.route.params
 
     //non-ISO format for simplicity (local timezone) and
     // compatibility with `handleConfirm` function
-    const [date, setDate] = useState<Date>(new Date())
+    const [date, setDate] = useState<Date>(
+        new Date(currentDate) !== new Date()
+            ? new Date(currentDate)
+            : new Date()
+    )
+
+    useEffect(() => {
+        setDate(new Date(currentDate))
+    }, [props.route.params.currentDate])
 
     return (
         <View
@@ -86,7 +126,7 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = () => {
                                 justifyContent: "space-between",
                                 marginHorizontal: 22,
                             }}
-                            data={data}
+                            data={campusList}
                             keyExtractor={(_, index) => index.toString()}
                             renderItem={({ item }) => (
                                 <Pressable
@@ -102,6 +142,7 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = () => {
                                     onPress={() =>
                                         navigate("BuildingChoice", {
                                             campus: item,
+                                            currentDate: date.toISOString(),
                                         })
                                     }
                                 >

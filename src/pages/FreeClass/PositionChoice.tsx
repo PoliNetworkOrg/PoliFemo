@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { Pressable, View, Platform, ActivityIndicator } from "react-native"
+import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
 import { BodyText, Title } from "components/Text"
 import { PoliSearchBar } from "components/Home"
-import PositionArrowIcon from "assets/freeClassrooms/positionArrow.svg"
-import { useSVG, Canvas, ImageSVG } from "@shopify/react-native-skia"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { Map } from "components/FreeClass/Map"
 import * as Location from "expo-location"
-import { LocationGeocodedAddress } from "expo-location"
+import { LocationGeocodedAddress, PermissionStatus } from "expo-location"
+import { AddressText } from "components/FreeClass/AddressText"
+import { CampusItem, campusList } from "./CampusChoice"
+import { getDistance } from "geolib"
+import { api } from "api"
+import { BuildingItem } from "./BuildingChoice"
 
 enum ButtonType {
     MAP,
@@ -21,23 +24,123 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     const [search, setSearch] = useState("")
     const { homeBackground, background, primary, isDark, palette } =
         usePalette()
-    const positionArrowSVG = useSVG(PositionArrowIcon)
 
     const [status, setStatus] = useState<ButtonType>(ButtonType.MAP)
+
+    const [locationStatus, setLocationStatus] = useState<PermissionStatus>(
+        PermissionStatus.GRANTED
+    )
 
     const [currentLocation, setCurrentLocation] =
         useState<LocationGeocodedAddress>()
 
-    useEffect(() => {
-        void (async () => {
+    const [currentCoords, setCurrentCoords] = useState<number[]>([])
+
+    const [currentCampus, setCurrentCampus] = useState<number[]>([])
+
+    const [roomList, setRoomList] = useState<number[]>([])
+
+    function addHours(dateStart: Date, hours: number) {
+        const tempDate = new Date(dateStart.getTime())
+        tempDate.setHours(tempDate.getHours() + hours)
+        return tempDate
+    }
+
+    //the dateEnd is the startDate + 8 hours, the number of hours has not been chosen yet
+    const dateEnd = addHours(new Date(), 8).toISOString() //8 hours is an example
+
+    //main function that handles the call to the API in order to obtain the list of freeclassRooms
+    const findRoomsAvailable = async (campus: CampusItem) => {
+        try {
+            const response = await api.rooms.getFreeRoomsTimeRange(
+                campus.acronym,
+                new Date().toISOString(),
+                dateEnd,
+            )
+            if (response.length > 0) {
+                const tempBuildingStrings: string[] = []
+                const tempRoomList: number[] = []
+                const tempBuildings: BuildingItem[] = []
+                response.map(room => {
+                    const currentBuildingString = room.building.replace(
+                        "Edificio ",
+                        "Ed. "
+                    )
+                    if (!tempBuildingStrings.includes(currentBuildingString)) {
+                        const currentBuilding: BuildingItem = {
+                            campus: campus,
+                            name: room.building.replace("Edificio ", "Ed. "),
+                            freeRoomList: [room.room_id],
+                        }
+                        tempBuildingStrings.push(currentBuildingString)
+                        tempBuildings.push(currentBuilding)
+                    } else {
+                        //element already present in the list
+                        const indexElement = tempBuildingStrings.indexOf(
+                            currentBuildingString
+                        )
+                        tempBuildings[indexElement].freeRoomList.push(
+                            room.room_id
+                        )
+                    }
+                    tempRoomList.push(room.room_id)
+                })
+                setRoomList(tempRoomList)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async function getPosition() {
+        const { status } = await Location.requestForegroundPermissionsAsync()
+        if (status !== "granted") {
+            setLocationStatus(PermissionStatus.UNDETERMINED)
+            setCurrentLocation(undefined)
+        } else {
             const { coords } = await Location.getCurrentPositionAsync({})
             const { latitude, longitude } = coords
             const response = await Location.reverseGeocodeAsync({
                 latitude,
                 longitude,
             })
+            //temporary solution, too inefficient
+            campusList.map(campus => {
+                if (
+                    getDistance(
+                        { latitude: latitude, longitude: longitude },
+                        {
+                            latitude: campus.latitude,
+                            longitude: campus.longitude,
+                        }
+                    ) <= 50000 //if the distance between the user and the campus is less than 500m I'll call the API
+                ) {
+                    //call the API
+                    void findRoomsAvailable(campus)
+                    setCurrentCampus([campus.latitude, campus.longitude])
+                }
+            })
+            setLocationStatus(PermissionStatus.GRANTED)
+            setCurrentCoords([latitude, longitude])
             setCurrentLocation(response[0])
-        })()
+        }
+    }
+
+    async function checkPermission() {
+        const { status } = await Location.requestForegroundPermissionsAsync()
+        if (status !== "granted") {
+            setLocationStatus(PermissionStatus.UNDETERMINED)
+            setCurrentLocation(undefined)
+        }
+    }
+
+    useEffect(() => {
+        const intervalId = setInterval(() => void checkPermission(), 1000 * 2) // in milliseconds,call every 2 sec(this could be modified)
+        return () => clearInterval(intervalId)
+    }, [])
+
+    useEffect(() => {
+        void getPosition()
     }, [])
 
     return (
@@ -83,56 +186,10 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                         <Title style={{ fontSize: 40 }}>
                             Posizione Attuale
                         </Title>
-                        <View style={{ flexDirection: "row", marginTop: 19 }}>
-                            <View
-                                style={{
-                                    width: 25,
-                                    height: 25,
-                                    backgroundColor: background,
-                                }}
-                            >
-                                <Canvas
-                                    style={{
-                                        flex: 1,
-                                        width: 20,
-                                    }}
-                                >
-                                    {positionArrowSVG && (
-                                        <ImageSVG
-                                            svg={positionArrowSVG}
-                                            x={0}
-                                            y={0}
-                                            width={20}
-                                            height={20}
-                                        />
-                                    )}
-                                </Canvas>
-                            </View>
-                            <BodyText
-                                style={{
-                                    fontWeight: "900",
-                                    color: isDark ? "white" : "#454773",
-                                    fontSize: 20,
-                                }}
-                            >
-                                {currentLocation === undefined ? (
-                                    <ActivityIndicator
-                                        style={{ marginTop: 5, marginLeft: 5 }}
-                                        size="small"
-                                    />
-                                ) : Platform.OS === "ios" ? (
-                                    currentLocation?.name +
-                                    ", " +
-                                    currentLocation?.city
-                                ) : (
-                                    currentLocation?.street +
-                                    " " +
-                                    currentLocation?.streetNumber +
-                                    ", " +
-                                    currentLocation?.city
-                                )}
-                            </BodyText>
-                        </View>
+                        <AddressText
+                            currentLocation={currentLocation}
+                            locationStatus={locationStatus}
+                        />
                     </View>
                     <View style={{ marginTop: -35 }}>
                         <PoliSearchBar
@@ -186,7 +243,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                                         ? palette.primary
                                         : palette.lighter,
                                 borderRadius: 22,
-                                marginLeft: 17,
+                                marginLeft: 18,
                                 alignItems: "center",
                                 justifyContent: "center",
                             }}
@@ -209,21 +266,20 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                     {status === ButtonType.LIST ? (
                         <View
                             style={{
-                                marginBottom: 100,
-                                paddingBottom: 130,
+                                marginBottom: 90,
+                                paddingBottom: 100,
                             }}
                         >
-                            <FreeClassList />
+                            <FreeClassList data={roomList} />
                         </View>
                     ) : (
-                        <View
-                            style={{
-                                marginBottom: 100,
-                                paddingBottom: 130,
-                            }}
-                        >
-                            <Map />
-                        </View>
+                        <Map
+                            latitude={currentCoords[0]}
+                            longitude={currentCoords[1]}
+                            locationStatus={locationStatus}
+                            currentCampus={currentCampus}
+                            onPressMarker={() => setStatus(ButtonType.LIST)}
+                        />
                     )}
                 </View>
             </View>

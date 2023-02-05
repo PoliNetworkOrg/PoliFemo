@@ -33,6 +33,12 @@ const freeClassButtons: FreeClassInterface[] = [
     { id: 1, type: SearchClassType.CAMPUS, text: ["Scegli il tuo", "campus"] },
 ]
 
+/**
+ * This is the first page where the user select the modality to find a free room.
+ * There are two options: 
+ * - Selection by campus
+ * - Selection by current user position->this feature is available ONLY IF the GPS is enabled.
+ */
 export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
     const [search, setSearch] = useState("")
     const { navigate } = useNavigation()
@@ -45,7 +51,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
     const [geolocation, setGeoloaction] = useState<boolean>(false)
 
     const handlePositionPressed = async () => {
-        if (geolocation) {
+        if (geolocation) { //if the geolocation is active, the user can proceed
             navigate("PositionChoice")
         } else {
             const { status } =
@@ -142,7 +148,10 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
                                 }}
                                 onPress={
                                     item.type === SearchClassType.CAMPUS
-                                        ? () => navigate("CampusChoice")
+                                        ? () =>
+                                              navigate("CampusChoice", {
+                                                  currentDate: new Date().toString(),
+                                              })
                                         : () => handlePositionPressed()
                                 }
                             >
