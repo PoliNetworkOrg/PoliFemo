@@ -42,7 +42,7 @@ export const DeleteAccount: SettingsStackScreen<"DeleteAccount"> = () => {
                 showContent={loggedIn}
                 bottomComponent={
                     <TouchableOpacity
-                        onPress={deleteAccount}
+                        onPress={void deleteAccount}
                         activeOpacity={0.8}
                         style={[
                             styles.button,
@@ -81,7 +81,7 @@ export const DeleteAccount: SettingsStackScreen<"DeleteAccount"> = () => {
                 onClose={() => setShowFailureModal(false)}
                 onOK={() => {
                     setShowFailureModal(false)
-                    deleteAccount()
+                    void deleteAccount()
                 }}
             >
                 <BodyText style={styles.modalText}>
