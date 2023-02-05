@@ -28,7 +28,6 @@ export const MainContainer: FC = () => {
                 onDownloads={() => {
                     console.log("downloads")
                 }}
-                /* eslint-disable @typescript-eslint/naming-convention */
                 onNotifications={() => {
                     console.log("notifications")
                 }}
