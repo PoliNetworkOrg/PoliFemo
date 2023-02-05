@@ -1,13 +1,13 @@
 import React, { FC, useContext, useEffect, useState } from "react"
 import { View } from "react-native"
 import { PoliCarousel } from "./PoliCarousel"
-import { LoginContext } from "utils/login"
+import { LoginContext } from "contexts/login"
 import { Event } from "api/event"
 import {
     CarouselItem,
     checkEventType,
-    checkFirstLecture,
     createWidget,
+    WidgetType,
 } from "utils/carousel"
 import { api } from "api"
 
@@ -26,13 +26,19 @@ export const HighlightsManager: FC = () => {
      * @param events
      */
     const extractNextEvents = (events: Event[]) => {
-        const filteredEvents = events.filter(x =>
-            checkEventType(x.event_type.typeId)
-        )
-        const filteredEventsWithOneLecture = filteredEvents.filter(x =>
-            checkFirstLecture(filteredEvents, x)
-        )
-        return filteredEventsWithOneLecture.map(e => createWidget(e))
+        let firstLecture = true
+        return events
+            .filter(x => checkEventType(x.event_type.typeId))
+            .filter(x => {
+                if (x.event_type.typeId === WidgetType.LECTURES) {
+                    if (firstLecture) {
+                        firstLecture = false
+                        return true
+                    }
+                    return false
+                } else return true
+            })
+            .map(e => createWidget(e))
     }
 
     /**

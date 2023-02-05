@@ -31,7 +31,7 @@ export const CareerTile: FC<CareerTileProps> = props => {
                 <ButtonCustom
                     onPress={props.onPress}
                     text={"Cambia matricola"}
-                    buttonStyle={{ paddingHorizontal: 8 }}
+                    style={{ paddingHorizontal: 8 }}
                 />
                 <CareerColumn career={props.career}></CareerColumn>
             </View>

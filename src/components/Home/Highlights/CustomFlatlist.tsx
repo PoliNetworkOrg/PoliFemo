@@ -54,19 +54,19 @@ export const CustomFlatlist: FC<{ dataToShow: CarouselItem[] }> = ({
                 )}
                 renderItem={({ item }) => {
                     return (
-                        <View
+                        <Pressable
                             style={{
                                 width,
                                 justifyContent: "center",
                                 alignItems: "center",
                             }}
+                            onPress={() => navigate("Error404")}
                         >
-                            <Pressable
+                            <View
                                 style={{
                                     width: width - 80,
                                     height: 77,
                                 }}
-                                onPress={() => navigate("Error404")}
                             >
                                 <ImageBackground
                                     style={{
@@ -106,7 +106,7 @@ export const CustomFlatlist: FC<{ dataToShow: CarouselItem[] }> = ({
                                         </BodyText>
                                     </View>
                                 </ImageBackground>
-                            </Pressable>
+                            </View>
                             <View
                                 //this view represents the text under the highlights
                                 style={{
@@ -117,7 +117,7 @@ export const CustomFlatlist: FC<{ dataToShow: CarouselItem[] }> = ({
                                     flexDirection: "row",
                                 }}
                             >
-                                <Pressable>
+                                <View>
                                     <BodyText
                                         style={{
                                             fontWeight: "700",
@@ -129,8 +129,8 @@ export const CustomFlatlist: FC<{ dataToShow: CarouselItem[] }> = ({
                                         {"          "}
                                         {item.time}
                                     </BodyText>
-                                </Pressable>
-                                <Pressable>
+                                </View>
+                                <View>
                                     <BodyText
                                         style={{
                                             fontWeight: "400",
@@ -140,12 +140,12 @@ export const CustomFlatlist: FC<{ dataToShow: CarouselItem[] }> = ({
                                     >
                                         {item.room}
                                     </BodyText>
-                                </Pressable>
+                                </View>
                             </View>
                             <Divider
                                 style={{ marginTop: 12, width: width - 80 }}
                             />
-                        </View>
+                        </Pressable>
                     )
                 }}
                 viewabilityConfig={viewAbilityConfig}

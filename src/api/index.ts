@@ -1,5 +1,6 @@
 import { articles } from "./articles"
 import { auth } from "./auth"
+import { groups } from "./groups"
 import { tags } from "./tags"
 import { timetable } from "./timetable"
 import { user } from "./user"
@@ -11,7 +12,7 @@ export { RetryType, AuthType, RequestOptions } from "./HttpClient"
  * To make a request:
  *
  * ```ts
- *       api.tags.get({retryType : RetryType.RETRY_N_TIMES, maxRetries : 5})
+ *       api.tags.getTags({retryType : RetryType.RETRY_N_TIMES, maxRetries : 5})
  *           .then(response => {
  *               const tags: Tag[] = response
  *               //do something
@@ -29,4 +30,5 @@ export const api = {
     timetable,
     user,
     events,
+    groups,
 }

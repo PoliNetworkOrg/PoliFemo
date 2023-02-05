@@ -68,18 +68,6 @@ export function checkEventType(typeId: number) {
     )
 }
 
-export function checkFirstLecture(events: Event[], event: Event) {
-    if (event.event_type.typeId !== WidgetType.LECTURES) {
-        return true
-    } else {
-        for (const e of events) {
-            if (e.event_type.typeId === WidgetType.LECTURES) {
-                return e.event_id === event.event_id
-            }
-        }
-    }
-}
-
 export function createWidget(event: Event) {
     const days = [
         "Domenica",

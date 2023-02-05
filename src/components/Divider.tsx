@@ -1,10 +1,11 @@
 import React, { FC } from "react"
-import { StyleProp, View, ViewStyle } from "react-native"
+import { View, ViewStyle } from "react-native"
 
 export interface DividerProps {
     color?: string
     height?: number
-    style?: StyleProp<ViewStyle>
+    width?: number
+    style?: ViewStyle
 }
 
 export const Divider: FC<DividerProps> = props => {
@@ -14,8 +15,9 @@ export const Divider: FC<DividerProps> = props => {
                 {
                     backgroundColor: props.color ?? "#8791BD",
                     height: props.height ?? 1,
-                    width: "100%",
+                    width: props.width ?? "100%",
                 },
+
                 props.style,
             ]}
         />

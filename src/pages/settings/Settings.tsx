@@ -1,12 +1,12 @@
 import React, { useContext, useState } from "react"
 import { View } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { SettingsScroll } from "components/Settings"
+import { ContentWrapperScroll } from "components/Settings"
 import { Divider } from "components/Divider"
 import { SettingTile } from "components/Settings"
 import { settingsIcons } from "assets/settings"
 import { UserDetailsTile } from "components/Settings"
-import { ModalCustomSettings } from "components/Settings"
+import { ModalSelection } from "components/Settings"
 import { CareerTile } from "components/Settings"
 import { SelectTile } from "components/Settings"
 import { UserAnonymousTile } from "components/Settings"
@@ -14,9 +14,9 @@ import {
     SettingOptions,
     SettingsContext,
     ValidColorSchemeName,
-} from "utils/settings"
+} from "contexts/settings"
 import { CareerColumn } from "components/Settings"
-import { LoginContext } from "utils/login"
+import { LoginContext } from "contexts/login"
 import { Career } from "api/user"
 import { HttpClient } from "api/HttpClient"
 
@@ -86,7 +86,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
 
     return (
         <View style={{ flex: 1 }}>
-            <SettingsScroll title="Impostazioni">
+            <ContentWrapperScroll title="Impostazioni">
                 {loggedIn ? (
                     <UserDetailsTile user={userInfo} />
                 ) : (
@@ -108,12 +108,11 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
                 {settingsList.map((setting, index) => {
                     return <SettingTile setting={setting} key={index} />
                 })}
-            </SettingsScroll>
+            </ContentWrapperScroll>
 
-            <ModalCustomSettings
+            <ModalSelection
                 title={"Scegli Tema"}
                 isShowing={isModalThemeVisible}
-                selectedValue={selectedTheme}
                 onClose={() => {
                     //restore real theme value
                     setSelectedTheme(theme)
@@ -136,11 +135,10 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
                         />
                     )
                 })}
-            </ModalCustomSettings>
-            <ModalCustomSettings
+            </ModalSelection>
+            <ModalSelection
                 title={"Cambia Matricola"}
                 isShowing={isModalCareerVisible}
-                selectedValue={selectedCareer.matricola}
                 onClose={() => {
                     //restore selectedCareer to career
                     if (career) setSelectedCareer(career)
@@ -169,7 +167,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
                         </SelectTile>
                     )
                 })}
-            </ModalCustomSettings>
+            </ModalSelection>
         </View>
     )
 }

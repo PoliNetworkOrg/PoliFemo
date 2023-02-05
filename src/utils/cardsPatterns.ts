@@ -20,7 +20,7 @@ export interface CardsPatterns {
     other: { [key: number]: CardsPattern }
 }
 
-export const newsCategoryPatterns: CardsPatterns = {
+export const newsTagsPatterns: CardsPatterns = {
     // first batch of news category cards
     first: {
         [1]: [[190, "left"]],
@@ -29,9 +29,9 @@ export const newsCategoryPatterns: CardsPatterns = {
             [274, "right"],
         ],
         [3]: [
+            [130, "left"],
+            [130, "left"],
             [277, "right"],
-            [130, "left"],
-            [130, "left"],
         ],
         [4]: [
             [274, "left"],
