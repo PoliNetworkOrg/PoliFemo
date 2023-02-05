@@ -7,6 +7,7 @@ import lecturesImage from "assets/carousel-lectures.png"
 import iseeImage from "assets/carousel-isee.png"
 import { useNavigation } from "navigation/NavigationTypes"
 import { WidgetType, CarouselItem, formatTitle } from "utils/carousel"
+import { Divider } from "components/Divider"
 
 const { width } = Dimensions.get("window")
 
@@ -141,16 +142,8 @@ export const CustomFlatlist: FC<{ dataToShow: CarouselItem[] }> = ({
                                     </BodyText>
                                 </Pressable>
                             </View>
-                            <View
-                                //this view represents the line of separation
-                                style={{
-                                    width: width - 80,
-                                    marginTop: 12,
-                                    justifyContent: "center",
-                                    alignSelf: "center",
-                                    borderBottomColor: "#8791BD",
-                                    borderBottomWidth: 1,
-                                }}
+                            <Divider
+                                style={{ marginTop: 12, width: width - 80 }}
                             />
                         </View>
                     )

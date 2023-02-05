@@ -82,13 +82,13 @@ export function checkFirstLecture(events: Event[], event: Event) {
 
 export function createWidget(event: Event) {
     const days = [
+        "Domenica",
         "Lunedi",
         "Martedi",
         "Mercoledi",
         "Giovedi",
         "Venerdi",
         "Sabato",
-        "Domenica",
     ]
     const months = [
         "Gennaio",
@@ -106,7 +106,7 @@ export function createWidget(event: Event) {
     ]
     const dateObj = new Date(event.date_start)
     const resultDate =
-        days[(dateObj.getDay() - 1 + 7) % 7] +
+        days[dateObj.getDay()] +
         " " +
         dateObj.getDate().toString().padStart(2, "0") +
         " " +
