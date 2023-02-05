@@ -1,5 +1,4 @@
 import React from "react"
-import { Linking } from "react-native"
 
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ContentWrapperScroll } from "components/ContentWrapperScroll"
@@ -10,7 +9,7 @@ import { SettingOptions } from "utils/settings"
 import { INTRODUCTION } from "utils/privacy"
 
 /**
- * Privacy Settings Page
+ * Privacy Page
  */
 export const Privacy: SettingsStackScreen<"Privacy"> = () => {
     const { navigate } = useNavigation()
@@ -33,13 +32,14 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
         {
             title: "Imposta autocancellazione",
             subtitle: "Imposta un timer per l'eliminazione dell'account",
+            callback: () => {
+                navigate("AccountSelfDeletion")
+            },
         },
         {
-            title: "Privacy policy",
+            title: "Informativa privacy",
             callback: () => {
-                Linking.openURL(
-                    "https://polinetwork.org/it/learnmore/privacy/"
-                ).catch(err => console.log(err))
+                navigate("PrivacyPolicy")
             },
         },
     ]

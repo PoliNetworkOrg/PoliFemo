@@ -9,8 +9,10 @@ import { SettingsStackNavigatorParams } from "navigation/NavigationTypes"
 import { SettingsPage } from "pages/settings/Settings"
 import { Help } from "pages/settings/Help"
 import { Privacy } from "pages/settings/Privacy"
-import { AccountData } from "pages/settings/AccountData"
-import { DeleteAccount } from "pages/settings/DeleteAccount"
+import { AccountData } from "pages/settings/privacy/AccountData"
+import { DeleteAccount } from "pages/settings/privacy/DeleteAccount"
+import { AccountSelfDeletion } from "pages/settings/privacy/AccountSelfDeletion"
+import { PrivacyPolicy } from "pages/settings/privacy/PrivacyPolicy"
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const SettingsStackNavigator =
     createStackNavigator<SettingsStackNavigatorParams>()
@@ -33,6 +35,14 @@ export const SettingsStack: FC = () => {
             <SettingsStackNavigator.Screen
                 name="DeleteAccount"
                 component={DeleteAccount}
+            />
+            <SettingsStackNavigator.Screen
+                name="PrivacyPolicy"
+                component={PrivacyPolicy}
+            />
+            <SettingsStackNavigator.Screen
+                name="AccountSelfDeletion"
+                component={AccountSelfDeletion}
             />
         </SettingsStackNavigator.Navigator>
     )
