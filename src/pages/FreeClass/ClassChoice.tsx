@@ -1,18 +1,15 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
 import React, { useState, useEffect } from "react"
 import { View } from "react-native"
-import { usePalette } from "utils/colors"
 import { Title } from "components/Text"
-import { NavBar } from "components/NavBar"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
+import { PageWrapper } from "components/Groups/PageWrapper"
 
 /**
  * In this page the user can select finally the free class he wants.
  */
 export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
-    const { background, homeBackground } = usePalette()
-
     const { building, currentDate } = props.route.params
 
     //non-ISO format for simplicity (local timezone) and
@@ -35,59 +32,29 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
         })
     }
 
+    const buildingName: string[] = building.name.split(" ") // ex. buildingName = ["Ed.","B2"]
+
     return (
-        <View
-            style={{
-                flex: 1,
-                alignItems: "stretch",
-                backgroundColor: homeBackground,
-            }}
-        >
-            <View
-                style={{
-                    flex: 1,
-                    marginTop: 106,
-                }}
-            >
-                <View
+        <PageWrapper navbarOptions={{ overrideBackBehavior: () => goBack() }}>
+            <View style={{ paddingTop: 28 }}>
+                <Title
                     style={{
-                        paddingBottom: 400,
-                        backgroundColor: background,
-                        borderTopLeftRadius: 30,
-                        borderTopRightRadius: 30,
-
-                        shadowColor: "#000",
-                        shadowOffset: {
-                            width: 0,
-                            height: 7,
-                        },
-                        shadowOpacity: 0.43,
-                        shadowRadius: 9.51,
-
-                        elevation: 15,
+                        paddingLeft: 28,
+                        fontWeight: "300",
+                        fontFamily: "Roboto_300Light",
                     }}
                 >
-                    <View
-                        //view containing the title
-                        style={{
-                            paddingHorizontal: 28,
-                            marginTop: 28,
-                        }}
-                    >
-                        <Title style={{ fontSize: 40, fontWeight: "900" }}>
-                            {building.name.replace("Ed. ","Edificio ")}
-                        </Title>
-                    </View>
-                    <DateTimePicker
-                        date={date}
-                        setDate={(date: Date) => setDate(date)}
-                    />
-                    <View style={{ height: "100%", marginTop: 26 }}>
-                        <FreeClassList data={building.freeRoomList}/>
-                    </View>
-                </View>
+                    {buildingName[0].replace("Ed.", "Edificio")}
+                    <Title>{" " + buildingName[1]}</Title>
+                </Title>
+                <DateTimePicker
+                    date={date}
+                    setDate={(date: Date) => setDate(date)}
+                />
             </View>
-            <NavBar overrideBackBehavior={goBack} />
-        </View>
+            <View style={{ flex: 1, marginTop: 26, marginBottom: 93 }}>
+                <FreeClassList data={building.freeRoomList} />
+            </View>
+        </PageWrapper>
     )
 }

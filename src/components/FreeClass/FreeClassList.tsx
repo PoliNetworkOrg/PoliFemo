@@ -6,7 +6,7 @@ import { usePalette } from "utils/colors"
 import timerIcon from "assets/freeClassrooms/timer.svg"
 import overcrowdingIcon from "assets/freeClassrooms/overcrowding.svg"
 import fireIcon from "assets/freeClassrooms/fire.svg"
-import { ScrollView } from "react-native-gesture-handler"
+import { FlatList } from "react-native-gesture-handler"
 
 const { width } = Dimensions.get("window")
 
@@ -21,16 +21,20 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
     const fireSVG = useSVG(fireIcon)
 
     return (
-        <ScrollView
-            style={{ width, marginBottom: 35, marginTop: 27 }}
+        <FlatList
+            showsVerticalScrollIndicator={true}
+            style={{
+                flex: 1,
+                marginTop: 27,
+            }}
             contentContainerStyle={{
                 alignItems: "center",
                 justifyContent: "center",
             }}
-        >
-            {props.data.map((room, index) => (
+            data={props.data}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={({ item }) => (
                 <Pressable
-                    key={index}
                     style={{
                         width: width - 65,
                         height: 93,
@@ -190,11 +194,11 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                                 fontSize: 24,
                             }}
                         >
-                            {room}
+                            {item}
                         </BodyText>
                     </View>
                 </Pressable>
-            ))}
-        </ScrollView>
+            )}
+        />
     )
 }

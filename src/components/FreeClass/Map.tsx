@@ -5,8 +5,8 @@ import { PermissionStatus } from "expo-location"
 import { BodyText } from "components/Text"
 
 interface MapProps {
-    latitude: number
-    longitude: number
+    userLatitude: number
+    userLongitude: number
     locationStatus: PermissionStatus
     currentCampus?: number[]
     onPressMarker: () => void
@@ -24,7 +24,7 @@ export const Map: FC<MapProps> = props => {
                 paddingBottom: 130,
             }}
         >
-            {props.latitude === undefined || props.longitude === undefined ? (
+            {props.userLatitude === undefined || props.userLongitude === undefined ? (
                 props.locationStatus !== PermissionStatus.GRANTED ? (
                     <BodyText
                         style={{
@@ -47,12 +47,18 @@ export const Map: FC<MapProps> = props => {
                 <MapView
                     style={{ marginTop: 23, width: "100%", height: "100%" }}
                     initialRegion={{
-                        latitude: props.latitude,
-                        longitude: props.longitude,
-                        latitudeDelta: 0.005,
-                        longitudeDelta: 0.005,
+                        latitude: props.userLatitude,
+                        longitude: props.userLongitude,
+                        latitudeDelta: 0.003,
+                        longitudeDelta: 0.003,
                     }}
                     showsUserLocation={true}
+                    mapPadding={{
+                        top: 0,
+                        right: 0,
+                        bottom: 190,
+                        left: 0,
+                    }}
                 >
                     {props.currentCampus !== undefined ? (
                         <Marker

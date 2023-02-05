@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { Pressable, View } from "react-native"
-import { usePalette } from "utils/colors"
-import { NavBar } from "components/NavBar"
-import { BodyText, Title } from "components/Text"
+import { View } from "react-native"
+import { Title } from "components/Text"
 import { PoliSearchBar } from "components/Home"
-import { FreeClassList } from "components/FreeClass/FreeClassList"
-import { Map } from "components/FreeClass/Map"
 import * as Location from "expo-location"
 import { LocationGeocodedAddress, PermissionStatus } from "expo-location"
 import { AddressText } from "components/FreeClass/AddressText"
@@ -14,18 +10,11 @@ import { CampusItem, campusList } from "./CampusChoice"
 import { getDistance } from "geolib"
 import { api } from "api"
 import { BuildingItem } from "./BuildingChoice"
-
-enum ButtonType {
-    MAP,
-    LIST,
-}
+import { PageWrapper } from "components/Groups/PageWrapper"
+import { PositionModality } from "components/FreeClass/PositionModality"
 
 export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     const [search, setSearch] = useState("")
-    const { homeBackground, background, primary, isDark, palette } =
-        usePalette()
-
-    const [status, setStatus] = useState<ButtonType>(ButtonType.MAP)
 
     const [locationStatus, setLocationStatus] = useState<PermissionStatus>(
         PermissionStatus.GRANTED
@@ -55,7 +44,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
             const response = await api.rooms.getFreeRoomsTimeRange(
                 campus.acronym,
                 new Date().toISOString(),
-                dateEnd,
+                dateEnd
             )
             if (response.length > 0) {
                 const tempBuildingStrings: string[] = []
@@ -113,7 +102,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                             latitude: campus.latitude,
                             longitude: campus.longitude,
                         }
-                    ) <= 50000 //if the distance between the user and the campus is less than 500m I'll call the API
+                    ) <= 50000 //if the distance between the user and the campus is less than 500m I'll call the API,to test I put 5km
                 ) {
                     //call the API
                     void findRoomsAvailable(campus)
@@ -144,146 +133,27 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     }, [])
 
     return (
-        <View
-            style={{
-                flex: 1,
-                alignItems: "stretch",
-                backgroundColor: homeBackground,
-            }}
-        >
-            <View
-                style={{
-                    flex: 1,
-                    marginTop: 106,
-                }}
-            >
-                <View
-                    style={{
-                        paddingBottom: 400,
-                        backgroundColor: background,
-                        borderTopLeftRadius: 30,
-                        borderTopRightRadius: 30,
-
-                        shadowColor: "#000",
-                        shadowOffset: {
-                            width: 0,
-                            height: 7,
-                        },
-                        shadowOpacity: 0.43,
-                        shadowRadius: 9.51,
-
-                        elevation: 15,
-                    }}
-                >
-                    <View
-                        //view containing the title
-                        style={{
-                            paddingHorizontal: 28,
-                            marginTop: 28,
-                            marginBottom: 17,
-                        }}
-                    >
-                        <Title style={{ fontSize: 40 }}>
-                            Posizione Attuale
-                        </Title>
-                        <AddressText
-                            currentLocation={currentLocation}
-                            locationStatus={locationStatus}
-                        />
-                    </View>
-                    <View style={{ marginTop: -35 }}>
-                        <PoliSearchBar
-                            onChange={searchKey => setSearch(searchKey)}
-                        />
-                    </View>
-                    <View
-                        style={{
-                            marginTop: 22,
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <Pressable
-                            style={{
-                                width: 134,
-                                height: 44,
-                                backgroundColor:
-                                    status === ButtonType.MAP
-                                        ? primary
-                                        : isDark
-                                        ? palette.primary
-                                        : palette.lighter,
-                                borderRadius: 22,
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                            onPress={() => setStatus(ButtonType.MAP)}
-                        >
-                            <BodyText
-                                style={{
-                                    fontWeight:
-                                        status === ButtonType.MAP
-                                            ? "900"
-                                            : "500",
-                                    color: "white",
-                                }}
-                            >
-                                Mappa
-                            </BodyText>
-                        </Pressable>
-                        <Pressable
-                            style={{
-                                width: 134,
-                                height: 44,
-                                backgroundColor:
-                                    status === ButtonType.LIST
-                                        ? primary
-                                        : isDark
-                                        ? palette.primary
-                                        : palette.lighter,
-                                borderRadius: 22,
-                                marginLeft: 18,
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                            onPress={() => setStatus(ButtonType.LIST)}
-                        >
-                            <BodyText
-                                style={{
-                                    fontWeight:
-                                        status === ButtonType.LIST
-                                            ? "900"
-                                            : "500",
-                                    color: "white",
-                                }}
-                            >
-                                Lista
-                            </BodyText>
-                        </Pressable>
-                    </View>
-
-                    {status === ButtonType.LIST ? (
-                        <View
-                            style={{
-                                marginBottom: 90,
-                                paddingBottom: 100,
-                            }}
-                        >
-                            <FreeClassList data={roomList} />
-                        </View>
-                    ) : (
-                        <Map
-                            latitude={currentCoords[0]}
-                            longitude={currentCoords[1]}
-                            locationStatus={locationStatus}
-                            currentCampus={currentCampus}
-                            onPressMarker={() => setStatus(ButtonType.LIST)}
-                        />
-                    )}
+        <PageWrapper>
+            <View style={{ paddingTop: 28 }}>
+                <View style={{ paddingLeft: 28 }}>
+                    <Title>Posizione attuale</Title>
+                    <AddressText
+                        currentLocation={currentLocation}
+                        locationStatus={locationStatus}
+                    />
+                </View>
+                <View style={{ marginTop: -20 }}>
+                    <PoliSearchBar
+                        onChange={searchKey => setSearch(searchKey)}
+                    />
                 </View>
             </View>
-            <NavBar />
-        </View>
+            <PositionModality
+                currentCoords={currentCoords}
+                currentCampus={currentCampus}
+                locationStatus={locationStatus}
+                roomList={roomList}
+            />
+        </PageWrapper>
     )
 }
