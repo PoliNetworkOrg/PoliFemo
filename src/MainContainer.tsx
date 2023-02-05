@@ -30,17 +30,7 @@ export const MainContainer: FC = () => {
                 }}
                 /* eslint-disable @typescript-eslint/naming-convention */
                 onNotifications={() => {
-                    navigate("RoomDetails", {
-                        room: {
-                            name: "2.5",
-                            building: "2",
-                            power: true,
-                            link: "https://www7.ceda.polimi.it/spazi/spazi/controller/Aula.do?evn_init=espandi&idaula=2328",
-                            room_id: 2328,
-                            lat: 45.47889998740511,
-                            long: 9.227246568702538,
-                        },
-                    })
+                    console.log("notifications")
                 }}
                 onSettings={() => {
                     navigate("SettingsNav", {

@@ -50,7 +50,7 @@ export const rooms = {
     },
 
     async getRoomInfo(roomId: number, options?: RequestOptions) {
-        const response = await client.poliNetworkInstance.get<RoomDetails[]>(
+        const response = await client.poliNetworkInstance.get<RoomDetails>(
             "/v1/rooms/" + roomId,
             {
                 ...options,

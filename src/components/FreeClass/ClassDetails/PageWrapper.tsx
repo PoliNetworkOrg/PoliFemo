@@ -44,8 +44,15 @@ export const PageWrapper: FC<{
                     overflow: "hidden",
                 }}
             >
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    <View style={props.style}>{props.children}</View>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={{ flex: 1 }}
+                    contentContainerStyle={[
+                        { overflow: "visible" },
+                        props.style,
+                    ]}
+                >
+                    {props.children}
                 </ScrollView>
             </View>
 

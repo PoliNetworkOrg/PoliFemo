@@ -270,7 +270,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                                 paddingBottom: 100,
                             }}
                         >
-                            <FreeClassList data={roomList} />
+                            <FreeClassList data={roomList} date={new Date()} />
                         </View>
                     ) : (
                         <Map

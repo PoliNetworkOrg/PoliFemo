@@ -16,56 +16,37 @@
  * probably I need to find another way, maybe ask aliases from backend?
  */
 
-function extractRoom(val: string) {
-    const len = val.length
-    const hasNumbers = containsNumber(val)
-    if (!hasNumbers) {
-        return { room: val, isOnlyText: true }
+export function extractRoom(val: string) {
+    const arr = val.split(".")
+    if (arr.length > 2) {
+        return arr.slice(1).join(".")
     } else {
-        val = val.trimEnd()
-
-        let separatorIndex: number | undefined = undefined
-
-        let dotsFound = 0
-        for (let n = len - 1; n > 0 && separatorIndex === undefined; n--) {
-            if (val[n] === "." || val[n] === " ") {
-                dotsFound++
-            }
-            if (dotsFound === 2) {
-                separatorIndex = n
-            }
-        }
-        if (separatorIndex) {
-            return {
-                room: val.substring(separatorIndex + 1, len),
-                isOnlyText: false,
-            }
-        } else {
-            //something went wrong, display all string ?
-            return { room: val, isOnlyText: true }
-        }
-    }
-    return
-}
-
-function extractBuilding(val: string) {
-    const len = val.length
-    let separatorIndex: number | undefined = undefined
-    for (let n = len; n > 0 && separatorIndex === undefined; n--) {
-        if (val === " ") {
-            separatorIndex = n
-        }
-    }
-    if (separatorIndex) {
-        return { building: val.substring(separatorIndex + 1, len) }
-    } else {
-        //something went wrong, display only room
-        return { building: undefined }
+        return undefined
     }
 }
 
-function containsNumber(val: string) {
+export function extractBuilding(val: string) {
+    const arr = val.split(" ")
+    if (arr.length === 2) {
+        return arr[1]
+    }
+    return undefined
+}
+
+/* function containsNumber(val: string) {
     // if has digits
     const regExp = /\d/g
     return regExp.test(val)
+} */
+
+export function extractTimeLeft(startDate: Date) {
+    const deltaMilliseconds = startDate.getTime() - Date.now()
+    const hours = Math.floor(deltaMilliseconds / 3.6e6)
+    const minutes = Math.floor(
+        (deltaMilliseconds - hours * 60 * 60 * 1000) / 60000
+    )
+    const hoursLeft = hours.toString()
+    const minutesLeft = minutes.toString()
+    const isPositive = hours >= 0 && minutes >= 0
+    return { hoursLeft, minutesLeft, isPositive }
 }

@@ -24,8 +24,8 @@ import {
 import { Article } from "api/articles"
 import { CampusItem } from "pages/FreeClass/CampusChoice"
 import { NavigatorScreenParams } from "@react-navigation/native"
-import { MockedClass } from "pages/FreeClass/RoomDetails"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
+import { RoomDetails } from "api/Room"
 
 /**
  * interface containing the info about the params for each page of the stack navigator
@@ -50,7 +50,7 @@ export type MainStackNavigatorParams = {
     FreeClassrooms: undefined
     CampusChoice: { currentDate: string }
     PositionChoice: undefined
-    RoomDetails: { room: MockedClass }
+    RoomDetails: { room: RoomDetails; startDate : string }
     BuildingChoice: { campus: CampusItem; currentDate: string }
     ClassChoice: { building: BuildingItem; currentDate: string }
     Groups: undefined

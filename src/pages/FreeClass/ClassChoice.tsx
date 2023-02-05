@@ -83,7 +83,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
                         setDate={(date: Date) => setDate(date)}
                     />
                     <View style={{ height: "100%", marginTop: 26 }}>
-                        <FreeClassList data={building.freeRoomList}/>
+                        <FreeClassList data={building.freeRoomList} date={date}/>
                     </View>
                 </View>
             </View>

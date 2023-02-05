@@ -7,11 +7,14 @@ import timerIcon from "assets/freeClassrooms/timer.svg"
 import overcrowdingIcon from "assets/freeClassrooms/overcrowding.svg"
 import fireIcon from "assets/freeClassrooms/fire.svg"
 import { ScrollView } from "react-native-gesture-handler"
+import { useNavigation } from "navigation/NavigationTypes"
+import { api } from "api"
 
 const { width } = Dimensions.get("window")
 
 interface FreeClassListProps {
     data: number[]
+    date: Date
 }
 
 export const FreeClassList: FC<FreeClassListProps> = props => {
@@ -19,6 +22,8 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
     const timerSVG = useSVG(timerIcon)
     const overcrowdingSVG = useSVG(overcrowdingIcon)
     const fireSVG = useSVG(fireIcon)
+
+    const { navigate } = useNavigation()
 
     return (
         <ScrollView
@@ -37,6 +42,19 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                         backgroundColor: "#8791BD",
                         marginBottom: 34,
                         borderRadius: 12,
+                    }}
+                    onPress={async () => {
+                        try {
+                            const selectedRoom = await api.rooms.getRoomInfo(
+                                room
+                            )
+                            navigate("RoomDetails", {
+                                room: selectedRoom,
+                                startDate : props.date.toISOString()
+                            })
+                        } catch (err) {
+                            console.log(err)
+                        }
                     }}
                 >
                     <View
