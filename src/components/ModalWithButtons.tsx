@@ -1,16 +1,19 @@
 import React, { FC } from "react"
 import { View, Modal, StyleSheet, Pressable } from "react-native"
 import { Text } from "components/Text"
+import { ButtonCustom } from "components/Button"
 import { usePalette } from "utils/colors"
-import { ButtonCustom } from "./ButtonCustom"
 
-export interface ModalSelectionProps {
+export interface ModalWithButtonsProps {
     /**
      * content of the modal
      */
     children: React.ReactNode
 
-    title: string
+    title?: string
+
+    leftButtonTitle?: string
+    rightButtonTitle?: string
 
     /**
      * whether ot not to show the modal
@@ -22,7 +25,7 @@ export interface ModalSelectionProps {
     onClose: () => void
 
     /**
-     * function called when button "OK" is pressed
+     * function called when the right button is pressed
      */
     onOK: () => void
 
@@ -32,15 +35,17 @@ export interface ModalSelectionProps {
     height?: number
 }
 
-// ? maybe should move this out of Settings folder ?
-
 /**
  * Custom Modal Component with two buttons at the bottom.
  *
  */
-export const ModalSelection: FC<ModalSelectionProps> = props => {
+export const ModalWithButtons: FC<ModalWithButtonsProps> = props => {
     const { backgroundSecondary, homeBackground, modalBarrier, isLight } =
         usePalette()
+
+    const leftButtonTitle = props.leftButtonTitle ?? "Annulla"
+
+    const rightButtonTitle = props.rightButtonTitle ?? "OK"
 
     return (
         //TODO: animationType fade or slide?
@@ -65,21 +70,25 @@ export const ModalSelection: FC<ModalSelectionProps> = props => {
                     ]}
                 >
                     <View>
-                        <Text
-                            style={[
-                                styles.title,
-                                {
-                                    color: isLight ? homeBackground : "#ffffff",
-                                },
-                                {
-                                    textAlign: "center",
-                                    marginTop: 22,
-                                    marginBottom: 12,
-                                },
-                            ]}
-                        >
-                            {props.title}
-                        </Text>
+                        {props.title && (
+                            <Text
+                                style={[
+                                    styles.title,
+                                    {
+                                        color: isLight
+                                            ? homeBackground
+                                            : "#ffffff",
+                                    },
+                                    {
+                                        textAlign: "center",
+                                        marginTop: 22,
+                                        marginBottom: 12,
+                                    },
+                                ]}
+                            >
+                                {props.title}
+                            </Text>
+                        )}
 
                         {props.children}
                     </View>
@@ -93,12 +102,12 @@ export const ModalSelection: FC<ModalSelectionProps> = props => {
                     >
                         <ButtonCustom
                             light={true}
-                            text={"Annulla"}
+                            text={leftButtonTitle}
                             onPress={props.onClose}
                         />
                         <ButtonCustom
                             light={false}
-                            text={"OK"}
+                            text={rightButtonTitle}
                             onPress={props.onOK}
                         />
                     </View>

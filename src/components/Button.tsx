@@ -26,8 +26,8 @@ export const ButtonCustom: FC<ButtonCustomProps> = props => {
                 {
                     backgroundColor: props.light
                         ? isLight
-                            ? (palette.lighter)
-                            : ( palette.darker)
+                            ? palette.lighter
+                            : palette.darker
                         : isLight
                         ? palette.darker
                         : palette.lighter,

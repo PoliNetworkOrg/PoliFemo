@@ -1,7 +1,7 @@
 import React, { FC } from "react"
 import { View, Modal, StyleSheet, Pressable } from "react-native"
 import { usePalette } from "utils/colors"
-import { ButtonCustom } from "components/Settings"
+import { ButtonCustom } from "components/Button"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import { deleteSvg as icon } from "assets/modal"
 import { Group } from "api/groups"

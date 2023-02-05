@@ -1,7 +1,7 @@
 import React, { FC } from "react"
 import { View } from "react-native"
 import { TouchableRipple } from "components/TouchableRipple"
-import { ButtonCustom } from "./ButtonCustom"
+import { ButtonCustom } from "components/Button"
 import { CareerColumn } from "./CareerColumn"
 import { Career } from "api/user"
 
