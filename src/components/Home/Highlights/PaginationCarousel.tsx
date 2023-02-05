@@ -4,7 +4,7 @@ import Animated, {
     interpolateColors,
 } from "react-native-reanimated"
 import { View, Dimensions } from "react-native"
-import { CarouselItem } from "./HighlightsManager"
+import { CarouselItem } from "utils/carousel"
 import { usePalette } from "utils/colors"
 
 const { width } = Dimensions.get("window")

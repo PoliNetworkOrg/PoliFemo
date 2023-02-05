@@ -81,13 +81,12 @@ export function createGroupLink(idLink: string, platform: string) {
     }
 }
 
-
-export function choosePlatformIcon(platform? : string){
-    if(platform === "TG"){
+export function choosePlatformIcon(platform?: string) {
+    if (platform === "TG") {
         return platformIcons.telegram
-    }else if(platform ==="FB"){
+    } else if (platform === "FB") {
         return platformIcons.facebook
-    }else if(platform === "WA"){
+    } else if (platform === "WA") {
         return platformIcons.whatsapp
     }
     return undefined
