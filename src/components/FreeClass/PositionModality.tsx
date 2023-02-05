@@ -5,12 +5,13 @@ import { BodyText } from "components/Text"
 import { Map } from "./Map"
 import { FreeClassList } from "./FreeClassList"
 import { PermissionStatus } from "expo-location"
+import { RoomSimplified } from "api/Room"
 
 interface PositionModalityProps {
     currentCoords: number[]
     locationStatus: PermissionStatus
     currentCampus: number[]
-    roomList: number[]
+    roomList: RoomSimplified[]
 }
 
 enum ButtonType {

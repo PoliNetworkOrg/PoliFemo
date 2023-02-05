@@ -7,11 +7,12 @@ import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePick
 import { api, RetryType } from "api"
 import { CampusItem } from "./CampusChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
+import { RoomSimplified } from "api/Room"
 
 export interface BuildingItem {
     campus: CampusItem
     name: string
-    freeRoomList: number[]
+    freeRoomList: RoomSimplified[]
 }
 
 /**
@@ -63,7 +64,12 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                         const currentBuilding: BuildingItem = {
                             campus: campus,
                             name: room.building.replace("Edificio ", "Ed. "),
-                            freeRoomList: [room.room_id],
+                            freeRoomList: [
+                                {
+                                    roomId: room.room_id,
+                                    name: room.name,
+                                },
+                            ],
                         }
                         tempBuildingStrings.push(currentBuildingString)
                         tempBuildings.push(currentBuilding)
@@ -72,9 +78,10 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                         const indexElement = tempBuildingStrings.indexOf(
                             currentBuildingString
                         )
-                        tempBuildings[indexElement].freeRoomList.push(
-                            room.room_id
-                        )
+                        tempBuildings[indexElement].freeRoomList.push({
+                            roomId: room.room_id,
+                            name: room.name,
+                        })
                     }
                 })
                 setBuildingList(tempBuildings)
@@ -172,7 +179,16 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                                     textAlign: "center",
                                 }}
                             >
-                                {item.name}
+                                {item.name.split(" ")[0]}
+                                <BodyText
+                                    style={{
+                                        fontWeight: "900",
+                                        color: "white",
+                                        fontSize: 34,
+                                    }}
+                                >
+                                    {" " + item.name.split(" ")[1]}
+                                </BodyText>
                             </BodyText>
                         </View>
                     </Pressable>

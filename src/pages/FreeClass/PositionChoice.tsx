@@ -12,6 +12,7 @@ import { api } from "api"
 import { BuildingItem } from "./BuildingChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { PositionModality } from "components/FreeClass/PositionModality"
+import { RoomSimplified } from "api/Room"
 
 export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     const [search, setSearch] = useState("")
@@ -27,7 +28,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
 
     const [currentCampus, setCurrentCampus] = useState<number[]>([])
 
-    const [roomList, setRoomList] = useState<number[]>([])
+    const [roomList, setRoomList] = useState<RoomSimplified[]>([])
 
     function addHours(dateStart: Date, hours: number) {
         const tempDate = new Date(dateStart.getTime())
@@ -48,7 +49,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
             )
             if (response.length > 0) {
                 const tempBuildingStrings: string[] = []
-                const tempRoomList: number[] = []
+                const tempRoomList: RoomSimplified[] = []
                 const tempBuildings: BuildingItem[] = []
                 response.map(room => {
                     const currentBuildingString = room.building.replace(
@@ -59,7 +60,9 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                         const currentBuilding: BuildingItem = {
                             campus: campus,
                             name: room.building.replace("Edificio ", "Ed. "),
-                            freeRoomList: [room.room_id],
+                            freeRoomList: [
+                                { roomId: room.room_id, name: room.name },
+                            ],
                         }
                         tempBuildingStrings.push(currentBuildingString)
                         tempBuildings.push(currentBuilding)
@@ -68,11 +71,12 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                         const indexElement = tempBuildingStrings.indexOf(
                             currentBuildingString
                         )
-                        tempBuildings[indexElement].freeRoomList.push(
-                            room.room_id
-                        )
+                        tempBuildings[indexElement].freeRoomList.push({
+                            roomId: room.room_id,
+                            name: room.name,
+                        })
                     }
-                    tempRoomList.push(room.room_id)
+                    tempRoomList.push({ roomId: room.room_id, name: room.name })
                 })
                 setRoomList(tempRoomList)
             }
