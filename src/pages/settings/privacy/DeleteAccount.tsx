@@ -42,7 +42,7 @@ export const DeleteAccount: SettingsStackScreen<"DeleteAccount"> = () => {
                 showContent={loggedIn}
                 bottomComponent={
                     <TouchableOpacity
-                        onPress={void deleteAccount}
+                        onPress={() => void deleteAccount()}
                         activeOpacity={0.8}
                         style={[
                             styles.button,
@@ -85,8 +85,9 @@ export const DeleteAccount: SettingsStackScreen<"DeleteAccount"> = () => {
                 }}
             >
                 <BodyText style={styles.modalText}>
-                    Si è verificato un errore durante la cancellazione
-                    dell'account.
+                    {
+                        "Si è verificato un errore durante la cancellazione dell'account."
+                    }
                 </BodyText>
             </ModalWithButtons>
         </>
