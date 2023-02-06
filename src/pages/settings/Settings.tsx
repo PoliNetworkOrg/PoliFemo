@@ -163,7 +163,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
                             }}
                             flexStyle={"space-between"}
                         >
-                            <CareerColumn career={careerOfIndex}></CareerColumn>
+                            <CareerColumn career={careerOfIndex} />
                         </SelectTile>
                     )
                 })}

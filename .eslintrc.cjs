@@ -32,6 +32,7 @@ module.exports = {
         quotes: ["error", "double"],
         "react/prop-types": ["off"],
         "react/no-multi-comp": ["error"],
+        "react/self-closing-comp": ["error"],
         "@typescript-eslint/naming-convention": [
             "error",
             {
