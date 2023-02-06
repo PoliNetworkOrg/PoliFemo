@@ -1,5 +1,5 @@
-import React, { FC } from "react"
-import { View, ActivityIndicator } from "react-native"
+import React, { FC, useEffect, useState } from "react"
+import { View, ActivityIndicator, Platform } from "react-native"
 import MapView, { Marker } from "react-native-maps"
 import { PermissionStatus } from "expo-location"
 import { BodyText } from "components/Text"
@@ -17,6 +17,17 @@ interface MapProps {
  * So far, the initial region is represented by the user coordinates.
  */
 export const Map: FC<MapProps> = props => {
+    const [timer, setTimer] = useState<boolean>(false)
+
+    useEffect(() => {
+        if (
+            props.userLatitude === undefined &&
+            props.userLongitude === undefined
+        ) {
+            setTimeout(() => setTimer(true), 5000)
+        }
+    }, [])
+
     return (
         <View
             style={{
@@ -24,14 +35,16 @@ export const Map: FC<MapProps> = props => {
                 paddingBottom: 130,
             }}
         >
-            {props.userLatitude === undefined || props.userLongitude === undefined ? (
-                props.locationStatus !== PermissionStatus.GRANTED ? (
+            {props.userLatitude === undefined ||
+            props.userLongitude === undefined ? (
+                props.locationStatus !== PermissionStatus.GRANTED ||
+                timer === true ? (
                     <BodyText
                         style={{
                             alignSelf: "center",
-                            marginTop: 50,
+                            marginTop: 100,
                             color: "red",
-                            fontWeight: "900",
+                            fontWeight: "700",
                             fontSize: 30,
                         }}
                     >
@@ -49,14 +62,14 @@ export const Map: FC<MapProps> = props => {
                     initialRegion={{
                         latitude: props.userLatitude,
                         longitude: props.userLongitude,
-                        latitudeDelta: 0.003,
-                        longitudeDelta: 0.003,
+                        latitudeDelta: 0.002,
+                        longitudeDelta: 0.002,
                     }}
                     showsUserLocation={true}
                     mapPadding={{
                         top: 0,
                         right: 0,
-                        bottom: 190,
+                        bottom: Platform.OS === "ios" ? 190 : 180,
                         left: 0,
                     }}
                 >

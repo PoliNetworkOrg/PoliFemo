@@ -111,11 +111,11 @@ export class HttpClient extends EventEmitter {
         console.log("HttpClient constructor called")
         this.poliNetworkInstance = axios.create({
             baseURL: baseUrlPoliNetwork,
-            timeout: 2000,
+            timeout: 30000,
         })
         this.polimiInstance = axios.create({
             baseURL: baseUrlPolimi,
-            timeout: 2000,
+            timeout: 30000,
         })
         this._initializeInterceptors()
     }
