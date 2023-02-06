@@ -7,6 +7,7 @@ import { ScrollPage } from "components/ScrollPage"
 import { usePalette } from "utils/colors"
 import { Asset } from "expo-asset"
 import { Roboto_400Regular } from "@expo-google-fonts/roboto"
+import { ImageSlider } from "components/Articles/ImageSlider"
 
 export const Article: MainStackScreen<"Article"> = props => {
     const { isLight } = usePalette()
@@ -19,6 +20,12 @@ export const Article: MainStackScreen<"Article"> = props => {
     } catch (error) {
         console.log(error)
     }
+
+    const [isModalVisible, setIsModalVisible] = useState(false)
+
+    const [imageSources, setImageSources] = useState<string[]>([])
+
+    const [activeIndex, setActiveIndex] = useState(0)
 
     return (
         <ScrollPage
@@ -41,7 +48,32 @@ export const Article: MainStackScreen<"Article"> = props => {
         >
             <WebView
                 onMessage={event => {
-                    setWebHeight(parseInt(event.nativeEvent.data))
+                    try {
+                        const message = JSON.parse(event.nativeEvent.data) as {
+                            type: string
+                            data: any
+                        }
+                        if (
+                            message.type === "height" &&
+                            typeof message.data === "number"
+                        ) {
+                            setWebHeight(message.data)
+                        } else if (
+                            message.type === "imageSources" &&
+                            Array.isArray(message.data) &&
+                            message.data.every(item => typeof item === "string")
+                        ) {
+                            setImageSources(message.data)
+                        } else if (
+                            message.type === "imageClick" &&
+                            typeof message.data === "number"
+                        ) {
+                            setActiveIndex(message.data)
+                            setIsModalVisible(true)
+                        }
+                    } catch (err) {
+                        console.log(err)
+                    }
                 }}
                 /* Questo dovrebbe reindirizzare i link nel browser,
                 stoppando la webview. Apparentemente non funziona col mio
@@ -112,6 +144,12 @@ export const Article: MainStackScreen<"Article"> = props => {
                     baseUrl: "",
                 }}
             />
+            <ImageSlider
+                activeIndex={activeIndex}
+                imageSources={imageSources}
+                isVisible={isModalVisible}
+                onClose={() => setIsModalVisible(false)}
+            />
         </ScrollPage>
     )
 }
@@ -121,7 +159,16 @@ export const Article: MainStackScreen<"Article"> = props => {
 //the alternative was to install a whole package
 const webViewScript = `
   setTimeout(function() { 
-    window.ReactNativeWebView.postMessage(document.documentElement.scrollHeight); 
+    window.ReactNativeWebView.postMessage(JSON.stringify({type : "height" , data: document.documentElement.scrollHeight}));
+    const images = document.getElementsByTagName('img')
+    const imageSources = [...images].map(img => img.getAttribute("src"));
+    window.ReactNativeWebView.postMessage(JSON.stringify({type : "imageSources" , data : imageSources}));
+    [...images].forEach((img, index) => {
+        img.setAttribute("id", index)
+        img.addEventListener("click", event => {
+          window.ReactNativeWebView.postMessage(JSON.stringify({type : "imageClick" , data : index}));
+        });
+      });
   }, 500);
   true; // note: this is required, or you'll sometimes get silent failures
 `
