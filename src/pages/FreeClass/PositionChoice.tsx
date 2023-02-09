@@ -12,7 +12,11 @@ import { api } from "api"
 import { BuildingItem } from "./BuildingChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { PositionModality } from "components/FreeClass/PositionModality"
+import { addHours } from "api/rooms"
 
+/**
+ * In this page the user can find a room according to his current position.
+ */
 export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     const [search, setSearch] = useState("")
 
@@ -26,12 +30,6 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     const [currentCoords, setCurrentCoords] = useState<number[]>([])
 
     const [buildingList, setBuildingList] = useState<BuildingItem[]>()
-
-    function addHours(dateStart: Date, hours: number) {
-        const tempDate = new Date(dateStart.getTime())
-        tempDate.setHours(tempDate.getHours() + hours)
-        return tempDate
-    }
 
     //the dateEnd is the startDate + 3 hours, the number of hours has not been chosen yet
     const dateEnd = addHours(new Date(), 3).toISOString() //3 hours is an example
@@ -51,7 +49,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                         latitude: campus.latitude,
                         longitude: campus.longitude,
                     }
-                ) <= 40000 //if the distance between the user and the campus is less than 500m I'll call the API,to test I put 50km
+                ) <= 50000 //if the distance between the user and the campus is less than 500m I'll call the API,to test I put 50km
             ) {
                 //call the API
                 try {

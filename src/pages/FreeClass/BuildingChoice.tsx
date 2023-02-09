@@ -7,7 +7,7 @@ import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePick
 import { api, RetryType } from "api"
 import { CampusItem } from "./CampusChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
-import { RoomSimplified } from "api/Room"
+import { RoomSimplified } from "api/rooms"
 
 export interface BuildingItem {
     campus: CampusItem

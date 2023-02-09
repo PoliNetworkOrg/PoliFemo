@@ -4,7 +4,7 @@ import { groups } from "./groups"
 import { tags } from "./tags"
 import { timetable } from "./timetable"
 import { user } from "./user"
-import { rooms } from "./Room"
+import { rooms } from "./rooms"
 export { RetryType, AuthType, RequestOptions } from "./HttpClient"
 /**
  * This object groups together all collections of endpoints.

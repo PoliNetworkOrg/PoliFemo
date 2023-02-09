@@ -44,6 +44,9 @@ export const rooms = {
         return response.data.freeRooms
     },
 
+    /**
+     * Retrieves room details from PoliNetwork Server.
+     */
     async getRoomInfo(roomId: number, options?: RequestOptions) {
         const response = await client.poliNetworkInstance.get<Room>(
             "/v1/rooms/" + roomId,
@@ -53,4 +56,12 @@ export const rooms = {
         )
         return response.data
     },
+}
+/**
+ * It simply add an amount of hours to a given date.
+ */
+export function addHours(dateStart: Date, hours: number) {
+    const tempDate = new Date(dateStart.getTime())
+    tempDate.setHours(tempDate.getHours() + hours)
+    return tempDate
 }

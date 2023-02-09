@@ -6,7 +6,7 @@ import { Map } from "./Map"
 import { FreeClassList } from "./FreeClassList"
 import { PermissionStatus } from "expo-location"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
-import { RoomSimplified } from "api/Room"
+import { RoomSimplified } from "api/rooms"
 import { CampusItem } from "pages/FreeClass/CampusChoice"
 
 interface PositionModalityProps {
@@ -20,6 +20,9 @@ enum ButtonType {
     LIST,
 }
 
+/**
+ * It handles the button's state and the two modality: Map or List.
+ */
 export const PositionModality: FC<PositionModalityProps> = props => {
     const { primary, isDark, palette } = usePalette()
 

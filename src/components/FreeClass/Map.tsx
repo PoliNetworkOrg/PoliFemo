@@ -25,7 +25,7 @@ export const Map: FC<MapProps> = props => {
             props.userLatitude === undefined &&
             props.userLongitude === undefined
         ) {
-            setTimeout(() => setTimer(true), 5000)
+            setTimeout(() => setTimer(true), 7000)
         }
     }, [])
 

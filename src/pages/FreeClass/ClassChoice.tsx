@@ -2,7 +2,7 @@ import { MainStackScreen } from "navigation/NavigationTypes"
 import React, { useState, useEffect } from "react"
 import { View } from "react-native"
 import { Title } from "components/Text"
-import { FreeClassList } from "components/FreeClass/FreeClassList"
+import FreeClassList from "components/FreeClass/FreeClassList"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { PageWrapper } from "components/Groups/PageWrapper"
 

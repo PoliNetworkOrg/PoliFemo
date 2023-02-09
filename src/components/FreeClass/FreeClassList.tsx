@@ -7,7 +7,7 @@ import timerIcon from "assets/freeClassrooms/timer.svg"
 import overcrowdingIcon from "assets/freeClassrooms/overcrowding.svg"
 import fireIcon from "assets/freeClassrooms/fire.svg"
 import { FlatList } from "react-native-gesture-handler"
-import { RoomSimplified } from "api/Room"
+import { RoomSimplified } from "api/rooms"
 
 const { width } = Dimensions.get("window")
 
@@ -15,6 +15,9 @@ interface FreeClassListProps {
     data: RoomSimplified[] | undefined
 }
 
+/**
+ * It handles a list of freeclassrooms available.
+ */
 export const FreeClassList: FC<FreeClassListProps> = props => {
     const { palette } = usePalette()
     const timerSVG = useSVG(timerIcon)
