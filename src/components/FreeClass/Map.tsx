@@ -1,15 +1,16 @@
 import React, { FC, useEffect, useState } from "react"
-import { View, ActivityIndicator, Platform } from "react-native"
-import MapView, { Marker } from "react-native-maps"
+import { View, ActivityIndicator, Platform, Text } from "react-native"
+import MapView, { Callout, Marker } from "react-native-maps"
 import { PermissionStatus } from "expo-location"
 import { BodyText } from "components/Text"
+import { CampusItem } from "pages/FreeClass/CampusChoice"
 
 interface MapProps {
     userLatitude: number
     userLongitude: number
     locationStatus: PermissionStatus
-    currentCampus?: number[]
-    onPressMarker: () => void
+    campusList: CampusItem[]
+    onPressMarker: (campusName: string[]) => void
 }
 
 /**
@@ -73,15 +74,27 @@ export const Map: FC<MapProps> = props => {
                         left: 0,
                     }}
                 >
-                    {props.currentCampus !== undefined ? (
+                    {props.campusList.map((campus, index) => (
                         <Marker
+                            key={index}
                             coordinate={{
-                                latitude: props.currentCampus[0],
-                                longitude: props.currentCampus[1],
+                                latitude: campus.latitude,
+                                longitude: campus.longitude,
                             }}
-                            onPress={() => props.onPressMarker()}
-                        ></Marker>
-                    ) : undefined}
+                        >
+                            <Callout
+                                onPress={() => props.onPressMarker(campus.name)}
+                            >
+                                {campus.name.length > 1 ? (
+                                    <Text>
+                                        {campus.name[0] + " " + campus.name[1]}
+                                    </Text>
+                                ) : (
+                                    <Text>{campus.name[0]}</Text>
+                                )}
+                            </Callout>
+                        </Marker>
+                    ))}
                 </MapView>
             )}
         </View>

@@ -12,7 +12,7 @@ import { RoomSimplified } from "api/Room"
 const { width } = Dimensions.get("window")
 
 interface FreeClassListProps {
-    data: RoomSimplified[]
+    data: RoomSimplified[] | undefined
 }
 
 export const FreeClassList: FC<FreeClassListProps> = props => {

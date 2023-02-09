@@ -40,8 +40,8 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
         return tempDate
     }
 
-    //the dateEnd is the startDate + 8 hours, the number of hours has not been chosen yet
-    const dateEnd = addHours(date, 8).toISOString() //8 hours is an example
+    //the dateEnd is the startDate + 3 hours, the number of hours has not been chosen yet
+    const dateEnd = addHours(date, 3).toISOString() //3 hours is an example
 
     //main function that handles the call to the API in order to obtain the list of freeclassRooms
     const findRoomsAvailable = async () => {

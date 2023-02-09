@@ -12,7 +12,6 @@ import { api } from "api"
 import { BuildingItem } from "./BuildingChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { PositionModality } from "components/FreeClass/PositionModality"
-import { RoomSimplified } from "api/Room"
 
 export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     const [search, setSearch] = useState("")
@@ -26,9 +25,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
 
     const [currentCoords, setCurrentCoords] = useState<number[]>([])
 
-    const [currentCampus, setCurrentCampus] = useState<number[]>([])
-
-    const [roomList, setRoomList] = useState<RoomSimplified[]>([])
+    const [buildingList, setBuildingList] = useState<BuildingItem[]>()
 
     function addHours(dateStart: Date, hours: number) {
         const tempDate = new Date(dateStart.getTime())
@@ -36,53 +33,81 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
         return tempDate
     }
 
-    //the dateEnd is the startDate + 8 hours, the number of hours has not been chosen yet
-    const dateEnd = addHours(new Date(), 8).toISOString() //8 hours is an example
+    //the dateEnd is the startDate + 3 hours, the number of hours has not been chosen yet
+    const dateEnd = addHours(new Date(), 3).toISOString() //3 hours is an example
 
     //main function that handles the call to the API in order to obtain the list of freeclassRooms
-    const findRoomsAvailable = async (campus: CampusItem) => {
-        try {
-            const response = await api.rooms.getFreeRoomsTimeRange(
-                campus.acronym,
-                new Date().toISOString(),
-                dateEnd
-            )
-            if (response.length > 0) {
-                const tempBuildingStrings: string[] = []
-                const tempRoomList: RoomSimplified[] = []
-                const tempBuildings: BuildingItem[] = []
-                response.map(room => {
-                    const currentBuildingString = room.building.replace(
-                        "Edificio ",
-                        "Ed. "
-                    )
-                    if (!tempBuildingStrings.includes(currentBuildingString)) {
-                        const currentBuilding: BuildingItem = {
-                            campus: campus,
-                            name: room.building.replace("Edificio ", "Ed. "),
-                            freeRoomList: [
-                                { roomId: room.room_id, name: room.name },
-                            ],
-                        }
-                        tempBuildingStrings.push(currentBuildingString)
-                        tempBuildings.push(currentBuilding)
-                    } else {
-                        //element already present in the list
-                        const indexElement = tempBuildingStrings.indexOf(
-                            currentBuildingString
-                        )
-                        tempBuildings[indexElement].freeRoomList.push({
-                            roomId: room.room_id,
-                            name: room.name,
-                        })
+    const findRoomsAvailable = async (
+        campusList: CampusItem[],
+        currentLat: number,
+        currentLong: number
+    ) => {
+        const tempBuildingList: BuildingItem[] = []
+        for (const campus of campusList) {
+            if (
+                getDistance(
+                    { latitude: currentLat, longitude: currentLong },
+                    {
+                        latitude: campus.latitude,
+                        longitude: campus.longitude,
                     }
-                    tempRoomList.push({ roomId: room.room_id, name: room.name })
-                })
-                setRoomList(tempRoomList)
+                ) <= 40000 //if the distance between the user and the campus is less than 500m I'll call the API,to test I put 50km
+            ) {
+                //call the API
+                try {
+                    const response = await api.rooms.getFreeRoomsTimeRange(
+                        campus.acronym,
+                        new Date().toISOString(),
+                        dateEnd
+                    )
+                    if (response.length > 0) {
+                        const tempBuildingStrings: string[] = []
+                        const tempBuildings: BuildingItem[] = []
+                        response.map(room => {
+                            const currentBuildingString = room.building.replace(
+                                "Edificio ",
+                                "Ed. "
+                            )
+                            if (
+                                !tempBuildingStrings.includes(
+                                    currentBuildingString
+                                )
+                            ) {
+                                const currentBuilding: BuildingItem = {
+                                    campus: campus,
+                                    name: room.building.replace(
+                                        "Edificio ",
+                                        "Ed. "
+                                    ),
+                                    freeRoomList: [
+                                        {
+                                            roomId: room.room_id,
+                                            name: room.name,
+                                        },
+                                    ],
+                                }
+                                tempBuildingStrings.push(currentBuildingString)
+                                tempBuildings.push(currentBuilding)
+                            } else {
+                                //element already present in the list
+                                const indexElement =
+                                    tempBuildingStrings.indexOf(
+                                        currentBuildingString
+                                    )
+                                tempBuildings[indexElement].freeRoomList.push({
+                                    roomId: room.room_id,
+                                    name: room.name,
+                                })
+                            }
+                        })
+                        tempBuildingList.push(...tempBuildings)
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
             }
-        } catch (error) {
-            console.log(error)
         }
+        setBuildingList(tempBuildingList)
     }
 
     async function getPosition() {
@@ -97,22 +122,9 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                 latitude,
                 longitude,
             })
-            //temporary solution, too inefficient
-            campusList.map(campus => {
-                if (
-                    getDistance(
-                        { latitude: latitude, longitude: longitude },
-                        {
-                            latitude: campus.latitude,
-                            longitude: campus.longitude,
-                        }
-                    ) <= 50000 //if the distance between the user and the campus is less than 500m I'll call the API,to test I put 5km
-                ) {
-                    //call the API
-                    void findRoomsAvailable(campus)
-                    setCurrentCampus([campus.latitude, campus.longitude])
-                }
-            })
+            //temporary solution, too inefficient?
+            void findRoomsAvailable(campusList, latitude, longitude)
+
             setLocationStatus(PermissionStatus.GRANTED)
             setCurrentCoords([latitude, longitude])
             setCurrentLocation(response[0])
@@ -154,9 +166,8 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
             </View>
             <PositionModality
                 currentCoords={currentCoords}
-                currentCampus={currentCampus}
                 locationStatus={locationStatus}
-                roomList={roomList}
+                buildingList={buildingList}
             />
         </PageWrapper>
     )
