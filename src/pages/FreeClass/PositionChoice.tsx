@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { View } from "react-native"
+import { Platform, View } from "react-native"
 import { Title } from "components/Text"
 import { PoliSearchBar } from "components/Home"
 import * as Location from "expo-location"
@@ -130,15 +130,28 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     }
 
     async function checkPermission() {
-        const { status } = await Location.requestForegroundPermissionsAsync()
-        if (status !== "granted") {
-            setLocationStatus(PermissionStatus.UNDETERMINED)
-            setCurrentLocation(undefined)
+        if (Platform.OS === "ios") { // idk but hasServicesEnabledAsync does not work on IOS
+            const { status } =
+                await Location.requestForegroundPermissionsAsync()
+            if (status !== "granted") {
+                setLocationStatus(PermissionStatus.UNDETERMINED)
+                setCurrentLocation(undefined)
+            }
+        } else {
+            const res = await Location.hasServicesEnabledAsync()
+            if (!res) {
+                setLocationStatus(PermissionStatus.UNDETERMINED)
+                setCurrentLocation(undefined)
+            }
+            else{
+                setLocationStatus(PermissionStatus.GRANTED)
+            }
         }
+        return
     }
 
     useEffect(() => {
-        const intervalId = setInterval(() => void checkPermission(), 1000 * 2) // in milliseconds,call every 2 sec(this could be modified)
+        const intervalId = setInterval(() => void checkPermission(), 2000) // in milliseconds,call every 2 sec(this could be modified)
         return () => clearInterval(intervalId)
     }, [])
 
