@@ -7,13 +7,17 @@ import {
     GestureHandlerRootView,
 } from "react-native-gesture-handler"
 import Animated, {
+    SharedValue,
     useAnimatedStyle,
-    useSharedValue,
     withSpring,
 } from "react-native-reanimated"
 
 interface ZoomableImageProps {
     uri: string
+    position: SharedValue<number>
+    lastPosition: SharedValue<number>
+    scale: SharedValue<number>
+    savedScale: SharedValue<number>
     style?: ViewStyle
 }
 
@@ -30,48 +34,45 @@ export const ZoomableImage: FC<ZoomableImageProps> = props => {
         setHeight((height * fullWidth) / width)
     })
 
-    const scale = useSharedValue(1)
-    const savedScale = useSharedValue(1)
-    const position = useSharedValue(0)
-    const lastPosition = useSharedValue(0)
-
     const pinchGesture = Gesture.Pinch()
         .onUpdate(e => {
-            scale.value = savedScale.value * e.scale
+            props.scale.value = props.savedScale.value * e.scale
         })
         .onEnd(() => {
-            if (scale.value > 1) {
-                savedScale.value = scale.value
+            if (props.scale.value > 1) {
+                props.savedScale.value = props.scale.value
             } else {
-                savedScale.value = 1
-                scale.value = withSpring(1)
-                lastPosition.value = 0
-                position.value = withSpring(0)
+                props.savedScale.value = 1
+                props.scale.value = withSpring(1)
+                props.lastPosition.value = 0
+                props.position.value = withSpring(0)
             }
         })
 
     const panGesture = Gesture.Pan()
         .onUpdate(e => {
-            if (scale.value >= 1) {
-                position.value =
-                    e.translationX / scale.value + lastPosition.value
+            if (props.scale.value >= 1) {
+                props.position.value =
+                    e.translationX / props.scale.value +
+                    props.lastPosition.value
             }
         })
         .onEnd(() => {
-            if (scale.value >= 1) {
-                lastPosition.value = position.value
+            if (props.scale.value >= 1) {
+                props.lastPosition.value = props.position.value
                 const delta =
-                    (fullWidth * (scale.value - 1)) / (2 * scale.value)
+                    (fullWidth * (props.scale.value - 1)) /
+                    (2 * props.scale.value)
 
-                if (position.value > 0 && position.value > delta) {
-                    position.value = withSpring(delta)
-                    lastPosition.value = delta
+                if (props.position.value > 0 && props.position.value > delta) {
+                    props.position.value = withSpring(delta)
+                    props.lastPosition.value = delta
                 } else if (
-                    position.value < 0 &&
-                    Math.abs(position.value) > delta
+                    props.position.value < 0 &&
+                    Math.abs(props.position.value) > delta
                 ) {
-                    position.value = withSpring(-delta)
-                    lastPosition.value = -delta
+                    props.position.value = withSpring(-delta)
+                    props.lastPosition.value = -delta
                 }
             }
         })
@@ -79,7 +80,10 @@ export const ZoomableImage: FC<ZoomableImageProps> = props => {
     const composed = Gesture.Simultaneous(pinchGesture, panGesture)
 
     const animatedStyle = useAnimatedStyle(() => ({
-        transform: [{ scale: scale.value }, { translateX: position.value }],
+        transform: [
+            { scale: props.scale.value },
+            { translateX: props.position.value },
+        ],
     }))
     return (
         <View
