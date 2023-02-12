@@ -49,7 +49,13 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
                 onPress={props.onClose}
                 style={[styles.pageWrapper, { backgroundColor: modalBarrier }]}
             >
-                <View>
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
                     <Pressable
                         style={{ alignSelf: "flex-end" }}
                         onPress={() => props.onClose()}
@@ -81,27 +87,9 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
                             { backgroundColor: backgroundSecondary },
                         ]}
                     >
-                        <Text
-                            style={[
-                                styles.title,
-                                { color: isLight ? homeBackground : "#ffffff" },
-                                { textAlign: centerText ? "center" : "left" },
-                                { marginTop: centerText ? 72 : 36 },
-                            ]}
-                        >
-                            {props.title}
-                        </Text>
-                        <Text
-                            style={[
-                                styles.subTitle,
-                                { color: isLight ? homeBackground : "#ffffff" },
-                                { textAlign: centerText ? "center" : "left" },
-                                { marginVertical: centerText ? 56 : 8 },
-                            ]}
-                        >
-                            {props.subTitle}
-                        </Text>
-                        <View style={{ flex: 1 }}>{props.children}</View>
+                        <View style={{ width: 320, height: 420 }}>
+                            {props.children}
+                        </View>
                     </Pressable>
                 </View>
             </Pressable>
@@ -116,10 +104,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     contentWrapper: {
-        width: 320,
-        height: 420,
         borderRadius: 12,
-        marginHorizontal: 15,
 
         shadowColor: "#000",
         shadowOffset: {

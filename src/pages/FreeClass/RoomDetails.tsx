@@ -6,6 +6,7 @@ import { BodyText } from "components/Text"
 import { InfoMapTile } from "components/FreeClass/ClassDetails/InfoMapTile"
 import { TimeLeftTile } from "components/FreeClass/ClassDetails/TimeLeftTile"
 import { RoomUtilsSection } from "components/FreeClass/ClassDetails/RoomUtilsSection"
+import { CrowdingSection } from "components/FreeClass/ClassDetails/CrowdingSection"
 /* eslint-disable @typescript-eslint/naming-convention */
 
 export const RoomDetails: MainStackScreen<"RoomDetails"> = props => {
@@ -21,20 +22,8 @@ export const RoomDetails: MainStackScreen<"RoomDetails"> = props => {
                 roomName={room.name}
             />
             <TimeLeftTile startDate={startDate} />
-            <View
-                style={{
-                    width: "100%",
-                    height: 140,
-                    backgroundColor: "#414867",
-                    marginTop: 46,
-                    marginBottom: 18,
-                }}
-            >
-                <BodyText style={{ color: "#fff" }}>
-                    Seziona affolamento
-                </BodyText>
-            </View>
-            <RoomUtilsSection />
+            <CrowdingSection/>
+            <RoomUtilsSection power={room.power} />
         </PageWrapper>
     )
 }

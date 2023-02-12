@@ -8,18 +8,19 @@ import expand from "assets/freeClassrooms/expand.svg"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 
 interface InfoMapTileProps {
-    roomName: string
-    building: string
-    address: string
-    capacity: string
+    roomName?: string
+    building?: string
+    address?: string
+    capacity?: string
 }
 
 export const InfoMapTile: FC<InfoMapTileProps> = props => {
     const { isLight, primary } = usePalette()
 
-    const building = extractBuilding(props.building)
-
-    const roomName = extractRoom(props.roomName)
+    console.log(props.building)
+    const building = extractBuilding(props.building ?? "Edificio 50")
+    console.log(props.roomName)
+    const roomName = extractRoom(props.roomName ?? "50.1.1")
 
     const expandSvg = useSVG(expand)
     return (

@@ -16,9 +16,10 @@ import grading_book from "assets/menu/grading_book.svg"
 import tests from "assets/menu/tests.svg"
 import add from "assets/menu/add.svg"
 import { ModalCustom } from "components/Modal"
-
+import { Text } from "components/Text"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useOutsideClick } from "utils/outsideClick"
+import { usePalette } from "utils/colors"
 
 /**
  * the buttons and their features
@@ -58,6 +59,8 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
     useEffect(() => {
         scrollView.current?.scrollTo({ x: 0, y: 0, animated: true })
     }, [filter, scrollView])
+
+    const { homeBackground, isLight } = usePalette()
 
     useEffect(() => {
         AsyncStorage.getItem("menu:icons")
@@ -109,6 +112,34 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                 isShowing={isModalVisible}
                 onClose={() => setModalVisible(false)}
             >
+                <Text
+                    style={[
+                        {
+                            fontSize: 32,
+                            marginHorizontal: 27,
+                            fontWeight: "900",
+                            color: isLight ? homeBackground : "#ffffff",
+                            textAlign: "left",
+                            marginTop: 36,
+                        },
+                    ]}
+                >
+                    Aggiungi features
+                </Text>
+                <Text
+                    style={[
+                        {
+                            fontSize: 13,
+                            marginHorizontal: 27,
+                            fontWeight: "600",
+                            color: isLight ? homeBackground : "#ffffff",
+                            textAlign: "left",
+                            marginTop: 8,
+                        },
+                    ]}
+                >
+                    Personalizza la tua bacheca
+                </Text>
                 <View
                     style={{
                         alignItems: "center",
@@ -162,18 +193,16 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                             if (isDeleting) setIsDeleting(false)
                             if (buttonIcon.id === 9) setModalVisible(true)
                             // TODO: actual navigation
- 
+
                             if (!isDeleting && buttonIcon.id !== 9) {
                                 if (buttonIcon.id == 3) {
                                     navigate("FreeClassrooms")
                                 } else if (buttonIcon.id === 5) {
                                     navigate("Groups")
-                                } 
-                                else {
+                                } else {
                                     navigate("Error404")
                                 }
                             }
-                            
                         }}
                         onLongPress={() => {
                             if (buttonIcon.id !== 9) setIsDeleting(!isDeleting)
