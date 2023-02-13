@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useState } from "react"
 import { View, Pressable } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
@@ -7,7 +7,6 @@ import { FreeClassList } from "./FreeClassList"
 import { PermissionStatus } from "expo-location"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
 import { RoomSimplified } from "api/rooms"
-import { CampusItem } from "pages/FreeClass/CampusChoice"
 
 interface PositionModalityProps {
     currentCoords: number[]
@@ -30,40 +29,15 @@ export const PositionModality: FC<PositionModalityProps> = props => {
 
     const [roomList, setRoomList] = useState<RoomSimplified[]>([])
 
-    const [campusList, setCampusList] = useState<CampusItem[]>([])
-
-    const extractRooms = (campusName: string[]) => {
+    const extractRooms = (campusName: string[],buildingName: string) => {
         const tempRooms: RoomSimplified[] = []
         props.buildingList?.map(building => {
-            if (campusName.length > 1) {
-                if (
-                    campusName[0] === building.campus.name[0] &&
-                    campusName[1] === building.campus.name[1]
-                ) {
-                    tempRooms.push(...building.freeRoomList)
-                }
-            } else {
-                if (campusName[0] === building.campus.name[0]) {
-                    tempRooms.push(...building.freeRoomList)
-                }
+            if(building.campus.name === campusName && building.name === buildingName){
+                tempRooms.push(...building.freeRoomList)
             }
         })
         setRoomList(tempRooms)
     }
-
-    const extractCampus = () => {
-        const tempCampus: CampusItem[] = []
-        props.buildingList?.map(building => {
-            if (!tempCampus.includes(building.campus)) {
-                tempCampus.push(building.campus)
-            }
-        })
-        setCampusList(tempCampus)
-    }
-
-    useEffect(() => {
-        extractCampus()
-    }, [props.buildingList])
 
     return (
         <>
@@ -144,10 +118,10 @@ export const PositionModality: FC<PositionModalityProps> = props => {
                     userLatitude={props.currentCoords[0]}
                     userLongitude={props.currentCoords[1]}
                     locationStatus={props.locationStatus}
-                    campusList={campusList}
-                    onPressMarker={(campusName: string[]) => {
+                    buildingList={props.buildingList}
+                    onPressMarker={(campusName: string[],buildingName: string) => {
                         setStatus(ButtonType.LIST)
-                        void extractRooms(campusName)
+                        void extractRooms(campusName,buildingName)
                     }}
                 />
             )}

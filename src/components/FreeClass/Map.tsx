@@ -3,14 +3,14 @@ import { View, ActivityIndicator, Platform, Text } from "react-native"
 import MapView, { Callout, Marker } from "react-native-maps"
 import { PermissionStatus } from "expo-location"
 import { BodyText } from "components/Text"
-import { CampusItem } from "pages/FreeClass/CampusChoice"
+import { BuildingItem } from "pages/FreeClass/BuildingChoice"
 
 interface MapProps {
     userLatitude: number
     userLongitude: number
     locationStatus: PermissionStatus
-    campusList: CampusItem[]
-    onPressMarker: (campusName: string[]) => void
+    buildingList: BuildingItem[] | undefined
+    onPressMarker: (campusName: string[], buildingName: string) => void
 }
 
 /**
@@ -74,24 +74,29 @@ export const Map: FC<MapProps> = props => {
                         left: 0,
                     }}
                 >
-                    {props.campusList.map((campus, index) => (
+                    {props.buildingList?.map((building, index) => (
                         <Marker
                             key={index}
-                            coordinate={{
-                                latitude: campus.latitude,
-                                longitude: campus.longitude,
-                            }}
+                            coordinate={
+                                building.latitude !== undefined &&
+                                building.longitude !== undefined
+                                    ? {
+                                          latitude: building.latitude,
+                                          longitude: building.longitude,
+                                      }
+                                    : { latitude: 0, longitude: 0 } // fa schifo sta soluzione ma è l'unica che non mi dà errori.
+                                    //come faccio in questi casi quando le props latitude e longitude del marker non possono essere undefined?
+                            }
                         >
                             <Callout
-                                onPress={() => props.onPressMarker(campus.name)}
+                                onPress={() =>
+                                    props.onPressMarker(
+                                        building.campus.name,
+                                        building.name
+                                    )
+                                }
                             >
-                                {campus.name.length > 1 ? (
-                                    <Text>
-                                        {campus.name[0] + " " + campus.name[1]}
-                                    </Text>
-                                ) : (
-                                    <Text>{campus.name[0]}</Text>
-                                )}
+                                <Text>{building.name}</Text>
                             </Callout>
                         </Marker>
                     ))}

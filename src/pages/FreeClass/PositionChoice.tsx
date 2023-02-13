@@ -13,6 +13,7 @@ import { BuildingItem } from "./BuildingChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { PositionModality } from "components/FreeClass/PositionModality"
 import { addHours } from "api/rooms"
+import BuildingListJSON from "components/FreeClass/buildingCoords.json"
 
 /**
  * In this page the user can find a room according to his current position.
@@ -33,6 +34,42 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
 
     //the dateEnd is the startDate + 3 hours, the number of hours has not been chosen yet
     const dateEnd = addHours(new Date(), 3).toISOString() //3 hours is an example
+
+    const compareCampusNames = (c1: string[], c2: string[]) => {
+        if (c1.length === c2.length) {
+            if (c1.length > 1) {
+                if (c1[0] === c2[0] && c1[1] === c2[1]) {
+                    return true
+                } else {
+                    return false
+                }
+            } else {
+                if (c1[0] === c2[0]) {
+                    return true
+                } else {
+                    return false
+                }
+            }
+        } else {
+            return false
+        }
+    }
+
+    const getBuildingCoords = (campus: CampusItem, buildingName: string) => {
+        for (const element of BuildingListJSON) {
+            if (element.acronym === campus.acronym) {
+                for (const c of element.campus) {
+                    if (compareCampusNames(c.name, campus.name)) {
+                        for (const b of c.buildings) {
+                            if (b.name === buildingName) {
+                                return b.coords
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     //main function that handles the call to the API in order to obtain the list of freeclassRooms
     const findRoomsAvailable = async (
@@ -62,6 +99,10 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                         const tempBuildingStrings: string[] = []
                         const tempBuildings: BuildingItem[] = []
                         response.map(room => {
+                            const coords = getBuildingCoords(
+                                campus,
+                                room.building
+                            )
                             const currentBuildingString = room.building.replace(
                                 "Edificio ",
                                 "Ed. "
@@ -73,10 +114,9 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                             ) {
                                 const currentBuilding: BuildingItem = {
                                     campus: campus,
-                                    name: room.building.replace(
-                                        "Edificio ",
-                                        "Ed. "
-                                    ),
+                                    name: room.building,
+                                    latitude: coords?.latitude,
+                                    longitude: coords?.longitude,
                                     freeRoomList: [
                                         {
                                             roomId: room.room_id,
@@ -87,7 +127,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                                 tempBuildingStrings.push(currentBuildingString)
                                 tempBuildings.push(currentBuilding)
                             } else {
-                                //element already present in the list
+                                //element already in the list
                                 const indexElement =
                                     tempBuildingStrings.indexOf(
                                         currentBuildingString
@@ -130,7 +170,8 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     }
 
     async function checkPermission() {
-        if (Platform.OS === "ios") { // idk but hasServicesEnabledAsync does not work on IOS
+        if (Platform.OS === "ios") {
+            // idk but hasServicesEnabledAsync does not work on IOS
             const { status } =
                 await Location.requestForegroundPermissionsAsync()
             if (status !== "granted") {
@@ -142,8 +183,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
             if (!res) {
                 setLocationStatus(PermissionStatus.UNDETERMINED)
                 setCurrentLocation(undefined)
-            }
-            else{
+            } else {
                 setLocationStatus(PermissionStatus.GRANTED)
             }
         }

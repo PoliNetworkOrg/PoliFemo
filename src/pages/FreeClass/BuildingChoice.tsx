@@ -12,6 +12,8 @@ import { RoomSimplified } from "api/rooms"
 export interface BuildingItem {
     campus: CampusItem
     name: string
+    latitude?: number
+    longitude?: number
     freeRoomList: RoomSimplified[]
 }
 
