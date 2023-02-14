@@ -5,7 +5,7 @@ export function extractRoom(val: string) {
     if (arr.length > 2) {
         return arr.slice(1).join(".")
     } else {
-        return undefined
+        return val
     }
 }
 
