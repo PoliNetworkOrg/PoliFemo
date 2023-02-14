@@ -1,9 +1,16 @@
 import React, { FC, useEffect, useState } from "react"
-import { View, ActivityIndicator, Platform, Text } from "react-native"
-import MapView, { Callout, Marker } from "react-native-maps"
+import {
+    View,
+    ActivityIndicator,
+    Platform,
+    Text,
+    Pressable,
+} from "react-native"
+import MapView, { Callout, Marker, Region } from "react-native-maps"
 import { PermissionStatus } from "expo-location"
 import { BodyText } from "components/Text"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 interface MapProps {
     userLatitude: number
@@ -20,6 +27,8 @@ interface MapProps {
 export const Map: FC<MapProps> = props => {
     const [timer, setTimer] = useState<boolean>(false)
 
+    const [region, setRegion] = useState<Region>()
+
     useEffect(() => {
         if (
             props.userLatitude === undefined &&
@@ -27,6 +36,18 @@ export const Map: FC<MapProps> = props => {
         ) {
             setTimeout(() => setTimer(true), 7000)
         }
+    }, [])
+
+    useEffect(() => {
+        AsyncStorage.getItem("lastRegionVisited")
+            .then(regionJSON => {
+                if (regionJSON) {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    const tempRegion: Region = JSON.parse(regionJSON)
+                    setRegion(tempRegion)
+                }
+            })
+            .catch(err => console.log(err))
     }, [])
 
     return (
@@ -60,11 +81,21 @@ export const Map: FC<MapProps> = props => {
             ) : (
                 <MapView
                     style={{ marginTop: 23, width: "100%", height: "100%" }}
-                    initialRegion={{
-                        latitude: props.userLatitude,
-                        longitude: props.userLongitude,
-                        latitudeDelta: 0.002,
-                        longitudeDelta: 0.002,
+                    region={
+                        region !== undefined
+                            ? region
+                            : {
+                                  latitude: props.userLatitude,
+                                  longitude: props.userLongitude,
+                                  latitudeDelta: 0.002,
+                                  longitudeDelta: 0.002,
+                              }
+                    }
+                    onRegionChangeComplete={region => {
+                        AsyncStorage.setItem(
+                            "lastRegionVisited",
+                            JSON.stringify(region)
+                        ).catch(err => console.log(err))
                     }}
                     showsUserLocation={true}
                     mapPadding={{
@@ -74,6 +105,28 @@ export const Map: FC<MapProps> = props => {
                         left: 0,
                     }}
                 >
+                    {Platform.OS === "ios" ? (
+                        <Pressable
+                            //this pressable is a button to return to user current location, on MapKit this feature is not provided by react-native-maps
+                            style={{
+                                backgroundColor: "red",
+                                width: 25,
+                                height: 25,
+                                alignSelf: "flex-end",
+                                marginRight: 13,
+                                marginTop: 55,
+                                borderRadius: 5,
+                            }}
+                            onPress={() =>
+                                setRegion({
+                                    latitude: props.userLatitude,
+                                    longitude: props.userLongitude,
+                                    latitudeDelta: 0.002,
+                                    longitudeDelta: 0.002,
+                                })
+                            }
+                        />
+                    ) : undefined}
                     {props.buildingList?.map((building, index) => (
                         <Marker
                             key={index}
@@ -85,7 +138,7 @@ export const Map: FC<MapProps> = props => {
                                           longitude: building.longitude,
                                       }
                                     : { latitude: 0, longitude: 0 } // fa schifo sta soluzione ma è l'unica che non mi dà errori.
-                                    //come faccio in questi casi quando le props latitude e longitude del marker non possono essere undefined?
+                                //come faccio in questi casi quando le props latitude e longitude del marker non possono essere undefined?
                             }
                         >
                             <Callout
