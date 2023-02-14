@@ -136,8 +136,8 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
 
                     <ButtonCustom
                         text="Conferma"
-                        light={true}
-                        style={{ alignSelf: "center" }}
+                        light={false}
+                        style={{ alignSelf: "center", minWidth: 103 }}
                         onPress={() => {
                             void postOccupancyRate()
                             setIsModalVisible(false)

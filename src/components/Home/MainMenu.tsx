@@ -106,9 +106,6 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
             showsHorizontalScrollIndicator={false}
         >
             <ModalCustom
-                centerText={false}
-                title={"Aggiungi features"}
-                subTitle={"Personalizza la tua bacheca"}
                 isShowing={isModalVisible}
                 onClose={() => setModalVisible(false)}
             >
