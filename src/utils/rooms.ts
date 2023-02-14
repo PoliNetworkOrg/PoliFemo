@@ -1,20 +1,4 @@
-/**
- * BL.27.04 --> {"27.04" , false}
- *
- * "F.LLI CASTIGLIONI" ---> {"F.LLI CASTIGLIONI", true}
- *
- * B8 0.3 ---> {"0.3" , false}
- *
- * there are some pathological cases, for example:
- *
- * "ATRIO P.T. - ED. BL.27"
- * "CORRIDOIO SX 1� P. - ED. BL.27"
- * B8 0.10 (EX B8.0.8)
- *
- * what should I show?
- *
- * probably I need to find another way, maybe ask aliases from backend?
- */
+import { ValidCrowdStatus } from "components/FreeClass/ClassDetails/CrowdingSection"
 
 export function extractRoom(val: string) {
     const arr = val.split(".")
@@ -50,3 +34,24 @@ export function extractTimeLeft(startDate: Date) {
     const isPositive = hours >= 0 && minutes >= 0
     return { hoursLeft, minutesLeft, isPositive }
 }
+
+export function getCrowdStatus(pos: number, width: number): ValidCrowdStatus {
+    if (pos < 0) {
+        pos = 0
+    }
+
+    const radius = 14
+    const percentage = (pos + radius) / (width + 2 * radius)
+    if (percentage < 0.2) {
+        return 1
+    } else if (percentage < 0.4) {
+        return 2
+    } else if (percentage < 0.6) {
+        return 3
+    } else if (percentage < 0.8) {
+        return 4
+    } else {
+        return 5
+    }
+}
+

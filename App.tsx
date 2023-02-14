@@ -125,7 +125,6 @@ export default function App() {
                 if (loginState.loggedIn) {
                     console.log(await api.user.getPoliNetworkMe())
                     console.log(await api.user.getPolimiUserInfo())
-                    
                 }
             })
         }

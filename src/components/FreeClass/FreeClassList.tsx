@@ -50,7 +50,8 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                             )
                             navigate("RoomDetails", {
                                 room: selectedRoom,
-                                startDate : props.date.toISOString()
+                                startDate: props.date.toISOString(),
+                                roomId: room,
                             })
                         } catch (err) {
                             console.log(err)

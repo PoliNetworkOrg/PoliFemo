@@ -1,9 +1,8 @@
-import React, { FC, useMemo } from "react"
+import React, { FC } from "react"
 import { View } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
 import { RoomUtilsTile } from "./RoomUtilsTile"
-
 
 interface RoomUtilsSectionProps {
     power?: boolean

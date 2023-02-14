@@ -1,4 +1,5 @@
-import { HttpClient, RequestOptions } from "./HttpClient"
+import { ValidCrowdStatus } from "components/FreeClass/ClassDetails/CrowdingSection"
+import { AuthType, HttpClient, RequestOptions } from "./HttpClient"
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface Rooms {
@@ -18,6 +19,11 @@ export interface RoomDetails {
     building: string
     address: string
     power: boolean
+}
+
+export interface OccupancyInfo {
+    room_id: number
+    occupancy_rate: null | ValidCrowdStatus
 }
 
 const client = HttpClient.getInstance()
@@ -57,5 +63,30 @@ export const rooms = {
             }
         )
         return response.data
+    },
+
+    async getOccupancyRate(roomId: number, options?: RequestOptions) {
+        const response = await client.poliNetworkInstance.get<OccupancyInfo>(
+            "/v1/rooms/" + roomId + "/occupancy",
+            {
+                ...options,
+            }
+        )
+        return response.data
+    },
+
+    async postOccupancyRate(
+        roomId: number,
+        rate: number,
+        options?: RequestOptions
+    ) {
+        const res = await client.poliNetworkInstance.post(
+            "/v1/rooms/" + roomId + "/occupancy",
+            {
+                ...options,
+            },
+            { params: { rate: rate }, authType: AuthType.POLINETWORK }
+        )
+        return res
     },
 }

@@ -50,7 +50,7 @@ export type MainStackNavigatorParams = {
     FreeClassrooms: undefined
     CampusChoice: { currentDate: string }
     PositionChoice: undefined
-    RoomDetails: { room: RoomDetails; startDate : string }
+    RoomDetails: { room: RoomDetails; startDate: string; roomId: number }
     BuildingChoice: { campus: CampusItem; currentDate: string }
     ClassChoice: { building: BuildingItem; currentDate: string }
     Groups: undefined

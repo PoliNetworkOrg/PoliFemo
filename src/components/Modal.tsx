@@ -1,6 +1,5 @@
 import React, { FC } from "react"
 import { View, Modal, StyleSheet, Pressable } from "react-native"
-import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import { deleteSvg as icon } from "assets/modal"
@@ -9,8 +8,6 @@ export interface ModalCustomProps {
      * content of the modal
      */
     children: React.ReactNode
-    title: string
-    subTitle?: string
     /**
      * whether ot not to show the modal
      */
@@ -19,12 +16,6 @@ export interface ModalCustomProps {
      * this function hides the modal by changing the state in the parent component
      */
     onClose: () => void
-
-    /**
-     * whether ot not to center title and subtitle and apply different margins
-     * @default false
-     */
-    centerText?: boolean
 }
 
 /**
@@ -32,9 +23,8 @@ export interface ModalCustomProps {
  *
  */
 export const ModalCustom: FC<ModalCustomProps> = props => {
-    const { backgroundSecondary, homeBackground, modalBarrier, isLight } =
-        usePalette()
-    const centerText = props.centerText ?? false
+    const { backgroundSecondary, modalBarrier } = usePalette()
+
     const deleteSvg = useSVG(icon.svg)
     return (
         //TODO: animationType fade or slide?
@@ -124,15 +114,5 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         justifyContent: "center",
         alignItems: "center",
-    },
-    title: {
-        fontSize: 32,
-        marginHorizontal: 27,
-        fontWeight: "900",
-    },
-    subTitle: {
-        fontSize: 13,
-        marginHorizontal: 27,
-        fontWeight: "600",
     },
 })

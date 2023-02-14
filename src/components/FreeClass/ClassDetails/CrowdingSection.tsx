@@ -1,22 +1,56 @@
-import React, { FC, useMemo, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
 import { CrowdSliderStatic } from "./CrowdSlider/CrowdSliderStatic"
-import { ModalCustom } from "components/Modal"
 import { CrowdSliderDynamic } from "./CrowdSlider/CrowdSliderDynamic"
 import { CrowdSliderLabels } from "./CrowdSlider/CrowdSliderLabels"
 import { ButtonCustom } from "components/Settings"
+import { ModalWithGestures } from "../ModalWithGestures"
+import { api, RetryType } from "api"
 
 interface CrowdingSectionProps {
+    roomId: number
     isSlidable?: boolean
     onSlided?: () => void
 }
+
+export type ValidCrowdStatus = 1 | 2 | 3 | 4 | 5
 
 export const CrowdingSection: FC<CrowdingSectionProps> = props => {
     const { isLight } = usePalette()
 
     const [isModalVisible, setIsModalVisible] = useState(false)
+
+    const [occupancyRate, setOccupancyRate] = useState<ValidCrowdStatus>(1)
+
+    let occupancyRateUser: ValidCrowdStatus = 3
+
+    const getOccupancyRate = async () => {
+        try {
+            const res = await api.rooms.getOccupancyRate(props.roomId)
+            if (res.occupancy_rate !== null) {
+                setOccupancyRate(res.occupancy_rate)
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    useEffect(() => {
+        void getOccupancyRate()
+    }, [])
+
+    const postOccupancyRate = async () => {
+        try {
+            await api.rooms.postOccupancyRate(props.roomId, occupancyRateUser, {
+                retryType: RetryType.RETRY_N_TIMES,
+                maxRetries: 3,
+            })
+        } catch (err) {
+            console.log(err)
+        }
+    }
     return (
         <View>
             <BodyText
@@ -29,7 +63,8 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
             >
                 Affollamento:
             </BodyText>
-            <CrowdSliderStatic position="medio" />
+
+            <CrowdSliderStatic position={occupancyRate} />
             <CrowdSliderLabels />
             <View style={{ alignItems: "center", marginTop: 20 }}>
                 <BodyText
@@ -39,7 +74,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
                         color: isLight ? "#454773" : "#fff",
                     }}
                 >
-                    Se il dato sull'affollamento non è corretto
+                    Se il dato sull&apos;affollamento non è corretto
                 </BodyText>
                 <Pressable hitSlop={8} onPress={() => setIsModalVisible(true)}>
                     <BodyText
@@ -54,12 +89,10 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
                     </BodyText>
                 </Pressable>
             </View>
-            <ModalCustom
-                title={`Esprimi\nOpinione`}
-                subTitle={`Indica il livello di affollamento \n dell'aula`}
+
+            <ModalWithGestures
                 isShowing={isModalVisible}
                 onClose={() => setIsModalVisible(false)}
-                centerText={true}
             >
                 <View
                     style={{
@@ -89,10 +122,15 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
                             textAlign: "center",
                         }}
                     >
-                        Indica il livello di affollamento {"\n"} dell'aula
+                        Indica il livello di affollamento {"\n"} dell&apos;aula
                     </BodyText>
-                    <View style={{}}>
-                        <CrowdSliderDynamic />
+                    <View>
+                        <CrowdSliderDynamic
+                            startingPos={occupancyRateUser}
+                            onSlideEnd={(pos: ValidCrowdStatus) =>
+                                (occupancyRateUser = pos)
+                            }
+                        />
                         <CrowdSliderLabels />
                     </View>
 
@@ -100,10 +138,13 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
                         text="Conferma"
                         light={true}
                         style={{ alignSelf: "center" }}
-                        onPress={() => console.log("press")}
+                        onPress={() => {
+                            void postOccupancyRate()
+                            setIsModalVisible(false)
+                        }}
                     />
                 </View>
-            </ModalCustom>
+            </ModalWithGestures>
         </View>
     )
 }
