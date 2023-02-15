@@ -83,7 +83,7 @@ export const ScrollPage: FC<{
                         width: width,
                         height: 230,
                     }}
-                ></View>
+                />
             )}
             {props.backdropElement && (
                 <View

@@ -1,7 +1,6 @@
 import { User } from "api/user"
 import React from "react"
 
-
 /* eslint-disable @typescript-eslint/naming-convention */
 
 export interface PoliNetworkToken {

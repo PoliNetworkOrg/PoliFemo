@@ -99,7 +99,7 @@ export const GroupTile: FC<GroupTileProps> = props => {
                     </View>
                 </View>
             </Pressable>
-            <Divider color={"#8791BD"} height={1}></Divider>
+            <Divider color={"#8791BD"} height={1} />
         </View>
     )
 }

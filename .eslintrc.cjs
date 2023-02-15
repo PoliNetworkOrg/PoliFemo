@@ -1,6 +1,3 @@
-/* eslint-disable indent, no-undef */
-/* eslint-disable prettier/prettier */
-// eslint-disable-next-line no-undef
 module.exports = {
     settings: {
         react: {
@@ -26,15 +23,16 @@ module.exports = {
         ecmaVersion: "latest",
         sourceType: "module",
         tsconfigRootDir: __dirname,
-        project: ["./tsconfig.json"],
     },
     plugins: ["react", "@typescript-eslint", "prettier"],
     rules: {
+        "prettier/prettier": "error",
         "no-extra-parens": ["off"],
         "linebreak-style": ["error", "unix"],
         quotes: ["error", "double"],
         "react/prop-types": ["off"],
         "react/no-multi-comp": ["error"],
+        "react/self-closing-comp": ["error"],
         "@typescript-eslint/naming-convention": [
             "error",
             {
@@ -72,4 +70,12 @@ module.exports = {
             },
         ],
     },
+    overrides: [
+        {
+            files: ["*.ts", "*.tsx"],
+            parserOptions: {
+                project: ["./tsconfig.json"],
+            },
+        },
+    ],
 }

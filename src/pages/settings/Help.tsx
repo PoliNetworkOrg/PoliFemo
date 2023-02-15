@@ -3,7 +3,7 @@ import { View } from "react-native"
 import { SettingsStackScreen } from "navigation/NavigationTypes"
 import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import { SettingTile } from "components/Settings/SettingTile"
-import { SettingOptions } from "utils/settings"
+import { SettingOptions } from "contexts/settings"
 
 export const settingsList: SettingOptions[] = [
     {

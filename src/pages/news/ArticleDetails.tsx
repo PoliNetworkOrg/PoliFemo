@@ -49,6 +49,10 @@ export const Article: MainStackScreen<"Article"> = props => {
                 il problema dei reindirizzamenti dentro la webview non
                 si presenta sul mio telefono). Da testare su iOS e altri
                 Android.  */
+
+                style={{
+                    backgroundColor: "transparent",
+                }}
                 onShouldStartLoadWithRequest={event => {
                     if (event.url.slice(0, 4) === "http") {
                         void Linking.openURL(event.url)
@@ -85,6 +89,22 @@ export const Article: MainStackScreen<"Article"> = props => {
                     a {
                         color: ${isLight ? "black" : "white"};
                       }
+                    h1 {
+                        color: ${isLight ? "black" : "white"};
+                    }
+                    h2 {
+                        color: ${isLight ? "black" : "white"};
+                    }
+                    h3 {
+                        color: ${isLight ? "black" : "white"};
+                        text-align: justify;
+                    }
+                    img { 
+                        display: block; max-width: 100%; height: auto;
+                    }
+                    iframe { 
+                        display: block; max-width: 100%; height: auto;
+                    }
                   </style></head><body><div>${html
                       .map(el => `<p>${el}<p/>`)
                       .join("")}

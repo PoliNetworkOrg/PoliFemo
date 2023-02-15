@@ -33,7 +33,7 @@ export const CareerTile: FC<CareerTileProps> = props => {
                     text={"Cambia matricola"}
                     style={{ paddingHorizontal: 8 }}
                 />
-                <CareerColumn career={props.career}></CareerColumn>
+                <CareerColumn career={props.career} />
             </View>
         </TouchableRipple>
     )

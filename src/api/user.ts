@@ -53,7 +53,7 @@ export const user = {
      */
     async getPolimiUserInfo() {
         const response = await client.polimiInstance.get<PolimiUserData>(
-            "/internal/user",
+            "/rest/jaf/internal/user",
             {
                 authType: AuthType.POLIMI,
             }
