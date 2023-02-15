@@ -2,7 +2,7 @@ import { EventEmitter } from "events"
 import axios, {
     AxiosError,
     AxiosInstance,
-    InternalAxiosRequestConfig,
+    AxiosRequestConfig,
     AxiosResponse,
 } from "axios"
 import { PolimiToken, PoliNetworkToken, Tokens } from "contexts/login"
@@ -137,7 +137,7 @@ export class HttpClient extends EventEmitter {
         )
     }
 
-    private _handleRequest = (config: InternalAxiosRequestConfig) => {
+    private _handleRequest = (config: AxiosRequestConfig) => {
         config.headers = config.headers ?? {}
         if (config.authType === AuthType.POLIMI && this.polimiToken) {
             config.headers[

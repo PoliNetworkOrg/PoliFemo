@@ -5,7 +5,7 @@ import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import { Divider } from "components/Divider"
 import { SettingTile } from "components/Settings/SettingTile"
 import { BodyText } from "components/Text"
-import { SettingOptions } from "utils/settings"
+import { SettingOptions } from "contexts/settings"
 import { INTRODUCTION } from "utils/privacy"
 
 /**

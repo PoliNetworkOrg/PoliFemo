@@ -5,7 +5,7 @@ import { SettingsStackScreen } from "navigation/NavigationTypes"
 import { PrivacyPage } from "components/Settings/PrivacyPage"
 import { Text } from "components/Text"
 import { ACCOUNT_SELF_DELETION, NOT_LOGGED_IN } from "utils/privacy"
-import { LoginContext } from "utils/login"
+import { LoginContext } from "contexts/login"
 import { usePalette } from "utils/colors"
 
 /**

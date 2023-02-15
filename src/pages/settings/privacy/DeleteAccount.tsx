@@ -9,7 +9,7 @@ import { ModalWithButtons } from "components/ModalWithButtons"
 import { Text, BodyText } from "components/Text"
 import { DELETE_ACCOUNT, NOT_LOGGED_IN } from "utils/privacy"
 import { usePalette } from "utils/colors"
-import { LoginContext } from "utils/login"
+import { LoginContext } from "contexts/login"
 
 const client = HttpClient.getInstance()
 

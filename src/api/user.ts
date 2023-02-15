@@ -65,7 +65,7 @@ export const user = {
      */
     async exportPoliNetworkMe() {
         const response = await client.poliNetworkInstance.get<
-            Record<string, any>
+            Record<string, unknown>
         >("/v1/accounts/me/export", {
             authType: AuthType.POLINETWORK,
         })

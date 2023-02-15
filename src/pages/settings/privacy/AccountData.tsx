@@ -8,7 +8,7 @@ import { PrivacyPage } from "components/Settings/PrivacyPage"
 import { Text, BodyText } from "components/Text"
 import { ACCOUNT_DATA, NOT_LOGGED_IN } from "utils/privacy"
 import { usePalette } from "utils/colors"
-import { LoginContext } from "utils/login"
+import { LoginContext } from "contexts/login"
 
 /**
  * Account data Page
