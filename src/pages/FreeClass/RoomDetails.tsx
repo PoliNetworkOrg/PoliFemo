@@ -5,10 +5,8 @@ import { InfoMapTile } from "components/FreeClass/ClassDetails/InfoMapTile"
 import { TimeLeftTile } from "components/FreeClass/ClassDetails/TimeLeftTile"
 import { RoomUtilsSection } from "components/FreeClass/ClassDetails/RoomUtilsSection"
 import { CrowdingSection } from "components/FreeClass/ClassDetails/CrowdingSection"
-/* eslint-disable @typescript-eslint/naming-convention */
 
 export const RoomDetails: MainStackScreen<"RoomDetails"> = props => {
-    // funny how renaming it class breaks everything, because class is also a keyword
     const { room, startDate, roomId } = props.route.params
 
     return (

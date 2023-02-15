@@ -118,109 +118,121 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
                     </BodyText>
                 </View>
             </View>
-
-            <Pressable
-                onPress={() =>
-                    openAddressOnMap(
-                        props.building ? building + roomName : roomName,
-                        "45.478053",
-                        "9.228061"
-                    )
-                }
+            <View
+                style={{
+                    alignItems: "flex-end",
+                    height: "100%",
+                }}
             >
-                <View style={{ alignItems: "flex-end" }}>
-                    <View
+                <View style={{ marginTop: 65 }}>
+                    <Pressable
                         style={{
-                            width: 100,
-                            height: 100,
-                            backgroundColor: isLight ? "#414867" : "#fff",
-                            marginTop: 65,
-                            borderRadius: 10,
-                            overflow: "hidden",
-                            shadowColor: "#000",
-                            shadowOffset: {
-                                width: 0,
-                                height: 7,
-                            },
-                            shadowOpacity: 0.43,
-                            shadowRadius: 9.51,
-
-                            elevation: 15,
+                            alignItems: "flex-end",
                         }}
+                        onPress={() =>
+                            openAddressOnMap(
+                                props.building
+                                    ? building + "." + roomName
+                                    : roomName,
+                                "45.478053",
+                                "9.228061"
+                            )
+                        }
                     >
-                        {expand && expandSvg && (
-                            <View
-                                style={{
-                                    position: "absolute",
-                                    width: 20,
-                                    height: 20,
-                                    bottom: 8,
-                                    right: 8,
-                                    zIndex: 2,
-                                }}
-                            >
-                                <Canvas
+                        <View
+                            style={{
+                                width: 100,
+                                height: 100,
+                                backgroundColor: isLight ? "#414867" : "#fff",
+                                borderRadius: 10,
+                                overflow: "hidden",
+                                shadowColor: "#000",
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 7,
+                                },
+                                shadowOpacity: 0.43,
+                                shadowRadius: 9.51,
+
+                                elevation: 15,
+                            }}
+                        >
+                            {expand && expandSvg && (
+                                <View
                                     style={{
-                                        flex: 1,
+                                        position: "absolute",
                                         width: 20,
                                         height: 20,
+                                        bottom: 8,
+                                        right: 8,
+                                        zIndex: 2,
                                     }}
                                 >
-                                    <ImageSVG
-                                        svg={expandSvg}
-                                        x={0}
-                                        y={0}
-                                        width={20}
-                                        height={20}
-                                    />
-                                </Canvas>
-                            </View>
-                        )}
-                        <MapView
+                                    <Canvas
+                                        style={{
+                                            flex: 1,
+                                            width: 20,
+                                            height: 20,
+                                        }}
+                                    >
+                                        <ImageSVG
+                                            svg={expandSvg}
+                                            x={0}
+                                            y={0}
+                                            width={20}
+                                            height={20}
+                                        />
+                                    </Canvas>
+                                </View>
+                            )}
+                            <MapView
+                                style={{
+                                    position: "absolute",
+                                    left: 0,
+                                    right: 0,
+                                    top: 0,
+                                    bottom: -25,
+                                }}
+                                initialRegion={{
+                                    latitude: 45.478053,
+                                    longitude: 9.228061,
+                                    latitudeDelta: 0.01,
+                                    longitudeDelta: 0.01,
+                                }}
+                                scrollEnabled={false}
+                                zoomTapEnabled={false}
+                                zoomControlEnabled={false}
+                                zoomEnabled={false}
+                            />
+                        </View>
+                        <View
                             style={{
-                                position: "absolute",
-                                left: 0,
-                                right: 0,
-                                top: 0,
-                                bottom: -25,
-                            }}
-                            initialRegion={{
-                                latitude: 45.478053,
-                                longitude: 9.228061,
-                                latitudeDelta: 0.01,
-                                longitudeDelta: 0.01,
-                            }}
-                            scrollEnabled={false}
-                            zoomTapEnabled={false}
-                            zoomControlEnabled={false}
-                            zoomEnabled={false}
-                        />
-                    </View>
-
-                    <View
-                        style={{ flexDirection: "row", alignItems: "baseline" }}
-                    >
-                        <BodyText
-                            style={{
-                                fontSize: 13,
-                                fontWeight: "400",
-                                color: isLight ? "#414867" : "#fff",
+                                flexDirection: "row",
+                                alignItems: "baseline",
                             }}
                         >
-                            consulta la{" "}
-                        </BodyText>
-                        <BodyText
-                            style={{
-                                fontSize: 16,
-                                fontWeight: "900",
-                                color: isLight ? "#414867" : "#fff",
-                            }}
-                        >
-                            mappa
-                        </BodyText>
-                    </View>
+                            <BodyText
+                                style={{
+                                    fontSize: 13,
+                                    fontWeight: "400",
+                                    color: isLight ? "#414867" : "#fff",
+                                }}
+                            >
+                                consulta la{" "}
+                            </BodyText>
+                            <BodyText
+                                style={{
+                                    fontSize: 16,
+                                    fontWeight: "900",
+                                    color: isLight ? "#414867" : "#fff",
+                                }}
+                            >
+                                mappa
+                            </BodyText>
+                        </View>
+                    </Pressable>
                 </View>
-            </Pressable>
+            </View>
         </View>
     )
 }
