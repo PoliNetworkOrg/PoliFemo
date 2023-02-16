@@ -8,7 +8,6 @@ import axios, {
 import { PolimiToken, PoliNetworkToken, Tokens } from "contexts/login"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { wait } from "utils/functions"
-import { Alert } from "react-native"
 
 /*Docs used to make this:
 Singleton:
@@ -198,28 +197,8 @@ export class HttpClient extends EventEmitter {
           return instance(config)
         } else {
           console.warn("Error: could not refresh Polimi token")
-          console.warn("Error:")
-          console.warn(error)
-          console.warn("Call config:")
-          console.warn(JSON.stringify(config))
-          Alert.alert(
-            "An error has occurred while refreshing Polimi token",
-            `The call to ${
-              config.url ?? "undefined"
-            } failed, is the token invalid?\n\nThis is a debug option, if you think this is an error, please report it and try again later, otherwise you can logout`,
-            [
-              {
-                text: "Cancel",
-                style: "cancel",
-              },
-              {
-                text: "Logout",
-                onPress: () => {
-                  void this.destroyTokens()
-                },
-              },
-            ]
-          )
+          console.warn("Should disconnect user")
+          // void this.destroyTokens()
           throw error
         }
       } else if (config.authType === AuthType.POLINETWORK) {
@@ -227,29 +206,8 @@ export class HttpClient extends EventEmitter {
         if (success) return instance(config)
         else {
           console.warn("Error: could not refresh PoliNetwork token")
-          console.warn("Error:")
-          console.warn(error)
-          console.warn("Call config:")
-          console.warn(JSON.stringify(config))
-          Alert.alert(
-            "An error has occurred while refreshing PoliNetwork token",
-            `The call to ${
-              config.url ?? "undefined"
-            } failed, is the token invalid?\n\nThis is a debug option, if you think this is an error, please report it and try again later, otherwise you can logout`,
-            [
-              {
-                text: "Cancel",
-                style: "cancel",
-              },
-              {
-                text: "Logout",
-                onPress: () => {
-                  void this.destroyTokens()
-                },
-              },
-            ]
-          )
-
+          console.warn("Should disconnect user")
+          // void this.destroyTokens()
           throw error
         }
       }
