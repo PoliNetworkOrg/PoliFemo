@@ -9,69 +9,69 @@ import { Asset } from "expo-asset"
 import { Roboto_400Regular } from "@expo-google-fonts/roboto"
 
 export const Article: MainStackScreen<"Article"> = props => {
-    const { isLight } = usePalette()
-    const article = props.route.params.article
-    const [webHeight, setWebHeight] = useState<number>(400)
-    let html: string[] = []
-    try {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        html = JSON.parse(article.content)
-    } catch (error) {
-        console.log(error)
-    }
+  const { isLight } = usePalette()
+  const article = props.route.params.article
+  const [webHeight, setWebHeight] = useState<number>(400)
+  let html: string[] = []
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    html = JSON.parse(article.content)
+  } catch (error) {
+    console.log(error)
+  }
 
-    return (
-        <ScrollPage
-            navbarOptions={{ elevated: true }}
-            title={article.title}
-            subtitle={article.subtitle}
-            backdropElement={
-                article.image ? (
-                    <Image
-                        source={{
-                            uri: article.image,
-                        }}
-                        style={{
-                            width: "100%",
-                            height: "100%",
-                        }}
-                    />
-                ) : undefined
-            }
-        >
-            <WebView
-                onMessage={event => {
-                    setWebHeight(parseInt(event.nativeEvent.data))
-                }}
-                /* Questo dovrebbe reindirizzare i link nel browser,
+  return (
+    <ScrollPage
+      navbarOptions={{ elevated: true }}
+      title={article.title}
+      subtitle={article.subtitle}
+      backdropElement={
+        article.image ? (
+          <Image
+            source={{
+              uri: article.image,
+            }}
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        ) : undefined
+      }
+    >
+      <WebView
+        onMessage={event => {
+          setWebHeight(parseInt(event.nativeEvent.data))
+        }}
+        /* Questo dovrebbe reindirizzare i link nel browser,
                 stoppando la webview. Apparentemente non funziona col mio
                 android, nel senso che non viene chiamata (comunque 
                 il problema dei reindirizzamenti dentro la webview non
                 si presenta sul mio telefono). Da testare su iOS e altri
                 Android.  */
 
-                style={{
-                    backgroundColor: "transparent",
-                }}
-                onShouldStartLoadWithRequest={event => {
-                    if (event.url.slice(0, 4) === "http") {
-                        void Linking.openURL(event.url)
-                        return false
-                    }
+        style={{
+          backgroundColor: "transparent",
+        }}
+        onShouldStartLoadWithRequest={event => {
+          if (event.url.slice(0, 4) === "http") {
+            void Linking.openURL(event.url)
+            return false
+          }
 
-                    return true
-                }}
-                javaScriptEnabled={true}
-                injectedJavaScript={webViewScript}
-                containerStyle={{ height: webHeight, marginBottom: 120 }}
-                showsVerticalScrollIndicator={false}
-                setBuiltInZoomControls={false}
-                nestedScrollEnabled={false}
-                scrollEnabled={false}
-                androidHardwareAccelerationDisabled={true}
-                originWhitelist={["*"]}
-                source={{
-                    html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+          return true
+        }}
+        javaScriptEnabled={true}
+        injectedJavaScript={webViewScript}
+        containerStyle={{ height: webHeight, marginBottom: 120 }}
+        showsVerticalScrollIndicator={false}
+        setBuiltInZoomControls={false}
+        nestedScrollEnabled={false}
+        scrollEnabled={false}
+        androidHardwareAccelerationDisabled={true}
+        originWhitelist={["*"]}
+        source={{
+          html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"> 
                     <style type="text/css">
                     @font-face {
                         font-family: "Roboto";
@@ -106,14 +106,14 @@ export const Article: MainStackScreen<"Article"> = props => {
                         display: block; max-width: 100%; height: auto;
                     }
                   </style></head><body><div>${html
-                      .map(el => `<p>${el}<p/>`)
-                      .join("")}
+                    .map(el => `<p>${el}<p/>`)
+                    .join("")}
                     <div/></body></html>`,
-                    baseUrl: "",
-                }}
-            />
-        </ScrollPage>
-    )
+          baseUrl: "",
+        }}
+      />
+    </ScrollPage>
+  )
 }
 
 //used to set automatic heigth in webview

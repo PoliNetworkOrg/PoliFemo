@@ -5,39 +5,39 @@ import disconnect from "./disconnect.svg"
 import notifiche from "./notifiche.svg"
 
 export const settingsIconList = [
-    "notifiche",
-    "modify",
-    "help",
-    "disconnect",
+  "notifiche",
+  "modify",
+  "help",
+  "disconnect",
 ] as const
 
-export type SettingIconNames = typeof settingsIconList[number]
+export type SettingIconNames = (typeof settingsIconList)[number]
 
 export interface IconProps {
-    svg: DataSourceParam
-    width: number
-    heigth: number
+  svg: DataSourceParam
+  width: number
+  heigth: number
 }
 
 export const settingsIcons: Record<SettingIconNames, IconProps> = {
-    notifiche: {
-        svg: notifiche,
-        width: 20,
-        heigth: 24,
-    },
-    modify: {
-        svg: modify,
-        width: 20,
-        heigth: 20,
-    },
-    help: {
-        svg: help,
-        width: 24,
-        heigth: 24,
-    },
-    disconnect: {
-        svg: disconnect,
-        width: 24,
-        heigth: 24,
-    },
+  notifiche: {
+    svg: notifiche,
+    width: 20,
+    heigth: 24,
+  },
+  modify: {
+    svg: modify,
+    width: 20,
+    heigth: 20,
+  },
+  help: {
+    svg: help,
+    width: 24,
+    heigth: 24,
+  },
+  disconnect: {
+    svg: disconnect,
+    width: 24,
+    heigth: 24,
+  },
 }

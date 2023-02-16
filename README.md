@@ -4,17 +4,17 @@
 
 Prerequisiti:
 
--   [NodeJS](http://nodejs.org/) versione lts 16.14.2 (che su linux/mac consiglio di installare
-    tramite [nvm](https://github.com/nvm-sh/nvm))
--   [Yarn](https://yarnpkg.com) che una volta installato Node si può installare con
-    ```sh
-    corepack enable
-    ```
--   La CLI Expo che si può installare con il comando
-    ```sh
-    npm install --global expo-cli
-    ```
--   L'applicazione Expo GO installata sul proprio telefono (https://expo.dev/client)
+- [NodeJS](http://nodejs.org/) versione lts 16.14.2 (che su linux/mac consiglio di installare
+  tramite [nvm](https://github.com/nvm-sh/nvm))
+- [Yarn](https://yarnpkg.com) che una volta installato Node si può installare con
+  ```sh
+  corepack enable
+  ```
+- La CLI Expo che si può installare con il comando
+  ```sh
+  npm install --global expo-cli
+  ```
+- L'applicazione Expo GO installata sul proprio telefono (https://expo.dev/client)
 
 Una volta clonata la repo la prima cosa da fare è installare le dependencies con
 
@@ -83,9 +83,9 @@ Molte risorse utili sono linkate nei commenti in [App.tsx](App.tsx)
 
 In generale è sono scritte molto bene le documentazioni di
 
--   [React](https://it.reactjs.org/docs/getting-started.html)
-    per la sintassi e i paradigmi utilizzati per la UI
--   [React Native](https://reactnative.dev/docs/getting-started)
-    specificatamente su come funziona su mobile e
--   [Expo](https://docs.expo.dev) per le molti moduli nativi
-    (tipo fotocamera, gps, ecc.)
+- [React](https://it.reactjs.org/docs/getting-started.html)
+  per la sintassi e i paradigmi utilizzati per la UI
+- [React Native](https://reactnative.dev/docs/getting-started)
+  specificatamente su come funziona su mobile e
+- [Expo](https://docs.expo.dev) per le molti moduli nativi
+  (tipo fotocamera, gps, ecc.)

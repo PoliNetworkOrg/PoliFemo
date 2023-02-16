@@ -9,16 +9,16 @@ import { SettingsStack } from "navigation/SettingsNavigator"
  * It's a view that wraps pages of the Settings Navigator
  */
 export const SettingsContainer: FC = () => {
-    const { homeBackground } = usePalette()
+  const { homeBackground } = usePalette()
 
-    return (
-        <View
-            style={{
-                flex: 1,
-                backgroundColor: homeBackground,
-            }}
-        >
-            <SettingsStack />
-        </View>
-    )
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: homeBackground,
+      }}
+    >
+      <SettingsStack />
+    </View>
+  )
 }

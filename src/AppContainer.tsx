@@ -10,16 +10,16 @@ import { usePalette } from "utils/colors"
  * structural components.
  */
 export const AppContainer: FC = () => {
-    const { homeBackground } = usePalette()
+  const { homeBackground } = usePalette()
 
-    return (
-        <View
-            style={{
-                flex: 1,
-                backgroundColor: homeBackground,
-            }}
-        >
-            <RootStack />
-        </View>
-    )
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: homeBackground,
+      }}
+    >
+      <RootStack />
+    </View>
+  )
 }

@@ -14,68 +14,65 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
  */
 
 export const MainContainer: FC = () => {
-    const { homeBackground } = usePalette()
+  const { homeBackground } = usePalette()
 
-    const { navigate } = useNavigation()
+  const { navigate } = useNavigation()
 
-    const [preferences, setPreferences] = useState<Record<string, Preference>>(
-        {}
-    )
+  const [preferences, setPreferences] = useState<Record<string, Preference>>({})
 
-    useEffect(() => {
-        console.log("Loading tags preferences from storage")
-        AsyncStorage.getItem("newstags:preferences")
-            .then(preferencesJSON => {
-                if (preferencesJSON) {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                    const data: Record<string, Preference> =
-                        JSON.parse(preferencesJSON)
-                    console.log(data)
-                    setPreferences(data)
-                }
-            })
-            .catch(err => console.log(err))
-    }, [])
+  useEffect(() => {
+    console.log("Loading tags preferences from storage")
+    AsyncStorage.getItem("newstags:preferences")
+      .then(preferencesJSON => {
+        if (preferencesJSON) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          const data: Record<string, Preference> = JSON.parse(preferencesJSON)
+          console.log(data)
+          setPreferences(data)
+        }
+      })
+      .catch(err => console.log(err))
+  }, [])
 
-    useEffect(() => {
-        console.log("Saving tags preferences to storage")
-        console.log(preferences)
-        AsyncStorage.setItem(
-            "newstags:preferences",
-            JSON.stringify(preferences)
-        ).catch(err => console.log(err))
-    }, [preferences])
+  useEffect(() => {
+    console.log("Saving tags preferences to storage")
+    console.log(preferences)
+    AsyncStorage.setItem(
+      "newstags:preferences",
+      JSON.stringify(preferences)
+    ).catch(err => console.log(err))
+  }, [preferences])
 
-    return (
-        <View
-            style={{
-                flex: 1,
-                backgroundColor: homeBackground,
-            }}
-        >
-            <NewsPreferencesContext.Provider
-                value={{
-                    preferences,
-                    setArticlesPreferences: pref => {
-                        setPreferences(pref.preferences)
-                    },
-                }}
-            >
-                <MainStack />
-            </NewsPreferencesContext.Provider>
-            <Tray
-                onDownloads={() => {
-                    console.log("downloads")
-                }}
-                onNotifications={() => {
-                    console.log("notifications")
-                }}
-                onSettings={() => {
-                    navigate("SettingsNav", {
-                        screen: "Settings",
-                    })
-                }}
-            />
-        </View>
-    )
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: homeBackground,
+      }}
+    >
+      <NewsPreferencesContext.Provider
+        value={{
+          preferences,
+          setArticlesPreferences: pref => {
+            setPreferences(pref.preferences)
+          },
+        }}
+      >
+        <MainStack />
+      </NewsPreferencesContext.Provider>
+      <Tray
+        onDownloads={() => {
+          console.log("downloads")
+        }}
+        onNotifications={() => {
+          console.log("notifications")
+        }}
+        onSettings={() => {
+          navigate("SettingsNav", {
+            screen: "Settings",
+          })
+        }}
+      />
+    </View>
+  )
 }
