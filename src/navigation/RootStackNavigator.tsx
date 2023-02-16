@@ -15,17 +15,14 @@ import { Login } from "pages/Login"
 const RootStackNavigator = createStackNavigator<RootStackNavigatorParams>()
 
 export const RootStack: FC = () => {
-    return (
-        <RootStackNavigator.Navigator screenOptions={{ headerShown: false }}>
-            <RootStackNavigator.Screen
-                name="MainNav"
-                component={MainContainer}
-            />
-            <RootStackNavigator.Screen
-                name="SettingsNav"
-                component={SettingsContainer}
-            />
-            <RootStackNavigator.Screen name="Login" component={Login} />
-        </RootStackNavigator.Navigator>
-    )
+  return (
+    <RootStackNavigator.Navigator screenOptions={{ headerShown: false }}>
+      <RootStackNavigator.Screen name="MainNav" component={MainContainer} />
+      <RootStackNavigator.Screen
+        name="SettingsNav"
+        component={SettingsContainer}
+      />
+      <RootStackNavigator.Screen name="Login" component={Login} />
+    </RootStackNavigator.Navigator>
+  )
 }

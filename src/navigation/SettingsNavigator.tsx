@@ -10,18 +10,13 @@ import { SettingsPage } from "pages/settings/Settings"
 import { Help } from "pages/settings/Help"
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const SettingsStackNavigator =
-    createStackNavigator<SettingsStackNavigatorParams>()
+  createStackNavigator<SettingsStackNavigatorParams>()
 
 export const SettingsStack: FC = () => {
-    return (
-        <SettingsStackNavigator.Navigator
-            screenOptions={{ headerShown: false }}
-        >
-            <SettingsStackNavigator.Screen
-                name="Settings"
-                component={SettingsPage}
-            />
-            <SettingsStackNavigator.Screen name="Help" component={Help} />
-        </SettingsStackNavigator.Navigator>
-    )
+  return (
+    <SettingsStackNavigator.Navigator screenOptions={{ headerShown: false }}>
+      <SettingsStackNavigator.Screen name="Settings" component={SettingsPage} />
+      <SettingsStackNavigator.Screen name="Help" component={Help} />
+    </SettingsStackNavigator.Navigator>
+  )
 }

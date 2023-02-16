@@ -8,25 +8,25 @@ import telegram from "./telegram.svg"
  */
 export const platformIconList = ["telegram", "whatsapp", "facebook"] as const
 
-export type PlatformIcon = typeof platformIconList[number]
+export type PlatformIcon = (typeof platformIconList)[number]
 
 export const platformIcons: Record<
-    PlatformIcon,
-    { svg: DataSourceParam; width: number; heigth: number }
+  PlatformIcon,
+  { svg: DataSourceParam; width: number; heigth: number }
 > = {
-    whatsapp: {
-        svg: whatsapp,
-        width: 24,
-        heigth: 24,
-    },
-    telegram: {
-        svg: telegram,
-        width: 24,
-        heigth: 24,
-    },
-    facebook: {
-        svg: facebook,
-        width: 25,
-        heigth: 24,
-    },
+  whatsapp: {
+    svg: whatsapp,
+    width: 24,
+    heigth: 24,
+  },
+  telegram: {
+    svg: telegram,
+    width: 24,
+    heigth: 24,
+  },
+  facebook: {
+    svg: facebook,
+    width: 25,
+    heigth: 24,
+  },
 }
