@@ -1,9 +1,10 @@
 import React, { FC } from "react"
-import { View, Modal, StyleSheet, Pressable } from "react-native"
+import { View, StyleSheet, Pressable, Dimensions } from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import { deleteSvg as icon } from "assets/modal"
+import Modal from "react-native-modal"
 export interface ModalCustomProps {
     /**
      * content of the modal
@@ -32,6 +33,7 @@ export interface ModalCustomProps {
  *
  */
 export const ModalCustom: FC<ModalCustomProps> = props => {
+    const deviceHeight = Dimensions.get("screen").height
     const { backgroundSecondary, homeBackground, modalBarrier, isLight } =
         usePalette()
     const centerText = props.centerText ?? false
@@ -39,16 +41,15 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
     return (
         //TODO: animationType fade or slide?
         <Modal
-            onRequestClose={props.onClose}
+            onBackButtonPress={props.onClose}
             statusBarTranslucent={true}
-            visible={props.isShowing}
-            animationType="fade"
-            transparent={true}
+            isVisible={props.isShowing}
+            animationIn={"slideInDown"}
+            animationOut={"slideOutDown"}
+            backdropColor={modalBarrier}
+            deviceHeight={deviceHeight}
         >
-            <Pressable
-                onPress={props.onClose}
-                style={[styles.pageWrapper, { backgroundColor: modalBarrier }]}
-            >
+            <Pressable onPress={props.onClose} style={[styles.pageWrapper]}>
                 <View>
                     <Pressable
                         style={{ alignSelf: "flex-end" }}
