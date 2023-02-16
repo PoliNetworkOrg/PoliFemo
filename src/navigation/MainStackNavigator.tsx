@@ -17,23 +17,20 @@ import { Groups } from "pages/Groups"
 const MainStackNavigator = createStackNavigator<MainStackNavigatorParams>()
 
 export const MainStack: FC = () => {
-    return (
-        <MainStackNavigator.Navigator
-            screenOptions={{ headerShown: false }}
-            initialRouteName="Home"
-        >
-            <MainStackNavigator.Screen name="Home" component={Home} />
-            <MainStackNavigator.Screen name="Article" component={Article} />
-            <MainStackNavigator.Screen
-                name="ArticlesList"
-                component={ArticlesList}
-            />
-            <MainStackNavigator.Screen
-                name="OtherCategories"
-                component={OtherCategories}
-            />
-            <MainStackNavigator.Screen name="Error404" component={Error404} />
-            <MainStackNavigator.Screen name="Groups" component={Groups} />
-        </MainStackNavigator.Navigator>
-    )
+  return (
+    <MainStackNavigator.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="Home"
+    >
+      <MainStackNavigator.Screen name="Home" component={Home} />
+      <MainStackNavigator.Screen name="Article" component={Article} />
+      <MainStackNavigator.Screen name="ArticlesList" component={ArticlesList} />
+      <MainStackNavigator.Screen
+        name="OtherCategories"
+        component={OtherCategories}
+      />
+      <MainStackNavigator.Screen name="Error404" component={Error404} />
+      <MainStackNavigator.Screen name="Groups" component={Groups} />
+    </MainStackNavigator.Navigator>
+  )
 }

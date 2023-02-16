@@ -5,18 +5,18 @@
  * @returns the date of "n" days before the reference date
  */
 export function getDateFromDaysBefore(date: Date, n: number): Date {
-    //today's date in milliseconds from the beginning of time
-    const time = date.getTime()
+  //today's date in milliseconds from the beginning of time
+  const time = date.getTime()
 
-    //milliseconds in n days
-    const timeToSubtract = n * 24 * 60 * 60 * 1000
+  //milliseconds in n days
+  const timeToSubtract = n * 24 * 60 * 60 * 1000
 
-    //n-days-ago's date in milliseconds from the beginning of time
-    const newTime = time - timeToSubtract
-    //n-days-ago's date
-    const newDate = new Date(newTime)
+  //n-days-ago's date in milliseconds from the beginning of time
+  const newTime = time - timeToSubtract
+  //n-days-ago's date
+  const newDate = new Date(newTime)
 
-    return newDate
+  return newDate
 }
 
 /**
@@ -24,5 +24,5 @@ export function getDateFromDaysBefore(date: Date, n: number): Date {
  * @param ms milliseconds to wait
  */
 export function wait(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms))
+  return new Promise(resolve => setTimeout(resolve, ms))
 }

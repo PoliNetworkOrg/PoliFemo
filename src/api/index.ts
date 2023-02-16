@@ -24,11 +24,11 @@ export { RetryType, AuthType, RequestOptions } from "./HttpClient"
  * like RetryType, etc...
  */
 export const api = {
-    articles,
-    auth,
-    tags,
-    timetable,
-    user,
-    events,
-    groups,
+  articles,
+  auth,
+  tags,
+  timetable,
+  user,
+  events,
+  groups,
 }
