@@ -3,18 +3,14 @@ import { View } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ContentWrapperScroll } from "components/Settings"
 import { Divider } from "components/Divider"
-import { SettingTile } from "components/Settings"
+import { SettingTile, SettingOptions } from "components/Settings"
 import { settingsIcons } from "assets/settings"
 import { UserDetailsTile } from "components/Settings"
 import { CareerTile } from "components/Settings"
 import { SelectTile } from "components/Settings"
 import { UserAnonymousTile } from "components/Settings"
 import { ModalWithButtons } from "components/ModalWithButtons"
-import {
-    SettingOptions,
-    SettingsContext,
-    ValidColorSchemeName,
-} from "contexts/settings"
+import { SettingsContext, ValidColorSchemeName } from "contexts/settings"
 import { CareerColumn } from "components/Settings"
 import { LoginContext } from "contexts/login"
 import { Career } from "api/user"

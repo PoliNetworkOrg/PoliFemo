@@ -1,16 +1,6 @@
 import React from "react"
 import { ColorSchemeName } from "react-native"
-import { IconProps } from "assets/settings"
 
-/**
- * interface representing a setting's UI fields
- */
-export interface SettingOptions {
-    title: string
-    subtitle?: string
-    icon?: IconProps
-    callback?: () => void
-}
 /**
  * `"predefined"` or `"light"` or `"dark"`
  */

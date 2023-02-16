@@ -1,5 +1,5 @@
 import React, { FC, useMemo } from "react"
-import { View } from "react-native"
+import { ActivityIndicator, View } from "react-native"
 import { TouchableRipple } from "../TouchableRipple"
 import {
     BlendMode,
@@ -9,10 +9,21 @@ import {
     Skia,
     useSVG,
 } from "@shopify/react-native-skia"
-import { Text } from "components/Text"
+import { BodyText, Text } from "components/Text"
 import { Divider } from "components/Divider"
 import { usePalette } from "utils/colors"
-import { SettingOptions } from "contexts/settings"
+import { IconProps } from "assets/settings"
+
+/**
+ * interface representing a setting's UI fields
+ */
+export interface SettingOptions {
+    title: string
+    subtitle?: string
+    icon?: IconProps
+    callback?: () => void
+    loading?: boolean
+}
 
 export interface SettingTileProps {
     setting: SettingOptions
@@ -21,23 +32,36 @@ export interface SettingTileProps {
 export const SettingTile: FC<SettingTileProps> = props => {
     const icon = props.setting.icon ?? null
     const iconSvg = useSVG(icon?.svg)
-    const { isLight, palette } = usePalette()
+    const { articleSubtitle } = usePalette()
 
     //changing icon color
     //from: https://github.com/Shopify/react-native-skia/issues/462
     const paint = useMemo(() => Skia.Paint(), [])
     paint.setColorFilter(
-        Skia.ColorFilter.MakeBlend(
-            Skia.Color(isLight ? palette.primary : palette.lighter),
-            BlendMode.SrcIn
-        )
+        Skia.ColorFilter.MakeBlend(Skia.Color(articleSubtitle), BlendMode.SrcIn)
     )
 
     return (
         <View>
             {props.setting.title === "Disconnetti" && <Divider />}
+            {props.setting.loading ? (
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        position: "absolute",
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "#0003",
+                    }}
+                >
+                    <ActivityIndicator size="large" color={articleSubtitle} />
+                </View>
+            ) : null}
             <TouchableRipple
-                onClick={props.setting.callback ?? undefined}
+                onClick={() => {
+                    if (!props.setting.loading) props.setting.callback?.()
+                }}
                 isRoundedTopCorners={false}
             >
                 <View
@@ -79,23 +103,13 @@ export const SettingTile: FC<SettingTileProps> = props => {
                     )}
 
                     <View style={{ marginLeft: icon ? 20 : 0 }}>
-                        <Text
-                            style={{
-                                fontSize: 16,
-                                fontWeight: "400",
-                                color: isLight ? "#000" : "#fff",
-                            }}
-                        >
-                            {props.setting.title}
-                        </Text>
+                        <BodyText>{props.setting.title}</BodyText>
                         {props.setting.subtitle && (
                             <Text
                                 style={{
                                     fontSize: 12,
                                     fontWeight: "400",
-                                    color: isLight
-                                        ? palette.primary
-                                        : palette.lighter,
+                                    color: articleSubtitle,
                                 }}
                             >
                                 {props.setting.subtitle}
