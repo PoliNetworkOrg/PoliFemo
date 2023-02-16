@@ -1,10 +1,5 @@
 import React, { FC } from "react"
-import {
-    View,
-    StyleSheet,
-    Pressable,
-    Dimensions,
-} from "react-native"
+import { View, StyleSheet, Pressable, Dimensions } from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
