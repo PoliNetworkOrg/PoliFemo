@@ -16,7 +16,7 @@ import grading_book from "assets/menu/grading_book.svg"
 import tests from "assets/menu/tests.svg"
 import add from "assets/menu/add.svg"
 import { ModalCustom } from "components/Modal"
-
+import { Portal } from "react-native-portalize"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useOutsideClick } from "utils/outsideClick"
 
@@ -102,49 +102,51 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
             contentContainerStyle={{ paddingHorizontal: 21, marginTop: 5 }}
             showsHorizontalScrollIndicator={false}
         >
-            <ModalCustom
-                centerText={false}
-                title={"Aggiungi features"}
-                subTitle={"Personalizza la tua bacheca"}
-                isShowing={isModalVisible}
-                onClose={() => setModalVisible(false)}
-            >
-                <View
-                    style={{
-                        alignItems: "center",
-                        marginTop: 6,
-                    }}
+            <Portal>
+                <ModalCustom
+                    centerText={false}
+                    title={"Aggiungi features"}
+                    subTitle={"Personalizza la tua bacheca"}
+                    isShowing={isModalVisible}
+                    onClose={() => setModalVisible(false)}
                 >
-                    {triplets.map((triplet, i) => (
-                        <View
-                            key={"menu_add_row" + i}
-                            style={{
-                                flexDirection: "row",
-                                marginVertical: 6,
-                                width: 288,
-                            }}
-                        >
-                            {triplet.map(buttonIcon => (
-                                <MenuButton
-                                    onPress={() => {
-                                        setIcons(
-                                            icons.map(i =>
-                                                i.id === buttonIcon.id
-                                                    ? { ...i, shown: true }
-                                                    : i
+                    <View
+                        style={{
+                            alignItems: "center",
+                            marginTop: 6,
+                        }}
+                    >
+                        {triplets.map((triplet, i) => (
+                            <View
+                                key={"menu_add_row" + i}
+                                style={{
+                                    flexDirection: "row",
+                                    marginVertical: 6,
+                                    width: 288,
+                                }}
+                            >
+                                {triplet.map(buttonIcon => (
+                                    <MenuButton
+                                        onPress={() => {
+                                            setIcons(
+                                                icons.map(i =>
+                                                    i.id === buttonIcon.id
+                                                        ? { ...i, shown: true }
+                                                        : i
+                                                )
                                             )
-                                        )
-                                    }}
-                                    buttonIcon={buttonIcon}
-                                    isDeleting={false}
-                                    key={"menu_add_icon" + buttonIcon.id}
-                                    inMenu
-                                />
-                            ))}
-                        </View>
-                    ))}
-                </View>
-            </ModalCustom>
+                                        }}
+                                        buttonIcon={buttonIcon}
+                                        isDeleting={false}
+                                        key={"menu_add_icon" + buttonIcon.id}
+                                        inMenu
+                                    />
+                                ))}
+                            </View>
+                        ))}
+                    </View>
+                </ModalCustom>
+            </Portal>
             {icons
                 .filter(i => i.shown)
                 .filter(
