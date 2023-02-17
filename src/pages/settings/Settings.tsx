@@ -71,7 +71,8 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
     },
     {
       title: "Privacy",
-      subtitle: "Esporta dati, cancella account",
+      subtitle:
+        "Informativa sulla privacy, impostazioni del tuo account relative alla privacy",
       icon: settingsIcons.help,
       callback: () => {
         navigate("Privacy")

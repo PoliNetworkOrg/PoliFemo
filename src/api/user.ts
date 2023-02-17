@@ -31,12 +31,45 @@ export interface PolimiUserData {
   fotoURL: string
 }
 
+interface PoliNetworkSettings {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  expire_in_days: number
+}
+
 const client = HttpClient.getInstance()
 
 /**
  * Collection of endpoints related to User
  */
 export const user = {
+  /**
+   * Get the user's settings from PoliNetwork
+   * @returns Settings of the user
+   */
+  async getPoliNetworkSettings() {
+    const response = await client.poliNetworkInstance.get<PoliNetworkSettings>(
+      "/v1/accounts/me/settings",
+      {
+        authType: AuthType.POLINETWORK,
+      }
+    )
+    return response.data
+  },
+
+  /**
+   * Update PoliNetwork user settings
+   * @param settings new settings to be saved
+   */
+  async updatePoliNetworkSettings(settings: Partial<PoliNetworkSettings>) {
+    await client.poliNetworkInstance.post(
+      "/v1/accounts/me/settings",
+      settings,
+      {
+        authType: AuthType.POLINETWORK,
+      }
+    )
+  },
+
   /**
    * test PoliNetwork auth call
    */
