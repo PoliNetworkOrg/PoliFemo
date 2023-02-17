@@ -1,5 +1,6 @@
 import React, { FC } from "react"
 import { Dimensions, View } from "react-native"
+import { LittleTitle } from "./LittleTitle"
 import { TrayButton } from "./TrayButton"
 
 /**
@@ -22,6 +23,7 @@ export const Tray: FC<{
         width: Dimensions.get("window").width,
       }}
     >
+      <LittleTitle />
       <TrayButton label="downloads" onClick={() => props.onDownloads()} />
       <TrayButton
         label="notifications"
