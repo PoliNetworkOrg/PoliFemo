@@ -57,21 +57,32 @@ export const ContentWrapperScroll: FC<{
 
       <View
         style={{
+          flex: 1,
           backgroundColor: background,
+          marginTop: props.marginTop ?? 86,
+
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
-          marginTop: props.marginTop ?? 86,
-          zIndex: 2,
-          flex: 1,
+
           shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 0,
+          },
           shadowOpacity: 0.2,
           shadowRadius: 8.3,
           elevation: 13,
-          overflow: "hidden",
         }}
       >
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={{ paddingBottom: 160 }}>{props.children}</View>
+        <ScrollView
+          style={{
+            borderTopLeftRadius: 30,
+            borderTopRightRadius: 30,
+            overflow: "hidden",
+          }}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={{ paddingBottom: 50 }}>{props.children}</View>
         </ScrollView>
       </View>
       {navbar ? <NavBar {...props.navbarOptions} /> : null}

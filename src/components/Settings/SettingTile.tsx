@@ -66,7 +66,7 @@ export const SettingTile: FC<SettingTileProps> = props => {
       >
         <View
           style={{
-            paddingVertical: 22,
+            paddingVertical: 14,
             paddingHorizontal: 32,
             flex: 1,
             flexDirection: "row",

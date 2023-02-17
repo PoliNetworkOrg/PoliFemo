@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import { Alert, Linking, View } from "react-native"
+import { Alert, Linking } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import { Divider } from "components/Divider"
@@ -12,6 +12,7 @@ import { HttpClient } from "api/HttpClient"
 import { usePalette } from "utils/colors"
 import { LoginContext } from "contexts/login"
 import { ModalPicker } from "components/Settings/ModalPicker"
+import { Description } from "components/Settings/Description"
 
 const client = HttpClient.getInstance()
 
@@ -45,7 +46,6 @@ Sei sicuro di voler procedere?`
 export const Privacy: SettingsStackScreen<"Privacy"> = () => {
   const { loggedIn } = useContext(LoginContext)
   const { navigate } = useNavigation()
-  const { articleSubtitle } = usePalette()
 
   const [loadingExport, setLoadingExport] = useState(false)
 
@@ -68,32 +68,28 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
 
   return (
     <ContentWrapperScroll title="Privacy">
-      <View
+      <BodyText
         style={{
           paddingTop: 36,
-          paddingBottom: 32,
           paddingHorizontal: 32,
         }}
       >
-        <BodyText>
-          PoliNetwork riconosce la privacy come un valore fondamentale e
-          sostiene il diritto degli utenti di avere il pieno controllo dei
-          propri dati. Nonostante l&apos;app sia progettata per archiviare la
-          minima quantità possibile di dati, e che non ci è possibile risalire
-          all&apos;identità di una persona fisica partendo dai dati in nostro
-          possesso, PoliNetwork fornisce comunque gli strumenti per una buona
-          gestione della privacy, come la cancellazione e l&apos;esportazione
-          dei dati.{"\n"}
-        </BodyText>
-        <BodyText style={{ fontSize: 14, color: articleSubtitle }}>
-          Per eventuali domande o dubbi sulla privacy, si prega di leggere la
-          Privacy Policy o di contattare{" "}
-          <HyperLink href="mailto:privacy@polinetwork.org">
-            privacy@polinetwork.org
-          </HyperLink>
-          .
-        </BodyText>
-      </View>
+        PoliNetwork riconosce la privacy come un valore fondamentale e sostiene
+        il diritto degli utenti di avere il pieno controllo dei propri dati.
+        Nonostante l&apos;app sia progettata per archiviare la minima quantità
+        possibile di dati, e che non ci è possibile risalire all&apos;identità
+        di una persona fisica partendo dai dati in nostro possesso, PoliNetwork
+        fornisce comunque gli strumenti per una buona gestione della privacy,
+        come la cancellazione e l&apos;esportazione dei dati.{"\n"}
+      </BodyText>
+      <Description>
+        Per eventuali domande o dubbi sulla privacy, si prega di leggere la
+        Privacy Policy o di contattare{" "}
+        <HyperLink href="mailto:privacy@polinetwork.org">
+          privacy@polinetwork.org
+        </HyperLink>
+        .
+      </Description>
       {loggedIn && (
         <>
           <Divider />
@@ -169,16 +165,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
               },
             }}
           />
-          <Divider />
-          <BodyText
-            style={{
-              paddingHorizontal: 32,
-              fontSize: 14,
-              color: articleSubtitle,
-              paddingTop: 16,
-              paddingBottom: 32,
-            }}
-          >
+          <Description>
             La possibilità di cancellare i tuoi dati in modo semplice è un
             aspetto cruciale per garantire la tua privacy e la tua sicurezza
             nella nostra app. Questa opzione ti permette di rimuovere in modo
@@ -189,26 +176,19 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
             cancellati, non saranno più disponibili o recuperabili. Questa
             opzione fornisce agli utenti il pieno controllo sui propri dati. La
             cancellazione dei dati può essere eseguita in qualsiasi momento.
-          </BodyText>
+          </Description>
         </>
       )}
       <Divider />
       <SettingTile
         setting={{
-          title: "Informativa privacy",
+          title: "Informativa Privacy",
+          subtitle: "Leggi la nostra privacy policy",
           callback: () =>
             Linking.openURL("https://polinetwork.org/learnmore/privacy/"),
         }}
       />
-      <Divider />
-      <BodyText
-        style={{
-          paddingHorizontal: 32,
-          fontSize: 14,
-          color: articleSubtitle,
-          paddingTop: 16,
-        }}
-      >
+      <Description last>
         In PoliNetwork, la privacy è un valore fondamentale, per questo abbiamo
         progettato la nostra app tenendo sempre presente questo aspetto. La
         Privacy Policy è molto importante per PoliNetwork e fornisce ai nostri
@@ -226,7 +206,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
           privacy@polinetwork.org
         </HyperLink>
         .
-      </BodyText>
+      </Description>
       <ModalPicker
         title="Cancellazione dei dati per inattività"
         subTitle="Scegli un periodo di inattività dopo il quale i tuoi dati verranno eliminati per la tua privacy."
