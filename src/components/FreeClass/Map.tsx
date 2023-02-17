@@ -34,7 +34,7 @@ export const Map: FC<MapProps> = props => {
             props.userLatitude === undefined &&
             props.userLongitude === undefined
         ) {
-            setTimeout(() => setTimer(true), 7000)
+            setTimeout(() => setTimer(true), 10000) //10 sec
         }
     }, [])
 
@@ -110,21 +110,27 @@ export const Map: FC<MapProps> = props => {
                             //this pressable is a button to return to user current location, on MapKit this feature is not provided by react-native-maps
                             style={{
                                 backgroundColor: "red",
-                                width: 25,
-                                height: 25,
+                                width: 30,
+                                height: 30,
                                 alignSelf: "flex-end",
-                                marginRight: 13,
+                                marginRight: 12,
                                 marginTop: 55,
                                 borderRadius: 5,
+                                
                             }}
-                            onPress={() =>
-                                setRegion({
+                            onPress={() => {
+                                const region: Region = {
                                     latitude: props.userLatitude,
                                     longitude: props.userLongitude,
                                     latitudeDelta: 0.002,
                                     longitudeDelta: 0.002,
-                                })
-                            }
+                                }
+                                setRegion(region)
+                                AsyncStorage.setItem(
+                                    "lastRegionVisited",
+                                    JSON.stringify(region)
+                                ).catch(err => console.log(err))
+                            }}
                         />
                     ) : undefined}
                     {props.buildingList?.map((building, index) => (
