@@ -12,6 +12,7 @@ interface AddressTextProps {
     locationStatus: PermissionStatus
 }
 
+
 /**
  * This component represents the current address of the user, if it's available.
  * Otherwise:
