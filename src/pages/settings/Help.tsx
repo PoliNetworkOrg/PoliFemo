@@ -2,8 +2,7 @@ import React from "react"
 import { View } from "react-native"
 import { SettingsStackScreen } from "navigation/NavigationTypes"
 import { ContentWrapperScroll } from "components/ContentWrapperScroll"
-import { SettingTile } from "components/Settings/SettingTile"
-import { SettingOptions } from "contexts/settings"
+import { SettingTile, SettingOptions } from "components/Settings/SettingTile"
 
 export const settingsList: SettingOptions[] = [
   {
@@ -13,10 +12,6 @@ export const settingsList: SettingOptions[] = [
   {
     title: "Contattaci",
     subtitle: "descrizione placeholder",
-  },
-  {
-    title: "Termini e privacy",
-    subtitle: "descrizione plaiceholder",
   },
   {
     title: "Informazioni App",
