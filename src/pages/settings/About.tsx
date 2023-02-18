@@ -75,7 +75,7 @@ export const About: SettingsStackScreen<"About"> = () => {
             subtitle: "Segnala un bug o suggerisci una nuova funzionalità",
             callback: () =>
               Linking.openURL(
-                "https://github.com/PoliNetworkOrg/PoliFemo/issues/new"
+                "https://github.com/PoliNetworkOrg/PoliFemo/issues/new/choose"
               ),
           }}
         />
