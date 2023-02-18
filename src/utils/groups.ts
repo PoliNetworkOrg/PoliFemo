@@ -1,5 +1,6 @@
 import { Group } from "api/groups"
 import { platformIcons } from "assets/groups"
+import { Filters } from "components/Groups/Filters"
 /**
  * return groups ordered by most recent year using a bubble sort algorithm
  * see {@link Groups} Page
@@ -88,4 +89,42 @@ export function choosePlatformIcon(platform?: string) {
     return platformIcons.whatsapp
   }
   return undefined
+}
+
+export function applyFilters(groups: Group[], filters: Filters): Group[] {
+  let newGroups: Group[] = groups
+  if (filters.year !== undefined) {
+    newGroups = newGroups.filter(group => {
+      return group.year === filters.year
+    })
+  }
+  if (filters.platform !== undefined) {
+    newGroups = newGroups.filter(group => {
+      return group.platform === filters.platform
+    })
+  }
+  if (filters.type !== undefined) {
+    newGroups = newGroups.filter(group => {
+      return group.type === filters.type
+    })
+  }
+  if (filters.course !== undefined) {
+    newGroups = newGroups.filter(group => {
+      return group.degree === filters.course
+    })
+  }
+  return newGroups
+}
+
+export function searchGroups(groups: Group[], search: string): Group[] {
+  return groups.filter(group => {
+    try {
+      if (group.class === null) {
+        return false
+      }
+      return group.class.toLowerCase().includes(search.trimEnd().toLowerCase())
+    } catch (err) {
+      console.log(err)
+    }
+  })
 }

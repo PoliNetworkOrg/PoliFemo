@@ -13,19 +13,20 @@ export interface GroupOptions {
 }
 
 export interface Group {
-  class: string
-  office: string
+  class: string | null
+  office?: string
   id: string
   degree?: string
   school?: string
-  link_id: string
-  language: string
-  type_?: string
+  id_link: string
+  language?: string
+  type?: string
   year: string | null //probably I should use  | null evreywhere?
   platform: string
-  permanent_id?: number
-  last_updated?: string
-  link_is_working?: string
+  permanentId?: number
+  LastUpdateInviteLinkTime?: string
+  linkfunzionante?: string
+  LinkType?: string
   members?: string
 }
 
@@ -39,21 +40,13 @@ export const groups = {
    * Retrieves groups from PoliNetwork server.
    * Check {@link GroupOptions} for additional parameters.
    */
-  async get(groupsOptions?: GroupOptions, options?: RequestOptions) {
-    const response = await client.poliNetworkInstance.get<{
-      groups: Group[]
-    }>("/v1/groups", {
+
+  async getFromGithub(options?: RequestOptions) {
+    const response = await client.githubRawContentInstance.get<{
+      index_data: Group[]
+    }>("PoliNetworkOrg/polinetworkWebsiteData/main/groupsGenerated.json", {
       ...options,
-      params: {
-        name: groupsOptions?.name,
-        year: groupsOptions?.year,
-        degree: groupsOptions?.degree,
-        type: groupsOptions?.type,
-        platform: groupsOptions?.platform,
-        language: groupsOptions?.language,
-        office: groupsOptions?.office,
-      },
     })
-    return response.data.groups
+    return response.data.index_data
   },
 }
