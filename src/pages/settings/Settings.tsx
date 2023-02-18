@@ -70,7 +70,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
       subtitle: "Centro assistenza, contattaci, informativa privacy",
       icon: settingsIcons.help,
       callback: () => {
-        navigate("Help")
+        navigate("About")
       },
     },
     {
