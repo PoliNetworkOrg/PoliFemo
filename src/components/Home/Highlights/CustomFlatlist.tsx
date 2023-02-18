@@ -3,13 +3,23 @@ import React, { FC, useState, useRef } from "react"
 import { View, Dimensions, Pressable, ImageBackground } from "react-native"
 import Animated from "react-native-reanimated"
 import { PaginationCarousel } from "./PaginationCarousel"
-import lecturesImage from "assets/carousel-lectures.png"
-import iseeImage from "assets/carousel-isee.png"
+import lecturesImage from "assets/highlights/carousel-lectures.png"
+import iseeImage from "assets/highlights/carousel-isee.png"
+import deadlineImage from "assets/highlights/deadline.png"
+import reminderImage from "assets/highlights/reminder.png"
 import { useNavigation } from "navigation/NavigationTypes"
 import { WidgetType, CarouselItem, formatTitle } from "utils/carousel"
 import { Divider } from "components/Divider"
 
 const { width } = Dimensions.get("window")
+
+const widgetImages = [
+  lecturesImage,
+  reminderImage,
+  reminderImage,
+  deadlineImage,
+  reminderImage,
+]
 
 export const CustomFlatlist: FC<{ dataToShow: CarouselItem[] }> = ({
   dataToShow,
@@ -75,11 +85,7 @@ export const CustomFlatlist: FC<{ dataToShow: CarouselItem[] }> = ({
                     borderRadius: 10,
                     overflow: "hidden",
                   }}
-                  source={
-                    item.type === WidgetType.LECTURES || WidgetType.EXAMS
-                      ? lecturesImage
-                      : iseeImage
-                  }
+                  source={widgetImages[item.type - 1]}
                 >
                   <View
                     style={{
