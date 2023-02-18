@@ -56,7 +56,6 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
       api.user
         .getPoliNetworkSettings()
         .then(settings => {
-          console.log("Settings in privacy page", settings)
           setAutodeleteTime(settings.expire_in_days)
         })
         .catch(() => {

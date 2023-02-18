@@ -1,4 +1,4 @@
-import { HttpClient, AuthType } from "./HttpClient"
+import { HttpClient, AuthType, RetryType } from "./HttpClient"
 /**
  * Interface of UI User Object.
  */
@@ -66,6 +66,7 @@ export const user = {
       settings,
       {
         authType: AuthType.POLINETWORK,
+        retryType: RetryType.NO_RETRY,
       }
     )
   },
