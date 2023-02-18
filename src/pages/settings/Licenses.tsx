@@ -9,7 +9,8 @@ import { usePalette } from "utils/colors"
 import { Divider } from "components/Divider"
 
 export const Licenses: SettingsStackScreen<"Licenses"> = () => {
-  const { background, homeBackground, primary, isLight } = usePalette()
+  const { background, homeBackground, primary, isLight, articleTitle } =
+    usePalette()
   return (
     <View
       style={{
@@ -67,10 +68,10 @@ export const Licenses: SettingsStackScreen<"Licenses"> = () => {
             data={licenses}
             contentContainerStyle={{ paddingBottom: 120, padding: 12 }}
             ListHeaderComponent={() => (
-              <Text style={{ marginBottom: 12 }}>
+              <Text style={{ marginBottom: 12, color: articleTitle }}>
                 The following sets forth attribution notices for third party
-                software that may be contained in portions of this the Polifemo
-                by PoliNetwork app
+                software that may be contained in portions of the Polifemo by
+                PoliNetwork app
               </Text>
             )}
             renderItem={({ item, index }) => (

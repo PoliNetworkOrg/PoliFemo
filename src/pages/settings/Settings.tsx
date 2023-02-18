@@ -62,8 +62,8 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
       },
     },
     {
-      title: "Aiuto",
-      subtitle: "Centro assistenza, contattaci",
+      title: "Su quest'app",
+      subtitle: "Informazioni sull'app, versione, contatti",
       icon: settingsIcons.help,
       callback: () => {
         navigate("About")
