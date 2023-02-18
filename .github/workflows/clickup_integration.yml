@@ -1,0 +1,18 @@
+name: ClickUp integration
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, closed]
+  issues:
+    types: [opened, edited, reopened, closed, labeled]
+
+jobs:
+  automate:
+    name: Automate ClickUp integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: polinetworkorg/clickup-integration-action@main
+        with:
+          problem_list_id: 210431256
+          feature_list_id: 900400324463
+          clickup_api_key: ${{ secrets.CLICKUP_TOKEN }}

@@ -1,24 +1,18 @@
 import { useContext } from "react"
 import { useColorScheme, ColorSchemeName } from "react-native"
-import { SettingsContext } from "./settings"
+import { SettingsContext } from "contexts/settings"
 
-export interface Palette {
-    primary: string
-    lighter: string
-    darker: string
-    variant1: string
-    variant2: string
-    accent: string
-}
+const palette = {
+  primary: "#424967",
+  lighter: "#8791BD",
+  darker: "#232A3E",
+  lessDark: "#2B344A",
+  variant1: "#414867",
+  variant2: "#010B40",
+  accent: "#FFB544",
+} as const
 
-const palette: Palette = {
-    primary: "#424967",
-    lighter: "#8791BD",
-    darker: "#232A3E",
-    variant1: "#414867",
-    variant2: "#010B40",
-    accent: "#FFB544",
-}
+export type Palette = typeof palette
 
 /**
  * Interface containing strings with the hex values for most used colors in the app, additional info
@@ -29,91 +23,91 @@ const palette: Palette = {
  * *"Stop Remote Debugging"*
  */
 export interface ColorTheme {
-    /**
-     * Default background color for most UI views.
-     * White in light mode, deep blue in dark mode.
-     */
-    background: string
+  /**
+   * Default background color for most UI views.
+   * White in light mode, deep blue in dark mode.
+   */
+  background: string
 
-    /**
-     * Accent background color for stacked UI elements, a slightly lighter version of the background
-     * color.
-     */
-    backgroundSecondary: string
+  /**
+   * Accent background color for stacked UI elements, a slightly lighter version of the background
+   * color.
+   */
+  backgroundSecondary: string
 
-    /**
-     * Background for the home screen.
-     * Lilac in light theme, deep blue in dark theme.
-     */
-    homeBackground: string
+  /**
+   * Background for the home screen.
+   * Lilac in light theme, deep blue in dark theme.
+   */
+  homeBackground: string
 
-    /**
-     * Primary color, used mostly in titles.
-     * Deep blue in dark mode, orange in light mode.
-     * Im not a designer i dont know colors
-     */
-    primary: string
+  /**
+   * Primary color, used mostly in titles.
+   * Deep blue in dark mode, orange in light mode.
+   * Im not a designer i dont know colors
+   */
+  primary: string
 
-    /**
-     * Color for bulk text, e.g the body for an article.
-     * Straight up black in dark mode, almost white in light mode.
-     */
-    bodyText: string
+  /**
+   * Color for bulk text, e.g the body for an article.
+   * Straight up black in dark mode, almost white in light mode.
+   */
+  bodyText: string
 
-    /**
-     * Fill color for most buttons that do not require sudden attention.
-     * Gray in light mode, lilac again in dark mode.
-     */
-    buttonFill: string
+  /**
+   * Fill color for most buttons that do not require sudden attention.
+   * Gray in light mode, lilac again in dark mode.
+   */
+  buttonFill: string
 
-    /**
-     * Text color for most buttons.
-     * Yeah that's purple i know this one.
-     */
-    buttonText: string
+  /**
+   * Text color for most buttons.
+   * Yeah that's purple i know this one.
+   */
+  buttonText: string
 
-    /**
-     * Fill color for the search button
-     */
-    fieldText: string
+  /**
+   * Fill color for the search button
+   */
+  fieldText: string
 
-    /**
-     * Darker in white mode, Lighter in dark mode background color, used in the text input fields.
-     */
-    fieldBackground: string
+  /**
+   * Darker in white mode, Lighter in dark mode background color, used in the text input fields.
+   */
+  fieldBackground: string
 
-    /**
-     * Fill color for modal barriers.
-     * different shades of blue I guess
-     */
-    modalBarrier: string
+  /**
+   * Fill color for modal barriers.
+   * different shades of blue I guess
+   */
+  modalBarrier: string
 
-    /**
-     * Color for article title
-     */
-    articleTitle: string
+  /**
+   * Color for article title
+   */
+  articleTitle: string
 
-    /**
-     * Color for article subtitle
-     */
-    articleSubtitle: string
+  /**
+   * Color for article subtitle
+   */
+  articleSubtitle: string
 
-    /**
-     * Dark blue used for the title in cards with a background image and a yellowish gradient.
-     */
-    cardTitle: string
+  /**
+   * Dark blue used for the title in cards with a background image and a yellowish gradient.
+   */
+  cardTitle: string
 }
 
 /**
  * contains info about the color theme, taken from react-native's [useColorScheme hook](https://reactnative.dev/docs/usecolorscheme)
  */
 export interface ColorSchemeInfo {
-    /** true when in light mode */
-    isLight: boolean
-    /** true when in dark mode */
-    isDark: boolean
-    /** see {@link https://reactnative.dev/docs/usecolorscheme} */
-    colorScheme: NonNullable<ColorSchemeName>
+  /** true when in light mode */
+  isLight: boolean
+  /** true when in dark mode */
+  isDark: boolean
+  /** see {@link https://reactnative.dev/docs/usecolorscheme} */
+  colorScheme: NonNullable<ColorSchemeName>
 }
 
 /**
@@ -154,66 +148,66 @@ export interface ColorSchemeInfo {
  * ```
  */
 export const usePalette: () => ColorTheme &
-    ColorSchemeInfo & {
-        /** object containing the colors of the palette */
-        palette: Palette
-        /** the colors for the light theme, see {@link ColorTheme} */
-        lightTheme: ColorTheme
-        /** the colors for the dark theme, see {@link ColorTheme} */
-        darkTheme: ColorTheme
-    } = () => {
-    const context = useContext(SettingsContext)
-    const chosenTheme = context.settings.theme
+  ColorSchemeInfo & {
+    /** object containing the colors of the palette */
+    palette: Palette
+    /** the colors for the light theme, see {@link ColorTheme} */
+    lightTheme: ColorTheme
+    /** the colors for the dark theme, see {@link ColorTheme} */
+    darkTheme: ColorTheme
+  } = () => {
+  const context = useContext(SettingsContext)
+  const chosenTheme = context.settings.theme
 
-    let colorScheme = useColorScheme() ?? "light"
-    if (chosenTheme !== "predefined") {
-        colorScheme = chosenTheme
-    }
+  let colorScheme = useColorScheme() ?? "light"
+  if (chosenTheme !== "predefined") {
+    colorScheme = chosenTheme
+  }
 
-    const isDark = colorScheme === "dark"
-    const isLight = !isDark
+  const isDark = colorScheme === "dark"
+  const isLight = !isDark
 
-    const lightTheme: ColorTheme = {
-        background: "#FFFFFF",
-        backgroundSecondary: "#FFFFFF",
-        homeBackground: palette.primary, // "#424967",
-        primary: palette.variant1, // "#414867",
-        bodyText: "#000000",
-        buttonFill: palette.primary, // "#424967",
-        buttonText: "#FFFFFF",
-        fieldText: palette.primary, //"#424967",
-        fieldBackground: "#F6F7FC",
-        modalBarrier: "rgba(1, 27, 41, 0.45)",
-        articleTitle: palette.darker,
-        articleSubtitle: palette.primary,
-        cardTitle: palette.variant2, // "#010B40"
-    }
+  const lightTheme: ColorTheme = {
+    background: "#FFFFFF",
+    backgroundSecondary: "#FFFFFF",
+    homeBackground: palette.primary, // "#424967",
+    primary: palette.variant1, // "#414867",
+    bodyText: "#000000",
+    buttonFill: palette.primary, // "#424967",
+    buttonText: "#FFFFFF",
+    fieldText: palette.primary, //"#424967",
+    fieldBackground: "#F6F7FC",
+    modalBarrier: "rgba(1, 27, 41, 0.45)",
+    articleTitle: palette.darker,
+    articleSubtitle: palette.primary,
+    cardTitle: palette.variant2, // "#010B40"
+  }
 
-    const darkTheme: ColorTheme = {
-        background: palette.darker, // "#232A3E",
-        backgroundSecondary: palette.primary, // "#424967",
-        homeBackground: palette.darker, // "#232A3E",
-        primary: palette.accent, // "#FFB544",
-        bodyText: "#FFFFFF",
-        buttonFill: palette.lighter, // "#8791BD",
-        buttonText: "#FFFFFF",
-        fieldText: "#D4D4D4",
-        fieldBackground: "#343E5A",
-        modalBarrier: "rgba(1, 27, 41, 0.6)",
-        articleTitle: "#FFFFFF",
-        articleSubtitle: palette.lighter,
-        cardTitle: palette.variant2, // "#010B40"
-    }
+  const darkTheme: ColorTheme = {
+    background: palette.darker, // "#232A3E",
+    backgroundSecondary: palette.primary, // "#424967",
+    homeBackground: palette.darker, // "#232A3E",
+    primary: palette.accent, // "#FFB544",
+    bodyText: "#FFFFFF",
+    buttonFill: palette.lighter, // "#8791BD",
+    buttonText: "#FFFFFF",
+    fieldText: "#D4D4D4",
+    fieldBackground: "#343E5A",
+    modalBarrier: "rgba(1, 27, 41, 0.6)",
+    articleTitle: "#FFFFFF",
+    articleSubtitle: palette.lighter,
+    cardTitle: palette.variant2, // "#010B40"
+  }
 
-    const colors = isLight ? lightTheme : darkTheme
+  const colors = isLight ? lightTheme : darkTheme
 
-    return {
-        ...colors,
-        isLight,
-        isDark,
-        colorScheme,
-        lightTheme,
-        darkTheme,
-        palette,
-    }
+  return {
+    ...colors,
+    isLight,
+    isDark,
+    colorScheme,
+    lightTheme,
+    darkTheme,
+    palette,
+  }
 }

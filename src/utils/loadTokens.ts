@@ -9,9 +9,9 @@ const client = HttpClient.getInstance()
  * @returns true if the promise has returned, false otherwise
  */
 export const useLoadTokens = () => {
-    const [loaded, setLoaded] = React.useState(false)
-    React.useEffect(() => {
-        void client.loadTokens().then(() => setLoaded(true))
-    }, [client]) // this has to be here for hot reload to work
-    return loaded
+  const [loaded, setLoaded] = React.useState(false)
+  React.useEffect(() => {
+    void client.loadTokens().then(() => setLoaded(true))
+  }, [client]) // this has to be here for hot reload to work
+  return loaded
 }

@@ -5,6 +5,7 @@ import { tags } from "./tags"
 import { timetable } from "./timetable"
 import { user } from "./user"
 import { rooms } from "./rooms"
+import { events } from "./event"
 export { RetryType, AuthType, RequestOptions } from "./HttpClient"
 /**
  * This object groups together all collections of endpoints.
@@ -24,11 +25,12 @@ export { RetryType, AuthType, RequestOptions } from "./HttpClient"
  * like RetryType, etc...
  */
 export const api = {
-    articles,
-    auth,
-    tags,
-    timetable,
-    user,
-    rooms,
-    groups,
+  articles,
+  auth,
+  events,
+  groups,
+  rooms,
+  tags,
+  timetable,
+  user,
 }
