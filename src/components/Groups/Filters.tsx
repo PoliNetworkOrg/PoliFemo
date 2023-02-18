@@ -2,7 +2,8 @@ import React, { FC, useState } from "react"
 import { View } from "react-native"
 import { OutlinedButton } from "./OutlinedButton"
 import { StyleSheet } from "react-native"
-import { ModalSelection, SelectTile } from "components/Settings"
+import { ModalWithButtons } from "components/ModalWithButtons"
+import { SelectTile } from "components/Settings"
 import { getNameFromMode, ValidModalType } from "utils/groups"
 
 export interface FiltersProps {
@@ -129,7 +130,7 @@ export const Filters: FC<FiltersProps> = props => {
           onPress={reset}
         />
       </View>
-      <ModalSelection
+      <ModalWithButtons
         title={getNameFromMode(modalMode)}
         isShowing={isModalShowing}
         onClose={() => {
@@ -179,7 +180,7 @@ export const Filters: FC<FiltersProps> = props => {
             />
           )
         })}
-      </ModalSelection>
+      </ModalWithButtons>
     </View>
   )
 }

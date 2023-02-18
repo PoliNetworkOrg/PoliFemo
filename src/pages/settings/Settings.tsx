@@ -3,18 +3,14 @@ import { View } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ContentWrapperScroll } from "components/Settings"
 import { Divider } from "components/Divider"
-import { SettingTile } from "components/Settings"
+import { SettingTile, SettingOptions } from "components/Settings"
 import { settingsIcons } from "assets/settings"
 import { UserDetailsTile } from "components/Settings"
-import { ModalSelection } from "components/Settings"
 import { CareerTile } from "components/Settings"
 import { SelectTile } from "components/Settings"
 import { UserAnonymousTile } from "components/Settings"
-import {
-  SettingOptions,
-  SettingsContext,
-  ValidColorSchemeName,
-} from "contexts/settings"
+import { ModalWithButtons } from "components/ModalWithButtons"
+import { SettingsContext, ValidColorSchemeName } from "contexts/settings"
 import { CareerColumn } from "components/Settings"
 import { LoginContext } from "contexts/login"
 import { Career } from "api/user"
@@ -67,10 +63,19 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
     },
     {
       title: "Aiuto",
-      subtitle: "Centro assistenza, contattaci, informativa privacy",
+      subtitle: "Centro assistenza, contattaci",
       icon: settingsIcons.help,
       callback: () => {
         navigate("About")
+      },
+    },
+    {
+      title: "Privacy",
+      subtitle:
+        "Informativa sulla privacy, impostazioni del tuo account relative alla privacy",
+      icon: settingsIcons.privacy,
+      callback: () => {
+        navigate("Privacy")
       },
     },
     {
@@ -108,7 +113,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
         })}
       </ContentWrapperScroll>
 
-      <ModalSelection
+      <ModalWithButtons
         title={"Scegli Tema"}
         isShowing={isModalThemeVisible}
         onClose={() => {
@@ -133,8 +138,8 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
             />
           )
         })}
-      </ModalSelection>
-      <ModalSelection
+      </ModalWithButtons>
+      <ModalWithButtons
         title={"Cambia Matricola"}
         isShowing={isModalCareerVisible}
         onClose={() => {
@@ -162,7 +167,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
             </SelectTile>
           )
         })}
-      </ModalSelection>
+      </ModalWithButtons>
     </View>
   )
 }

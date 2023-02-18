@@ -53,6 +53,7 @@ export type SettingsStackNavigatorParams = {
   Settings: undefined
   About: undefined
   Licenses: undefined
+  Privacy: undefined
 }
 
 export type GlobalStackNavigatorParams = RootStackNavigatorParams &

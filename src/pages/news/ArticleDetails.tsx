@@ -72,43 +72,41 @@ export const Article: MainStackScreen<"Article"> = props => {
         originWhitelist={["*"]}
         source={{
           html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-                    <style type="text/css">
-                    @font-face {
-                        font-family: "Roboto";
-                        src: url("${Asset.fromModule(Roboto_400Regular).uri}");
-                    }
-                    body {
-                      font-size: 16;
-                      font-family: "Roboto";
-                      background-color: ${isLight ? "white" : "#232A3E"};
-                    }
-                    p {
-                      color: ${isLight ? "black" : "white"};
-                      text-align: justify;
-                    }
-                    a {
-                        color: ${isLight ? "black" : "white"};
-                      }
-                    h1 {
-                        color: ${isLight ? "black" : "white"};
-                    }
-                    h2 {
-                        color: ${isLight ? "black" : "white"};
-                    }
-                    h3 {
-                        color: ${isLight ? "black" : "white"};
-                        text-align: justify;
-                    }
-                    img { 
-                        display: block; max-width: 100%; height: auto;
-                    }
-                    iframe { 
-                        display: block; max-width: 100%; height: auto;
-                    }
-                  </style></head><body><div>${html
-                    .map(el => `<p>${el}<p/>`)
-                    .join("")}
-                    <div/></body></html>`,
+            <style type="text/css">
+            @font-face {
+                font-family: "Roboto";
+                src: url("${Asset.fromModule(Roboto_400Regular).uri}");
+            }
+            body {
+              font-size: 16;
+              font-family: "Roboto";
+              background-color: ${isLight ? "white" : "#232A3E"};
+            }
+            p {
+              color: ${isLight ? "black" : "white"};
+              text-align: justify;
+            }
+            a {
+                color: ${isLight ? "black" : "white"};
+              }
+            h1 {
+                color: ${isLight ? "black" : "white"};
+            }
+            h2 {
+                color: ${isLight ? "black" : "white"};
+            }
+            h3 {
+                color: ${isLight ? "black" : "white"};
+                text-align: justify;
+            }
+            img { 
+                display: block; max-width: 100%; height: auto;
+            }
+            iframe { 
+                display: block; max-width: 100%; height: auto;
+            }
+            </style></head><body><div>${html.map(el => `<p>${el}<p/>`).join("")}
+          <div/></body></html>`,
           baseUrl: "",
         }}
       />
