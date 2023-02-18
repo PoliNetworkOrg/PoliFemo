@@ -101,7 +101,7 @@ export const Map: FC<MapProps> = props => {
                     mapPadding={{
                         top: 0,
                         right: 0,
-                        bottom: Platform.OS === "ios" ? 185 : 180,
+                        bottom: Platform.OS === "ios" ? 170 : 165,
                         left: 0,
                     }}
                 >

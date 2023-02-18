@@ -19,8 +19,7 @@ import BuildingListJSON from "components/FreeClass/buildingCoords.json"
  * In this page the user can find a room according to his current position.
  */
 export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
-    const [search, setSearch] = useState("")
-
+    
     const [locationStatus, setLocationStatus] = useState<PermissionStatus>(
         PermissionStatus.GRANTED
     )
@@ -207,11 +206,6 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                     <AddressText
                         currentLocation={currentLocation}
                         locationStatus={locationStatus}
-                    />
-                </View>
-                <View style={{ marginTop: -20 }}>
-                    <PoliSearchBar
-                        onChange={searchKey => setSearch(searchKey)}
                     />
                 </View>
             </View>

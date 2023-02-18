@@ -7,6 +7,7 @@ import { FreeClassList } from "./FreeClassList"
 import { PermissionStatus } from "expo-location"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
 import { RoomSimplified } from "api/rooms"
+import { PositionSearchBar } from "./PositionSearchBar"
 
 interface PositionModalityProps {
     currentCoords: number[]
@@ -23,16 +24,22 @@ enum ButtonType {
  * It handles the button's state and the two modality: Map or List.
  */
 export const PositionModality: FC<PositionModalityProps> = props => {
+
+    const [search, setSearch] = useState("")
+
     const { primary, isDark, palette } = usePalette()
 
     const [status, setStatus] = useState<ButtonType>(ButtonType.MAP)
 
     const [roomList, setRoomList] = useState<RoomSimplified[]>([])
 
-    const extractRooms = (campusName: string[],buildingName: string) => {
+    const extractRooms = (campusName: string[], buildingName: string) => {
         const tempRooms: RoomSimplified[] = []
         props.buildingList?.map(building => {
-            if(building.campus.name === campusName && building.name === buildingName){
+            if (
+                building.campus.name === campusName &&
+                building.name === buildingName
+            ) {
                 tempRooms.push(...building.freeRoomList)
             }
         })
@@ -41,9 +48,12 @@ export const PositionModality: FC<PositionModalityProps> = props => {
 
     return (
         <>
+            <View style={{ marginTop: -23 }}>
+                <PositionSearchBar onChange={searchKey => setSearch(searchKey)} />
+            </View>
             <View
                 style={{
-                    marginTop: 22,
+                    marginTop: 10,
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "center",
@@ -119,9 +129,12 @@ export const PositionModality: FC<PositionModalityProps> = props => {
                     userLongitude={props.currentCoords[1]}
                     locationStatus={props.locationStatus}
                     buildingList={props.buildingList}
-                    onPressMarker={(campusName: string[],buildingName: string) => {
+                    onPressMarker={(
+                        campusName: string[],
+                        buildingName: string
+                    ) => {
                         setStatus(ButtonType.LIST)
-                        void extractRooms(campusName,buildingName)
+                        void extractRooms(campusName, buildingName)
                     }}
                 />
             )}
