@@ -69,6 +69,9 @@ export function ModalPicker<T>(props: ModalPickerProps<T>) {
           marginHorizontal: 16,
           color: bodyText,
         }}
+        itemStyle={{
+          color: bodyText,
+        }}
         dropdownIconColor={palette.accent}
         selectedValue={selectedValue}
         onValueChange={itemValue => setSelectedValue(itemValue)}
