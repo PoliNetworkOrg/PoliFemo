@@ -9,7 +9,7 @@ import polifemoIcon from "assets/highlights/polifemo.svg"
 const { width } = Dimensions.get("window")
 
 export const DefaultWidget: FC = () => {
-  const { isLight } = usePalette()
+  const { isLight, palette } = usePalette()
 
   const polifemoSVG = useSVG(polifemoIcon)
 
@@ -25,7 +25,9 @@ export const DefaultWidget: FC = () => {
         style={{
           width: width - 80,
           height: 77,
-          backgroundColor: isLight ? "#F6F7FC" : "#343E5A", //forse meglio usare palette
+          backgroundColor: isLight
+            ? palette.widgetBgLighter
+            : palette.widgetBgDarker,
           borderRadius: 10,
           flexDirection: "row",
         }}
@@ -61,7 +63,7 @@ export const DefaultWidget: FC = () => {
           <BodyText
             style={{
               fontWeight: "500",
-              color: "#8791BD", //palette?
+              color: palette.lighter,
               fontSize: 19,
               textAlign: "center",
             }}
@@ -74,7 +76,7 @@ export const DefaultWidget: FC = () => {
       <BodyText
         style={{
           fontWeight: "400",
-          color: "#8791BD", //palette?
+          color: palette.lighter,
           fontSize: 11,
           textAlign: "center",
           marginTop: 14,

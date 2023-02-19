@@ -3,21 +3,21 @@ import React, { FC, useState, useRef } from "react"
 import { View, Dimensions, Pressable, ImageBackground } from "react-native"
 import Animated from "react-native-reanimated"
 import { PaginationCarousel } from "./PaginationCarousel"
-import lecturesImage from "assets/highlights/carousel-lectures.png"
-import iseeImage from "assets/highlights/carousel-isee.png"
+import iseeImage from "assets/highlights/isee.png"
+import lecturesImage from "assets/highlights/lectures.png"
 import deadlineImage from "assets/highlights/deadline.png"
 import reminderImage from "assets/highlights/reminder.png"
 import { useNavigation } from "navigation/NavigationTypes"
-import { WidgetType, CarouselItem, formatTitle } from "utils/carousel"
+import { CarouselItem, formatTitle } from "utils/carousel"
 import { Divider } from "components/Divider"
 
 const { width } = Dimensions.get("window")
 
 const widgetImages = [
   lecturesImage,
-  reminderImage,
-  reminderImage,
   deadlineImage,
+  reminderImage,
+  iseeImage,
   reminderImage,
 ]
 

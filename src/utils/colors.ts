@@ -9,6 +9,8 @@ export interface Palette {
   variant1: string
   variant2: string
   accent: string
+  widgetBgLighter: string
+  widgetBgDarker: string
 }
 
 const palette: Palette = {
@@ -18,6 +20,8 @@ const palette: Palette = {
   variant1: "#414867",
   variant2: "#010B40",
   accent: "#FFB544",
+  widgetBgLighter: "#F6F7FC",
+  widgetBgDarker: "#343E5A",
 }
 
 /**
