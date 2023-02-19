@@ -21,7 +21,7 @@ export interface Group {
   id_link: string
   language?: string
   type?: string
-  year: string | null //probably I should use  | null evreywhere?
+  year: string | null //probably I should use  | null everywhere?
   platform: string
   permanentId?: number
   LastUpdateInviteLinkTime?: string
@@ -37,7 +37,7 @@ const client = HttpClient.getInstance()
  */
 export const groups = {
   /**
-   * Retrieves groups from PoliNetwork server.
+   * Retrieves groups from Github.
    * Check {@link GroupOptions} for additional parameters.
    */
 

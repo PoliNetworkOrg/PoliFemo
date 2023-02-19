@@ -14,11 +14,11 @@ import {
   searchGroups,
 } from "utils/groups"
 
-import { AnimatedPoliSearchBar } from "components/Groups/AnimatedPoliSearchBar"
 import { GroupTile } from "components/Groups/GroupTile"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { ModalGroup } from "components/Groups/ModalGroup"
 import { ModalGroupItem } from "components/Groups/ModalGroupItem"
+import { PoliSearchBar } from "components/Home/PoliSearchBar"
 
 const deltaTime = 100 //ms
 let searchTimeout: NodeJS.Timeout
@@ -50,10 +50,20 @@ export const Groups: MainStackScreen<"Groups"> = () => {
     }
   }
 
+  //Request groups from Github
   useEffect(() => {
     void getGroups()
   }, [])
 
+  //Apply filters
+  useEffect(() => {
+    if (isMounted && groups) {
+      const newGroups = applyFilters(groups, filters)
+      setFilteredGroups(newGroups)
+    }
+  }, [filters, groups])
+
+  //Search among filtered groups
   useEffect(() => {
     clearTimeout(searchTimeout)
     searchTimeout = setTimeout(() => {
@@ -66,14 +76,6 @@ export const Groups: MainStackScreen<"Groups"> = () => {
     }, deltaTime)
   }, [search, filteredGroups])
 
-  //if filters are applied after search, search again
-  useEffect(() => {
-    if (isMounted && groups) {
-      const newGroups = applyFilters(groups, filters)
-      setFilteredGroups(newGroups)
-    }
-  }, [filters, groups])
-
   const orderedGroups =
     filters.year === undefined
       ? orderByMostRecentYear(searchableGroups)
@@ -83,10 +85,14 @@ export const Groups: MainStackScreen<"Groups"> = () => {
     <PageWrapper>
       <View style={{ paddingHorizontal: 28, paddingTop: 56 }}>
         <Title>Gruppi Corsi</Title>
-        <AnimatedPoliSearchBar
-          onSearch={val => setSearch(val)}
-          style={{ marginTop: 36, marginBottom: 22 }}
-        />
+        <View style={{ marginTop: 36, marginBottom: 22 }}>
+          <PoliSearchBar
+            onChange={val => {
+              setSearch(val)
+            }}
+            style={{ marginTop: 0, marginBottom: 0 }}
+          />
+        </View>
         <Filters
           onFilterChange={filters => setFilters(filters)}
           filters={filters}
