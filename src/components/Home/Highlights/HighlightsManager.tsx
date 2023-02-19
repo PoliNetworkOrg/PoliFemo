@@ -67,6 +67,8 @@ export const HighlightsManager: FC = () => {
   useEffect(() => {
     if (loggedIn) {
       void setNextEvents()
+    } else {
+      setWidgets([])
     }
   }, [loggedIn])
 
