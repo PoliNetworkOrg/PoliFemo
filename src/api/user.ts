@@ -1,4 +1,4 @@
-import { HttpClient, AuthType } from "./HttpClient"
+import { HttpClient, AuthType, RetryType } from "./HttpClient"
 /**
  * Interface of UI User Object.
  */
@@ -31,12 +31,46 @@ export interface PolimiUserData {
   fotoURL: string
 }
 
+interface PoliNetworkSettings {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  expire_in_days: number
+}
+
 const client = HttpClient.getInstance()
 
 /**
  * Collection of endpoints related to User
  */
 export const user = {
+  /**
+   * Get the user's settings from PoliNetwork
+   * @returns Settings of the user
+   */
+  async getPoliNetworkSettings() {
+    const response = await client.poliNetworkInstance.get<PoliNetworkSettings>(
+      "/v1/accounts/me/settings",
+      {
+        authType: AuthType.POLINETWORK,
+      }
+    )
+    return response.data
+  },
+
+  /**
+   * Update PoliNetwork user settings
+   * @param settings new settings to be saved
+   */
+  async updatePoliNetworkSettings(settings: Partial<PoliNetworkSettings>) {
+    await client.poliNetworkInstance.post(
+      "/v1/accounts/me/settings",
+      settings,
+      {
+        authType: AuthType.POLINETWORK,
+        retryType: RetryType.NO_RETRY,
+      }
+    )
+  },
+
   /**
    * test PoliNetwork auth call
    */
@@ -59,5 +93,24 @@ export const user = {
       }
     )
     return response.data
+  },
+  /**
+   * Get a file with all of the user's data
+   */
+  async exportPoliNetworkMe() {
+    const response = await client.poliNetworkInstance.get<
+      Record<string, unknown>
+    >("/v1/accounts/me/export", {
+      authType: AuthType.POLINETWORK,
+    })
+    return response.data
+  },
+  /**
+   * Delete the user's account and data
+   */
+  async deletePoliNetworkMe() {
+    await client.poliNetworkInstance.delete("/v1/accounts/me", {
+      authType: AuthType.POLINETWORK,
+    })
   },
 }

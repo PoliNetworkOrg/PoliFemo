@@ -2,27 +2,19 @@ import { useContext } from "react"
 import { useColorScheme, ColorSchemeName } from "react-native"
 import { SettingsContext } from "contexts/settings"
 
-export interface Palette {
-  primary: string
-  lighter: string
-  darker: string
-  variant1: string
-  variant2: string
-  accent: string
-  widgetBgLighter: string
-  widgetBgDarker: string
-}
-
-const palette: Palette = {
+const palette = {
   primary: "#424967",
   lighter: "#8791BD",
   darker: "#232A3E",
+  lessDark: "#2B344A",
   variant1: "#414867",
   variant2: "#010B40",
   accent: "#FFB544",
   widgetBgLighter: "#F6F7FC",
   widgetBgDarker: "#343E5A",
-}
+} as const
+
+export type Palette = typeof palette
 
 /**
  * Interface containing strings with the hex values for most used colors in the app, additional info

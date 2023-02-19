@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState, useRef, useContext } from "react"
-import { StyleSheet, View, DeviceEventEmitter } from "react-native"
+import { StyleSheet, View } from "react-native"
 import BottomSheet, {
   BottomSheetScrollView,
   BottomSheetScrollViewMethods,
@@ -14,10 +14,11 @@ import {
 import { NewsTagsGrid } from "./NewsTagsGrid"
 import { Title } from "components/Text"
 import { CardWithGradient } from "components/CardWithGradient"
-import { NavBar, CLOSE_BOTTOM_SHEET_EVENT_NAME } from "components/NavBar"
+import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
 import { useNavigation } from "navigation/NavigationTypes"
 import { getUsableScreenHeight } from "utils/height"
+import { newsSheetEventEmitter } from "utils/events"
 
 interface NewsBottomSheetProps {
   /**
@@ -74,14 +75,17 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
   }, [isNewsClosed])
 
   useEffect(() => {
+    // dispatch news sheet event
+    newsSheetEventEmitter.emit("state_change", !isNewsClosed)
+  }, [isNewsClosed])
+
+  useEffect(() => {
     // Set up the event listener to close the NewsBottomSheet
     // when the home button in the NavBar is clicked
-    DeviceEventEmitter.addListener(CLOSE_BOTTOM_SHEET_EVENT_NAME, () => {
+    const listener = newsSheetEventEmitter.addListener("should_close", () => {
       setIsNewsClosed(true)
     })
-    return () => {
-      DeviceEventEmitter.removeAllListeners(CLOSE_BOTTOM_SHEET_EVENT_NAME)
-    }
+    return () => listener.remove?.()
   }, [])
 
   return (

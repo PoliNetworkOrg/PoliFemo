@@ -1,11 +1,13 @@
 import { DataSourceParam } from "@shopify/react-native-skia"
 import help from "./help.svg"
 import modify from "./modify.svg"
+import privacy from "./privacy.svg"
 import disconnect from "./disconnect.svg"
 import notifiche from "./notifiche.svg"
 
 export const settingsIconList = [
   "notifiche",
+  "privacy",
   "modify",
   "help",
   "disconnect",
@@ -23,6 +25,11 @@ export const settingsIcons: Record<SettingIconNames, IconProps> = {
   notifiche: {
     svg: notifiche,
     width: 20,
+    heigth: 24,
+  },
+  privacy: {
+    svg: privacy,
+    width: 18,
     heigth: 24,
   },
   modify: {
