@@ -72,15 +72,6 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
     {
       title: "Privacy",
       subtitle:
-        "Informativa sulla privacy, impostazioni del tuo account relative alla privacy",
-      icon: settingsIcons.privacy,
-      callback: () => {
-        navigate("Privacy")
-      },
-    },
-    {
-      title: "Privacy",
-      subtitle:
         "Informativa sulla privacy\nImpostazioni del tuo account relative alla privacy",
       icon: settingsIcons.privacy,
       callback: () => {

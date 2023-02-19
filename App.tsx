@@ -85,7 +85,10 @@ export default function App() {
     // subscribe to the API login events to manage the login state
     const handleLoginEvent = async (loggedIn: boolean) => {
       if (loggedIn) {
-        const inf = await api.user.getPolimiUserInfo()
+        const [inf, pn] = await Promise.all([
+          api.user.getPolimiUserInfo(),
+          api.user.getPoliNetworkMe(),
+        ])
         setLoginState({
           loggedIn,
           userInfo: {
@@ -108,6 +111,7 @@ export default function App() {
             ],
             codPersona: inf.codicePersona,
             profilePic: inf.fotoURL,
+            userID: pn.id,
           },
         })
       } else setLoginState({ loggedIn })

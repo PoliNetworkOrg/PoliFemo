@@ -8,6 +8,7 @@ export interface User {
   firstname: string
   lastname: string
   profilePic?: string
+  userID: string
 }
 
 export interface Career {
