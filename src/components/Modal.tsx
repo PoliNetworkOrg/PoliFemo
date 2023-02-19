@@ -1,10 +1,17 @@
 import React, { FC } from "react"
-import { View, StyleSheet, Pressable, Dimensions } from "react-native"
+import {
+    View,
+    StyleSheet,
+    Pressable,
+    Dimensions,
+    ViewStyle,
+} from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import { deleteSvg as icon } from "assets/modal"
 import Modal from "react-native-modal"
+import { Portal } from "react-native-portalize"
 export interface ModalCustomProps {
     /**
      * content of the modal
@@ -26,6 +33,11 @@ export interface ModalCustomProps {
      * @default false
      */
     centerText?: boolean
+
+    animationTiming?: number
+
+    /**override center container's style, for example changing height */
+    style?: ViewStyle
 }
 
 /**
@@ -39,82 +51,112 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
     const centerText = props.centerText ?? false
     const deleteSvg = useSVG(icon.svg)
     return (
-        <Modal
-            onBackButtonPress={props.onClose}
-            statusBarTranslucent={true}
-            isVisible={props.isShowing}
-            animationIn={"slideInDown"}
-            animationOut={"slideOutDown"}
-            backdropColor={modalBarrier}
-            deviceHeight={deviceHeight}
-            coverScreen={false}
-        >
-            <Pressable onPress={props.onClose} style={[styles.pageWrapper]}>
-                <View>
-                    <Pressable
-                        style={{ alignSelf: "flex-end" }}
-                        onPress={() => props.onClose()}
-                    >
-                        <View style={styles.circle}>
-                            <Canvas
-                                style={{
-                                    width: icon.width,
-                                    height: icon.heigth,
-                                }}
+        <Portal>
+            <Modal
+                onBackButtonPress={props.onClose}
+                statusBarTranslucent={true}
+                isVisible={props.isShowing}
+                animationIn={"fadeIn"}
+                animationOut={"fadeOut"}
+                backdropColor={modalBarrier}
+                deviceHeight={deviceHeight}
+                coverScreen={false}
+                // TODO: animation timing?
+                animationInTiming={props.animationTiming ?? 100}
+                animationOutTiming={props.animationTiming ?? 100}
+                onBackdropPress={props.onClose}
+                useNativeDriverForBackdrop={true}
+                useNativeDriver={true}
+            >
+                <View style={[styles.pageWrapper]}>
+                    <View>
+                        <Pressable
+                            style={{ alignSelf: "flex-end" }}
+                            onPress={() => props.onClose()}
+                        >
+                            <View style={styles.circle}>
+                                <Canvas
+                                    style={{
+                                        width: icon.width,
+                                        height: icon.heigth,
+                                    }}
+                                >
+                                    {deleteSvg && (
+                                        <ImageSVG
+                                            svg={deleteSvg}
+                                            x={0}
+                                            y={0}
+                                            width={icon.width}
+                                            height={icon.heigth}
+                                        />
+                                    )}
+                                </Canvas>
+                            </View>
+                        </Pressable>
+                        <View
+                            // this is a pressable just to prevent the modal from closing when clicking
+                            // on the content
+                            style={[
+                                {
+                                    width: 320,
+                                    height: 420,
+                                    borderRadius: 12,
+                                    marginHorizontal: 15,
+                                    shadowColor: "#000",
+                                    shadowOffset: {
+                                        width: 0,
+                                        height: 3,
+                                    },
+                                    shadowOpacity: 0.27,
+                                    shadowRadius: 4.65,
+                                    backgroundColor: backgroundSecondary,
+                                },
+                                props.isShowing ? { elevation: 6 } : undefined,
+                                props.style,
+                            ]}
+                        >
+                            <Text
+                                style={[
+                                    styles.title,
+                                    {
+                                        color: isLight
+                                            ? homeBackground
+                                            : "#ffffff",
+                                    },
+                                    {
+                                        textAlign: centerText
+                                            ? "center"
+                                            : "left",
+                                    },
+                                    { marginTop: centerText ? 72 : 36 },
+                                ]}
                             >
-                                {deleteSvg && (
-                                    <ImageSVG
-                                        svg={deleteSvg}
-                                        x={0}
-                                        y={0}
-                                        width={icon.width}
-                                        height={icon.heigth}
-                                    />
-                                )}
-                            </Canvas>
+                                {props.title}
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.subTitle,
+                                    {
+                                        color: isLight
+                                            ? homeBackground
+                                            : "#ffffff",
+                                    },
+                                    {
+                                        textAlign: centerText
+                                            ? "center"
+                                            : "left",
+                                    },
+                                    { marginVertical: centerText ? 56 : 8 },
+                                ]}
+                            >
+                                {props.subTitle}
+                            </Text>
+                            <View style={{ flex: 1 }}>{props.children}</View>
                         </View>
-                    </Pressable>
-                    <Pressable
-                        // this is a pressable just to prevent the modal from closing when clicking
-                        // on the content
-                        style={[
-                            styles.contentWrapper,
-                            { backgroundColor: backgroundSecondary },
-                        ]}
-                    >
-                        <Text
-                            style={[
-                                styles.title,
-                                {
-                                    color: isLight ? homeBackground : "#ffffff",
-                                },
-                                {
-                                    textAlign: centerText ? "center" : "left",
-                                },
-                                { marginTop: centerText ? 72 : 36 },
-                            ]}
-                        >
-                            {props.title}
-                        </Text>
-                        <Text
-                            style={[
-                                styles.subTitle,
-                                {
-                                    color: isLight ? homeBackground : "#ffffff",
-                                },
-                                {
-                                    textAlign: centerText ? "center" : "left",
-                                },
-                                { marginVertical: centerText ? 56 : 8 },
-                            ]}
-                        >
-                            {props.subTitle}
-                        </Text>
-                        <View style={{ flex: 1 }}>{props.children}</View>
-                    </Pressable>
+                    </View>
                 </View>
-            </Pressable>
-        </Modal>
+            </Modal>
+        </Portal>
     )
 }
 
@@ -123,21 +165,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-    },
-    contentWrapper: {
-        width: 320,
-        height: 420,
-        borderRadius: 12,
-        marginHorizontal: 15,
-
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 3,
-        },
-        shadowOpacity: 0.27,
-        shadowRadius: 4.65,
-        elevation: 6,
     },
     circle: {
         width: 30,

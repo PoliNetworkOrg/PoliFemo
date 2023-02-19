@@ -1,9 +1,10 @@
 import React, { FC } from "react"
-import { View, Modal, StyleSheet, Pressable } from "react-native"
+import { View, StyleSheet, ViewStyle, Dimensions } from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import { ButtonCustom } from "./ButtonCustom"
-
+import Modal from "react-native-modal"
+import { Portal } from "react-native-portalize"
 export interface ModalSelectionProps {
     /**
      * content of the modal
@@ -26,10 +27,10 @@ export interface ModalSelectionProps {
      */
     onOK: () => void
 
-    /**
-     * modal wrapper height, specify if height is fixed
-     */
-    height?: number
+    animationTiming?: number
+
+    /**override center container's style, for example changing height */
+    style?: ViewStyle
 }
 
 // ? maybe should move this out of Settings folder ?
@@ -41,70 +42,92 @@ export interface ModalSelectionProps {
 export const ModalSelection: FC<ModalSelectionProps> = props => {
     const { backgroundSecondary, homeBackground, modalBarrier, isLight } =
         usePalette()
-
+    const deviceHeight = Dimensions.get("screen").height
     return (
-        //TODO: animationType fade or slide?
-        <Modal
-            onRequestClose={props.onClose}
-            statusBarTranslucent={true}
-            visible={props.isShowing}
-            animationType="fade"
-            transparent={true}
-        >
-            <Pressable
-                onPress={props.onClose}
-                style={[styles.pageWrapper, { backgroundColor: modalBarrier }]}
+        <Portal>
+            <Modal
+                onBackButtonPress={props.onClose}
+                statusBarTranslucent={true}
+                isVisible={props.isShowing}
+                animationIn={"fadeIn"}
+                animationOut={"fadeOut"}
+                backdropColor={modalBarrier}
+                deviceHeight={deviceHeight}
+                coverScreen={false}
+                // TODO: animation timing?
+                animationInTiming={props.animationTiming ?? 100}
+                animationOutTiming={props.animationTiming ?? 100}
+                onBackdropPress={props.onClose}
+                useNativeDriverForBackdrop={true}
+                useNativeDriver={true}
             >
-                <Pressable
-                    // this is a pressable just to prevent the modal from closing when clicking
-                    // on the content
-                    style={[
-                        styles.contentWrapper,
-                        { backgroundColor: backgroundSecondary },
-                        { height: props.height },
-                    ]}
-                >
-                    <View>
-                        <Text
-                            style={[
-                                styles.title,
-                                {
-                                    color: isLight ? homeBackground : "#ffffff",
-                                },
-                                {
-                                    textAlign: "center",
-                                    marginTop: 22,
-                                    marginBottom: 12,
-                                },
-                            ]}
-                        >
-                            {props.title}
-                        </Text>
-
-                        {props.children}
-                    </View>
+                <View style={[styles.pageWrapper]}>
                     <View
-                        style={{
-                            flexDirection: "row",
-                            justifyContent: "space-evenly",
-                            marginBottom: 32,
-                            marginTop: 16,
-                        }}
+                        style={[
+                            {
+                                flexDirection: "column",
+                                justifyContent: "space-between",
+                                width: 320,
+                                borderRadius: 12,
+                                marginHorizontal: 15,
+
+                                shadowColor: "#000",
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 3,
+                                },
+                                shadowOpacity: 0.27,
+                                shadowRadius: 4.65,
+                                backgroundColor: backgroundSecondary,
+                            },
+                            props.isShowing ? { elevation: 6 } : undefined,
+                            props.style,
+                        ]}
                     >
-                        <ButtonCustom
-                            light={true}
-                            text={"Annulla"}
-                            onPress={props.onClose}
-                        />
-                        <ButtonCustom
-                            light={false}
-                            text={"OK"}
-                            onPress={props.onOK}
-                        />
+                        <View>
+                            <Text
+                                style={[
+                                    styles.title,
+                                    {
+                                        color: isLight
+                                            ? homeBackground
+                                            : "#ffffff",
+                                    },
+                                    {
+                                        textAlign: "center",
+                                        marginTop: 22,
+                                        marginBottom: 12,
+                                    },
+                                ]}
+                            >
+                                {props.title}
+                            </Text>
+
+                            {props.children}
+                        </View>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "space-evenly",
+                                marginBottom: 32,
+                                marginTop: 16,
+                            }}
+                        >
+                            <ButtonCustom
+                                light={true}
+                                text={"Annulla"}
+                                onPress={props.onClose}
+                            />
+                            <ButtonCustom
+                                light={false}
+                                text={"OK"}
+                                onPress={props.onOK}
+                            />
+                        </View>
                     </View>
-                </Pressable>
-            </Pressable>
-        </Modal>
+                </View>
+            </Modal>
+        </Portal>
     )
 }
 
@@ -113,22 +136,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-    },
-    contentWrapper: {
-        flexDirection: "column",
-        justifyContent: "space-between",
-        width: 320,
-        borderRadius: 12,
-        marginHorizontal: 15,
-
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 3,
-        },
-        shadowOpacity: 0.27,
-        shadowRadius: 4.65,
-        elevation: 6,
     },
     title: {
         fontSize: 32,
