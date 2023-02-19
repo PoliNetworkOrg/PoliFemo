@@ -49,12 +49,12 @@ avviare debugger scuotendo con molta rabbia e violenza il telefono
 
 #### To report a bug, use the following guidelines:
 - Title: [BUG] Brief description of the issue
-- Label: "bug"
+- Label: "type: bug"
 - Description: Describe the issue in detail, including steps to reproduce it and any error messages you encountered. Include a screenshot or video if possible.
 
 #### To request a new feature, use the following guidelines:
-- Title: [FEATURE REQUEST] Brief description of the feature
-- Label: "feature request"
+- Title: [FEATURE] Brief description of the feature
+- Label: "type: suggestion"
 - Description: Describe the feature in detail, including how it would benefit users and any potential challenges or limitations.
 
 
