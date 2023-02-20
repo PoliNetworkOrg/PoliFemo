@@ -15,22 +15,22 @@ export interface CampusItem {
 
 export const campusList: CampusItem[] = [
   {
-    name: ["Bovisa", "Durando"],
-    acronym: "MIB",
-    latitude: 45.504422059752116,
-    longitude: 9.164129368703703,
-  },
-  {
-    name: ["Bovisa", "La Masa"],
-    acronym: "MIB",
-    latitude: 45.50286551603009,
-    longitude: 9.156452626872522,
-  },
-  {
     name: ["Leonardo"],
     acronym: "MIA",
     latitude: 45.47791263153159,
     longitude: 9.227122387828846,
+  },
+  {
+    name: ["Bassini"],
+    acronym: "MIA",
+    latitude: 45.4789992620537,
+    longitude: 9.23224621210039,
+  },
+  {
+    name: ["Bonardi"],
+    acronym: "MIA",
+    latitude: 45.479781934520446,
+    longitude: 9.22835238075815,
   },
   {
     name: ["Colombo"],
@@ -43,6 +43,54 @@ export const campusList: CampusItem[] = [
     acronym: "MIA",
     latitude: 45.49016811534536,
     longitude: 9.227177297538793,
+  },
+  {
+    name: ["Golgi"],
+    acronym: "MIA",
+    latitude: 45.475701787753316,
+    longitude: 9.23566774592704,
+  },
+  {
+    name: ["Pascoli"],
+    acronym: "MIA",
+    latitude: 45.475845466349035,
+    longitude: 9.226032157517993,
+  },
+  {
+    name: ["Bovisa", "Durando"],
+    acronym: "MIB",
+    latitude: 45.504422059752116,
+    longitude: 9.164129368703703,
+  },
+  {
+    name: ["Bovisa", "La Masa"],
+    acronym: "MIB",
+    latitude: 45.50286551603009,
+    longitude: 9.156452626872522,
+  },
+  {
+    name: ["Sesto"],
+    acronym: "CRG",
+    latitude: 45.14636683054809,
+    longitude: 10.002025408405924,
+  },
+  {
+    name: ["Ghislanzoni"],
+    acronym: "LCF",
+    latitude: 45.848982262635516,
+    longitude: 9.397375312267139,
+  },
+  {
+    name: ["Scalabrini"],
+    acronym: "PCL",
+    latitude: 45.046624066557236,
+    longitude: 9.70295943795921,
+  },
+  {
+    name: ["Scarsellini"],
+    acronym: "MNI",
+    latitude: 45.16007288978253,
+    longitude: 10.78895040720128,
   },
 ]
 

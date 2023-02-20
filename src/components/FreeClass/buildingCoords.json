@@ -1,502 +1,5 @@
 [
     {
-        "acronym": "COE",
-        "campus": [
-            {
-                "name": ["Anzani"],
-                "buildings": [
-                    {
-                        "name": "Edificio 4",
-                        "address": "Via Anzani 42, Como, 22100",
-                        "coords": {
-                            "latitude": 45.80120256319488,
-                            "longitude": 9.092668671639375
-                        }
-                    }
-                ]
-            },
-            {
-                "name": ["Castelnuovo"],
-                "buildings": [
-                    {
-                        "name": "Edificio 1",
-                        "address": "Via Castelnuovo 7, Como, 22100",
-                        "coords": {
-                            "latitude": 45.80276883790487,
-                            "longitude": 9.09505146871641
-                        }
-                    }
-                ]
-            },
-            {
-                "name": ["Zezio"],
-                "buildings": [
-                    {
-                        "name": "Residenza La Presentazione",
-                        "address": "Via Zezio 58, Como, 22100",
-                        "coords": {
-                            "latitude": 45.80645610020381,
-                            "longitude": 9.09718826871654
-                        }
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "acronym": "CRG",
-        "campus": [
-            {
-                "name": ["Sesto"],
-                "buildings": [
-                    {
-                        "name": "Edificio C",
-                        "address": "Via Sesto 39, Cremona, 26100",
-                        "coords": {
-                            "latitude": 45.147121757649806,
-                            "longitude": 10.00162101166769
-                        }
-                    },
-                    {
-                        "name": "Palazzina A",
-                        "address": "Via Sesto 39, Cremona, 26100",
-                        "coords": {
-                            "latitude": 45.14624583991279,
-                            "longitude": 10.002210009658127
-                        }
-                    },
-                    {
-                        "name": "Palazzina B",
-                        "address": "Via Sesto 39, Cremona, 26100",
-                        "coords": {
-                            "latitude": 45.146619394711394,
-                            "longitude": 10.001899530097274
-                        }
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "acronym": "LCF",
-        "campus": [
-            {
-                "name": ["Ghislanzoni"],
-                "buildings": [
-                    {
-                        "name": "Residenza Loos",
-                        "address": "Via Ghislanzoni 24, Lecco, 23900",
-                        "coords": {
-                            "latitude": 45.84944207561925,
-                            "longitude": 9.397439941157165
-                        }
-                    },
-                    {
-                        "name": "BEEpilot",
-                        "address": "Via Previati 1C, Lecco, 23900",
-                        "coords": {
-                            "latitude": 45.84889332151791,
-                            "longitude": 9.39735373582034
-                        }
-                    },
-                    {
-                        "name": "Edificio 10",
-                        "address": "Via Previati 1C, Lecco, 23900",
-                        "coords": {
-                            "latitude": 45.84945959386757,
-                            "longitude": 9.396282096446393
-                        }
-                    },
-                    {
-                        "name": "Edificio 11",
-                        "address": "Via Previati 1C, Lecco, 23900",
-                        "coords": {
-                            "latitude": 45.84976868042763,
-                            "longitude": 9.397024120135281
-                        }
-                    },
-                    {
-                        "name": "Edificio 12",
-                        "address": "Via Previati 1C, Lecco, 23900",
-                        "coords": {
-                            "latitude": 45.850239482856416,
-                            "longitude": 9.396348203485335
-                        }
-                    },
-                    {
-                        "name": "Edificio 5",
-                        "address": "Via Previati 1C, Lecco, 23900",
-                        "coords": {
-                            "latitude": 45.84992561501641,
-                            "longitude": 9.396852458762153
-                        }
-                    },
-                    {
-                        "name": "Edificio 8",
-                        "address": "Via Previati 1C, Lecco, 23900",
-                        "coords": {
-                            "latitude": 45.84920819614676,
-                            "longitude": 9.39701875573217
-                        }
-                    },
-                    {
-                        "name": "Edificio 9",
-                        "address": "Via Previati 1C, Lecco, 23900",
-                        "coords": {
-                            "latitude": 45.84890553228907,
-                            "longitude": 9.396487678342055
-                        }
-                    },
-                    {
-                        "name": "Edificio CNR",
-                        "address": "Via Previati 1C, Lecco, 23900",
-                        "coords": {
-                            "latitude": 45.84854681743879,
-                            "longitude": 9.397254790092957
-                        }
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "acronym": "MNI",
-        "campus": [
-            {
-                "name": ["Scarsellini"],
-                "buildings": [
-                    {
-                        "name": "Edificio 1",
-                        "address": "Via Scarsellini 15, Mantova, 46100",
-                        "coords": {
-                            "latitude": 45.160352957787765,
-                            "longitude": 10.788892210362015
-                        }
-                    },
-                    {
-                        "name": "Edificio B",
-                        "address": "Via Scarsellini 2, Mantova, 46100",
-                        "coords": {
-                            "latitude": 45.16071402717656,
-                            "longitude": 10.78813888256507
-                        }
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "acronym": "MIB",
-        "campus": [
-            {
-                "name": ["Bovisa", "Durando"],
-                "buildings": [
-                    {
-                        "name": "Edificio B1",
-                        "address": "Via Candiani 72, Milano, 20158",
-                        "coords": {
-                            "latitude": 45.50526063108648,
-                            "longitude": 9.166960640981896
-                        }
-                    },
-                    {
-                        "name": "Edificio B2",
-                        "address": "Via Candiani 72, Milano, 20158",
-                        "coords": {
-                            "latitude": 45.505856940521184,
-                            "longitude": 9.16684246746718
-                        }
-                    },
-                    {
-                        "name": "Edificio B3",
-                        "address": "Via Candiani 72, Milano, 20158",
-                        "coords": {
-                            "latitude": 45.506291745504754,
-                            "longitude": 9.16657066831335
-                        }
-                    },
-                    {
-                        "name": "Edificio B4",
-                        "address": "Via Candiani 72, Milano, 20158",
-                        "coords": {
-                            "latitude": 45.50582827267731,
-                            "longitude": 9.1657801030213
-                        }
-                    },
-                    {
-                        "name": "Edificio B5",
-                        "address": "Via Candiani 72, Milano, 20158",
-                        "coords": {
-                            "latitude": 45.504051263792235,
-                            "longitude": 9.165419660659406
-                        }
-                    },
-                    {
-                        "name": "Edificio B5A",
-                        "address": "Via Candiani 72, Milano, 20158",
-                        "coords": {
-                            "latitude": 45.50424070168094,
-                            "longitude": 9.165416008016528
-                        }
-                    },
-                    {
-                        "name": "Edificio B6",
-                        "address": "Via Candiani 72, Milano, 20158",
-                        "coords": {
-                            "latitude": 45.50481669134817,
-                            "longitude": 9.16627437531528
-                        }
-                    },
-                    {
-                        "name": "Edificio B7",
-                        "address": "Via Candiani 72, Milano, 20158",
-                        "coords": {
-                            "latitude": 45.504682097750845,
-                            "longitude": 9.164140249884532
-                        }
-                    },
-                    {
-                        "name": "Edificio B8",
-                        "address": "Via Candiani 72, Milano, 20158",
-                        "coords": {
-                            "latitude": 45.50468698803176,
-                            "longitude": 9.164754281608419
-                        }
-                    },
-                    {
-                        "name": "Edificio B9",
-                        "address": "Via Candiani 72, Milano, 20158",
-                        "coords": {
-                            "latitude": 45.50521269076449,
-                            "longitude": 9.164468198661584
-                        }
-                    },
-                    {
-                        "name": "Edificio B9A",
-                        "address": "Via Candiani 72, Milano, 20158",
-                        "coords": {
-                            "latitude": 45.50541074493551,
-                            "longitude": 9.164988032336918
-                        }
-                    },
-                    {
-                        "name": "Infopoint",
-                        "address": "Via Verità 25, Milano, 20158",
-                        "coords": {
-                            "latitude": 45.50448148112203,
-                            "longitude": 9.165766681881529
-                        }
-                    }
-                ]
-            },
-            {
-                "name": ["Bovisa", "La Masa"],
-                "buildings": [
-                    {
-                        "name": "Edificio B11",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.500846286602666,
-                            "longitude": 9.155348601436222
-                        }
-                    },
-                    {
-                        "name": "Edificio B12",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50148227512907,
-                            "longitude": 9.154387194659964
-                        }
-                    },
-                    {
-                        "name": "Edificio B13",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50157313004546,
-                            "longitude": 9.155059639273848
-                        }
-                    },
-                    {
-                        "name": "Edificio B14",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.501563666,
-                            "longitude": 9.156285702980878
-                        }
-                    },
-                    {
-                        "name": "Edificio B14A",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50161287903062,
-                            "longitude": 9.156733999417478
-                        }
-                    },
-                    {
-                        "name": "Edificio B15",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50188922830498,
-                            "longitude": 9.156825819163954
-                        }
-                    },
-                    {
-                        "name": "Edificio B16",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.501845693924324,
-                            "longitude": 9.15774941782049
-                        }
-                    },
-                    {
-                        "name": "Edificio B16A",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50196304740825,
-                            "longitude": 9.158189612507442
-                        }
-                    },
-                    {
-                        "name": "Edificio B18A",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50203686641096,
-                            "longitude": 9.156566563416906
-                        }
-                    },
-                    {
-                        "name": "Edificio B18B",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50223182381833,
-                            "longitude": 9.15721470280378
-                        }
-                    },
-                    {
-                        "name": "Edificio B18C",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50228860740229,
-                            "longitude": 9.157603586435906
-                        }
-                    },
-                    {
-                        "name": "Edificio B19",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.502271572336156,
-                            "longitude": 9.155699676957584
-                        }
-                    },
-                    {
-                        "name": "Edificio B20",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50239838883989,
-                            "longitude": 9.15493811315239
-                        }
-                    },
-                    {
-                        "name": "Edificio B21",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50104305808609,
-                            "longitude": 9.15633786717546
-                        }
-                    },
-                    {
-                        "name": "Edificio B22",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50135848414706,
-                            "longitude": 9.157643792042283
-                        }
-                    },
-                    {
-                        "name": "Edificio B23",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50095617559604,
-                            "longitude": 9.15800589026771
-                        }
-                    },
-                    {
-                        "name": "Edificio B24",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50170591921368,
-                            "longitude": 9.153366080649027
-                        }
-                    },
-                    {
-                        "name": "Edificio B29",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50128945237324,
-                            "longitude": 9.15353385381083
-                        }
-                    },
-                    {
-                        "name": "Edificio B30",
-                        "address": "Via La Masa 34, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.501549132062195,
-                            "longitude": 9.155347901172796
-                        }
-                    },
-                    {
-                        "name": "Edificio B37",
-                        "address": "Via Lambruschini 4, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.5029063064303,
-                            "longitude": 9.156305606322812
-                        }
-                    },
-                    {
-                        "name": "Edificio BL25",
-                        "address": "Via Lambruschini 4, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50309248664372,
-                            "longitude": 9.155917630899358
-                        }
-                    },
-                    {
-                        "name": "Edificio BL25A",
-                        "address": "Via Lambruschini 4, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50284016331667,
-                            "longitude": 9.15555412238212
-                        }
-                    },
-                    {
-                        "name": "Edificio BL26",
-                        "address": "Via Lambruschini 4, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50339625303833,
-                            "longitude": 9.156018993853149
-                        }
-                    },
-                    {
-                        "name": "Edificio BL27",
-                        "address": "Via Lambruschini 4, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.50366327214294,
-                            "longitude": 9.157438075212218
-                        }
-                    },
-                    {
-                        "name": "Edificio BL28",
-                        "address": "Via Lambruschini 4, Milano, 20156",
-                        "coords": {
-                            "latitude": 45.503143931072984,
-                            "longitude": 9.157036118688078
-                        }
-                    }
-                ]
-            }
-        ]
-    },
-    {
         "acronym": "MIA",
         "campus": [
             {
@@ -966,64 +469,310 @@
         ]
     },
     {
-        "acronym": "MIC",
+        "acronym": "MIB",
         "campus": [
             {
-                "name": ["Off", "Campus"],
+                "name": ["Bovisa", "Durando"],
                 "buildings": [
                     {
-                        "name": "NOLO",
-                        "address": "Viale Monza 54, Milano, 20128",
+                        "name": "Edificio B1",
+                        "address": "Via Candiani 72, Milano, 20158",
                         "coords": {
-                            "latitude": 45.49326461001558,
-                            "longitude": 9.21927698715338
+                            "latitude": 45.50526063108648,
+                            "longitude": 9.166960640981896
                         }
                     },
                     {
-                        "name": "San Siro",
-                        "address": "Viale Gigante, Milano, 20148",
+                        "name": "Edificio B2",
+                        "address": "Via Candiani 72, Milano, 20158",
                         "coords": {
-                            "latitude": 45.471604941331265,
-                            "longitude": 9.138379698192313
+                            "latitude": 45.505856940521184,
+                            "longitude": 9.16684246746718
+                        }
+                    },
+                    {
+                        "name": "Edificio B3",
+                        "address": "Via Candiani 72, Milano, 20158",
+                        "coords": {
+                            "latitude": 45.506291745504754,
+                            "longitude": 9.16657066831335
+                        }
+                    },
+                    {
+                        "name": "Edificio B4",
+                        "address": "Via Candiani 72, Milano, 20158",
+                        "coords": {
+                            "latitude": 45.50582827267731,
+                            "longitude": 9.1657801030213
+                        }
+                    },
+                    {
+                        "name": "Edificio B5",
+                        "address": "Via Candiani 72, Milano, 20158",
+                        "coords": {
+                            "latitude": 45.504051263792235,
+                            "longitude": 9.165419660659406
+                        }
+                    },
+                    {
+                        "name": "Edificio B5A",
+                        "address": "Via Candiani 72, Milano, 20158",
+                        "coords": {
+                            "latitude": 45.50424070168094,
+                            "longitude": 9.165416008016528
+                        }
+                    },
+                    {
+                        "name": "Edificio B6",
+                        "address": "Via Candiani 72, Milano, 20158",
+                        "coords": {
+                            "latitude": 45.50481669134817,
+                            "longitude": 9.16627437531528
+                        }
+                    },
+                    {
+                        "name": "Edificio B7",
+                        "address": "Via Candiani 72, Milano, 20158",
+                        "coords": {
+                            "latitude": 45.504682097750845,
+                            "longitude": 9.164140249884532
+                        }
+                    },
+                    {
+                        "name": "Edificio B8",
+                        "address": "Via Candiani 72, Milano, 20158",
+                        "coords": {
+                            "latitude": 45.50468698803176,
+                            "longitude": 9.164754281608419
+                        }
+                    },
+                    {
+                        "name": "Edificio B9",
+                        "address": "Via Candiani 72, Milano, 20158",
+                        "coords": {
+                            "latitude": 45.50521269076449,
+                            "longitude": 9.164468198661584
+                        }
+                    },
+                    {
+                        "name": "Edificio B9A",
+                        "address": "Via Candiani 72, Milano, 20158",
+                        "coords": {
+                            "latitude": 45.50541074493551,
+                            "longitude": 9.164988032336918
+                        }
+                    },
+                    {
+                        "name": "Infopoint",
+                        "address": "Via Verità 25, Milano, 20158",
+                        "coords": {
+                            "latitude": 45.50448148112203,
+                            "longitude": 9.165766681881529
                         }
                     }
                 ]
             },
             {
-                "name": ["Residenza", "Einstein"],
+                "name": ["Bovisa", "La Masa"],
                 "buildings": [
                     {
-                        "name": "Einstein",
-                        "address": "Via Einstein 6, Milano, 20137",
+                        "name": "Edificio B11",
+                        "address": "Via La Masa 34, Milano, 20156",
                         "coords": {
-                            "latitude": 45.45033404949838,
-                            "longitude": 9.216969652664448
+                            "latitude": 45.500846286602666,
+                            "longitude": 9.155348601436222
                         }
-                    }
-                ]
-            },
-            {
-                "name": ["Residenza", "Newton"],
-                "buildings": [
+                    },
                     {
-                        "name": "Newton",
-                        "address": "Via Mario Borsa 25, Milano, 20151",
+                        "name": "Edificio B12",
+                        "address": "Via La Masa 34, Milano, 20156",
                         "coords": {
-                            "latitude": 45.50201311059991,
-                            "longitude": 9.100693099933826
+                            "latitude": 45.50148227512907,
+                            "longitude": 9.154387194659964
                         }
-                    }
-                ]
-            },
-            {
-                "name": ["Residenza", "Pareto"],
-                "buildings": [
+                    },
                     {
-                        "name": "Pareto",
-                        "address": "Via Maggianico 6, Milano, 20156",
+                        "name": "Edificio B13",
+                        "address": "Via La Masa 34, Milano, 20156",
                         "coords": {
-                            "latitude": 45.50331624885291,
-                            "longitude": 9.145443677552473
+                            "latitude": 45.50157313004546,
+                            "longitude": 9.155059639273848
+                        }
+                    },
+                    {
+                        "name": "Edificio B14",
+                        "address": "Via La Masa 34, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.501563666,
+                            "longitude": 9.156285702980878
+                        }
+                    },
+                    {
+                        "name": "Edificio B14A",
+                        "address": "Via La Masa 34, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50161287903062,
+                            "longitude": 9.156733999417478
+                        }
+                    },
+                    {
+                        "name": "Edificio B15",
+                        "address": "Via La Masa 34, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50188922830498,
+                            "longitude": 9.156825819163954
+                        }
+                    },
+                    {
+                        "name": "Edificio B16",
+                        "address": "Via La Masa 34, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.501845693924324,
+                            "longitude": 9.15774941782049
+                        }
+                    },
+                    {
+                        "name": "Edificio B16A",
+                        "address": "Via La Masa 34, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50196304740825,
+                            "longitude": 9.158189612507442
+                        }
+                    },
+                    {
+                        "name": "Edificio B18A",
+                        "address": "Via La Masa 34, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50203686641096,
+                            "longitude": 9.156566563416906
+                        }
+                    },
+                    {
+                        "name": "Edificio B18B",
+                        "address": "Via La Masa 34, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50223182381833,
+                            "longitude": 9.15721470280378
+                        }
+                    },
+                    {
+                        "name": "Edificio B18C",
+                        "address": "Via La Masa 34, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50228860740229,
+                            "longitude": 9.157603586435906
+                        }
+                    },
+                    {
+                        "name": "Edificio B19",
+                        "address": "Via La Masa 34, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.502271572336156,
+                            "longitude": 9.155699676957584
+                        }
+                    },
+                    {
+                        "name": "Edificio B20",
+                        "address": "Via La Masa 34, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50239838883989,
+                            "longitude": 9.15493811315239
+                        }
+                    },
+                    {
+                        "name": "Edificio B21",
+                        "address": "Via La Masa 34, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50104305808609,
+                            "longitude": 9.15633786717546
+                        }
+                    },
+                    {
+                        "name": "Edificio B22",
+                        "address": "Via La Masa 34, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50135848414706,
+                            "longitude": 9.157643792042283
+                        }
+                    },
+                    {
+                        "name": "Edificio B23",
+                        "address": "Via La Masa 34, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50095617559604,
+                            "longitude": 9.15800589026771
+                        }
+                    },
+                    {
+                        "name": "Edificio B24",
+                        "address": "Via La Masa 34, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50170591921368,
+                            "longitude": 9.153366080649027
+                        }
+                    },
+                    {
+                        "name": "Edificio B29",
+                        "address": "Via La Masa 34, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50128945237324,
+                            "longitude": 9.15353385381083
+                        }
+                    },
+                    {
+                        "name": "Edificio B30",
+                        "address": "Via La Masa 34, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.501549132062195,
+                            "longitude": 9.155347901172796
+                        }
+                    },
+                    {
+                        "name": "Edificio B37",
+                        "address": "Via Lambruschini 4, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.5029063064303,
+                            "longitude": 9.156305606322812
+                        }
+                    },
+                    {
+                        "name": "Edificio BL25",
+                        "address": "Via Lambruschini 4, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50309248664372,
+                            "longitude": 9.155917630899358
+                        }
+                    },
+                    {
+                        "name": "Edificio BL25A",
+                        "address": "Via Lambruschini 4, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50284016331667,
+                            "longitude": 9.15555412238212
+                        }
+                    },
+                    {
+                        "name": "Edificio BL26",
+                        "address": "Via Lambruschini 4, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50339625303833,
+                            "longitude": 9.156018993853149
+                        }
+                    },
+                    {
+                        "name": "Edificio BL27",
+                        "address": "Via Lambruschini 4, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50366327214294,
+                            "longitude": 9.157438075212218
+                        }
+                    },
+                    {
+                        "name": "Edificio BL28",
+                        "address": "Via Lambruschini 4, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.503143931072984,
+                            "longitude": 9.157036118688078
                         }
                     }
                 ]
@@ -1031,17 +780,115 @@
         ]
     },
     {
-        "acronym": "MID",
+        "acronym": "CRG",
         "campus": [
             {
-                "name": ["Calabria"],
+                "name": ["Sesto"],
                 "buildings": [
                     {
-                        "name": "Edificio 1",
-                        "address": "Via Calabria 4, Milano, 20098",
+                        "name": "Edificio C",
+                        "address": "Via Sesto 39, Cremona, 26100",
                         "coords": {
-                            "latitude": 45.39350641657452,
-                            "longitude": 9.257432613353823
+                            "latitude": 45.147121757649806,
+                            "longitude": 10.00162101166769
+                        }
+                    },
+                    {
+                        "name": "Palazzina A",
+                        "address": "Via Sesto 39, Cremona, 26100",
+                        "coords": {
+                            "latitude": 45.14624583991279,
+                            "longitude": 10.002210009658127
+                        }
+                    },
+                    {
+                        "name": "Palazzina B",
+                        "address": "Via Sesto 39, Cremona, 26100",
+                        "coords": {
+                            "latitude": 45.146619394711394,
+                            "longitude": 10.001899530097274
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "acronym": "LCF",
+        "campus": [
+            {
+                "name": ["Ghislanzoni"],
+                "buildings": [
+                    {
+                        "name": "Residenza Loos",
+                        "address": "Via Ghislanzoni 24, Lecco, 23900",
+                        "coords": {
+                            "latitude": 45.84944207561925,
+                            "longitude": 9.397439941157165
+                        }
+                    },
+                    {
+                        "name": "BEEpilot",
+                        "address": "Via Previati 1C, Lecco, 23900",
+                        "coords": {
+                            "latitude": 45.84889332151791,
+                            "longitude": 9.39735373582034
+                        }
+                    },
+                    {
+                        "name": "Edificio 10",
+                        "address": "Via Previati 1C, Lecco, 23900",
+                        "coords": {
+                            "latitude": 45.84945959386757,
+                            "longitude": 9.396282096446393
+                        }
+                    },
+                    {
+                        "name": "Edificio 11",
+                        "address": "Via Previati 1C, Lecco, 23900",
+                        "coords": {
+                            "latitude": 45.84976868042763,
+                            "longitude": 9.397024120135281
+                        }
+                    },
+                    {
+                        "name": "Edificio 12",
+                        "address": "Via Previati 1C, Lecco, 23900",
+                        "coords": {
+                            "latitude": 45.850239482856416,
+                            "longitude": 9.396348203485335
+                        }
+                    },
+                    {
+                        "name": "Edificio 5",
+                        "address": "Via Previati 1C, Lecco, 23900",
+                        "coords": {
+                            "latitude": 45.84992561501641,
+                            "longitude": 9.396852458762153
+                        }
+                    },
+                    {
+                        "name": "Edificio 8",
+                        "address": "Via Previati 1C, Lecco, 23900",
+                        "coords": {
+                            "latitude": 45.84920819614676,
+                            "longitude": 9.39701875573217
+                        }
+                    },
+                    {
+                        "name": "Edificio 9",
+                        "address": "Via Previati 1C, Lecco, 23900",
+                        "coords": {
+                            "latitude": 45.84890553228907,
+                            "longitude": 9.396487678342055
+                        }
+                    },
+                    {
+                        "name": "Edificio CNR",
+                        "address": "Via Previati 1C, Lecco, 23900",
+                        "coords": {
+                            "latitude": 45.84854681743879,
+                            "longitude": 9.397254790092957
                         }
                     }
                 ]
@@ -1156,6 +1003,159 @@
                         "coords": {
                             "latitude": 45.04830239234551,
                             "longitude": 9.701883338558217
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "acronym": "MNI",
+        "campus": [
+            {
+                "name": ["Scarsellini"],
+                "buildings": [
+                    {
+                        "name": "Edificio 1",
+                        "address": "Via Scarsellini 15, Mantova, 46100",
+                        "coords": {
+                            "latitude": 45.160352957787765,
+                            "longitude": 10.788892210362015
+                        }
+                    },
+                    {
+                        "name": "Edificio B",
+                        "address": "Via Scarsellini 2, Mantova, 46100",
+                        "coords": {
+                            "latitude": 45.16071402717656,
+                            "longitude": 10.78813888256507
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "acronym": "MIC",
+        "campus": [
+            {
+                "name": ["Off", "Campus"],
+                "buildings": [
+                    {
+                        "name": "NOLO",
+                        "address": "Viale Monza 54, Milano, 20128",
+                        "coords": {
+                            "latitude": 45.49326461001558,
+                            "longitude": 9.21927698715338
+                        }
+                    },
+                    {
+                        "name": "San Siro",
+                        "address": "Viale Gigante, Milano, 20148",
+                        "coords": {
+                            "latitude": 45.471604941331265,
+                            "longitude": 9.138379698192313
+                        }
+                    }
+                ]
+            },
+            {
+                "name": ["Residenza", "Einstein"],
+                "buildings": [
+                    {
+                        "name": "Einstein",
+                        "address": "Via Einstein 6, Milano, 20137",
+                        "coords": {
+                            "latitude": 45.45033404949838,
+                            "longitude": 9.216969652664448
+                        }
+                    }
+                ]
+            },
+            {
+                "name": ["Residenza", "Newton"],
+                "buildings": [
+                    {
+                        "name": "Newton",
+                        "address": "Via Mario Borsa 25, Milano, 20151",
+                        "coords": {
+                            "latitude": 45.50201311059991,
+                            "longitude": 9.100693099933826
+                        }
+                    }
+                ]
+            },
+            {
+                "name": ["Residenza", "Pareto"],
+                "buildings": [
+                    {
+                        "name": "Pareto",
+                        "address": "Via Maggianico 6, Milano, 20156",
+                        "coords": {
+                            "latitude": 45.50331624885291,
+                            "longitude": 9.145443677552473
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "acronym": "MID",
+        "campus": [
+            {
+                "name": ["Calabria"],
+                "buildings": [
+                    {
+                        "name": "Edificio 1",
+                        "address": "Via Calabria 4, Milano, 20098",
+                        "coords": {
+                            "latitude": 45.39350641657452,
+                            "longitude": 9.257432613353823
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "acronym": "COE",
+        "campus": [
+            {
+                "name": ["Anzani"],
+                "buildings": [
+                    {
+                        "name": "Edificio 4",
+                        "address": "Via Anzani 42, Como, 22100",
+                        "coords": {
+                            "latitude": 45.80120256319488,
+                            "longitude": 9.092668671639375
+                        }
+                    }
+                ]
+            },
+            {
+                "name": ["Castelnuovo"],
+                "buildings": [
+                    {
+                        "name": "Edificio 1",
+                        "address": "Via Castelnuovo 7, Como, 22100",
+                        "coords": {
+                            "latitude": 45.80276883790487,
+                            "longitude": 9.09505146871641
+                        }
+                    }
+                ]
+            },
+            {
+                "name": ["Zezio"],
+                "buildings": [
+                    {
+                        "name": "Residenza La Presentazione",
+                        "address": "Via Zezio 58, Como, 22100",
+                        "coords": {
+                            "latitude": 45.80645610020381,
+                            "longitude": 9.09718826871654
                         }
                     }
                 ]

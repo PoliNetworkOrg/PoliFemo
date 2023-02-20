@@ -63,7 +63,9 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
           if (!tempBuildingStrings.includes(currentBuildingString)) {
             const currentBuilding: BuildingItem = {
               campus: campus,
-              name: room.building.replace("Edificio ", "Ed. "),
+              name: room.building
+                .replace("Edificio ", "Ed. ")
+                .replace("Padiglione", "Pad."),
               freeRoomList: [
                 {
                   roomId: room.room_id,
@@ -99,15 +101,8 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
     setDate(new Date(currentDate))
   }, [props.route.params.currentDate])
 
-  //custom goBack function, in order to maintain the currentDate.
-  const goBack = () => {
-    props.navigation.navigate("CampusChoice", {
-      currentDate: date.toString(),
-    })
-  }
-
   return (
-    <PageWrapper navbarOptions={{ overrideBackBehavior: () => goBack() }}>
+    <PageWrapper>
       <View style={{ paddingTop: 28 }}>
         {campus.name.length > 1 ? (
           <Title

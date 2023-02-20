@@ -12,7 +12,7 @@ import { api } from "api"
 import { BuildingItem } from "./BuildingChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { PositionModality } from "components/FreeClass/PositionModality"
-import { addHours } from "api/rooms"
+import { addHours, RoomSimplified } from "api/rooms"
 import BuildingListJSON from "components/FreeClass/buildingCoords.json"
 
 /**
@@ -29,6 +29,8 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
   const [currentCoords, setCurrentCoords] = useState<number[]>([])
 
   const [buildingList, setBuildingList] = useState<BuildingItem[]>()
+
+  const [roomList, setRoomList] = useState<RoomSimplified[]>()
 
   //the dateEnd is the startDate + 3 hours, the number of hours has not been chosen yet
   const dateEnd = addHours(new Date(), 3).toISOString() //3 hours is an example
@@ -76,6 +78,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     currentLong: number
   ) => {
     const tempBuildingList: BuildingItem[] = []
+    const tempRoomList: RoomSimplified[] = []
     for (const campus of campusList) {
       if (
         getDistance(
@@ -126,6 +129,11 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                   roomId: room.room_id,
                   name: room.name,
                 })
+              }
+              if (tempRoomList.length < 50) {
+                tempRoomList.push({ roomId: room.room_id, name: room.name })
+              } else {
+                setRoomList(tempRoomList)
               }
             })
             tempBuildingList.push(...tempBuildings)
@@ -203,6 +211,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
         currentCoords={currentCoords}
         locationStatus={locationStatus}
         buildingList={buildingList}
+        roomList={roomList}
       />
     </PageWrapper>
   )

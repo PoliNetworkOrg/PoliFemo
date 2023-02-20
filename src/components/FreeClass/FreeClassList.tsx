@@ -1,7 +1,7 @@
 import { useSVG, Canvas, ImageSVG } from "@shopify/react-native-skia"
 import { BodyText } from "components/Text"
-import React, { FC } from "react"
-import { View, Pressable, Dimensions } from "react-native"
+import React, { FC, useEffect, useState } from "react"
+import { View, Pressable, Dimensions, ActivityIndicator } from "react-native"
 import { usePalette } from "utils/colors"
 import timerIcon from "assets/freeClassrooms/timer.svg"
 import overcrowdingIcon from "assets/freeClassrooms/overcrowding.svg"
@@ -14,6 +14,8 @@ const { width } = Dimensions.get("window")
 interface FreeClassListProps {
   data: RoomSimplified[] | undefined
 }
+
+const overcrowdingTypes = ["Poco", "Mediamente", "Molto"]
 
 /**
  * It handles a list of freeclassrooms available.
@@ -111,7 +113,8 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                 marginTop: 12,
               }}
             >
-              Mediamente{"\n"}
+              {overcrowdingTypes[0]}
+              {"\n"}
               <BodyText
                 style={{
                   fontWeight: "300",

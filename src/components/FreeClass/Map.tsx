@@ -17,7 +17,7 @@ interface MapProps {
   userLongitude: number
   locationStatus: PermissionStatus
   buildingList: BuildingItem[] | undefined
-  onPressMarker: (campusName: string[], buildingName: string) => void
+  onPressMarker: (building: BuildingItem) => void
 }
 
 /**
@@ -31,7 +31,7 @@ export const Map: FC<MapProps> = props => {
 
   useEffect(() => {
     if (props.userLatitude === undefined && props.userLongitude === undefined) {
-      setTimeout(() => setTimer(true), 15000) //15 sec
+      setTimeout(() => setTimer(true), 20000) //20 sec
     }
   }, [])
 
@@ -142,11 +142,7 @@ export const Map: FC<MapProps> = props => {
                 //come faccio in questi casi quando le props latitude e longitude del marker non possono essere undefined?
               }
             >
-              <Callout
-                onPress={() =>
-                  props.onPressMarker(building.campus.name, building.name)
-                }
-              >
+              <Callout onPress={() => props.onPressMarker(building)}>
                 <Text>{building.name}</Text>
               </Callout>
             </Marker>
