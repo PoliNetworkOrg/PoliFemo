@@ -11,6 +11,7 @@ export interface ButtonInterface {
   id: number
   title: string
   icon: DataSourceParam
+  toAdd: boolean
 }
 
 /**

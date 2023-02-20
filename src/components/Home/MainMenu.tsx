@@ -24,19 +24,19 @@ import { useOutsideClick } from "utils/outsideClick"
  * the buttons and their features
  */
 export const defaultIcons: ButtonInterface[] = [
-  { id: 0, title: "Calendario", icon: calendar },
-  { id: 1, title: "Orario Lezioni", icon: clock },
-  { id: 2, title: "PoliAssociazioni", icon: association },
-  { id: 3, title: "Aule Libere", icon: free_classrooms },
-  { id: 4, title: "Materiali", icon: materials },
-  { id: 5, title: "Gruppi", icon: groups },
-  { id: 6, title: "Valutazioni", icon: marks },
-  { id: 7, title: "Libretto", icon: grading_book },
-  { id: 8, title: "Test e Prove", icon: tests },
-  { id: 9, title: "Aggiungi", icon: add },
+  { id: 0, title: "Calendario", icon: calendar, toAdd: false },
+  { id: 1, title: "Orario Lezioni", icon: clock, toAdd: false },
+  { id: 2, title: "PoliAssociazioni", icon: association, toAdd: false },
+  { id: 3, title: "Aule Libere", icon: free_classrooms, toAdd: false },
+  { id: 4, title: "Materiali", icon: materials, toAdd: false },
+  { id: 5, title: "Gruppi", icon: groups, toAdd: false },
+  { id: 6, title: "Valutazioni", icon: marks, toAdd: false },
+  { id: 7, title: "Libretto", icon: grading_book, toAdd: false },
+  { id: 8, title: "Test e Prove", icon: tests, toAdd: false },
+  { id: 9, title: "Aggiungi", icon: add, toAdd: true },
 ]
 
-type ButtonState = ButtonInterface & { shown: boolean }
+type ButtonState = ButtonInterface & { shown: boolean; toAdd: boolean }
 
 /**
  * the main menu of the app, an horizontal scroll view with the buttons to navigate to the different pages
@@ -45,7 +45,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
   const { navigate } = useNavigation()
 
   const [icons, setIcons] = useState<ButtonState[]>(
-    defaultIcons.map(icon => ({ ...icon, shown: true }))
+    defaultIcons.map(icon => ({ ...icon, shown: true, toAdd: icon.toAdd }))
   )
 
   const [isModalVisible, setModalVisible] = useState(false)
@@ -85,6 +85,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
 
   // divide iconsToAdd in triplets
   const triplets = icons
+    .filter(i => i.toAdd == false)
     .filter(i => !i.shown)
     .reduce((acc, cur, i) => {
       if (i % 3 === 0) {
@@ -147,12 +148,9 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
       )}
       {icons
         .filter(i => i.shown)
-        .filter(
-          i =>
-            i.id === 9 ||
-            (filter
-              ? i.title.toLowerCase().includes(filter.toLowerCase())
-              : true)
+        .filter(i => (i.toAdd ? triplets.length > 0 : true))
+        .filter(i =>
+          filter ? i.title.toLowerCase().includes(filter.toLowerCase()) : true
         )
         .map(buttonIcon => (
           <MenuButton
