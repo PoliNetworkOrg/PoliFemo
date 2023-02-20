@@ -11,7 +11,9 @@ interface InfoMapTileProps {
   roomName: string
   building: string
   address?: string
-  capacity?: string
+  capacity?: number
+  roomLongitude?: number
+  roomLatitude?: number
 }
 
 export const InfoMapTile: FC<InfoMapTileProps> = props => {
@@ -132,8 +134,8 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
             onPress={() =>
               openAddressOnMap(
                 props.building ? building + "." + roomName : roomName,
-                "45.478053",
-                "9.228061"
+                props.roomLatitude?.toString() ?? "45.478053",
+                props.roomLongitude?.toString() ?? "9.228061"
               )
             }
           >
@@ -192,8 +194,8 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
                   bottom: -25,
                 }}
                 initialRegion={{
-                  latitude: 45.478053,
-                  longitude: 9.228061,
+                  latitude: props.roomLatitude ?? 45.478053,
+                  longitude: props.roomLongitude ?? 9.228061,
                   latitudeDelta: 0.01,
                   longitudeDelta: 0.01,
                 }}

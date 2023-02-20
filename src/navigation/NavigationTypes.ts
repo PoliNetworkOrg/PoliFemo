@@ -53,7 +53,14 @@ export type MainStackNavigatorParams = {
   CampusChoice: { currentDate: string }
   PositionChoice: undefined
   BuildingChoice: { campus: CampusItem; currentDate: string }
-  RoomDetails: { room: RoomDetails; startDate: string; roomId: number }
+  RoomDetails: {
+    room: RoomDetails
+    startDate: string
+    roomId: number
+    roomLatitude?: number
+    roomLongitude?: number
+    occupancies?: Record<string, "FREE" | "OCCUPIED">
+  }
   ClassChoice: { building: BuildingItem; currentDate: string }
   Groups: undefined
 }

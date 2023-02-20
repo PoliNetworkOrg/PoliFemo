@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { ValidCrowdStatus } from "components/FreeClass/ClassDetails/CrowdingSection"
 
 export function extractRoom(val: string) {
@@ -23,16 +24,28 @@ export function extractBuilding(val: string) {
     return regExp.test(val)
 } */
 
-export function extractTimeLeft(startDate: Date) {
-  const deltaMilliseconds = startDate.getTime() - Date.now()
+export function extractTimeLeft(now: Date, targetDate?: Date) {
+  if (!targetDate) {
+    return { hoursLeft: undefined, minutesLeft: undefined }
+  }
+  const deltaMilliseconds = targetDate.getTime() - now.getTime()
+  if (deltaMilliseconds <= 0) {
+    return { hoursLeft: undefined, minutesLeft: undefined }
+  }
   const hours = Math.floor(deltaMilliseconds / 3.6e6)
   const minutes = Math.floor(
     (deltaMilliseconds - hours * 60 * 60 * 1000) / 60000
   )
   const hoursLeft = hours.toString()
   const minutesLeft = minutes.toString()
-  const isPositive = hours >= 0 && minutes >= 0
-  return { hoursLeft, minutesLeft, isPositive }
+
+  console.log(hoursLeft)
+
+  console.log(minutesLeft)
+  return {
+    hoursLeft: hoursLeft,
+    minutesLeft: minutesLeft,
+  }
 }
 
 export function getCrowdStatus(pos: number, width: number): ValidCrowdStatus {
@@ -52,5 +65,37 @@ export function getCrowdStatus(pos: number, width: number): ValidCrowdStatus {
     return 4
   } else {
     return 5
+  }
+}
+
+/**
+ * Return the correct end date in which the room is free given a record of occcupancies
+ *
+ * return undefined in case of errors
+ *
+ */
+export function getEndDate(occupancies?: Record<string, "FREE" | "OCCUPIED">) {
+  let time
+
+  if (occupancies !== undefined) {
+    time = Object.keys(occupancies).find(
+      time => occupancies[time] === "OCCUPIED"
+    )
+  }
+  if (time === undefined) {
+    const endDate = new Date()
+    endDate.setHours(20, 0, 0, 0)
+    return endDate
+  } else {
+    try {
+      const hour = parseInt(time.substring(0, 2))
+      const minutes = parseInt(time.substring(3))
+      const endDate = new Date()
+      endDate.setHours(hour, minutes, 0, 0)
+      return endDate
+    } catch (err) {
+      console.log(err)
+      return undefined
+    }
   }
 }

@@ -11,6 +11,7 @@ export interface Room {
   building: string
   power: boolean
   link: string
+  occupancies: Record<string, "FREE" | "OCCUPIED">
 }
 export interface RoomSimplified {
   roomId: number
@@ -19,7 +20,7 @@ export interface RoomSimplified {
 
 export interface RoomDetails {
   name: string
-  capacity: string
+  capacity: number
   building: string
   address: string
   power: boolean

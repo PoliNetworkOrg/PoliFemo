@@ -12,10 +12,11 @@ import {
   useSVG,
 } from "@shopify/react-native-skia"
 import clock from "assets/freeClassrooms/clock.svg"
-import { extractTimeLeft } from "utils/rooms"
+import { extractTimeLeft, getEndDate } from "utils/rooms"
 
 interface TimeLeftTileProps {
   startDate: string
+  occupancies?: Record<string, "FREE" | "OCCUPIED">
 }
 
 export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
@@ -39,12 +40,23 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
   )
 
   const startDate = new Date(props.startDate)
-  const endDate = new Date(startDate.getTime() + 8 * 60 * 60 * 1000)
+
+  const endDate = getEndDate(props.occupancies)
+
   const startHour = startDate.getHours().toString().padStart(2, "0")
-  const endhour = endDate.getHours().toString().padStart(2, "0")
+  const startMinutes = startDate.getMinutes().toString().padStart(2, "0")
 
-  const { hoursLeft, minutesLeft, isPositive } = extractTimeLeft(startDate)
+  let endhour = endDate?.getHours().toString().padStart(2, "0") ?? undefined
+  let endMinutes =
+    endDate?.getMinutes().toString().padStart(2, "0") ?? undefined
 
+  const { hoursLeft, minutesLeft } = extractTimeLeft(startDate, endDate)
+
+  // ! temporary fix
+  if (endDate && endDate.getTime() - startDate.getTime() < 0) {
+    endhour = undefined
+    endMinutes = undefined
+  }
   return (
     <View style={{ marginTop: 14 }}>
       <BodyText
@@ -70,7 +82,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                 flexDirection: "row",
                 alignItems: "center",
                 marginBottom: 8,
-                width: 96,
+                width: 100,
               }}
             >
               <BodyText
@@ -89,6 +101,8 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                   borderColor: isLight ? "#454773" : "#fff",
                   borderWidth: 0.5,
                   borderRadius: 5,
+                  minWidth: 70,
+                  alignItems: "center",
                 }}
               >
                 <BodyText
@@ -99,7 +113,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                     paddingHorizontal: 2,
                   }}
                 >
-                  {startHour} : 00
+                  {startHour} : {startMinutes}
                 </BodyText>
               </View>
             </View>
@@ -107,7 +121,6 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                width: 96,
               }}
             >
               <BodyText
@@ -127,6 +140,8 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                   borderColor: isLight ? "#454773" : "#fff",
                   borderWidth: 0.5,
                   borderRadius: 5,
+                  minWidth: 70,
+                  alignItems: "center",
                 }}
               >
                 <BodyText
@@ -137,7 +152,9 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                     paddingHorizontal: 2,
                   }}
                 >
-                  {endhour} : 00
+                  {endhour && endMinutes
+                    ? `${endhour} : ${endMinutes}`
+                    : "-- : --"}
                 </BodyText>
               </View>
             </View>
@@ -200,7 +217,9 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                   color: isLight ? "#414867" : "#fff",
                 }}
               >
-                {isPositive ? `${hoursLeft} h ${minutesLeft}'` : "-- h -- '"}
+                {hoursLeft && minutesLeft
+                  ? `${hoursLeft} h ${minutesLeft}'`
+                  : "-- h -- '"}
               </BodyText>
             </View>
           </View>
