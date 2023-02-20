@@ -7,19 +7,19 @@ import { RoomUtilsSection } from "components/FreeClass/ClassDetails/RoomUtilsSec
 import { CrowdingSection } from "components/FreeClass/ClassDetails/CrowdingSection"
 
 export const RoomDetails: MainStackScreen<"RoomDetails"> = props => {
-    const { room, startDate, roomId } = props.route.params
+  const { room, startDate, roomId } = props.route.params
 
-    return (
-        <PageWrapper style={{ paddingHorizontal: 28, paddingBottom: 115 }}>
-            <InfoMapTile
-                address={room.address}
-                building={room.building}
-                capacity={room.capacity}
-                roomName={room.name}
-            />
-            <TimeLeftTile startDate={startDate} />
-            <CrowdingSection roomId={roomId}/>
-            <RoomUtilsSection power={room.power} />
-        </PageWrapper>
-    )
+  return (
+    <PageWrapper style={{ paddingHorizontal: 28, paddingBottom: 115 }}>
+      <InfoMapTile
+        address={room.address}
+        building={room.building}
+        capacity={room.capacity}
+        roomName={room.name}
+      />
+      <TimeLeftTile startDate={startDate} />
+      <CrowdingSection roomId={roomId} />
+      <RoomUtilsSection power={room.power} />
+    </PageWrapper>
+  )
 }

@@ -1,34 +1,34 @@
 name: Prune EAS branches
 
 on:
-    workflow_dispatch:
-    schedule:
-        - cron: "42 0 * * *" # ahah funny number
+  workflow_dispatch:
+  schedule:
+    - cron: "42 0 * * *" # ahah funny number
 
 jobs:
-    prune:
-        name: Prune EAS branches
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-              with:
-                  fetch-depth: 0 # fetch all branches to get the remote ones
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 16
+  prune:
+    name: Prune EAS branches
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # fetch all branches to get the remote ones
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
 
-            - name: Log remote branches
-              run: git branch -r
+      - name: Log remote branches
+        run: git branch -r
 
-            - name: Install dependencies
-              run: yarn install --immutable
+      - name: Install dependencies
+        run: yarn install --immutable
 
-            - name: Setup Expo
-              uses: expo/expo-github-action@v7
-              with:
-                  expo-version: latest
-                  eas-version: latest
-                  token: ${{ secrets.EXPO_TOKEN }}
+      - name: Setup Expo
+        uses: expo/expo-github-action@v7
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
 
-            - name: Prune EAS branches
-              run: yarn run prune-branches
+      - name: Prune EAS branches
+        run: yarn run prune-branches

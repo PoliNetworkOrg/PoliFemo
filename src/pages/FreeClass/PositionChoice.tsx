@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { Pressable, View } from "react-native"
-import { usePalette } from "utils/colors"
-import { NavBar } from "components/NavBar"
-import { BodyText, Title } from "components/Text"
-import { PoliSearchBar } from "components/Home"
-import { FreeClassList } from "components/FreeClass/FreeClassList"
-import { Map } from "components/FreeClass/Map"
+import { Platform, View } from "react-native"
+import { Title } from "components/Text"
 import * as Location from "expo-location"
 import { LocationGeocodedAddress, PermissionStatus } from "expo-location"
 import { AddressText } from "components/FreeClass/AddressText"
@@ -14,276 +9,200 @@ import { CampusItem, campusList } from "./CampusChoice"
 import { getDistance } from "geolib"
 import { api } from "api"
 import { BuildingItem } from "./BuildingChoice"
+import { PageWrapper } from "components/Groups/PageWrapper"
+import { PositionModality } from "components/FreeClass/PositionModality"
+import { addHours } from "api/rooms"
+import BuildingListJSON from "components/FreeClass/buildingCoords.json"
 
-enum ButtonType {
-    MAP,
-    LIST,
-}
-
+/**
+ * In this page the user can find a room according to his current position.
+ */
 export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
-    const [search, setSearch] = useState("")
-    const { homeBackground, background, primary, isDark, palette } =
-        usePalette()
+  const [locationStatus, setLocationStatus] = useState<PermissionStatus>(
+    PermissionStatus.GRANTED
+  )
 
-    const [status, setStatus] = useState<ButtonType>(ButtonType.MAP)
+  const [currentLocation, setCurrentLocation] =
+    useState<LocationGeocodedAddress>()
 
-    const [locationStatus, setLocationStatus] = useState<PermissionStatus>(
-        PermissionStatus.GRANTED
-    )
+  const [currentCoords, setCurrentCoords] = useState<number[]>([])
 
-    const [currentLocation, setCurrentLocation] =
-        useState<LocationGeocodedAddress>()
+  const [buildingList, setBuildingList] = useState<BuildingItem[]>()
 
-    const [currentCoords, setCurrentCoords] = useState<number[]>([])
+  //the dateEnd is the startDate + 3 hours, the number of hours has not been chosen yet
+  const dateEnd = addHours(new Date(), 3).toISOString() //3 hours is an example
 
-    const [currentCampus, setCurrentCampus] = useState<number[]>([])
-
-    const [roomList, setRoomList] = useState<number[]>([])
-
-    function addHours(dateStart: Date, hours: number) {
-        const tempDate = new Date(dateStart.getTime())
-        tempDate.setHours(tempDate.getHours() + hours)
-        return tempDate
-    }
-
-    //the dateEnd is the startDate + 8 hours, the number of hours has not been chosen yet
-    const dateEnd = addHours(new Date(), 8).toISOString() //8 hours is an example
-
-    //main function that handles the call to the API in order to obtain the list of freeclassRooms
-    const findRoomsAvailable = async (campus: CampusItem) => {
-        try {
-            const response = await api.rooms.getFreeRoomsTimeRange(
-                campus.acronym,
-                new Date().toISOString(),
-                dateEnd,
-            )
-            if (response.length > 0) {
-                const tempBuildingStrings: string[] = []
-                const tempRoomList: number[] = []
-                const tempBuildings: BuildingItem[] = []
-                response.map(room => {
-                    const currentBuildingString = room.building.replace(
-                        "Edificio ",
-                        "Ed. "
-                    )
-                    if (!tempBuildingStrings.includes(currentBuildingString)) {
-                        const currentBuilding: BuildingItem = {
-                            campus: campus,
-                            name: room.building.replace("Edificio ", "Ed. "),
-                            freeRoomList: [room.room_id],
-                        }
-                        tempBuildingStrings.push(currentBuildingString)
-                        tempBuildings.push(currentBuilding)
-                    } else {
-                        //element already present in the list
-                        const indexElement = tempBuildingStrings.indexOf(
-                            currentBuildingString
-                        )
-                        tempBuildings[indexElement].freeRoomList.push(
-                            room.room_id
-                        )
-                    }
-                    tempRoomList.push(room.room_id)
-                })
-                setRoomList(tempRoomList)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    async function getPosition() {
-        const { status } = await Location.requestForegroundPermissionsAsync()
-        if (status !== "granted") {
-            setLocationStatus(PermissionStatus.UNDETERMINED)
-            setCurrentLocation(undefined)
+  const compareCampusNames = (c1: string[], c2: string[]) => {
+    if (c1.length === c2.length) {
+      if (c1.length > 1) {
+        if (c1[0] === c2[0] && c1[1] === c2[1]) {
+          return true
         } else {
-            const { coords } = await Location.getCurrentPositionAsync({})
-            const { latitude, longitude } = coords
-            const response = await Location.reverseGeocodeAsync({
-                latitude,
-                longitude,
-            })
-            //temporary solution, too inefficient
-            campusList.map(campus => {
-                if (
-                    getDistance(
-                        { latitude: latitude, longitude: longitude },
-                        {
-                            latitude: campus.latitude,
-                            longitude: campus.longitude,
-                        }
-                    ) <= 50000 //if the distance between the user and the campus is less than 500m I'll call the API
-                ) {
-                    //call the API
-                    void findRoomsAvailable(campus)
-                    setCurrentCampus([campus.latitude, campus.longitude])
+          return false
+        }
+      } else {
+        if (c1[0] === c2[0]) {
+          return true
+        } else {
+          return false
+        }
+      }
+    } else {
+      return false
+    }
+  }
+
+  const getBuildingCoords = (campus: CampusItem, buildingName: string) => {
+    for (const element of BuildingListJSON) {
+      if (element.acronym === campus.acronym) {
+        for (const c of element.campus) {
+          if (compareCampusNames(c.name, campus.name)) {
+            for (const b of c.buildings) {
+              if (b.name === buildingName) {
+                return b.coords
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  //main function that handles the call to the API in order to obtain the list of freeclassRooms
+  const findRoomsAvailable = async (
+    campusList: CampusItem[],
+    currentLat: number,
+    currentLong: number
+  ) => {
+    const tempBuildingList: BuildingItem[] = []
+    for (const campus of campusList) {
+      if (
+        getDistance(
+          { latitude: currentLat, longitude: currentLong },
+          {
+            latitude: campus.latitude,
+            longitude: campus.longitude,
+          }
+        ) <= 50000 //if the distance between the user and the campus is less than 500m I'll call the API,to test I put 50km
+      ) {
+        //call the API
+        try {
+          const response = await api.rooms.getFreeRoomsTimeRange(
+            campus.acronym,
+            new Date().toISOString(),
+            dateEnd
+          )
+          if (response.length > 0) {
+            const tempBuildingStrings: string[] = []
+            const tempBuildings: BuildingItem[] = []
+            response.map(room => {
+              const coords = getBuildingCoords(campus, room.building)
+              const currentBuildingString = room.building.replace(
+                "Edificio ",
+                "Ed. "
+              )
+              if (!tempBuildingStrings.includes(currentBuildingString)) {
+                const currentBuilding: BuildingItem = {
+                  campus: campus,
+                  name: room.building,
+                  latitude: coords?.latitude,
+                  longitude: coords?.longitude,
+                  freeRoomList: [
+                    {
+                      roomId: room.room_id,
+                      name: room.name,
+                    },
+                  ],
                 }
+                tempBuildingStrings.push(currentBuildingString)
+                tempBuildings.push(currentBuilding)
+              } else {
+                //element already in the list
+                const indexElement = tempBuildingStrings.indexOf(
+                  currentBuildingString
+                )
+                tempBuildings[indexElement].freeRoomList.push({
+                  roomId: room.room_id,
+                  name: room.name,
+                })
+              }
             })
-            setLocationStatus(PermissionStatus.GRANTED)
-            setCurrentCoords([latitude, longitude])
-            setCurrentLocation(response[0])
+            tempBuildingList.push(...tempBuildings)
+          }
+        } catch (error) {
+          console.log(error)
         }
+      }
     }
+    setBuildingList(tempBuildingList)
+  }
 
-    async function checkPermission() {
-        const { status } = await Location.requestForegroundPermissionsAsync()
-        if (status !== "granted") {
-            setLocationStatus(PermissionStatus.UNDETERMINED)
-            setCurrentLocation(undefined)
-        }
+  async function getPosition() {
+    const { status } = await Location.requestForegroundPermissionsAsync()
+    if (status !== "granted") {
+      setLocationStatus(PermissionStatus.UNDETERMINED)
+      setCurrentLocation(undefined)
+    } else {
+      const { coords } = await Location.getCurrentPositionAsync({})
+      const { latitude, longitude } = coords
+      const response = await Location.reverseGeocodeAsync({
+        latitude,
+        longitude,
+      })
+      //temporary solution, too inefficient?
+      void findRoomsAvailable(campusList, latitude, longitude)
+
+      setLocationStatus(PermissionStatus.GRANTED)
+      setCurrentCoords([latitude, longitude])
+      setCurrentLocation(response[0])
     }
+  }
 
-    useEffect(() => {
-        const intervalId = setInterval(() => void checkPermission(), 1000 * 2) // in milliseconds,call every 2 sec(this could be modified)
-        return () => clearInterval(intervalId)
-    }, [])
+  async function checkPermission() {
+    if (Platform.OS === "ios") {
+      // idk but hasServicesEnabledAsync does not work on IOS
+      const { status } = await Location.requestForegroundPermissionsAsync()
+      if (status !== "granted") {
+        setLocationStatus(PermissionStatus.UNDETERMINED)
+        setCurrentLocation(undefined)
+      }
+    } else {
+      const res = await Location.hasServicesEnabledAsync()
+      if (!res) {
+        setLocationStatus(PermissionStatus.UNDETERMINED)
+        setCurrentLocation(undefined)
+      } else {
+        setLocationStatus(PermissionStatus.GRANTED)
+      }
+    }
+    return
+  }
 
-    useEffect(() => {
-        void getPosition()
-    }, [])
+  useEffect(() => {
+    const intervalId = setInterval(() => void checkPermission(), 2000) // in milliseconds,call every 2 sec(this could be modified)
+    return () => clearInterval(intervalId)
+  }, [])
 
-    return (
-        <View
-            style={{
-                flex: 1,
-                alignItems: "stretch",
-                backgroundColor: homeBackground,
-            }}
-        >
-            <View
-                style={{
-                    flex: 1,
-                    marginTop: 106,
-                }}
-            >
-                <View
-                    style={{
-                        paddingBottom: 400,
-                        backgroundColor: background,
-                        borderTopLeftRadius: 30,
-                        borderTopRightRadius: 30,
+  useEffect(() => {
+    void getPosition()
+  }, [])
 
-                        shadowColor: "#000",
-                        shadowOffset: {
-                            width: 0,
-                            height: 7,
-                        },
-                        shadowOpacity: 0.43,
-                        shadowRadius: 9.51,
-
-                        elevation: 15,
-                    }}
-                >
-                    <View
-                        //view containing the title
-                        style={{
-                            paddingHorizontal: 28,
-                            marginTop: 28,
-                            marginBottom: 17,
-                        }}
-                    >
-                        <Title style={{ fontSize: 40 }}>
-                            Posizione Attuale
-                        </Title>
-                        <AddressText
-                            currentLocation={currentLocation}
-                            locationStatus={locationStatus}
-                        />
-                    </View>
-                    <View style={{ marginTop: -35 }}>
-                        <PoliSearchBar
-                            onChange={searchKey => setSearch(searchKey)}
-                        />
-                    </View>
-                    <View
-                        style={{
-                            marginTop: 22,
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <Pressable
-                            style={{
-                                width: 134,
-                                height: 44,
-                                backgroundColor:
-                                    status === ButtonType.MAP
-                                        ? primary
-                                        : isDark
-                                        ? palette.primary
-                                        : palette.lighter,
-                                borderRadius: 22,
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                            onPress={() => setStatus(ButtonType.MAP)}
-                        >
-                            <BodyText
-                                style={{
-                                    fontWeight:
-                                        status === ButtonType.MAP
-                                            ? "900"
-                                            : "500",
-                                    color: "white",
-                                }}
-                            >
-                                Mappa
-                            </BodyText>
-                        </Pressable>
-                        <Pressable
-                            style={{
-                                width: 134,
-                                height: 44,
-                                backgroundColor:
-                                    status === ButtonType.LIST
-                                        ? primary
-                                        : isDark
-                                        ? palette.primary
-                                        : palette.lighter,
-                                borderRadius: 22,
-                                marginLeft: 18,
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                            onPress={() => setStatus(ButtonType.LIST)}
-                        >
-                            <BodyText
-                                style={{
-                                    fontWeight:
-                                        status === ButtonType.LIST
-                                            ? "900"
-                                            : "500",
-                                    color: "white",
-                                }}
-                            >
-                                Lista
-                            </BodyText>
-                        </Pressable>
-                    </View>
-
-                    {status === ButtonType.LIST ? (
-                        <View
-                            style={{
-                                marginBottom: 90,
-                                paddingBottom: 100,
-                            }}
-                        >
-                            <FreeClassList data={roomList} date={new Date()} />
-                        </View>
-                    ) : (
-                        <Map
-                            latitude={currentCoords[0]}
-                            longitude={currentCoords[1]}
-                            locationStatus={locationStatus}
-                            currentCampus={currentCampus}
-                            onPressMarker={() => setStatus(ButtonType.LIST)}
-                        />
-                    )}
-                </View>
-            </View>
-            <NavBar />
+  return (
+    <PageWrapper>
+      <View style={{ paddingTop: 28 }}>
+        <View style={{ paddingLeft: 28 }}>
+          <Title>Posizione attuale</Title>
+          <AddressText
+            currentLocation={currentLocation}
+            locationStatus={locationStatus}
+          />
         </View>
-    )
+      </View>
+      <PositionModality
+        currentCoords={currentCoords}
+        locationStatus={locationStatus}
+        buildingList={buildingList}
+      />
+    </PageWrapper>
+  )
 }

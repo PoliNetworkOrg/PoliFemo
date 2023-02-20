@@ -8,55 +8,52 @@ import { usePalette } from "utils/colors"
  * somewhere in the app.
  */
 export const PageWrapper: FC<{
-    hideNavbar?: boolean
-    /**
-     * Props for the navbar, see {@link NavBar}
-     */
-    navbarOptions?: NavbarProps
+  hideNavbar?: boolean
+  /**
+   * Props for the navbar, see {@link NavBar}
+   */
+  navbarOptions?: NavbarProps
 
-    style?: ViewStyle
+  style?: ViewStyle
 
-    children: React.ReactNode
+  children: React.ReactNode
 }> = props => {
-    const { background, isLight, primary } = usePalette()
+  const { background, isLight, primary } = usePalette()
 
-    const navbar = !props.hideNavbar
+  const navbar = !props.hideNavbar
 
-    return (
-        <View
-            style={{
-                flex: 1,
-                backgroundColor: isLight ? primary : background,
-            }}
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: isLight ? primary : background,
+      }}
+    >
+      <View
+        style={{
+          backgroundColor: background,
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30,
+          marginTop: 106,
+          zIndex: 2,
+          flex: 1,
+          shadowColor: "#000",
+          shadowOpacity: 0.2,
+          shadowRadius: 8.3,
+          elevation: 13,
+          overflow: "hidden",
+        }}
+      >
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ flex: 1 }}
+          contentContainerStyle={[{ overflow: "visible" }, props.style]}
         >
-            <View
-                style={{
-                    backgroundColor: background,
-                    borderTopLeftRadius: 30,
-                    borderTopRightRadius: 30,
-                    marginTop: 106,
-                    zIndex: 2,
-                    flex: 1,
-                    shadowColor: "#000",
-                    shadowOpacity: 0.2,
-                    shadowRadius: 8.3,
-                    elevation: 13,
-                    overflow: "hidden",
-                }}
-            >
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    style={{ flex: 1 }}
-                    contentContainerStyle={[
-                        { overflow: "visible" },
-                        props.style,
-                    ]}
-                >
-                    {props.children}
-                </ScrollView>
-            </View>
+          {props.children}
+        </ScrollView>
+      </View>
 
-            {navbar ? <NavBar {...props.navbarOptions} /> : null}
-        </View>
-    )
+      {navbar ? <NavBar {...props.navbarOptions} /> : null}
+    </View>
+  )
 }

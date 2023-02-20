@@ -1,43 +1,50 @@
 import { DataSourceParam } from "@shopify/react-native-skia"
 import help from "./help.svg"
 import modify from "./modify.svg"
+import privacy from "./privacy.svg"
 import disconnect from "./disconnect.svg"
 import notifiche from "./notifiche.svg"
 
 export const settingsIconList = [
-    "notifiche",
-    "modify",
-    "help",
-    "disconnect",
+  "notifiche",
+  "privacy",
+  "modify",
+  "help",
+  "disconnect",
 ] as const
 
-export type SettingIconNames = typeof settingsIconList[number]
+export type SettingIconNames = (typeof settingsIconList)[number]
 
 export interface IconProps {
-    svg: DataSourceParam
-    width: number
-    heigth: number
+  svg: DataSourceParam
+  width: number
+  heigth: number
 }
 
 export const settingsIcons: Record<SettingIconNames, IconProps> = {
-    notifiche: {
-        svg: notifiche,
-        width: 20,
-        heigth: 24,
-    },
-    modify: {
-        svg: modify,
-        width: 20,
-        heigth: 20,
-    },
-    help: {
-        svg: help,
-        width: 24,
-        heigth: 24,
-    },
-    disconnect: {
-        svg: disconnect,
-        width: 24,
-        heigth: 24,
-    },
+  notifiche: {
+    svg: notifiche,
+    width: 20,
+    heigth: 24,
+  },
+  privacy: {
+    svg: privacy,
+    width: 18,
+    heigth: 24,
+  },
+  modify: {
+    svg: modify,
+    width: 20,
+    heigth: 20,
+  },
+  help: {
+    svg: help,
+    width: 24,
+    heigth: 24,
+  },
+  disconnect: {
+    svg: disconnect,
+    width: 24,
+    heigth: 24,
+  },
 }

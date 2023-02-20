@@ -1,27 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, {
-    FC,
-    useCallback,
-    useContext,
-    useRef,
-    useEffect,
-    useState,
-    createContext,
+  FC,
+  useCallback,
+  useContext,
+  useRef,
+  useEffect,
+  useState,
+  createContext,
 } from "react"
 import { GestureResponderEvent, View, ViewProps } from "react-native"
 
 export const outsideClickContext = createContext<{
-    addListener: (listener: (event: GestureResponderEvent) => boolean) => void
-    removeListener: (
-        listener: (event: GestureResponderEvent) => boolean
-    ) => void
+  addListener: (listener: (event: GestureResponderEvent) => boolean) => void
+  removeListener: (listener: (event: GestureResponderEvent) => boolean) => void
 }>({
-    addListener: () => {
-        // noop
-    },
-    removeListener: () => {
-        // noop
-    },
+  addListener: () => {
+    // noop
+  },
+  removeListener: () => {
+    // noop
+  },
 })
 
 /**
@@ -31,23 +29,23 @@ export const outsideClickContext = createContext<{
  * @returns false if the click is not within the component, true otherwise
  */
 function isTapInsideComponent(
-    target: GestureResponderEvent["target"],
-    component: React.Component
+  target: GestureResponderEvent["target"],
+  component: React.Component
 ) {
-    if (target === component) return true
+  if (target === component) return true
 
-    // everything below here is fucked beyond repair
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-    const curr = component as any
+  // everything below here is fucked beyond repair
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+  const curr = component as any
 
-    if (curr._children && curr._children.length) {
-        // check all of the children until one is the target
-        for (const child of curr._children) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            if (child && isTapInsideComponent(target, child)) return true
-        }
+  if (curr._children && curr._children.length) {
+    // check all of the children until one is the target
+    for (const child of curr._children) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      if (child && isTapInsideComponent(target, child)) return true
     }
-    return false
+  }
+  return false
 }
 
 /**
@@ -74,36 +72,36 @@ function isTapInsideComponent(
  * @returns a ref that must be used to link the component the click should be outside of
  */
 export function useOutsideClick<T extends React.Component>(
-    callback: () => void,
-    listening: boolean
+  callback: () => void,
+  listening: boolean
 ) {
-    const ref = useRef<T>(null)
+  const ref = useRef<T>(null)
 
-    const listener = useCallback(
-        (event: GestureResponderEvent) => {
-            if (
-                listening &&
-                ref.current &&
-                !isTapInsideComponent(event.target, ref.current)
-            ) {
-                // outside click!
-                callback()
-                return true // the outside click handler should set responder
-            }
-            return false
-        },
-        [listening]
-    )
+  const listener = useCallback(
+    (event: GestureResponderEvent) => {
+      if (
+        listening &&
+        ref.current &&
+        !isTapInsideComponent(event.target, ref.current)
+      ) {
+        // outside click!
+        callback()
+        return true // the outside click handler should set responder
+      }
+      return false
+    },
+    [listening]
+  )
 
-    const { addListener, removeListener } = useContext(outsideClickContext)
+  const { addListener, removeListener } = useContext(outsideClickContext)
 
-    useEffect(() => {
-        if (!listening) return // only add the listener while, well, listening
+  useEffect(() => {
+    if (!listening) return // only add the listener while, well, listening
 
-        addListener(listener)
-        return () => removeListener(listener) // remove on cleanup
-    }, [addListener, removeListener, listener, listening])
-    return ref
+    addListener(listener)
+    return () => removeListener(listener) // remove on cleanup
+  }, [addListener, removeListener, listener, listening])
+  return ref
 }
 
 const { Provider } = outsideClickContext
@@ -112,58 +110,57 @@ const { Provider } = outsideClickContext
  * OutsideClick context provider, also wraps children in a view used to listen to global click events
  */
 export const OutsideClickProvider: FC<
-    { children: React.ReactNode } & ViewProps
+  { children: React.ReactNode } & ViewProps
 > = ({ children, ...viewProps }) => {
-    // a set of listeners actively listening for a gloabl click event
-    const [listeners, setListeners] = useState<
-        Set<(evt: GestureResponderEvent) => boolean>
-    >(new Set())
+  // a set of listeners actively listening for a gloabl click event
+  const [listeners, setListeners] = useState<
+    Set<(evt: GestureResponderEvent) => boolean>
+  >(new Set())
 
-    const addListener = useCallback(
-        (listener: (evt: GestureResponderEvent) => boolean) => {
-            setListeners(listeners => {
-                const newListeners = new Set(listeners)
-                newListeners.add(listener)
-                return newListeners
-            })
-        },
-        []
-    )
+  const addListener = useCallback(
+    (listener: (evt: GestureResponderEvent) => boolean) => {
+      setListeners(listeners => {
+        const newListeners = new Set(listeners)
+        newListeners.add(listener)
+        return newListeners
+      })
+    },
+    []
+  )
 
-    const removeListener = useCallback(
-        (listener: (evt: GestureResponderEvent) => boolean) => {
-            setListeners(listeners => {
-                const newListeners = new Set(listeners)
-                newListeners.delete(listener)
-                return newListeners
-            })
-        },
-        []
-    )
+  const removeListener = useCallback(
+    (listener: (evt: GestureResponderEvent) => boolean) => {
+      setListeners(listeners => {
+        const newListeners = new Set(listeners)
+        newListeners.delete(listener)
+        return newListeners
+      })
+    },
+    []
+  )
 
-    const globalClickEvent: (evt: GestureResponderEvent) => boolean =
-        useCallback(
-            evt => {
-                let result = false
-                listeners.forEach(listener => {
-                    result = listener(evt) || result
-                })
-                return result
-            },
-            [listeners]
-        )
+  const globalClickEvent: (evt: GestureResponderEvent) => boolean = useCallback(
+    evt => {
+      let result = false
+      listeners.forEach(listener => {
+        result = listener(evt) || result
+      })
+      return result
+    },
+    [listeners]
+  )
 
-    return (
-        <Provider value={{ addListener, removeListener }}>
-            <View
-                style={{ flex: 1 }}
-                {...viewProps}
-                onStartShouldSetResponderCapture={evt => {
-                    return globalClickEvent(evt)
-                }}
-            >
-                {children}
-            </View>
-        </Provider>
-    )
+  return (
+    <Provider value={{ addListener, removeListener }}>
+      <View
+        style={{ flex: 1 }}
+        {...viewProps}
+        onStartShouldSetResponderCapture={evt => {
+          return globalClickEvent(evt)
+        }}
+      >
+        {children}
+      </View>
+    </Provider>
+  )
 }
