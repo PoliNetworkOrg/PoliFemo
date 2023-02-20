@@ -31,7 +31,7 @@ export const Map: FC<MapProps> = props => {
 
   useEffect(() => {
     if (props.userLatitude === undefined && props.userLongitude === undefined) {
-      setTimeout(() => setTimer(true), 10000) //10 sec
+      setTimeout(() => setTimer(true), 15000) //15 sec
     }
   }, [])
 
@@ -87,6 +87,7 @@ export const Map: FC<MapProps> = props => {
                 }
           }
           onRegionChangeComplete={region => {
+            setRegion(region)
             AsyncStorage.setItem(
               "lastRegionVisited",
               JSON.stringify(region)
