@@ -74,7 +74,10 @@ export function getCrowdStatus(pos: number, width: number): ValidCrowdStatus {
  * return undefined in case of errors
  *
  */
-export function getEndDate(occupancies?: Record<string, "FREE" | "OCCUPIED">) {
+export function getEndDate(
+  startDate: Date,
+  occupancies?: Record<string, "FREE" | "OCCUPIED">
+) {
   let time
 
   if (occupancies !== undefined) {
@@ -83,7 +86,7 @@ export function getEndDate(occupancies?: Record<string, "FREE" | "OCCUPIED">) {
     )
   }
   if (time === undefined) {
-    const endDate = new Date()
+    const endDate = new Date(startDate)
     endDate.setHours(20, 0, 0, 0)
     return endDate
   } else {
