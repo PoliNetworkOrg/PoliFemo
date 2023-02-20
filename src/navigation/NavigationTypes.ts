@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /**
  * This file contains the type definitions for the navigation.
  *
@@ -18,9 +17,9 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { FC } from "react"
 import {
-  CompositeScreenProps,
-  NavigationProp,
-  useNavigation as nativeUseNav,
+    CompositeScreenProps,
+    NavigationProp,
+    useNavigation as nativeUseNav,
 } from "@react-navigation/native"
 import { Article } from "api/articles"
 import { NavigatorScreenParams } from "@react-navigation/native"
@@ -35,32 +34,32 @@ import { TagWithData } from "contexts/newsPreferences"
  * More info: https://reactnavigation.org/docs/typescript/
  */
 export type RootStackNavigatorParams = {
-  /* eslint-disable @typescript-eslint/naming-convention */
-  MainNav: NavigatorScreenParams<MainStackNavigatorParams>
-  SettingsNav: NavigatorScreenParams<SettingsStackNavigatorParams>
-  Login: undefined
+    /* eslint-disable @typescript-eslint/naming-convention */
+    MainNav: NavigatorScreenParams<MainStackNavigatorParams>
+    SettingsNav: NavigatorScreenParams<SettingsStackNavigatorParams>
+    Login: undefined
 }
 
 export type MainStackNavigatorParams = {
-  Home: undefined
-  Article: { article: Article }
-  OtherCategories: { tags: TagWithData[] }
-  ArticlesList: { tagName: string }
-  Error404: undefined
-  Groups: undefined
+    Home: undefined
+    Article: { article: Article }
+    OtherCategories: { tags: TagWithData[] }
+    ArticlesList: { tagName: string }
+    Error404: undefined
+    Groups: undefined
 }
 
 export type SettingsStackNavigatorParams = {
-  Settings: undefined
-  About: undefined
-  Licenses: undefined
-  Privacy: undefined
-  PoliMiApp: undefined
+    Settings: undefined
+    About: undefined
+    Licenses: undefined
+    Privacy: undefined
+    PoliMiApp: undefined
 }
 
 export type GlobalStackNavigatorParams = RootStackNavigatorParams &
-  MainStackNavigatorParams &
-  SettingsStackNavigatorParams
+    MainStackNavigatorParams &
+    SettingsStackNavigatorParams
 
 // Here are a couple of magic types, straight from the Underground Realm of Weird Types:
 
@@ -82,19 +81,19 @@ export type GlobalStackNavigatorParams = RootStackNavigatorParams &
  * ```
  */
 export type RootStackProps<T extends keyof RootStackNavigatorParams> =
-  StackScreenProps<RootStackNavigatorParams, T>
+    StackScreenProps<RootStackNavigatorParams, T>
 
 export type MainStackProps<T extends keyof MainStackNavigatorParams> =
-  CompositeScreenProps<
-    StackScreenProps<MainStackNavigatorParams, T>,
-    StackScreenProps<RootStackNavigatorParams>
-  >
+    CompositeScreenProps<
+        StackScreenProps<MainStackNavigatorParams, T>,
+        StackScreenProps<RootStackNavigatorParams>
+    >
 
 export type SettingsStackProps<T extends keyof SettingsStackNavigatorParams> =
-  CompositeScreenProps<
-    StackScreenProps<SettingsStackNavigatorParams, T>,
-    StackScreenProps<RootStackNavigatorParams>
-  >
+    CompositeScreenProps<
+        StackScreenProps<SettingsStackNavigatorParams, T>,
+        StackScreenProps<RootStackNavigatorParams>
+    >
 
 /**
  * Type for a component of the root stack navigator, use in place of `FC`.
@@ -116,18 +115,18 @@ export type SettingsStackProps<T extends keyof SettingsStackNavigatorParams> =
  * ```
  */
 export type RootStackScreen<
-  T extends keyof RootStackNavigatorParams,
-  P = Record<string, never>
+    T extends keyof RootStackNavigatorParams,
+    P = Record<string, never>
 > = FC<RootStackProps<T> & P>
 
 export type MainStackScreen<
-  T extends keyof MainStackNavigatorParams,
-  P = Record<string, never>
+    T extends keyof MainStackNavigatorParams,
+    P = Record<string, never>
 > = FC<MainStackProps<T> & P>
 
 export type SettingsStackScreen<
-  T extends keyof SettingsStackNavigatorParams,
-  P = Record<string, never>
+    T extends keyof SettingsStackNavigatorParams,
+    P = Record<string, never>
 > = FC<SettingsStackProps<T> & P>
 /**
  * Hook to access the navigation prop of the parent screen anywhere.
@@ -160,4 +159,4 @@ export type SettingsStackScreen<
  *
  */
 export const useNavigation = () =>
-  nativeUseNav<NavigationProp<GlobalStackNavigatorParams>>()
+    nativeUseNav<NavigationProp<GlobalStackNavigatorParams>>()
