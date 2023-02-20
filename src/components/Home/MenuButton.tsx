@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { FC, useEffect } from "react"
 import { DataSourceParam } from "@shopify/react-native-skia"
 import { Pressable, View, Animated } from "react-native"

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  * This file contains the type definitions for the navigation.
  *
@@ -54,6 +55,7 @@ export type SettingsStackNavigatorParams = {
   About: undefined
   Licenses: undefined
   Privacy: undefined
+  PoliMiApp: undefined
 }
 
 export type GlobalStackNavigatorParams = RootStackNavigatorParams &

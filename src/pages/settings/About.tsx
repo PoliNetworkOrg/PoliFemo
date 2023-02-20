@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable prettier/prettier */
 import React, { useContext } from "react"
 import { Alert, Linking, View } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
@@ -147,6 +150,15 @@ export const About: SettingsStackScreen<"About"> = () => {
             subtitle: "Visualizza le licenze dei pacchetti utilizzati",
             callback: () => {
               navigate("Licenses")
+            },
+          }}
+        />
+        <SettingTile
+          setting={{
+            title: "PoliMi WebApp",
+            subtitle: "App Polimi",
+            callback: () => {
+              navigate("PoliMiApp")
             },
           }}
         />
