@@ -41,6 +41,8 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
 
   const startDate = new Date(props.startDate)
 
+  const now = new Date()
+
   const endDate = getEndDate(startDate, props.occupancies)
 
   const startHour = startDate.getHours().toString().padStart(2, "0")
@@ -50,7 +52,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
   let endMinutes =
     endDate?.getMinutes().toString().padStart(2, "0") ?? undefined
 
-  const { hoursLeft, minutesLeft } = extractTimeLeft(startDate, endDate)
+  const { hoursLeft, minutesLeft } = extractTimeLeft(now, endDate)
 
   // ! temporary fix
   if (endDate && endDate.getTime() - startDate.getTime() < 0) {
