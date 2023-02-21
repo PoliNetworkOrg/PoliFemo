@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { ValidCrowdStatus } from "components/FreeClass/ClassDetails/CrowdingSection"
+import BuildingListJSON from "components/FreeClass/buildingCoords.json"
+import { CampusItem } from "pages/FreeClass/CampusChoice"
 
 export function extractRoom(val: string) {
   const arr = val.split(".")
@@ -38,10 +40,6 @@ export function extractTimeLeft(now: Date, targetDate?: Date) {
   )
   const hoursLeft = hours.toString()
   const minutesLeft = minutes.toString()
-
-  console.log(hoursLeft)
-
-  console.log(minutesLeft)
   return {
     hoursLeft: hoursLeft,
     minutesLeft: minutesLeft,
@@ -93,12 +91,48 @@ export function getEndDate(
     try {
       const hour = parseInt(time.substring(0, 2))
       const minutes = parseInt(time.substring(3))
-      const endDate = new Date()
+      const endDate = new Date(startDate)
       endDate.setHours(hour, minutes, 0, 0)
       return endDate
     } catch (err) {
       console.log(err)
       return undefined
     }
+  }
+}
+
+export function getBuildingCoords(campus: CampusItem, buildingName: string) {
+  for (const element of BuildingListJSON) {
+    if (element.acronym === campus.acronym) {
+      for (const c of element.campus) {
+        if (compareCampusNames(c.name, campus.name)) {
+          for (const b of c.buildings) {
+            if (b.name === buildingName) {
+              return b.coords
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+const compareCampusNames = (c1: string[], c2: string[]) => {
+  if (c1.length === c2.length) {
+    if (c1.length > 1) {
+      if (c1[0] === c2[0] && c1[1] === c2[1]) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      if (c1[0] === c2[0]) {
+        return true
+      } else {
+        return false
+      }
+    }
+  } else {
+    return false
   }
 }

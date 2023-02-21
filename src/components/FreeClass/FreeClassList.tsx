@@ -16,6 +16,8 @@ const { width } = Dimensions.get("window")
 interface FreeClassListProps {
   data: RoomSimplified[] | undefined
   date: Date
+  latitude?: number
+  longitude?: number
 }
 
 /**
@@ -57,6 +59,9 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                 room: selectedRoom,
                 startDate: props.date.toISOString(),
                 roomId: item.roomId,
+                roomLatitude: props.latitude,
+                roomLongitude: props.longitude,
+                occupancies: item.occupancies,
               })
             } catch (err) {
               console.log(err)

@@ -17,8 +17,8 @@ export const RoomDetails: MainStackScreen<"RoomDetails"> = props => {
         building={room.building}
         capacity={room.capacity}
         roomName={room.name}
-        roomLatitude={roomLatitude}
-        roomLongitude={roomLongitude}
+        latitude={roomLatitude}
+        longitude={roomLongitude}
       />
       <TimeLeftTile startDate={startDate} occupancies={occupancies} />
       <CrowdingSection roomId={roomId} />

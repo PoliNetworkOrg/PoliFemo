@@ -12,19 +12,20 @@ interface InfoMapTileProps {
   building: string
   address?: string
   capacity?: number
-  roomLongitude?: number
-  roomLatitude?: number
+  longitude?: number
+  latitude?: number
 }
 
 export const InfoMapTile: FC<InfoMapTileProps> = props => {
   const { isLight, primary } = usePalette()
 
-  console.log(props.building)
   const building = extractBuilding(props.building)
-  console.log(props.roomName)
   const roomName = extractRoom(props.roomName)
 
   const expandSvg = useSVG(expand)
+
+  const latitude = props.latitude
+  const longitude = props.longitude
 
   /*from  https://stackoverflow.com/questions/73653813/how-to-open-google-map-with-latitude-and-longitude*/
   const openAddressOnMap = (label: string, lat: string, lng: string) => {
@@ -120,119 +121,121 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
           </BodyText>
         </View>
       </View>
-      <View
-        style={{
-          alignItems: "flex-end",
-          height: "100%",
-        }}
-      >
-        <View style={{ marginTop: 65 }}>
-          <Pressable
-            style={{
-              alignItems: "flex-end",
-            }}
-            onPress={() =>
-              openAddressOnMap(
-                props.building ? building + "." + roomName : roomName,
-                props.roomLatitude?.toString() ?? "45.478053",
-                props.roomLongitude?.toString() ?? "9.228061"
-              )
-            }
-          >
-            <View
+      {latitude && longitude && (
+        <View
+          style={{
+            alignItems: "flex-end",
+            height: "100%",
+          }}
+        >
+          <View style={{ marginTop: 65 }}>
+            <Pressable
               style={{
-                width: 100,
-                height: 100,
-                backgroundColor: isLight ? "#414867" : "#fff",
-                borderRadius: 10,
-                overflow: "hidden",
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 7,
-                },
-                shadowOpacity: 0.43,
-                shadowRadius: 9.51,
-
-                elevation: 15,
+                alignItems: "flex-end",
               }}
+              onPress={() =>
+                openAddressOnMap(
+                  props.building,
+                  latitude.toString(),
+                  longitude.toString()
+                )
+              }
             >
-              {expand && expandSvg && (
-                <View
-                  style={{
-                    position: "absolute",
-                    width: 20,
-                    height: 20,
-                    bottom: 8,
-                    right: 8,
-                    zIndex: 2,
-                  }}
-                >
-                  <Canvas
+              <View
+                style={{
+                  width: 100,
+                  height: 100,
+                  backgroundColor: isLight ? "#414867" : "#fff",
+                  borderRadius: 10,
+                  overflow: "hidden",
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 7,
+                  },
+                  shadowOpacity: 0.43,
+                  shadowRadius: 9.51,
+
+                  elevation: 15,
+                }}
+              >
+                {expand && expandSvg && (
+                  <View
                     style={{
-                      flex: 1,
+                      position: "absolute",
                       width: 20,
                       height: 20,
+                      bottom: 8,
+                      right: 8,
+                      zIndex: 2,
                     }}
                   >
-                    <ImageSVG
-                      svg={expandSvg}
-                      x={0}
-                      y={0}
-                      width={20}
-                      height={20}
-                    />
-                  </Canvas>
-                </View>
-              )}
-              <MapView
+                    <Canvas
+                      style={{
+                        flex: 1,
+                        width: 20,
+                        height: 20,
+                      }}
+                    >
+                      <ImageSVG
+                        svg={expandSvg}
+                        x={0}
+                        y={0}
+                        width={20}
+                        height={20}
+                      />
+                    </Canvas>
+                  </View>
+                )}
+                <MapView
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: -25,
+                  }}
+                  initialRegion={{
+                    latitude: latitude,
+                    longitude: longitude,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
+                  }}
+                  scrollEnabled={false}
+                  zoomTapEnabled={false}
+                  zoomControlEnabled={false}
+                  zoomEnabled={false}
+                />
+              </View>
+              <View
                 style={{
-                  position: "absolute",
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: -25,
-                }}
-                initialRegion={{
-                  latitude: props.roomLatitude ?? 45.478053,
-                  longitude: props.roomLongitude ?? 9.228061,
-                  latitudeDelta: 0.01,
-                  longitudeDelta: 0.01,
-                }}
-                scrollEnabled={false}
-                zoomTapEnabled={false}
-                zoomControlEnabled={false}
-                zoomEnabled={false}
-              />
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "baseline",
-              }}
-            >
-              <BodyText
-                style={{
-                  fontSize: 13,
-                  fontWeight: "400",
-                  color: isLight ? "#414867" : "#fff",
+                  flexDirection: "row",
+                  alignItems: "baseline",
                 }}
               >
-                consulta la{" "}
-              </BodyText>
-              <BodyText
-                style={{
-                  fontSize: 16,
-                  fontWeight: "900",
-                  color: isLight ? "#414867" : "#fff",
-                }}
-              >
-                mappa
-              </BodyText>
-            </View>
-          </Pressable>
+                <BodyText
+                  style={{
+                    fontSize: 13,
+                    fontWeight: "400",
+                    color: isLight ? "#414867" : "#fff",
+                  }}
+                >
+                  consulta la{" "}
+                </BodyText>
+                <BodyText
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "900",
+                    color: isLight ? "#414867" : "#fff",
+                  }}
+                >
+                  mappa
+                </BodyText>
+              </View>
+            </Pressable>
+          </View>
         </View>
-      </View>
+      )}
     </View>
   )
 }

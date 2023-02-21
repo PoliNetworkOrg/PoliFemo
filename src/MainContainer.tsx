@@ -65,7 +65,25 @@ export const MainContainer: FC = () => {
           console.log("downloads")
         }}
         onNotifications={() => {
-          console.log("notifications")
+          navigate("RoomDetails", {
+            room: {
+              name: "2.0.1",
+              capacity: 380,
+              building: "Edificio 2",
+              address: "Piazza Leonardo da Vinci, 32 - 20133 - Milano (MI)",
+              power: false,
+            },
+            startDate: "2023-02-22T16:15:00Z",
+            roomId: 32,
+            roomLatitude: 45.4788249919485,
+            roomLongitude: 9.227210008150676,
+            occupancies: {
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              "19:00": "FREE",
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              "19:35": "OCCUPIED",
+            },
+          })
         }}
         onSettings={() => {
           navigate("SettingsNav", {

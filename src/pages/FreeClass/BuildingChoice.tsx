@@ -68,6 +68,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                 {
                   roomId: room.room_id,
                   name: room.name,
+                  occupancies: room.occupancies,
                 },
               ],
             }
@@ -81,6 +82,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
             tempBuildings[indexElement].freeRoomList.push({
               roomId: room.room_id,
               name: room.name,
+              occupancies: room.occupancies,
             })
           }
         })

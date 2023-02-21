@@ -39,26 +39,21 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
     )
   )
 
-  const startDate = new Date(props.startDate)
-
   const now = new Date()
+
+  const startDate = new Date(props.startDate)
 
   const endDate = getEndDate(startDate, props.occupancies)
 
   const startHour = startDate.getHours().toString().padStart(2, "0")
   const startMinutes = startDate.getMinutes().toString().padStart(2, "0")
 
-  let endhour = endDate?.getHours().toString().padStart(2, "0") ?? undefined
-  let endMinutes =
+  const endhour = endDate?.getHours().toString().padStart(2, "0") ?? undefined
+  const endMinutes =
     endDate?.getMinutes().toString().padStart(2, "0") ?? undefined
 
   const { hoursLeft, minutesLeft } = extractTimeLeft(now, endDate)
 
-  // ! temporary fix
-  if (endDate && endDate.getTime() - startDate.getTime() < 0) {
-    endhour = undefined
-    endMinutes = undefined
-  }
   return (
     <View style={{ marginTop: 14 }}>
       <BodyText
@@ -169,7 +164,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
               borderWidth: 0.5,
               flexDirection: "row",
               borderRadius: 5,
-              width: 200,
+              paddingRight: 12,
               height: 64,
               alignItems: "center",
             }}

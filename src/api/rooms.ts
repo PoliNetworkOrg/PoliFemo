@@ -3,7 +3,7 @@ import { AuthType, HttpClient, RequestOptions } from "./HttpClient"
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface Rooms {
-  freeRooms: Room[]
+  free_rooms: Room[]
 }
 export interface Room {
   room_id: number
@@ -11,11 +11,13 @@ export interface Room {
   building: string
   power: boolean
   link: string
+  occupancy_rate: number | null
   occupancies: Record<string, "FREE" | "OCCUPIED">
 }
 export interface RoomSimplified {
   roomId: number
   name: string
+  occupancies: Record<string, "FREE" | "OCCUPIED">
 }
 
 export interface RoomDetails {
@@ -57,7 +59,7 @@ export const rooms = {
         },
       }
     )
-    return response.data.freeRooms
+    return response.data.free_rooms
   },
 
   async getOccupancyRate(roomId: number, options?: RequestOptions) {
