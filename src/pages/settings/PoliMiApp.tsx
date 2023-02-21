@@ -1,17 +1,31 @@
-import React from "react"
-import licenses from "assets/settings/licenses.json"
+import React, { useContext, useEffect, useState } from "react"
 import { SettingsStackScreen } from "navigation/NavigationTypes"
 import { NavBar } from "components/NavBar"
-import { Linking, Pressable, View } from "react-native"
-import { FlatList } from "react-native-gesture-handler"
-import { BodyText, Text } from "components/Text"
+import { View } from "react-native"
 import { usePalette } from "utils/colors"
-import { Divider } from "components/Divider"
 import WebView from "react-native-webview"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { Tokens } from "contexts/login"
 
 export const PoliMiApp: SettingsStackScreen<"PoliMiApp"> = () => {
-  const { background, homeBackground, primary, isLight, articleTitle } =
-    usePalette()
+  const { background, homeBackground } = usePalette()
+
+  const [polimiToken, setPolimiToken] = useState<string>("")
+
+  const getToken = async () => {
+    const tokens = await AsyncStorage.getItem("api:tokens")
+    if (tokens) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const parsedTokens: Tokens = JSON.parse(tokens)
+      setPolimiToken(parsedTokens.polimiToken.accessToken)
+      console.log(parsedTokens.polimiToken.accessToken)
+    } else {
+      setPolimiToken("")
+    }
+  }
+
+  useEffect(() => void getToken())
+
   return (
     <View
       style={{
@@ -42,6 +56,10 @@ export const PoliMiApp: SettingsStackScreen<"PoliMiApp"> = () => {
         <WebView
           source={{
             uri: "https://polimiapp.polimi.it/polimi_app/app/",
+            headers: {
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              Authorization: "Bearer" + " " + polimiToken,
+            },
           }}
           style={{ marginTop: 5 }}
         />
