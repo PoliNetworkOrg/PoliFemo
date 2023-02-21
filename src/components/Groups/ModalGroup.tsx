@@ -1,10 +1,18 @@
 import React, { FC } from "react"
-import { View, Modal, StyleSheet, Pressable } from "react-native"
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  ViewStyle,
+  Dimensions,
+} from "react-native"
 import { usePalette } from "utils/colors"
 import { ButtonCustom } from "components/Button"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import { deleteSvg as icon } from "assets/modal"
 import { Group } from "api/groups"
+import Modal from "react-native-modal"
+import { Portal } from "react-native-portalize"
 
 export interface ModalGroupProps {
   /**
@@ -27,10 +35,11 @@ export interface ModalGroupProps {
   onJoin: (group?: Group) => void
 
   group?: Group
-  /**
-   * modal wrapper height, specify if height is fixed
-   */
-  height?: number
+
+  animationTiming?: number
+
+  /**override center container's style, for example changing height */
+  style?: ViewStyle
 }
 
 /**
@@ -39,85 +48,107 @@ export interface ModalGroupProps {
  */
 export const ModalGroup: FC<ModalGroupProps> = props => {
   const { backgroundSecondary, modalBarrier, isLight } = usePalette()
-
+  const deviceHeight = Dimensions.get("screen").height
   const deleteSvg = useSVG(icon.svg)
+
   return (
-    //TODO: animationType fade or slide?
-    <Modal
-      onRequestClose={props.onClose}
-      statusBarTranslucent={true}
-      visible={props.isShowing}
-      animationType="fade"
-      transparent={true}
-    >
-      <Pressable
-        onPress={props.onClose}
-        style={[styles.pageWrapper, { backgroundColor: modalBarrier }]}
+    <Portal>
+      <Modal
+        needsOffscreenAlphaCompositing={true}
+        renderToHardwareTextureAndroid={true}
+        onBackButtonPress={props.onClose}
+        statusBarTranslucent={true}
+        isVisible={props.isShowing}
+        animationIn={"fadeIn"}
+        animationOut={"fadeOut"}
+        backdropColor={modalBarrier}
+        deviceHeight={deviceHeight}
+        coverScreen={false}
+        animationInTiming={props.animationTiming ?? 200}
+        animationOutTiming={props.animationTiming ?? 200}
+        onBackdropPress={props.onClose}
+        useNativeDriverForBackdrop={true}
+        useNativeDriver={true}
       >
-        <View>
-          <Pressable
-            style={{ alignSelf: "flex-end" }}
-            onPress={() => props.onClose()}
-          >
-            <View
-              style={{
-                width: 30,
-                height: 30,
-                backgroundColor: "#ffffff",
-                borderRadius: 15,
-                marginBottom: 8,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+        <View style={[styles.pageWrapper]}>
+          <View>
+            <Pressable
+              style={{ alignSelf: "flex-end" }}
+              onPress={() => props.onClose()}
             >
-              <Canvas
+              <View
                 style={{
-                  width: icon.width,
-                  height: icon.heigth,
+                  width: 30,
+                  height: 30,
+                  backgroundColor: "#ffffff",
+                  borderRadius: 15,
+                  marginBottom: 8,
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                {deleteSvg && (
-                  <ImageSVG
-                    svg={deleteSvg}
-                    x={0}
-                    y={0}
-                    width={icon.width}
-                    height={icon.heigth}
-                  />
-                )}
-              </Canvas>
-            </View>
-          </Pressable>
-          <Pressable
-            // this is a pressable just to prevent the modal from closing when clicking
-            // on the content
-            style={[
-              styles.contentWrapper,
-              { backgroundColor: backgroundSecondary },
-              { height: props.height },
-            ]}
-          >
-            <View>{props.children}</View>
+                <Canvas
+                  style={{
+                    width: icon.width,
+                    height: icon.heigth,
+                  }}
+                >
+                  {deleteSvg && (
+                    <ImageSVG
+                      svg={deleteSvg}
+                      x={0}
+                      y={0}
+                      width={icon.width}
+                      height={icon.heigth}
+                    />
+                  )}
+                </Canvas>
+              </View>
+            </Pressable>
             <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                marginBottom: 32,
-                marginTop: 16,
-              }}
+              style={[
+                {
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  width: 320,
+                  borderRadius: 12,
+                  marginHorizontal: 15,
+
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 3,
+                  },
+                  shadowOpacity: 0.27,
+                  shadowRadius: 4.65,
+                  backgroundColor: backgroundSecondary,
+                  elevation: 6,
+                },
+                props.style,
+              ]}
             >
-              <ButtonCustom
+              <View>{props.children}</View>
+              <View
                 style={{
-                  backgroundColor: isLight ? "#424967" : "#8791BD",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  marginBottom: 32,
+                  marginTop: 16,
                 }}
-                text={"JOIN GROUP"}
-                onPress={() => props.onJoin(props.group)}
-              />
+              >
+                <ButtonCustom
+                  style={{
+                    backgroundColor: isLight ? "#424967" : "#8791BD",
+                  }}
+                  text={"JOIN GROUP"}
+                  onPress={() => props.onJoin(props.group)}
+                />
+              </View>
             </View>
-          </Pressable>
+          </View>
         </View>
-      </Pressable>
-    </Modal>
+      </Modal>
+    </Portal>
   )
 }
 
@@ -127,22 +158,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  contentWrapper: {
-    flexDirection: "column",
-    justifyContent: "space-between",
-    width: 320,
-    borderRadius: 12,
-    marginHorizontal: 15,
 
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.27,
-    shadowRadius: 4.65,
-    elevation: 6,
-  },
   title: {
     fontSize: 32,
     fontWeight: "900",

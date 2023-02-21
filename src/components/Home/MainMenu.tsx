@@ -16,7 +16,6 @@ import grading_book from "assets/menu/grading_book.svg"
 import tests from "assets/menu/tests.svg"
 import add from "assets/menu/add.svg"
 import { ModalCustom } from "components/Modal"
-
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useOutsideClick } from "utils/outsideClick"
 
