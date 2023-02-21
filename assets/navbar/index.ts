@@ -13,37 +13,37 @@ import down from "./down.svg"
  */
 export const navbarIconList = ["home", "back", "add", "sync", "down"] as const
 
-export type NavbarIcon = typeof navbarIconList[number]
+export type NavbarIcon = (typeof navbarIconList)[number]
 
 export const navbarIcons: Record<
-    NavbarIcon,
-    { svg: DataSourceParam; width: number; heigth: number }
+  NavbarIcon,
+  { svg: DataSourceParam; width: number; heigth: number }
 > = {
-    home: {
-        svg: home,
-        width: 18,
-        heigth: 19,
-    },
-    back: {
-        svg: back,
-        width: 12,
-        heigth: 11,
-    },
-    add: {
-        svg: add,
-        width: 17,
-        heigth: 17,
-    },
-    sync: {
-        svg: sync,
-        width: 18,
-        heigth: 19,
-    },
-    down: {
-        svg: down,
-        width: 12,
-        heigth: 13,
-    },
+  home: {
+    svg: home,
+    width: 18,
+    heigth: 19,
+  },
+  back: {
+    svg: back,
+    width: 12,
+    heigth: 11,
+  },
+  add: {
+    svg: add,
+    width: 17,
+    heigth: 17,
+  },
+  sync: {
+    svg: sync,
+    width: 18,
+    heigth: 19,
+  },
+  down: {
+    svg: down,
+    width: 12,
+    heigth: 13,
+  },
 }
 
 /**
