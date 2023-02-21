@@ -50,10 +50,12 @@ export const ModalGroup: FC<ModalGroupProps> = props => {
   const { backgroundSecondary, modalBarrier, isLight } = usePalette()
   const deviceHeight = Dimensions.get("screen").height
   const deleteSvg = useSVG(icon.svg)
+
   return (
-    //TODO: animationType fade or slide?
     <Portal>
       <Modal
+        needsOffscreenAlphaCompositing={true}
+        renderToHardwareTextureAndroid={true}
         onBackButtonPress={props.onClose}
         statusBarTranslucent={true}
         isVisible={props.isShowing}
@@ -62,9 +64,8 @@ export const ModalGroup: FC<ModalGroupProps> = props => {
         backdropColor={modalBarrier}
         deviceHeight={deviceHeight}
         coverScreen={false}
-        // TODO: animation timing?
-        animationInTiming={props.animationTiming ?? 100}
-        animationOutTiming={props.animationTiming ?? 100}
+        animationInTiming={props.animationTiming ?? 200}
+        animationOutTiming={props.animationTiming ?? 200}
         onBackdropPress={props.onClose}
         useNativeDriverForBackdrop={true}
         useNativeDriver={true}
@@ -121,8 +122,8 @@ export const ModalGroup: FC<ModalGroupProps> = props => {
                   shadowOpacity: 0.27,
                   shadowRadius: 4.65,
                   backgroundColor: backgroundSecondary,
+                  elevation: 6,
                 },
-                props.isShowing ? { elevation: 6 } : undefined,
                 props.style,
               ]}
             >

@@ -50,9 +50,12 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
     usePalette()
   const centerText = props.centerText ?? false
   const deleteSvg = useSVG(icon.svg)
+
   return (
     <Portal>
       <Modal
+        needsOffscreenAlphaCompositing={true}
+        renderToHardwareTextureAndroid={true}
         onBackButtonPress={props.onClose}
         statusBarTranslucent={true}
         isVisible={props.isShowing}
@@ -61,9 +64,8 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
         backdropColor={modalBarrier}
         deviceHeight={deviceHeight}
         coverScreen={false}
-        // TODO: animation timing?
-        animationInTiming={props.animationTiming ?? 100}
-        animationOutTiming={props.animationTiming ?? 100}
+        animationInTiming={props.animationTiming ?? 200}
+        animationOutTiming={props.animationTiming ?? 200}
         onBackdropPress={props.onClose}
         useNativeDriverForBackdrop={true}
         useNativeDriver={true}
@@ -94,8 +96,6 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
               </View>
             </Pressable>
             <View
-              // this is a pressable just to prevent the modal from closing when clicking
-              // on the content
               style={[
                 {
                   width: 320,
@@ -110,8 +110,8 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
                   shadowOpacity: 0.27,
                   shadowRadius: 4.65,
                   backgroundColor: backgroundSecondary,
+                  elevation: 6,
                 },
-                props.isShowing ? { elevation: 6 } : undefined,
                 props.style,
               ]}
             >
