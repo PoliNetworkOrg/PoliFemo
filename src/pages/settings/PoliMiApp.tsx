@@ -5,12 +5,14 @@ import { View } from "react-native"
 import { usePalette } from "utils/colors"
 import WebView from "react-native-webview"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { Tokens } from "contexts/login"
+import { LoginContext, Tokens } from "contexts/login"
 
 export const PoliMiApp: SettingsStackScreen<"PoliMiApp"> = () => {
   const { background, homeBackground } = usePalette()
 
   const [polimiToken, setPolimiToken] = useState<string>("")
+
+  const { loggedIn } = useContext(LoginContext)
 
   const getToken = async () => {
     const tokens = await AsyncStorage.getItem("api:tokens")
@@ -18,7 +20,6 @@ export const PoliMiApp: SettingsStackScreen<"PoliMiApp"> = () => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const parsedTokens: Tokens = JSON.parse(tokens)
       setPolimiToken(parsedTokens.polimiToken.accessToken)
-      console.log(parsedTokens.polimiToken.accessToken)
     } else {
       setPolimiToken("")
     }
@@ -61,6 +62,7 @@ export const PoliMiApp: SettingsStackScreen<"PoliMiApp"> = () => {
               Authorization: "Bearer" + " " + polimiToken,
             },
           }}
+          incognito={loggedIn ? false : true}
           style={{ marginTop: 5 }}
         />
       </View>
