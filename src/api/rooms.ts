@@ -2,7 +2,7 @@ import { HttpClient, RequestOptions } from "./HttpClient"
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface Rooms {
-  freeRooms: Room[]
+  free_rooms: Room[]
 }
 export interface Room {
   room_id: number
@@ -10,10 +10,12 @@ export interface Room {
   building: string
   power: boolean
   link: string
+  occupancyRate: number | undefined
 }
 export interface RoomSimplified {
   roomId: number
   name: string
+  occupancyRate: number | undefined
 }
 const client = HttpClient.getInstance()
 
@@ -41,7 +43,7 @@ export const rooms = {
         },
       }
     )
-    return response.data.freeRooms
+    return response.data.free_rooms
   },
 
   /**

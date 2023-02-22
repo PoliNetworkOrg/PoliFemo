@@ -1,7 +1,7 @@
 import { useSVG, Canvas, ImageSVG } from "@shopify/react-native-skia"
 import { BodyText } from "components/Text"
-import React, { FC, useEffect, useState } from "react"
-import { View, Pressable, Dimensions, ActivityIndicator } from "react-native"
+import React, { FC, useState } from "react"
+import { View, Pressable, Dimensions } from "react-native"
 import { usePalette } from "utils/colors"
 import timerIcon from "assets/freeClassrooms/timer.svg"
 import overcrowdingIcon from "assets/freeClassrooms/overcrowding.svg"
@@ -15,7 +15,11 @@ interface FreeClassListProps {
   data: RoomSimplified[] | undefined
 }
 
-const overcrowdingTypes = ["Poco", "Mediamente", "Molto"]
+enum OvercrowdingTypes {
+  POCO = "Poco",
+  MEDIAMENTE = "Mediamente",
+  MOLTO = "Molto",
+}
 
 /**
  * It handles a list of freeclassrooms available.
@@ -25,6 +29,22 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
   const timerSVG = useSVG(timerIcon)
   const overcrowdingSVG = useSVG(overcrowdingIcon)
   const fireSVG = useSVG(fireIcon)
+
+  const [isOvercrowded, setIsOvercrowded] = useState<boolean>(false)
+
+  const overcrowdingFunction = (occupancyRate: number | undefined) => {
+    if (
+      occupancyRate === undefined ||
+      (occupancyRate >= 1 && occupancyRate < 2.33)
+    ) {
+      return OvercrowdingTypes.POCO
+    } else if (occupancyRate >= 2.33 && occupancyRate < 3.66) {
+      return OvercrowdingTypes.MEDIAMENTE
+    } else {
+      setIsOvercrowded(true)
+      return OvercrowdingTypes.MOLTO
+    }
+  }
 
   return (
     <FlatList
@@ -113,7 +133,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                 marginTop: 12,
               }}
             >
-              {overcrowdingTypes[0]}
+              {overcrowdingFunction(item.occupancyRate)}
               {"\n"}
               <BodyText
                 style={{
@@ -151,17 +171,25 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                   />
                 )}
               </Canvas>
-              <Canvas
-                style={{
-                  zIndex: 0,
-                  width: 40,
-                  height: 51,
-                }}
-              >
-                {fireSVG && (
-                  <ImageSVG svg={fireSVG} x={0} y={4} width={29} height={39} />
-                )}
-              </Canvas>
+              {isOvercrowded ? (
+                <Canvas
+                  style={{
+                    zIndex: 0,
+                    width: 40,
+                    height: 51,
+                  }}
+                >
+                  {fireSVG && (
+                    <ImageSVG
+                      svg={fireSVG}
+                      x={0}
+                      y={4}
+                      width={29}
+                      height={39}
+                    />
+                  )}
+                </Canvas>
+              ) : undefined}
             </View>
           </View>
           <View
