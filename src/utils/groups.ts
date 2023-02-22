@@ -1,6 +1,12 @@
 import { Group } from "api/groups"
 import { platformIcons } from "assets/groups"
-import { Filters } from "components/Groups/Filters"
+
+export interface Filters {
+  year?: string
+  course?: string
+  platform?: string
+  type?: string
+}
 /**
  * return groups ordered by most recent year using a bubble sort algorithm
  * see {@link Groups} Page
@@ -118,13 +124,9 @@ export function applyFilters(groups: Group[], filters: Filters): Group[] {
 
 export function searchGroups(groups: Group[], search: string): Group[] {
   return groups.filter(group => {
-    try {
-      if (group.class === null) {
-        return false
-      }
-      return group.class.toLowerCase().includes(search.trimEnd().toLowerCase())
-    } catch (err) {
-      console.log(err)
+    if (!group.class) {
+      return false
     }
+    return group.class.toLowerCase().includes(search.trimEnd().toLowerCase())
   })
 }

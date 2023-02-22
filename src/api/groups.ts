@@ -42,11 +42,14 @@ export const groups = {
    */
 
   async getFromGithub(options?: RequestOptions) {
-    const response = await client.githubRawContentInstance.get<{
+    const response = await client.generalInstance.get<{
       index_data: Group[]
-    }>("PoliNetworkOrg/polinetworkWebsiteData/main/groupsGenerated.json", {
-      ...options,
-    })
+    }>(
+      "https://raw.githubusercontent.com/PoliNetworkOrg/polinetworkWebsiteData/main/groupsGenerated.json",
+      {
+        ...options,
+      }
+    )
     return response.data.index_data
   },
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { FlatList, Linking, View } from "react-native"
 import { Title } from "components/Text"
-import { Filters } from "components/Groups/Filters"
+import { FiltersList } from "components/Groups/FiltersList"
 import { api } from "api"
 import { Group } from "api/groups"
 import { useMounted } from "utils/useMounted"
@@ -10,6 +10,7 @@ import {
   applyFilters,
   choosePlatformIcon,
   createGroupLink,
+  Filters,
   orderByMostRecentYear,
   searchGroups,
 } from "utils/groups"
@@ -93,7 +94,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
             style={{ marginTop: 0, marginBottom: 0 }}
           />
         </View>
-        <Filters
+        <FiltersList
           onFilterChange={filters => setFilters(filters)}
           filters={filters}
         />

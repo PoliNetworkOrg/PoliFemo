@@ -87,7 +87,7 @@ export class HttpClient extends EventEmitter {
 
   readonly polimiInstance: AxiosInstance
   readonly poliNetworkInstance: AxiosInstance
-  readonly githubRawContentInstance: AxiosInstance
+  readonly generalInstance: AxiosInstance
 
   private polimiToken?: PolimiToken
   private poliNetworkToken?: PoliNetworkToken
@@ -101,19 +101,14 @@ export class HttpClient extends EventEmitter {
     if (!this.classInstance) {
       this.classInstance = new HttpClient(
         "https://api.polinetwork.org/staging/",
-        "https://polimiapp.polimi.it/polimi_app",
-        "https://raw.githubusercontent.com/"
+        "https://polimiapp.polimi.it/polimi_app"
       )
     }
 
     return this.classInstance
   }
 
-  private constructor(
-    baseUrlPoliNetwork: string,
-    baseUrlPolimi: string,
-    baseUrlGithubRaw: string
-  ) {
+  private constructor(baseUrlPoliNetwork: string, baseUrlPolimi: string) {
     super()
     console.log("HttpClient constructor called")
     this.poliNetworkInstance = axios.create({
@@ -124,8 +119,7 @@ export class HttpClient extends EventEmitter {
       baseURL: baseUrlPolimi,
       timeout: 2000,
     })
-    this.githubRawContentInstance = axios.create({
-      baseURL: baseUrlGithubRaw,
+    this.generalInstance = axios.create({
       timeout: 2000,
     })
     this._initializeInterceptors()
@@ -144,11 +138,6 @@ export class HttpClient extends EventEmitter {
     this.polimiInstance.interceptors.response.use(
       val => this._handleResponse(val),
       err => this._handleError(err as AxiosError, this.polimiInstance)
-    )
-    this.githubRawContentInstance.interceptors.request.use(this._handleRequest)
-    this.githubRawContentInstance.interceptors.response.use(
-      val => this._handleResponse(val),
-      err => this._handleError(err as AxiosError, this.githubRawContentInstance)
     )
   }
 
