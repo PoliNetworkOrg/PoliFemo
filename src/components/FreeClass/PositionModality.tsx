@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react"
-import { View, Pressable } from "react-native"
+import { View, Pressable, ActivityIndicator } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
 import { Map } from "./Map"
@@ -8,11 +8,13 @@ import { PermissionStatus } from "expo-location"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
 import { RoomSimplified } from "api/rooms"
 import { PositionSearchBar } from "./PositionSearchBar"
+import { useNavigation } from "@react-navigation/native"
 
 interface PositionModalityProps {
   currentCoords: number[]
   locationStatus: PermissionStatus
   buildingList: BuildingItem[] | undefined
+  roomList: RoomSimplified[] | undefined
 }
 
 enum ButtonType {
@@ -31,6 +33,8 @@ export const PositionModality: FC<PositionModalityProps> = props => {
   const [status, setStatus] = useState<ButtonType>(ButtonType.MAP)
 
   const [roomList, setRoomList] = useState<RoomSimplified[]>([])
+
+  const { navigate } = useNavigation()
 
   const extractRooms = (campusName: string[], buildingName: string) => {
     const tempRooms: RoomSimplified[] = []
@@ -114,11 +118,18 @@ export const PositionModality: FC<PositionModalityProps> = props => {
         <View
           style={{
             flex: 1,
-            marginTop: -4,
+            //marginTop: -4,
             marginBottom: 93,
           }}
         >
-          <FreeClassList data={roomList} date={new Date()} />
+          {props.roomList === undefined ? (
+            <ActivityIndicator
+              style={{ marginTop: 50, marginLeft: 3 }}
+              size="large"
+            />
+          ) : (
+            <FreeClassList data={props.roomList} date={new Date()} />
+          )}
         </View>
       ) : (
         <Map
@@ -126,10 +137,15 @@ export const PositionModality: FC<PositionModalityProps> = props => {
           userLongitude={props.currentCoords[1]}
           locationStatus={props.locationStatus}
           buildingList={props.buildingList}
-          onPressMarker={(campusName: string[], buildingName: string) => {
-            setStatus(ButtonType.LIST)
-            void extractRooms(campusName, buildingName)
-          }}
+          onPressMarker={(building: BuildingItem) =>
+            navigate(
+              "ClassChoice" as never,
+              {
+                building: building,
+                currentDate: new Date().toString(),
+              } as never
+            )
+          }
         />
       )}
     </>

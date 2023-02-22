@@ -60,6 +60,7 @@ export type MainStackNavigatorParams = {
     roomLatitude?: number
     roomLongitude?: number
     occupancies?: Record<string, "FREE" | "OCCUPIED">
+    occupancyRate?: number | null
   }
   ClassChoice: { building: BuildingItem; currentDate: string }
   Groups: undefined

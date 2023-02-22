@@ -1,6 +1,6 @@
 import { useSVG, Canvas, ImageSVG } from "@shopify/react-native-skia"
 import { BodyText } from "components/Text"
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 import { View, Pressable, Dimensions } from "react-native"
 import { usePalette } from "utils/colors"
 import timerIcon from "assets/freeClassrooms/timer.svg"
@@ -20,6 +20,12 @@ interface FreeClassListProps {
   longitude?: number
 }
 
+enum OvercrowdingTypes {
+  POCO = "Poco",
+  MEDIAMENTE = "Mediamente",
+  MOLTO = "Molto",
+}
+
 /**
  * It handles a list of freeclassrooms available.
  */
@@ -29,6 +35,22 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
   const overcrowdingSVG = useSVG(overcrowdingIcon)
   const fireSVG = useSVG(fireIcon)
   const { navigate } = useNavigation()
+
+  const [isOvercrowded, setIsOvercrowded] = useState<boolean>(false)
+
+  const overcrowdingFunction = (occupancyRate: number | undefined) => {
+    if (
+      occupancyRate === undefined ||
+      (occupancyRate >= 1 && occupancyRate < 2.33)
+    ) {
+      return OvercrowdingTypes.POCO
+    } else if (occupancyRate >= 2.33 && occupancyRate < 3.66) {
+      return OvercrowdingTypes.MEDIAMENTE
+    } else {
+      setIsOvercrowded(true)
+      return OvercrowdingTypes.MOLTO
+    }
+  }
 
   return (
     <FlatList
@@ -62,6 +84,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                 roomLatitude: props.latitude,
                 roomLongitude: props.longitude,
                 occupancies: item.occupancies,
+                occupancyRate: item.occupancyRate,
               })
             } catch (err) {
               console.log(err)
@@ -132,7 +155,8 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                 marginTop: 12,
               }}
             >
-              Mediamente{"\n"}
+              {overcrowdingFunction(item.occupancyRate)}
+              {"\n"}
               <BodyText
                 style={{
                   fontWeight: "300",
@@ -169,17 +193,25 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                   />
                 )}
               </Canvas>
-              <Canvas
-                style={{
-                  zIndex: 0,
-                  width: 40,
-                  height: 51,
-                }}
-              >
-                {fireSVG && (
-                  <ImageSVG svg={fireSVG} x={0} y={4} width={29} height={39} />
-                )}
-              </Canvas>
+              {isOvercrowded ? (
+                <Canvas
+                  style={{
+                    zIndex: 0,
+                    width: 40,
+                    height: 51,
+                  }}
+                >
+                  {fireSVG && (
+                    <ImageSVG
+                      svg={fireSVG}
+                      x={0}
+                      y={4}
+                      width={29}
+                      height={39}
+                    />
+                  )}
+                </Canvas>
+              ) : undefined}
             </View>
           </View>
           <View

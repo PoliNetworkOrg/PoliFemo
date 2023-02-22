@@ -18,6 +18,7 @@ export interface RoomSimplified {
   roomId: number
   name: string
   occupancies: Record<string, "FREE" | "OCCUPIED">
+  occupancyRate: number | undefined
 }
 
 export interface RoomDetails {

@@ -11,8 +11,8 @@ import { api } from "api"
 import { BuildingItem } from "./BuildingChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { PositionModality } from "components/FreeClass/PositionModality"
-import { addHours } from "api/rooms"
-import { getBuildingCoords } from "utils/rooms"
+import { addHours, RoomSimplified } from "api/rooms"
+import BuildingListJSON from "components/FreeClass/buildingCoords.json"
 
 /**
  * In this page the user can find a room according to his current position.
@@ -29,8 +29,46 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
 
   const [buildingList, setBuildingList] = useState<BuildingItem[]>()
 
+  const [roomList, setRoomList] = useState<RoomSimplified[]>()
+
   //the dateEnd is the startDate + 3 hours, the number of hours has not been chosen yet
   const dateEnd = addHours(new Date(), 3).toISOString() //3 hours is an example
+
+  const compareCampusNames = (c1: string[], c2: string[]) => {
+    if (c1.length === c2.length) {
+      if (c1.length > 1) {
+        if (c1[0] === c2[0] && c1[1] === c2[1]) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        if (c1[0] === c2[0]) {
+          return true
+        } else {
+          return false
+        }
+      }
+    } else {
+      return false
+    }
+  }
+
+  const getBuildingCoords = (campus: CampusItem, buildingName: string) => {
+    for (const element of BuildingListJSON) {
+      if (element.acronym === campus.acronym) {
+        for (const c of element.campus) {
+          if (compareCampusNames(c.name, campus.name)) {
+            for (const b of c.buildings) {
+              if (b.name === buildingName) {
+                return b.coords
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
   //main function that handles the call to the API in order to obtain the list of freeclassRooms
   const findRoomsAvailable = async (
@@ -39,6 +77,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     currentLong: number
   ) => {
     const tempBuildingList: BuildingItem[] = []
+    const tempRoomList: RoomSimplified[] = []
     for (const campus of campusList) {
       if (
         getDistance(
@@ -76,6 +115,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                       roomId: room.room_id,
                       name: room.name,
                       occupancies: room.occupancies,
+                      occupancyRate: room.occupancy_rate ?? undefined,
                     },
                   ],
                 }
@@ -90,7 +130,18 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                   roomId: room.room_id,
                   name: room.name,
                   occupancies: room.occupancies,
+                  occupancyRate: room.occupancy_rate ?? undefined,
                 })
+              }
+              if (tempRoomList.length < 50) {
+                tempRoomList.push({
+                  roomId: room.room_id,
+                  name: room.name,
+                  occupancies: room.occupancies,
+                  occupancyRate: room.occupancy_rate ?? undefined,
+                })
+              } else {
+                setRoomList(tempRoomList)
               }
             })
             tempBuildingList.push(...tempBuildings)
@@ -168,6 +219,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
         currentCoords={currentCoords}
         locationStatus={locationStatus}
         buildingList={buildingList}
+        roomList={roomList}
       />
     </PageWrapper>
   )

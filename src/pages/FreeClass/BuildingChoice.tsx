@@ -63,12 +63,15 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
           if (!tempBuildingStrings.includes(currentBuildingString)) {
             const currentBuilding: BuildingItem = {
               campus: campus,
-              name: room.building.replace("Edificio ", "Ed. "),
+              name: room.building
+                .replace("Edificio ", "Ed. ")
+                .replace("Padiglione", "Pad."),
               freeRoomList: [
                 {
                   roomId: room.room_id,
                   name: room.name,
                   occupancies: room.occupancies,
+                  occupancyRate: room.occupancy_rate ?? undefined,
                 },
               ],
             }
@@ -83,6 +86,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
               roomId: room.room_id,
               name: room.name,
               occupancies: room.occupancies,
+              occupancyRate: room.occupancy_rate ?? undefined,
             })
           }
         })
