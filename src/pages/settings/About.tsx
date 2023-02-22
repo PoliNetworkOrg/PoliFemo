@@ -23,6 +23,7 @@ export const About: SettingsStackScreen<"About"> = () => {
   const { articleSubtitle, articleTitle } = usePalette()
   const { loggedIn, userInfo } = useContext(LoginContext)
   const polifemoSVG = useSVG(polifemoIcon)
+  const isRunningInExpoGo = Constants.appOwnership === "expo"
 
   return (
     <ContentWrapperScroll title="Su quest'app">
@@ -150,15 +151,17 @@ export const About: SettingsStackScreen<"About"> = () => {
             },
           }}
         />
-        <SettingTile
-          setting={{
-            title: "PoliMi WebApp",
-            subtitle: "App Polimi",
-            callback: () => {
-              navigate("PoliMiApp")
-            },
-          }}
-        />
+        {isRunningInExpoGo ? (
+          <SettingTile
+            setting={{
+              title: "PoliMi WebApp",
+              subtitle: "App Polimi",
+              callback: () => {
+                navigate("PoliMiApp")
+              },
+            }}
+          />
+        ) : null}
       </View>
     </ContentWrapperScroll>
   )
