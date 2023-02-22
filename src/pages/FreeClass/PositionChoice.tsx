@@ -115,6 +115,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                     {
                       roomId: room.room_id,
                       name: room.name,
+                      occupancyRate: room.occupancyRate,
                     },
                   ],
                 }
@@ -128,10 +129,15 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                 tempBuildings[indexElement].freeRoomList.push({
                   roomId: room.room_id,
                   name: room.name,
+                  occupancyRate: room.occupancyRate,
                 })
               }
               if (tempRoomList.length < 50) {
-                tempRoomList.push({ roomId: room.room_id, name: room.name })
+                tempRoomList.push({
+                  roomId: room.room_id,
+                  name: room.name,
+                  occupancyRate: room.occupancyRate,
+                })
               } else {
                 setRoomList(tempRoomList)
               }
