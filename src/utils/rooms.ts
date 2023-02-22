@@ -73,7 +73,7 @@ export function getEndDate(startDate: Date, occupancies?: Occupancies) {
       time = Object.keys(occupancies).find(time => {
         const hour = parseInt(time.substring(0, 2))
         const minutes = parseInt(time.substring(3))
-        occupancies[`${hour}:${minutes}`] === "OCCUPIED"
+        return occupancies[`${hour}:${minutes}`] === "OCCUPIED"
       })
     } catch (err) {
       console.log(err)
