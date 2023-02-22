@@ -4,7 +4,7 @@ import { BodyText } from "components/Text"
 import { View } from "react-native"
 
 export const CrowdSliderLabels: FC = () => {
-  const { isLight } = usePalette()
+  const { labelsHighContrast } = usePalette()
 
   return (
     <View
@@ -16,7 +16,7 @@ export const CrowdSliderLabels: FC = () => {
         style={{
           fontSize: 13,
           fontWeight: "600",
-          color: isLight ? "#414867" : "#fff",
+          color: labelsHighContrast,
           alignSelf: "flex-start",
         }}
       >
@@ -26,7 +26,7 @@ export const CrowdSliderLabels: FC = () => {
         style={{
           fontSize: 13,
           fontWeight: "600",
-          color: isLight ? "#414867" : "#fff",
+          color: labelsHighContrast,
           position: "absolute",
           alignSelf: "center",
         }}
@@ -37,7 +37,7 @@ export const CrowdSliderLabels: FC = () => {
         style={{
           fontSize: 13,
           fontWeight: "600",
-          color: isLight ? "#414867" : "#fff",
+          color: labelsHighContrast,
           position: "absolute",
           alignSelf: "flex-end",
         }}

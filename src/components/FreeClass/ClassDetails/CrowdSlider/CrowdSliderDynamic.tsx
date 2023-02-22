@@ -11,17 +11,16 @@ import {
   GestureDetector,
   GestureHandlerRootView,
 } from "react-native-gesture-handler"
-import { ValidCrowdStatus } from "../CrowdingSection"
 import { getCrowdStatus } from "utils/rooms"
 
 interface CrowdSliderDynamicProps {
   usableWidth?: number
-  startingPos: ValidCrowdStatus
-  onSlideEnd: (pos: ValidCrowdStatus) => void
+  startingPos: number
+  onSlideEnd: (pos: number) => void
 }
 
 export const CrowdSliderDynamic: FC<CrowdSliderDynamicProps> = props => {
-  const { isLight } = usePalette()
+  const { sliderBorderColor } = usePalette()
 
   const wrapper = (pos: number, width: number) => {
     const crowdStatus = getCrowdStatus(pos, width)
@@ -64,7 +63,7 @@ export const CrowdSliderDynamic: FC<CrowdSliderDynamicProps> = props => {
           position: "absolute",
           borderBottomWidth: 0.5,
           width: "100%",
-          borderColor: isLight ? "#454773" : "#fff",
+          borderColor: sliderBorderColor,
           marginTop: 15,
           marginBottom: 18,
         }}

@@ -25,7 +25,7 @@ import { Article } from "api/articles"
 import { CampusItem } from "pages/FreeClass/CampusChoice"
 import { NavigatorScreenParams } from "@react-navigation/native"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
-import { RoomDetails } from "api/rooms"
+import { Occupancies, RoomDetails } from "api/rooms"
 import { TagWithData } from "contexts/newsPreferences"
 
 /**
@@ -59,7 +59,7 @@ export type MainStackNavigatorParams = {
     roomId: number
     roomLatitude?: number
     roomLongitude?: number
-    occupancies?: Record<string, "FREE" | "OCCUPIED">
+    occupancies?: Occupancies
     occupancyRate?: number | null
   }
   ClassChoice: { building: BuildingItem; currentDate: string }

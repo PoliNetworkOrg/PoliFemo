@@ -15,16 +15,14 @@ interface CrowdingSectionProps {
   onSlided?: () => void
 }
 
-export type ValidCrowdStatus = 1 | 2 | 3 | 4 | 5
-
 export const CrowdingSection: FC<CrowdingSectionProps> = props => {
-  const { isLight } = usePalette()
+  const { iconHighContrast, labelsHighContrast } = usePalette()
 
   const [isModalVisible, setIsModalVisible] = useState(false)
 
-  const [occupancyRate, setOccupancyRate] = useState<ValidCrowdStatus>(1)
+  const [occupancyRate, setOccupancyRate] = useState<number>(1)
 
-  let occupancyRateUser: ValidCrowdStatus = 3
+  let occupancyRateUser = 3
 
   const getOccupancyRate = async () => {
     try {
@@ -52,13 +50,12 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
     }
   }
   return (
-    <View>
+    <View style={{ marginBottom: 18, marginTop: 46 }}>
       <BodyText
         style={{
           fontSize: 20,
           fontWeight: "900",
-          color: isLight ? "#414867" : "#fff",
-          marginTop: 46,
+          color: labelsHighContrast,
         }}
       >
         Affollamento:
@@ -71,7 +68,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
           style={{
             fontSize: 13,
             fontWeight: "400",
-            color: isLight ? "#454773" : "#fff",
+            color: iconHighContrast,
           }}
         >
           Se il dato sull&apos;affollamento non è corretto
@@ -81,7 +78,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
             style={{
               fontSize: 13,
               fontWeight: "900",
-              color: isLight ? "#454773" : "#fff",
+              color: iconHighContrast,
               textDecorationLine: "underline",
             }}
           >
@@ -108,7 +105,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
             style={{
               fontSize: 32,
               fontWeight: "900",
-              color: isLight ? "#454773" : "#fff",
+              color: iconHighContrast,
               textAlign: "center",
             }}
           >
@@ -118,7 +115,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
             style={{
               fontSize: 13,
               fontWeight: "900",
-              color: isLight ? "#454773" : "#fff",
+              color: iconHighContrast,
               textAlign: "center",
             }}
           >
@@ -127,7 +124,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
           <View>
             <CrowdSliderDynamic
               startingPos={occupancyRateUser}
-              onSlideEnd={(pos: ValidCrowdStatus) => (occupancyRateUser = pos)}
+              onSlideEnd={(pos: number) => (occupancyRateUser = pos)}
             />
             <CrowdSliderLabels />
           </View>

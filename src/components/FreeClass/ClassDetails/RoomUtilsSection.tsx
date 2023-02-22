@@ -11,7 +11,7 @@ interface RoomUtilsSectionProps {
 }
 
 export const RoomUtilsSection: FC<RoomUtilsSectionProps> = props => {
-  const { isLight } = usePalette()
+  const { labelsHighContrast } = usePalette()
 
   return (
     <View>
@@ -19,7 +19,7 @@ export const RoomUtilsSection: FC<RoomUtilsSectionProps> = props => {
         style={{
           fontSize: 20,
           fontWeight: "900",
-          color: isLight ? "#414867" : "#fff",
+          color: labelsHighContrast,
         }}
       >
         Info Utili:

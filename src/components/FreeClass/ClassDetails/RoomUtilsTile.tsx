@@ -19,7 +19,7 @@ interface RoomUtilsTileProps {
 }
 
 export const RoomUtilsTile: FC<RoomUtilsTileProps> = props => {
-  const { isLight } = usePalette()
+  const { palette, isLight, sliderBorderColor } = usePalette()
 
   const tickSvg = useSVG(tick)
 
@@ -29,11 +29,11 @@ export const RoomUtilsTile: FC<RoomUtilsTileProps> = props => {
       Skia.Color(
         props.status
           ? isLight
-            ? "#424967"
-            : "#8791BD"
+            ? palette.primary
+            : palette.lighter
           : isLight
-          ? "#8791BD"
-          : "#424967"
+          ? palette.lighter
+          : palette.primary
       ),
       BlendMode.SrcIn
     )
@@ -72,7 +72,7 @@ export const RoomUtilsTile: FC<RoomUtilsTileProps> = props => {
         style={{
           fontSize: 13,
           fontWeight: "400",
-          color: isLight ? "#414867" : "#fff",
+          color: sliderBorderColor,
         }}
       >
         {props.name}

@@ -13,28 +13,27 @@ import {
 } from "@shopify/react-native-skia"
 import clock from "assets/freeClassrooms/clock.svg"
 import { extractTimeLeft, getEndDate } from "utils/rooms"
+import { Occupancies } from "api/rooms"
 
 interface TimeLeftTileProps {
   startDate: string
-  occupancies?: Record<string, "FREE" | "OCCUPIED">
+  occupancies?: Occupancies
 }
 
 export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
-  const { isLight } = usePalette()
+  const { isLight, labelsHighContrast, iconHighContrast, primary } =
+    usePalette()
 
   const clockSvg = useSVG(clock)
 
   const paint = useMemo(() => Skia.Paint(), [])
   paint.setColorFilter(
-    Skia.ColorFilter.MakeBlend(
-      Skia.Color(isLight ? "#414867" : "#fff"),
-      BlendMode.SrcIn
-    )
+    Skia.ColorFilter.MakeBlend(Skia.Color(labelsHighContrast), BlendMode.SrcIn)
   )
   const paintClock = useMemo(() => Skia.Paint(), [])
   paintClock.setColorFilter(
     Skia.ColorFilter.MakeBlend(
-      Skia.Color(isLight ? "#424967" : "#fff"),
+      Skia.Color(isLight ? primary : "#fff"),
       BlendMode.SrcIn
     )
   )
@@ -60,7 +59,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
         style={{
           fontSize: 20,
           fontWeight: "900",
-          color: isLight ? "#414867" : "#fff",
+          color: labelsHighContrast,
         }}
       >
         Libera:
@@ -86,7 +85,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                 style={{
                   fontSize: 14,
                   fontWeight: "400",
-                  color: isLight ? "#414867" : "#fff",
+                  color: labelsHighContrast,
                   flex: 1,
                   paddingRight: 12,
                 }}
@@ -95,7 +94,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
               </BodyText>
               <View
                 style={{
-                  borderColor: isLight ? "#454773" : "#fff",
+                  borderColor: iconHighContrast,
                   borderWidth: 0.5,
                   borderRadius: 5,
                   minWidth: 70,
@@ -106,7 +105,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                   style={{
                     fontSize: 20,
                     fontWeight: "400",
-                    color: isLight ? "#414867" : "#fff",
+                    color: labelsHighContrast,
                     paddingHorizontal: 2,
                   }}
                 >
@@ -124,7 +123,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                 style={{
                   fontSize: 14,
                   fontWeight: "400",
-                  color: isLight ? "#414867" : "#fff",
+                  color: labelsHighContrast,
                   paddingRight: 12,
                   flex: 1,
                   textAlign: "right",
@@ -134,7 +133,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
               </BodyText>
               <View
                 style={{
-                  borderColor: isLight ? "#454773" : "#fff",
+                  borderColor: iconHighContrast,
                   borderWidth: 0.5,
                   borderRadius: 5,
                   minWidth: 70,
@@ -145,7 +144,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                   style={{
                     fontSize: 20,
                     fontWeight: "400",
-                    color: isLight ? "#414867" : "#fff",
+                    color: labelsHighContrast,
                     paddingHorizontal: 2,
                   }}
                 >
@@ -160,7 +159,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
         <View>
           <View
             style={{
-              borderColor: isLight ? "#454773" : "#fff",
+              borderColor: iconHighContrast,
               borderWidth: 0.5,
               flexDirection: "row",
               borderRadius: 5,
@@ -202,7 +201,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                 style={{
                   fontSize: 14,
                   fontWeight: "300",
-                  color: isLight ? "#414867" : "#fff",
+                  color: labelsHighContrast,
                 }}
               >
                 Mancano:
@@ -211,7 +210,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                 style={{
                   fontSize: 36,
                   fontWeight: "700",
-                  color: isLight ? "#414867" : "#fff",
+                  color: labelsHighContrast,
                 }}
               >
                 {hoursLeft && minutesLeft

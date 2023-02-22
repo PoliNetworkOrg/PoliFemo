@@ -1,14 +1,13 @@
 import React, { FC } from "react"
 import { Dimensions, View } from "react-native"
 import { usePalette } from "utils/colors"
-import { ValidCrowdStatus } from "../CrowdingSection"
 
 interface CrowdSliderStaticProps {
-  position: ValidCrowdStatus
+  position: number
 }
 
 export const CrowdSliderStatic: FC<CrowdSliderStaticProps> = props => {
-  const { isLight } = usePalette()
+  const { sliderBorderColor } = usePalette()
 
   //56 is padding, 28 is circle diameter
   const usableWidth = Dimensions.get("screen").width - 56 - 28
@@ -21,7 +20,7 @@ export const CrowdSliderStatic: FC<CrowdSliderStaticProps> = props => {
         style={{
           borderBottomWidth: 0.5,
           width: "100%",
-          borderColor: isLight ? "#454773" : "#fff",
+          borderColor: sliderBorderColor,
           marginTop: 15,
           marginBottom: 18,
         }}

@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-import { ValidCrowdStatus } from "components/FreeClass/ClassDetails/CrowdingSection"
 import BuildingListJSON from "components/FreeClass/buildingCoords.json"
 import { CampusItem } from "pages/FreeClass/CampusChoice"
+import { Occupancies } from "api/rooms"
 
 export function extractRoom(val: string) {
   const arr = val.split(".")
@@ -46,24 +45,18 @@ export function extractTimeLeft(now: Date, targetDate?: Date) {
   }
 }
 
-export function getCrowdStatus(pos: number, width: number): ValidCrowdStatus {
+/**
+ * @param pos slider current pos
+ * @param width slider max width
+ * @returns a float number from 1 to 5
+ */
+export function getCrowdStatus(pos: number, width: number): number {
   if (pos < 0) {
-    pos = 0
-  }
-
-  const radius = 14
-  const percentage = (pos + radius) / (width + 2 * radius)
-  if (percentage < 0.2) {
     return 1
-  } else if (percentage < 0.4) {
-    return 2
-  } else if (percentage < 0.6) {
-    return 3
-  } else if (percentage < 0.8) {
-    return 4
-  } else {
-    return 5
   }
+  const percentage = pos / width
+
+  return 1 + percentage * 4
 }
 
 /**
@@ -72,16 +65,20 @@ export function getCrowdStatus(pos: number, width: number): ValidCrowdStatus {
  * return undefined in case of errors
  *
  */
-export function getEndDate(
-  startDate: Date,
-  occupancies?: Record<string, "FREE" | "OCCUPIED">
-) {
+export function getEndDate(startDate: Date, occupancies?: Occupancies) {
   let time
 
   if (occupancies !== undefined) {
-    time = Object.keys(occupancies).find(
-      time => occupancies[time] === "OCCUPIED"
-    )
+    try {
+      time = Object.keys(occupancies).find(time => {
+        const hour = parseInt(time.substring(0, 2))
+        const minutes = parseInt(time.substring(3))
+        occupancies[`${hour}:${minutes}`] === "OCCUPIED"
+      })
+    } catch (err) {
+      console.log(err)
+      return undefined
+    }
   }
   if (time === undefined) {
     const endDate = new Date(startDate)

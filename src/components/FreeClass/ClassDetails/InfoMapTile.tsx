@@ -17,7 +17,7 @@ interface InfoMapTileProps {
 }
 
 export const InfoMapTile: FC<InfoMapTileProps> = props => {
-  const { isLight, primary } = usePalette()
+  const { labelsHighContrast, isLight, palette, primary } = usePalette()
 
   const building = extractBuilding(props.building)
   const roomName = extractRoom(props.roomName)
@@ -64,7 +64,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
             style={{
               fontSize: 40,
               fontWeight: "300",
-              color: isLight ? "#414867" : primary,
+              color: isLight ? palette.variant1 : primary,
             }}
           >
             {building && roomName ? `${building}.` : undefined}
@@ -73,7 +73,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
             style={{
               fontSize: 40,
               fontWeight: "900",
-              color: isLight ? "#414867" : primary,
+              color: isLight ? palette.variant1 : primary,
             }}
           >
             {building && roomName ? roomName : props.roomName}
@@ -84,7 +84,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
             style={{
               fontSize: 16,
               fontWeight: "900",
-              color: isLight ? "#414867" : "#fff",
+              color: labelsHighContrast,
             }}
           >
             Indirizzo :
@@ -93,7 +93,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
             style={{
               fontSize: 13,
               fontWeight: "400",
-              color: isLight ? "#414867" : "#fff",
+              color: labelsHighContrast,
             }}
           >
             {props.address}
@@ -104,7 +104,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
             style={{
               fontSize: 16,
               fontWeight: "900",
-              color: isLight ? "#414867" : "#fff",
+              color: labelsHighContrast,
               flex: 1,
             }}
           >
@@ -114,7 +114,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
             style={{
               fontSize: 13,
               fontWeight: "400",
-              color: isLight ? "#414867" : "#fff",
+              color: labelsHighContrast,
             }}
           >
             {props.capacity}
@@ -145,7 +145,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
                 style={{
                   width: 100,
                   height: 100,
-                  backgroundColor: isLight ? "#414867" : "#fff",
+                  backgroundColor: labelsHighContrast,
                   borderRadius: 10,
                   overflow: "hidden",
                   shadowColor: "#000",
@@ -217,7 +217,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
                   style={{
                     fontSize: 13,
                     fontWeight: "400",
-                    color: isLight ? "#414867" : "#fff",
+                    color: labelsHighContrast,
                   }}
                 >
                   consulta la{" "}
@@ -226,7 +226,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
                   style={{
                     fontSize: 16,
                     fontWeight: "900",
-                    color: isLight ? "#414867" : "#fff",
+                    color: labelsHighContrast,
                   }}
                 >
                   mappa

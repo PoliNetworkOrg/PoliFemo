@@ -1,4 +1,3 @@
-import { ValidCrowdStatus } from "components/FreeClass/ClassDetails/CrowdingSection"
 import { AuthType, HttpClient, RequestOptions } from "./HttpClient"
 
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -12,12 +11,15 @@ export interface Room {
   power: boolean
   link: string
   occupancy_rate: number | null
-  occupancies: Record<string, "FREE" | "OCCUPIED">
+  occupancies: Occupancies
 }
+
+export type Occupancies = Record<`${number}:${number}`, "FREE" | "OCCUPIED">
+
 export interface RoomSimplified {
   roomId: number
   name: string
-  occupancies: Record<string, "FREE" | "OCCUPIED">
+  occupancies: Occupancies
   occupancyRate: number | undefined
 }
 
@@ -31,7 +33,7 @@ export interface RoomDetails {
 
 export interface OccupancyInfo {
   room_id: number
-  occupancy_rate: null | ValidCrowdStatus
+  occupancy_rate: null | number
 }
 
 const client = HttpClient.getInstance()
