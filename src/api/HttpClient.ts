@@ -87,6 +87,7 @@ export class HttpClient extends EventEmitter {
 
   readonly polimiInstance: AxiosInstance
   readonly poliNetworkInstance: AxiosInstance
+  readonly generalInstance: AxiosInstance
 
   private polimiToken?: PolimiToken
   private poliNetworkToken?: PoliNetworkToken
@@ -118,6 +119,9 @@ export class HttpClient extends EventEmitter {
       baseURL: baseUrlPolimi,
       timeout: 2000,
     })
+    this.generalInstance = axios.create({
+      timeout: 2000,
+    })
     this._initializeInterceptors()
   }
 
@@ -134,6 +138,11 @@ export class HttpClient extends EventEmitter {
     this.polimiInstance.interceptors.response.use(
       val => this._handleResponse(val),
       err => this._handleError(err as AxiosError, this.polimiInstance)
+    )
+    this.generalInstance.interceptors.request.use(this._handleRequest)
+    this.generalInstance.interceptors.response.use(
+      val => this._handleResponse(val),
+      err => this._handleError(err as AxiosError, this.generalInstance)
     )
   }
 

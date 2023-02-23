@@ -5,17 +5,10 @@ import { StyleSheet } from "react-native"
 import { ModalWithButtons } from "components/ModalWithButtons"
 import { SelectTile } from "components/Settings"
 import { getNameFromMode, ValidModalType } from "utils/groups"
-
+import { Filters } from "utils/groups"
 export interface FiltersProps {
   filters: Filters
   onFilterChange: (filters: Filters) => void
-}
-
-export interface Filters {
-  year?: string
-  course?: string
-  platform?: string
-  type?: string
 }
 
 interface ModalItemList {
@@ -54,7 +47,7 @@ const platformsList: ModalItemList = {
   itemsToSave: ["WA", "FB", "TG"],
 }
 
-export const Filters: FC<FiltersProps> = props => {
+export const FiltersList: FC<FiltersProps> = props => {
   //show or hide modal
   const [isModalShowing, setIsModalShowing] = useState(false)
   //type of modal: year - type - course - platform
