@@ -139,6 +139,11 @@ export class HttpClient extends EventEmitter {
       val => this._handleResponse(val),
       err => this._handleError(err as AxiosError, this.polimiInstance)
     )
+    this.generalInstance.interceptors.request.use(this._handleRequest)
+    this.generalInstance.interceptors.response.use(
+      val => this._handleResponse(val),
+      err => this._handleError(err as AxiosError, this.generalInstance)
+    )
   }
 
   private _handleRequest = (config: AxiosRequestConfig) => {
