@@ -23,14 +23,6 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
     setDate(new Date(currentDate))
   }, [props.route.params.currentDate])
 
-  //custom goBack function in order to maintain the currenyDate
-  const goBack = () => {
-    props.navigation.navigate("BuildingChoice", {
-      campus: building.campus,
-      currentDate: date.toString(),
-    })
-  }
-
   const buildingName: string[] = building.name.split(" ") // ex. buildingName = ["Ed.","B2"]
 
   const coords = getBuildingCoords(
@@ -39,7 +31,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
   )
 
   return (
-    <PageWrapper navbarOptions={{ overrideBackBehavior: () => goBack() }}>
+    <PageWrapper style={{ marginTop: 106 }}>
       <View style={{ paddingTop: 28 }}>
         <Title
           style={{

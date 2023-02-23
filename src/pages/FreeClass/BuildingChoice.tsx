@@ -105,15 +105,8 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
     setDate(new Date(currentDate))
   }, [props.route.params.currentDate])
 
-  //custom goBack function, in order to maintain the currentDate.
-  const goBack = () => {
-    props.navigation.navigate("CampusChoice", {
-      currentDate: date.toString(),
-    })
-  }
-
   return (
-    <PageWrapper navbarOptions={{ overrideBackBehavior: () => goBack() }}>
+    <PageWrapper style={{ marginTop: 106 }}>
       <View style={{ paddingTop: 28 }}>
         {campus.name.length > 1 ? (
           <Title

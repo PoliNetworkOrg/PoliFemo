@@ -4,19 +4,18 @@ import { View, Dimensions, Pressable, Alert } from "react-native"
 import { PoliSearchBar } from "components/Home"
 import { usePalette } from "utils/colors"
 import { Title, BodyText } from "components/Text"
-import { FlatList } from "react-native-gesture-handler"
 import { Canvas, useSVG, ImageSVG } from "@shopify/react-native-skia"
 import campusIcon from "assets/freeClassrooms/campus.svg"
 import position1Icon from "assets/freeClassrooms/position1.svg"
 import position2Icon from "assets/freeClassrooms/position2.svg"
 import * as Location from "expo-location"
-import { PageWrapper } from "components/Groups/PageWrapper"
+import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 
 const { width } = Dimensions.get("window")
 
 enum SearchClassType {
   GPS_POSITION,
-  CAMPUS,
+  HEADQUARTER,
 }
 interface FreeClassInterface {
   id: number
@@ -30,7 +29,7 @@ const freeClassButtons: FreeClassInterface[] = [
     type: SearchClassType.GPS_POSITION,
     text: ["In base alla tua", "posizione"],
   },
-  { id: 1, type: SearchClassType.CAMPUS, text: ["Scegli il tuo", "campus"] },
+  { id: 1, type: SearchClassType.HEADQUARTER, text: ["Scegli la tua", "sede"] },
 ]
 
 /**
@@ -71,21 +70,16 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
   }
 
   return (
-    <PageWrapper>
+    <ContentWrapperScroll
+      scrollViewStyle={{ paddingBottom: 60 }}
+      style={{ marginTop: 106 }}
+    >
       <View style={{ paddingTop: 28 }}>
         <Title style={{ paddingLeft: 28, marginBottom: 17 }}>Aule Libere</Title>
         <PoliSearchBar onChange={searchKey => setSearch(searchKey)} />
       </View>
-      <FlatList
-        showsVerticalScrollIndicator={true}
-        style={{ flex: 1, marginBottom: 93 }}
-        contentContainerStyle={{
-          width,
-          alignItems: "center",
-        }}
-        data={freeClassButtons}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item }) => (
+      <View style={{ width, alignItems: "center" }}>
+        {freeClassButtons.map(item => (
           <Pressable
             key={"freeClass_" + item.id}
             style={{
@@ -104,9 +98,9 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
               alignItems: "center",
             }}
             onPress={
-              item.type === SearchClassType.CAMPUS
+              item.type === SearchClassType.HEADQUARTER
                 ? () =>
-                    navigate("CampusChoice", {
+                    navigate("HeadquarterChoice", {
                       currentDate: new Date().toString(),
                     })
                 : () => handlePositionPressed()
@@ -115,9 +109,9 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
             <Canvas
               style={{
                 flex: 1,
-                width: item.type === SearchClassType.CAMPUS ? 90 : 80,
+                width: item.type === SearchClassType.HEADQUARTER ? 90 : 80,
                 alignSelf: "center",
-                marginTop: item.type === SearchClassType.CAMPUS ? 33 : 28,
+                marginTop: item.type === SearchClassType.HEADQUARTER ? 33 : 28,
               }}
             >
               {item.type === SearchClassType.GPS_POSITION && position1SVG && (
@@ -138,7 +132,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
                   height={27}
                 />
               )}
-              {item.type === SearchClassType.CAMPUS && campusSVG && (
+              {item.type === SearchClassType.HEADQUARTER && campusSVG && (
                 <ImageSVG svg={campusSVG} x={0} y={0} width={90} height={85} />
               )}
             </Canvas>
@@ -160,8 +154,8 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
               </BodyText>
             </BodyText>
           </Pressable>
-        )}
-      />
-    </PageWrapper>
+        ))}
+      </View>
+    </ContentWrapperScroll>
   )
 }

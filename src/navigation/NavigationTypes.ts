@@ -27,6 +27,7 @@ import { NavigatorScreenParams } from "@react-navigation/native"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
 import { Occupancies, RoomDetails } from "api/rooms"
 import { TagWithData } from "contexts/newsPreferences"
+import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
 
 /**
  * interface containing the info about the params for each page of the stack navigator
@@ -50,7 +51,8 @@ export type MainStackNavigatorParams = {
   OtherCategories: { tags: TagWithData[] }
   Error404: undefined
   FreeClassrooms: undefined
-  CampusChoice: { currentDate: string }
+  HeadquarterChoice: { currentDate: string }
+  CampusChoice: { headquarter: HeadquarterItem; currentDate: string }
   PositionChoice: undefined
   BuildingChoice: { campus: CampusItem; currentDate: string }
   RoomDetails: {

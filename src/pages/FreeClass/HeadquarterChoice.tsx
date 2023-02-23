@@ -5,23 +5,34 @@ import { usePalette } from "utils/colors"
 import { Title, BodyText } from "components/Text"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { PageWrapper } from "components/Groups/PageWrapper"
-import buildingCoords from "components/FreeClass/buildingCoords.json"
 
-export interface CampusItem {
-  name: string[]
+export interface HeadquarterItem {
   acronym: string
-  latitude: number
-  longitude: number
+  name: string[]
 }
+
+const headquarterList: HeadquarterItem[] = [
+  { acronym: "MIA", name: ["Milano", "Città Studi"] },
+  { acronym: "MIB", name: ["Milano", "Bovisa"] },
+  { acronym: "CRG", name: ["Cremona"] },
+  { acronym: "LCF", name: ["Lecco"] },
+  { acronym: "PCL", name: ["Piacenza"] },
+  { acronym: "MNI", name: ["Mantova"] },
+  { acronym: "MIC", name: ["Residenze"] },
+  { acronym: "MID", name: ["Sesto", "Ulteriano"] },
+  { acronym: "COE", name: ["Como"] },
+]
 
 /**
  * In this page the user can select the campus.
  */
-export const CampusChoice: MainStackScreen<"CampusChoice"> = props => {
+export const HeadquarterChoice: MainStackScreen<
+  "HeadquarterChoice"
+> = props => {
   const { navigate } = useNavigation()
   const { palette } = usePalette()
 
-  const { headquarter, currentDate } = props.route.params
+  const { currentDate } = props.route.params
 
   //non-ISO format for simplicity (local timezone) and
   // compatibility with `handleConfirm` function
@@ -29,52 +40,14 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = props => {
     new Date(currentDate) !== new Date() ? new Date(currentDate) : new Date()
   )
 
-  const [campusList, setCampusList] = useState<CampusItem[]>([])
-
-  const getCampusList = (acronym: string) => {
-    const tempCampusList: CampusItem[] = []
-    for (const h of buildingCoords) {
-      if (h.acronym === acronym) {
-        for (const c of h.campus) {
-          const campus: CampusItem = {
-            name: c.name,
-            acronym: h.acronym,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            latitude: c.latitude,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            longitude: c.longitude,
-          }
-          tempCampusList.push(campus)
-        }
-        break
-      }
-    }
-    setCampusList(tempCampusList)
-  }
-
   useEffect(() => {
     setDate(new Date(currentDate))
   }, [props.route.params.currentDate])
 
-  useEffect(() => getCampusList(headquarter.acronym), [])
-
   return (
     <PageWrapper style={{ marginTop: 106 }}>
       <View style={{ paddingTop: 28 }}>
-        {headquarter.name.length > 1 ? (
-          <Title
-            style={{
-              paddingLeft: 28,
-              fontWeight: "300",
-              fontFamily: "Roboto_300Light",
-            }}
-          >
-            {headquarter.name[0]}
-            <Title>{" " + headquarter.name[1]}</Title>
-          </Title>
-        ) : (
-          <Title style={{ paddingLeft: 28 }}>{headquarter.name}</Title>
-        )}
+        <Title style={{ paddingLeft: 28 }}>Sede</Title>
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
       <FlatList
@@ -89,7 +62,7 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = props => {
           justifyContent: "space-between",
           marginHorizontal: 22,
         }}
-        data={campusList}
+        data={headquarterList}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => (
           <Pressable
@@ -103,8 +76,8 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = props => {
               alignItems: "center",
             }}
             onPress={() =>
-              navigate("BuildingChoice", {
-                campus: item,
+              navigate("CampusChoice", {
+                headquarter: item,
                 currentDate: date.toISOString(),
               })
             }

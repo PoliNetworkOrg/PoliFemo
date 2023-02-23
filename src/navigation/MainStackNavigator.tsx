@@ -18,6 +18,7 @@ import { ClassChoice } from "pages/FreeClass/ClassChoice"
 import { RoomDetails } from "pages/FreeClass/RoomDetails"
 import { OtherCategories } from "pages/news/OtherCategories"
 import { Groups } from "pages/Groups"
+import { HeadquarterChoice } from "pages/FreeClass/HeadquarterChoice"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const MainStackNavigator = createStackNavigator<MainStackNavigatorParams>()
@@ -36,6 +37,10 @@ export const MainStack: FC = () => {
       <MainStackNavigator.Screen
         name="FreeClassrooms"
         component={FreeClassrooms}
+      />
+      <MainStackNavigator.Screen
+        name="HeadquarterChoice"
+        component={HeadquarterChoice}
       />
       <MainStackNavigator.Screen name="CampusChoice" component={CampusChoice} />
       <MainStackNavigator.Screen

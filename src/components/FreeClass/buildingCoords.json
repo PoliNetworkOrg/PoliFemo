@@ -1,11 +1,14 @@
 [
   {
     "acronym": "MIA",
+    "name": ["Milano", "Città Studi"],
     "campus": [
       {
         "name": [
           "Leonardo"
         ],
+        "latitude": 45.47791263153159,
+        "longitude": 9.227122387828846,
         "buildings": [
           {
             "name": "Edificio 29",
@@ -133,6 +136,8 @@
         "name": [
           "Bassini"
         ],
+        "latitude": 45.4789992620537,
+        "longitude": 9.23224621210039,
         "buildings": [
           {
             "name": "Edificio 19",
@@ -212,6 +217,8 @@
         "name": [
           "Bonardi"
         ],
+        "latitude": 45.479781934520446,
+        "longitude": 9.22835238075815,
         "buildings": [
           {
             "name": "Edificio 11",
@@ -315,6 +322,8 @@
         "name": [
           "Colombo"
         ],
+        "latitude": 45.47190973697382,
+        "longitude": 9.227048868730659,
         "buildings": [
           {
             "name": "Edificio 32.1",
@@ -370,6 +379,8 @@
         "name": [
           "Golgi"
         ],
+        "latitude": 45.475701787753316,
+        "longitude": 9.23566774592704,
         "buildings": [
           {
             "name": "Edificio 26",
@@ -425,6 +436,8 @@
         "name": [
           "Mancinelli"
         ],
+        "latitude": 45.49016811534536,
+        "longitude": 9.227177297538793,
         "buildings": [
           {
             "name": "Edificio 28",
@@ -440,6 +453,8 @@
         "name": [
           "Pascoli"
         ],
+        "latitude": 45.475845466349035,
+        "longitude": 9.226032157517993,
         "buildings": [
           {
             "name": "Edificio 38",
@@ -471,6 +486,8 @@
         "name": [
           "Romagna"
         ],
+        "latitude": 45.47678010082273,
+        "longitude": 9.224452739758812,
         "buildings": [
           {
             "name": "Casa dello Studente",
@@ -486,12 +503,15 @@
   },
   {
     "acronym": "MIB",
+    "name": ["Milano", "Bovisa"],
     "campus": [
       {
         "name": [
           "Bovisa",
           "Durando"
         ],
+        "latitude": 45.504422059752116,
+        "longitude": 9.164129368703703,
         "buildings": [
           {
             "name": "Edificio B1",
@@ -596,6 +616,8 @@
           "Bovisa",
           "La Masa"
         ],
+        "latitude": 45.50286551603009,
+        "longitude": 9.156452626872522,
         "buildings": [
           {
             "name": "Edificio B11",
@@ -803,11 +825,14 @@
   },
   {
     "acronym": "CRG",
+    "name": ["Cremona"],
     "campus": [
       {
         "name": [
           "Sesto"
         ],
+        "latitude": 45.14636683054809,
+        "longitude": 10.002025408405924,
         "buildings": [
           {
             "name": "Edificio C",
@@ -839,11 +864,14 @@
   },
   {
     "acronym": "LCF",
+    "name": ["Lecco"],
     "campus": [
       {
         "name": [
           "Ghislanzoni"
         ],
+        "latitude": 45.848982262635516,
+        "longitude": 9.397375312267139,
         "buildings": [
           {
             "name": "Residenza Loos",
@@ -923,11 +951,14 @@
   },
   {
     "acronym": "PCL",
+    "name": ["Piacenza"],
     "campus": [
       {
         "name": [
           "Scalabrini"
         ],
+        "latitude": 45.046624066557236,
+        "longitude": 9.70295943795921,
         "buildings": [
           {
             "name": "Padiglione 11",
@@ -1039,11 +1070,14 @@
   },
   {
     "acronym": "MNI",
+    "name": ["Mantova"],
     "campus": [
       {
         "name": [
           "Scarsellini"
         ],
+        "latitude": 45.16007288978253,
+        "longitude": 10.78895040720128,
         "buildings": [
           {
             "name": "Edificio 1",
@@ -1067,12 +1101,15 @@
   },
   {
     "acronym": "MIC",
+    "name": ["Residenze"],
     "campus": [
       {
         "name": [
           "Off",
           "Campus"
         ],
+        "latitude": 45.49326461001558,
+        "longitude": 9.21927698715338,
         "buildings": [
           {
             "name": "NOLO",
@@ -1097,6 +1134,8 @@
           "Residenza",
           "Einstein"
         ],
+        "latitude": 45.45033404949838,
+        "longitude": 9.216969652664448,
         "buildings": [
           {
             "name": "Einstein",
@@ -1113,6 +1152,8 @@
           "Residenza",
           "Newton"
         ],
+        "latitude": 45.50201311059991,
+        "longitude": 9.100693099933826,
         "buildings": [
           {
             "name": "Newton",
@@ -1129,6 +1170,8 @@
           "Residenza",
           "Pareto"
         ],
+        "latitude": 45.50331624885291,
+        "longitude": 9.145443677552473,
         "buildings": [
           {
             "name": "Pareto",
@@ -1144,11 +1187,14 @@
   },
   {
     "acronym": "MID",
+    "name": ["Sesto","Ulteriano"],
     "campus": [
       {
         "name": [
           "Calabria"
         ],
+        "latitude": 45.39350641657452,
+        "longitude": 9.257432613353823,
         "buildings": [
           {
             "name": "Edificio 1",
@@ -1164,11 +1210,14 @@
   },
   {
     "acronym": "COE",
+    "name": ["Como"],
     "campus": [
       {
         "name": [
           "Anzani"
         ],
+        "latitude": 45.80120256319488,
+        "longitude": 9.092668671639375,
         "buildings": [
           {
             "name": "Edificio 4",
@@ -1184,6 +1233,8 @@
         "name": [
           "Castelnuovo"
         ],
+        "latitude": 45.80276883790487,
+        "longitude": 9.09505146871641,
         "buildings": [
           {
             "name": "Edificio 1",
@@ -1199,6 +1250,8 @@
         "name": [
           "Zezio"
         ],
+        "latitude": 45.80645610020381,
+        "longitude": 9.09718826871654,
         "buildings": [
           {
             "name": "Residenza La Presentazione",
