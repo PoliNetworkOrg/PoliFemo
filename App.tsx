@@ -22,6 +22,7 @@ import { useLoadTokens } from "utils/loadTokens"
 import { HttpClient } from "api/HttpClient"
 import { usePalette } from "utils/colors"
 import { StatusBar } from "react-native"
+import { Host } from "react-native-portalize"
 
 const client = HttpClient.getInstance()
 
@@ -85,7 +86,10 @@ export default function App() {
     // subscribe to the API login events to manage the login state
     const handleLoginEvent = async (loggedIn: boolean) => {
       if (loggedIn) {
-        const inf = await api.user.getPolimiUserInfo()
+        const [inf, pn] = await Promise.all([
+          api.user.getPolimiUserInfo(),
+          api.user.getPoliNetworkMe(),
+        ])
         setLoginState({
           loggedIn,
           userInfo: {
@@ -108,6 +112,7 @@ export default function App() {
             ],
             codPersona: inf.codicePersona,
             profilePic: inf.fotoURL,
+            userID: pn.id,
           },
         })
       } else setLoginState({ loggedIn })
@@ -133,29 +138,31 @@ export default function App() {
   if (!settingsReady || !fontsLoaded || !tokensLoaded) return null
 
   return (
-    <NavigationContainer
-      theme={{
-        ...DefaultTheme,
-        colors: {
-          ...DefaultTheme.colors,
-          background: homeBackground,
-        },
-      }}
-    >
-      <StatusBar
-        barStyle={"light-content"}
-        translucent={true}
-        backgroundColor={"transparent"}
-      />
-      <OutsideClickProvider>
-        <SettingsContext.Provider
-          value={{ settings: settings, setSettings: setSettings }}
-        >
-          <LoginContext.Provider value={{ ...loginState, setLoginState }}>
-            <AppContainer />
-          </LoginContext.Provider>
-        </SettingsContext.Provider>
-      </OutsideClickProvider>
-    </NavigationContainer>
+    <Host>
+      <NavigationContainer
+        theme={{
+          ...DefaultTheme,
+          colors: {
+            ...DefaultTheme.colors,
+            background: homeBackground,
+          },
+        }}
+      >
+        <StatusBar
+          barStyle={"light-content"}
+          translucent={true}
+          backgroundColor={"transparent"}
+        />
+        <OutsideClickProvider>
+          <SettingsContext.Provider
+            value={{ settings: settings, setSettings: setSettings }}
+          >
+            <LoginContext.Provider value={{ ...loginState, setLoginState }}>
+              <AppContainer />
+            </LoginContext.Provider>
+          </SettingsContext.Provider>
+        </OutsideClickProvider>
+      </NavigationContainer>
+    </Host>
   )
 }
