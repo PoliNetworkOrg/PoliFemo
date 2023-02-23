@@ -9,6 +9,7 @@ const palette = {
   lessDark: "#2B344A",
   variant1: "#414867",
   variant2: "#010B40",
+  variant3: "#454773",
   accent: "#FFB544",
 } as const
 
@@ -96,6 +97,21 @@ export interface ColorTheme {
    * Dark blue used for the title in cards with a background image and a yellowish gradient.
    */
   cardTitle: string
+
+  /**
+   * for RoomDetails page's slider
+   */
+  sliderBorderColor: string
+
+  /**
+   * dark blue in light mode, white in dark mode, used in slider labels
+   */
+  labelsHighContrast: string
+
+  /**
+   * purple/blueish in light mode, white in dark mode, used in TimeLeftTile
+   */
+  iconHighContrast: string
 }
 
 /**
@@ -181,6 +197,9 @@ export const usePalette: () => ColorTheme &
     articleTitle: palette.darker,
     articleSubtitle: palette.primary,
     cardTitle: palette.variant2, // "#010B40"
+    sliderBorderColor: "#454773",
+    labelsHighContrast: palette.variant1, // "#414867",
+    iconHighContrast: palette.variant3, // "#454773",
   }
 
   const darkTheme: ColorTheme = {
@@ -197,6 +216,9 @@ export const usePalette: () => ColorTheme &
     articleTitle: "#FFFFFF",
     articleSubtitle: palette.lighter,
     cardTitle: palette.variant2, // "#010B40"
+    sliderBorderColor: "#FFFFFF",
+    labelsHighContrast: "#FFFFFF",
+    iconHighContrast: "#FFFFFF",
   }
 
   const colors = isLight ? lightTheme : darkTheme

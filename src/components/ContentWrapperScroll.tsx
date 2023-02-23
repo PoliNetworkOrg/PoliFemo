@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { ScrollView, View } from "react-native"
+import { ScrollView, View, ViewStyle } from "react-native"
 import { Text } from "components/Text"
 import { NavBar, NavbarProps } from "components/NavBar"
 import { usePalette } from "utils/colors"
@@ -21,7 +21,10 @@ export const ContentWrapperScroll: FC<{
    * Props for the navbar, see {@link NavBar}
    */
   navbarOptions?: NavbarProps
-  marginTop?: number
+
+  style?: ViewStyle
+
+  scrollViewStyle?: ViewStyle
 }> = props => {
   const { background, isLight, primary } = usePalette()
 
@@ -56,23 +59,26 @@ export const ContentWrapperScroll: FC<{
       )}
 
       <View
-        style={{
-          flex: 1,
-          backgroundColor: background,
-          marginTop: props.marginTop ?? 86,
+        style={[
+          {
+            flex: 1,
+            backgroundColor: background,
+            marginTop: 86,
 
-          borderTopLeftRadius: 30,
-          borderTopRightRadius: 30,
+            borderTopLeftRadius: 30,
+            borderTopRightRadius: 30,
 
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 0,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 0,
+            },
+            shadowOpacity: 0.2,
+            shadowRadius: 8.3,
+            elevation: 13,
           },
-          shadowOpacity: 0.2,
-          shadowRadius: 8.3,
-          elevation: 13,
-        }}
+          props.style,
+        ]}
       >
         <View
           style={{
@@ -82,7 +88,13 @@ export const ContentWrapperScroll: FC<{
             overflow: "hidden",
           }}
         >
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={[
+              { overflow: "visible" },
+              props.scrollViewStyle,
+            ]}
+          >
             <View style={{ paddingBottom: 50 }}>{props.children}</View>
           </ScrollView>
         </View>

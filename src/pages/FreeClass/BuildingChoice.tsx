@@ -70,7 +70,8 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                 {
                   roomId: room.room_id,
                   name: room.name,
-                  occupancyRate: room.occupancyRate,
+                  occupancies: room.occupancies,
+                  occupancyRate: room.occupancy_rate ?? undefined,
                 },
               ],
             }
@@ -84,7 +85,8 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
             tempBuildings[indexElement].freeRoomList.push({
               roomId: room.room_id,
               name: room.name,
-              occupancyRate: room.occupancyRate,
+              occupancies: room.occupancies,
+              occupancyRate: room.occupancy_rate ?? undefined,
             })
           }
         })
@@ -103,8 +105,15 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
     setDate(new Date(currentDate))
   }, [props.route.params.currentDate])
 
+  //custom goBack function, in order to maintain the currentDate.
+  const goBack = () => {
+    props.navigation.navigate("CampusChoice", {
+      currentDate: date.toString(),
+    })
+  }
+
   return (
-    <PageWrapper>
+    <PageWrapper navbarOptions={{ overrideBackBehavior: () => goBack() }}>
       <View style={{ paddingTop: 28 }}>
         {campus.name.length > 1 ? (
           <Title

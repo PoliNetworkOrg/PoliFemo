@@ -5,6 +5,7 @@ import { Title } from "components/Text"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { PageWrapper } from "components/Groups/PageWrapper"
+import { getBuildingCoords } from "utils/rooms"
 
 /**
  * In this page the user can select finally the free class he wants.
@@ -22,10 +23,23 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
     setDate(new Date(currentDate))
   }, [props.route.params.currentDate])
 
+  //custom goBack function in order to maintain the currenyDate
+  const goBack = () => {
+    props.navigation.navigate("BuildingChoice", {
+      campus: building.campus,
+      currentDate: date.toString(),
+    })
+  }
+
   const buildingName: string[] = building.name.split(" ") // ex. buildingName = ["Ed.","B2"]
 
+  const coords = getBuildingCoords(
+    building.campus,
+    building.name.replace("Ed. ", "Edificio ")
+  )
+
   return (
-    <PageWrapper>
+    <PageWrapper navbarOptions={{ overrideBackBehavior: () => goBack() }}>
       <View style={{ paddingTop: 28 }}>
         <Title
           style={{
@@ -40,7 +54,12 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
       <View style={{ flex: 1, marginTop: 26, marginBottom: 93 }}>
-        <FreeClassList data={building.freeRoomList} />
+        <FreeClassList
+          data={building.freeRoomList}
+          date={new Date()}
+          latitude={coords?.latitude}
+          longitude={coords?.longitude}
+        />
       </View>
     </PageWrapper>
   )

@@ -128,7 +128,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
               size="large"
             />
           ) : (
-            <FreeClassList data={props.roomList} />
+            <FreeClassList data={props.roomList} date={new Date()} />
           )}
         </View>
       ) : (

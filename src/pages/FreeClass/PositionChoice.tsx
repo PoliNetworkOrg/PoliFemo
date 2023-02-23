@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { Platform, View } from "react-native"
 import { Title } from "components/Text"
-import { PoliSearchBar } from "components/Home"
 import * as Location from "expo-location"
 import { LocationGeocodedAddress, PermissionStatus } from "expo-location"
 import { AddressText } from "components/FreeClass/AddressText"
@@ -115,7 +114,8 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                     {
                       roomId: room.room_id,
                       name: room.name,
-                      occupancyRate: room.occupancyRate,
+                      occupancies: room.occupancies,
+                      occupancyRate: room.occupancy_rate ?? undefined,
                     },
                   ],
                 }
@@ -129,14 +129,16 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
                 tempBuildings[indexElement].freeRoomList.push({
                   roomId: room.room_id,
                   name: room.name,
-                  occupancyRate: room.occupancyRate,
+                  occupancies: room.occupancies,
+                  occupancyRate: room.occupancy_rate ?? undefined,
                 })
               }
               if (tempRoomList.length < 50) {
                 tempRoomList.push({
                   roomId: room.room_id,
                   name: room.name,
-                  occupancyRate: room.occupancyRate,
+                  occupancies: room.occupancies,
+                  occupancyRate: room.occupancy_rate ?? undefined,
                 })
               } else {
                 setRoomList(tempRoomList)

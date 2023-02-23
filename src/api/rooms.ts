@@ -1,4 +1,4 @@
-import { HttpClient, RequestOptions } from "./HttpClient"
+import { AuthType, HttpClient, RequestOptions } from "./HttpClient"
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface Rooms {
@@ -10,13 +10,32 @@ export interface Room {
   building: string
   power: boolean
   link: string
-  occupancyRate: number | undefined
+  occupancy_rate: number | null
+  occupancies: Occupancies
 }
+
+export type Occupancies = Record<`${number}:${number}`, "FREE" | "OCCUPIED">
+
 export interface RoomSimplified {
   roomId: number
   name: string
+  occupancies: Occupancies
   occupancyRate: number | undefined
 }
+
+export interface RoomDetails {
+  name: string
+  capacity: number
+  building: string
+  address: string
+  power: boolean
+}
+
+export interface OccupancyInfo {
+  room_id: number
+  occupancy_rate: null | number
+}
+
 const client = HttpClient.getInstance()
 
 /**
@@ -46,11 +65,36 @@ export const rooms = {
     return response.data.free_rooms
   },
 
+  async getOccupancyRate(roomId: number, options?: RequestOptions) {
+    const response = await client.poliNetworkInstance.get<OccupancyInfo>(
+      "/v1/rooms/" + roomId + "/occupancy",
+      {
+        ...options,
+      }
+    )
+    return response.data
+  },
+
+  async postOccupancyRate(
+    roomId: number,
+    rate: number,
+    options?: RequestOptions
+  ) {
+    const res = await client.poliNetworkInstance.post(
+      "/v1/rooms/" + roomId + "/occupancy",
+      {
+        ...options,
+      },
+      { params: { rate: rate }, authType: AuthType.POLINETWORK }
+    )
+    return res
+  },
+
   /**
    * Retrieves room details from PoliNetwork Server.
    */
   async getRoomInfo(roomId: number, options?: RequestOptions) {
-    const response = await client.poliNetworkInstance.get<Room>(
+    const response = await client.poliNetworkInstance.get<RoomDetails>(
       "/v1/rooms/" + roomId,
       {
         ...options,

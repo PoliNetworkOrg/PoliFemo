@@ -25,6 +25,7 @@ import { Article } from "api/articles"
 import { CampusItem } from "pages/FreeClass/CampusChoice"
 import { NavigatorScreenParams } from "@react-navigation/native"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
+import { Occupancies, RoomDetails } from "api/rooms"
 import { TagWithData } from "contexts/newsPreferences"
 
 /**
@@ -52,6 +53,15 @@ export type MainStackNavigatorParams = {
   CampusChoice: { currentDate: string }
   PositionChoice: undefined
   BuildingChoice: { campus: CampusItem; currentDate: string }
+  RoomDetails: {
+    room: RoomDetails
+    startDate: string
+    roomId: number
+    roomLatitude?: number
+    roomLongitude?: number
+    occupancies?: Occupancies
+    occupancyRate?: number | null
+  }
   ClassChoice: { building: BuildingItem; currentDate: string }
   Groups: undefined
 }

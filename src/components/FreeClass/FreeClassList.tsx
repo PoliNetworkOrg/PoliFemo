@@ -6,6 +6,8 @@ import { usePalette } from "utils/colors"
 import timerIcon from "assets/freeClassrooms/timer.svg"
 import overcrowdingIcon from "assets/freeClassrooms/overcrowding.svg"
 import fireIcon from "assets/freeClassrooms/fire.svg"
+import { useNavigation } from "navigation/NavigationTypes"
+import { api } from "api"
 import { FlatList } from "react-native-gesture-handler"
 import { RoomSimplified } from "api/rooms"
 
@@ -13,6 +15,9 @@ const { width } = Dimensions.get("window")
 
 interface FreeClassListProps {
   data: RoomSimplified[] | undefined
+  date: Date
+  latitude?: number
+  longitude?: number
 }
 
 enum OvercrowdingTypes {
@@ -29,6 +34,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
   const timerSVG = useSVG(timerIcon)
   const overcrowdingSVG = useSVG(overcrowdingIcon)
   const fireSVG = useSVG(fireIcon)
+  const { navigate } = useNavigation()
 
   const [isOvercrowded, setIsOvercrowded] = useState<boolean>(false)
 
@@ -67,6 +73,22 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
             backgroundColor: "#8791BD",
             marginBottom: 34,
             borderRadius: 12,
+          }}
+          onPress={async () => {
+            try {
+              const selectedRoom = await api.rooms.getRoomInfo(item.roomId)
+              navigate("RoomDetails", {
+                room: selectedRoom,
+                startDate: props.date.toISOString(),
+                roomId: item.roomId,
+                roomLatitude: props.latitude,
+                roomLongitude: props.longitude,
+                occupancies: item.occupancies,
+                occupancyRate: item.occupancyRate,
+              })
+            } catch (err) {
+              console.log(err)
+            }
           }}
         >
           <View
