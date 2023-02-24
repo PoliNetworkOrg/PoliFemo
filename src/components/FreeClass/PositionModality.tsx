@@ -32,22 +32,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
 
   const [status, setStatus] = useState<ButtonType>(ButtonType.MAP)
 
-  const [roomList, setRoomList] = useState<RoomSimplified[]>([])
-
   const { navigate } = useNavigation()
-
-  const extractRooms = (campusName: string[], buildingName: string) => {
-    const tempRooms: RoomSimplified[] = []
-    props.buildingList?.map(building => {
-      if (
-        building.campus.name === campusName &&
-        building.name === buildingName
-      ) {
-        tempRooms.push(...building.freeRoomList)
-      }
-    })
-    setRoomList(tempRooms)
-  }
 
   return (
     <>
