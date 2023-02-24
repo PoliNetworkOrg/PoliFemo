@@ -9,7 +9,8 @@ import fireIcon from "assets/freeClassrooms/fire.svg"
 import { useNavigation } from "navigation/NavigationTypes"
 import { api } from "api"
 import { FlatList } from "react-native-gesture-handler"
-import { RoomSimplified } from "api/rooms"
+import { Occupancies, RoomSimplified } from "api/rooms"
+import { extractTimeLeft, getEndDate } from "utils/rooms"
 
 const { width } = Dimensions.get("window")
 
@@ -30,7 +31,7 @@ enum OvercrowdingTypes {
  * It handles a list of freeclassrooms available.
  */
 export const FreeClassList: FC<FreeClassListProps> = props => {
-  const { palette } = usePalette()
+  const { palette, labelsHighContrast } = usePalette()
   const timerSVG = useSVG(timerIcon)
   const overcrowdingSVG = useSVG(overcrowdingIcon)
   const fireSVG = useSVG(fireIcon)
@@ -50,6 +51,16 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
       setIsOvercrowded(true)
       return OvercrowdingTypes.MOLTO
     }
+  }
+
+  let hLeft: string | undefined
+  let mLeft: string | undefined
+  const findTimeLeft = (occupancies: Occupancies) => {
+    const startDate = new Date(props.date)
+    const endDate = getEndDate(startDate, occupancies)
+    const { hoursLeft, minutesLeft } = extractTimeLeft(startDate, endDate)
+    hLeft = hoursLeft
+    mLeft = minutesLeft
   }
 
   return (
@@ -129,10 +140,11 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                 style={{
                   fontWeight: "700",
                   fontSize: 14,
-                  color: "#414867",
+                  color: hLeft !== "0" ? labelsHighContrast : palette.accent,
                 }}
               >
-                2 h 23{"'"}
+                {void findTimeLeft(item.occupancies)}
+                {hLeft && mLeft ? `${hLeft} h ${mLeft} '` : "-- h -- '"}
               </BodyText>
             </BodyText>
           </View>

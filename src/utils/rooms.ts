@@ -98,13 +98,15 @@ export function getEndDate(startDate: Date, occupancies?: Occupancies) {
   }
 }
 
-export function getBuildingCoords(campus: CampusItem, buildingName: string) {
+export function getBuildingCoords(campus: CampusItem, buildingName: string[]) {
+  const newBuildingName: string =
+    buildingName[0].replace("Ed.", "Edificio ") + buildingName[1]
   for (const element of BuildingListJSON) {
     if (element.acronym === campus.acronym) {
       for (const c of element.campus) {
         if (compareCampusNames(c.name, campus.name)) {
           for (const b of c.buildings) {
-            if (b.name === buildingName) {
+            if (b.name === newBuildingName) {
               return b.coords
             }
           }
@@ -132,4 +134,17 @@ const compareCampusNames = (c1: string[], c2: string[]) => {
   } else {
     return false
   }
+}
+
+export function addHours(dateStart: Date, hours: number) {
+  const tempDate = new Date(dateStart.getTime())
+  tempDate.setHours(tempDate.getHours() + hours)
+  return tempDate
+}
+
+export function formatBuildingName(name: string) {
+  return name
+    .replace("Edificio", "Ed.")
+    .replace("Padiglione", "Pad.")
+    .split(" ")
 }

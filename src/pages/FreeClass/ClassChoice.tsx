@@ -23,12 +23,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
     setDate(new Date(currentDate))
   }, [props.route.params.currentDate])
 
-  const buildingName: string[] = building.name.split(" ") // ex. buildingName = ["Ed.","B2"]
-
-  const coords = getBuildingCoords(
-    building.campus,
-    building.name.replace("Ed. ", "Edificio ")
-  )
+  const coords = getBuildingCoords(building.campus, building.name)
 
   return (
     <PageWrapper style={{ marginTop: 106 }}>
@@ -40,15 +35,15 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
             fontFamily: "Roboto_300Light",
           }}
         >
-          {buildingName[0].replace("Ed.", "Edificio")}
-          <Title>{" " + buildingName[1]}</Title>
+          {building.name[0].replace("Ed.", "Edificio")}
+          <Title>{" " + building.name[1]}</Title>
         </Title>
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
       <View style={{ flex: 1, marginTop: 26, marginBottom: 93 }}>
         <FreeClassList
           data={building.freeRoomList}
-          date={new Date()}
+          date={date}
           latitude={coords?.latitude}
           longitude={coords?.longitude}
         />

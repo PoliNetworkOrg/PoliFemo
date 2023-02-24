@@ -1,26 +1,40 @@
 import React, { useEffect, useState } from "react"
-import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { View, Pressable, FlatList } from "react-native"
-import { usePalette } from "utils/colors"
-import { Title, BodyText } from "components/Text"
+import { MainStackScreen } from "navigation/NavigationTypes"
+import { View } from "react-native"
+import { Title } from "components/Text"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { PageWrapper } from "components/Groups/PageWrapper"
+import { DefaultList } from "components/FreeClass/DefaultList"
+import { ConstructionType } from "api/rooms"
 
 export interface HeadquarterItem {
+  type: ConstructionType
   acronym: string
   name: string[]
 }
 
 const headquarterList: HeadquarterItem[] = [
-  { acronym: "MIA", name: ["Milano", "Città Studi"] },
-  { acronym: "MIB", name: ["Milano", "Bovisa"] },
-  { acronym: "CRG", name: ["Cremona"] },
-  { acronym: "LCF", name: ["Lecco"] },
-  { acronym: "PCL", name: ["Piacenza"] },
-  { acronym: "MNI", name: ["Mantova"] },
-  { acronym: "MIC", name: ["Residenze"] },
-  { acronym: "MID", name: ["Sesto", "Ulteriano"] },
-  { acronym: "COE", name: ["Como"] },
+  {
+    type: ConstructionType.HEADQUARTER,
+    acronym: "MIA",
+    name: ["Milano", "Città Studi"],
+  },
+  {
+    type: ConstructionType.HEADQUARTER,
+    acronym: "MIB",
+    name: ["Milano", "Bovisa"],
+  },
+  { type: ConstructionType.HEADQUARTER, acronym: "CRG", name: ["Cremona"] },
+  { type: ConstructionType.HEADQUARTER, acronym: "LCF", name: ["Lecco"] },
+  { type: ConstructionType.HEADQUARTER, acronym: "PCL", name: ["Piacenza"] },
+  { type: ConstructionType.HEADQUARTER, acronym: "MNI", name: ["Mantova"] },
+  { type: ConstructionType.HEADQUARTER, acronym: "MIC", name: ["Residenze"] },
+  {
+    type: ConstructionType.HEADQUARTER,
+    acronym: "MID",
+    name: ["Sesto", "Ulteriano"],
+  },
+  { type: ConstructionType.HEADQUARTER, acronym: "COE", name: ["Como"] },
 ]
 
 /**
@@ -29,9 +43,6 @@ const headquarterList: HeadquarterItem[] = [
 export const HeadquarterChoice: MainStackScreen<
   "HeadquarterChoice"
 > = props => {
-  const { navigate } = useNavigation()
-  const { palette } = usePalette()
-
   const { currentDate } = props.route.params
 
   //non-ISO format for simplicity (local timezone) and
@@ -50,75 +61,7 @@ export const HeadquarterChoice: MainStackScreen<
         <Title style={{ paddingLeft: 28 }}>Sede</Title>
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
-      <FlatList
-        style={{
-          flex: 1,
-          marginTop: 53,
-          marginBottom: 93,
-        }}
-        showsVerticalScrollIndicator={true}
-        numColumns={2}
-        columnWrapperStyle={{
-          justifyContent: "space-between",
-          marginHorizontal: 22,
-        }}
-        data={headquarterList}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item }) => (
-          <Pressable
-            style={{
-              backgroundColor: palette.primary,
-              borderRadius: 12,
-              width: "45%",
-              height: 93,
-              marginHorizontal: 9,
-              marginBottom: 54,
-              alignItems: "center",
-            }}
-            onPress={() =>
-              navigate("CampusChoice", {
-                headquarter: item,
-                currentDate: date.toISOString(),
-              })
-            }
-          >
-            <View
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <BodyText
-                style={{
-                  fontWeight: item.name.length > 1 ? "300" : "900",
-                  color: "white",
-                  fontSize: 20,
-                  textAlign: "center",
-                }}
-              >
-                {item.name[0]}
-              </BodyText>
-              {item.name.length > 1 ? (
-                <BodyText
-                  style={{
-                    fontWeight: "900",
-                    color: "white",
-                    fontSize: 20,
-                    textAlign: "center",
-                  }}
-                >
-                  {item.name[1]}
-                </BodyText>
-              ) : undefined}
-            </View>
-          </Pressable>
-        )}
-      />
+      <DefaultList dataToShow={headquarterList} currentDate={date} />
     </PageWrapper>
   )
 }

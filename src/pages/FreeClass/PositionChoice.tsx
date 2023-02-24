@@ -5,14 +5,14 @@ import { Title } from "components/Text"
 import * as Location from "expo-location"
 import { LocationGeocodedAddress, PermissionStatus } from "expo-location"
 import { AddressText } from "components/FreeClass/AddressText"
-import { CampusItem, campusList } from "./CampusChoice"
 import { getDistance } from "geolib"
 import { api } from "api"
 import { BuildingItem } from "./BuildingChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { PositionModality } from "components/FreeClass/PositionModality"
-import { addHours, RoomSimplified } from "api/rooms"
+import { addHours, ConstructionType, RoomSimplified } from "api/rooms"
 import BuildingListJSON from "components/FreeClass/buildingCoords.json"
+import { formatBuildingName, getBuildingCoords } from "utils/rooms"
 
 /**
  * In this page the user can find a room according to his current position.
@@ -34,124 +34,111 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
   //the dateEnd is the startDate + 3 hours, the number of hours has not been chosen yet
   const dateEnd = addHours(new Date(), 3).toISOString() //3 hours is an example
 
-  const compareCampusNames = (c1: string[], c2: string[]) => {
-    if (c1.length === c2.length) {
-      if (c1.length > 1) {
-        if (c1[0] === c2[0] && c1[1] === c2[1]) {
-          return true
-        } else {
-          return false
-        }
-      } else {
-        if (c1[0] === c2[0]) {
-          return true
-        } else {
-          return false
-        }
-      }
-    } else {
-      return false
-    }
-  }
-
-  const getBuildingCoords = (campus: CampusItem, buildingName: string) => {
-    for (const element of BuildingListJSON) {
-      if (element.acronym === campus.acronym) {
-        for (const c of element.campus) {
-          if (compareCampusNames(c.name, campus.name)) {
-            for (const b of c.buildings) {
-              if (b.name === buildingName) {
-                return b.coords
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
   //main function that handles the call to the API in order to obtain the list of freeclassRooms
+  //da rivedere
   const findRoomsAvailable = async (
-    campusList: CampusItem[],
     currentLat: number,
     currentLong: number
   ) => {
     const tempBuildingList: BuildingItem[] = []
     const tempRoomList: RoomSimplified[] = []
-    for (const campus of campusList) {
-      if (
-        getDistance(
-          { latitude: currentLat, longitude: currentLong },
-          {
-            latitude: campus.latitude,
-            longitude: campus.longitude,
-          }
-        ) <= 50000 //if the distance between the user and the campus is less than 500m I'll call the API,to test I put 50km
-      ) {
-        //call the API
-        try {
-          const response = await api.rooms.getFreeRoomsTimeRange(
-            campus.acronym,
-            new Date().toISOString(),
-            dateEnd
-          )
-          if (response.length > 0) {
-            const tempBuildingStrings: string[] = []
-            const tempBuildings: BuildingItem[] = []
-            response.map(room => {
-              const coords = getBuildingCoords(campus, room.building)
-              const currentBuildingString = room.building.replace(
-                "Edificio ",
-                "Ed. "
-              )
-              if (!tempBuildingStrings.includes(currentBuildingString)) {
-                const currentBuilding: BuildingItem = {
-                  campus: campus,
-                  name: room.building,
-                  latitude: coords?.latitude,
-                  longitude: coords?.longitude,
-                  freeRoomList: [
-                    {
-                      roomId: room.room_id,
-                      name: room.name,
-                      occupancies: room.occupancies,
-                      occupancyRate: room.occupancy_rate ?? undefined,
-                    },
-                  ],
-                }
-                tempBuildingStrings.push(currentBuildingString)
-                tempBuildings.push(currentBuilding)
-              } else {
-                //element already in the list
-                const indexElement = tempBuildingStrings.indexOf(
-                  currentBuildingString
+    for (const h of BuildingListJSON) {
+      for (const c of h.campus) {
+        if (
+          getDistance(
+            { latitude: currentLat, longitude: currentLong },
+            {
+              latitude: c.latitude,
+              longitude: c.longitude,
+            }
+          ) <= 50000 //if the distance between the user and the campus is less than 500m I'll call the API,to test I put 50km
+        ) {
+          //call the API
+          try {
+            const response = await api.rooms.getFreeRoomsTimeRange(
+              h.acronym,
+              new Date().toISOString(),
+              dateEnd
+            )
+            if (response.length > 0) {
+              const tempBuildingStrings: string[] = []
+              const tempBuildings: BuildingItem[] = []
+              response.map(room => {
+                const roomBuilding: string[] = room.building.split(" ")
+                roomBuilding[0] += " "
+                const coords = getBuildingCoords(
+                  {
+                    type: ConstructionType.CAMPUS,
+                    name: c.name,
+                    acronym: h.acronym,
+                    latitude: c.latitude,
+                    longitude: c.longitude,
+                  },
+                  roomBuilding
                 )
-                tempBuildings[indexElement].freeRoomList.push({
-                  roomId: room.room_id,
-                  name: room.name,
-                  occupancies: room.occupancies,
-                  occupancyRate: room.occupancy_rate ?? undefined,
-                })
-              }
-              if (tempRoomList.length < 50) {
-                tempRoomList.push({
-                  roomId: room.room_id,
-                  name: room.name,
-                  occupancies: room.occupancies,
-                  occupancyRate: room.occupancy_rate ?? undefined,
-                })
-              } else {
-                setRoomList(tempRoomList)
-              }
-            })
-            tempBuildingList.push(...tempBuildings)
+                //console.log(coords)
+                const currentBuildingString = room.building.replace(
+                  "Edificio ",
+                  "Ed. "
+                )
+                if (!tempBuildingStrings.includes(currentBuildingString)) {
+                  const currentBuilding: BuildingItem = {
+                    type: ConstructionType.BUILDING,
+                    campus: {
+                      type: ConstructionType.CAMPUS,
+                      name: c.name,
+                      acronym: h.acronym,
+                      latitude: c.latitude,
+                      longitude: c.longitude,
+                    },
+                    name: formatBuildingName(room.building),
+                    latitude: coords?.latitude,
+                    longitude: coords?.longitude,
+                    freeRoomList: [
+                      {
+                        roomId: room.room_id,
+                        name: room.name,
+                        occupancies: room.occupancies,
+                        occupancyRate: room.occupancy_rate ?? undefined,
+                      },
+                    ],
+                  }
+                  tempBuildingStrings.push(currentBuildingString)
+                  tempBuildings.push(currentBuilding)
+                } else {
+                  //element already in the list
+                  const indexElement = tempBuildingStrings.indexOf(
+                    currentBuildingString
+                  )
+                  tempBuildings[indexElement].freeRoomList.push({
+                    roomId: room.room_id,
+                    name: room.name,
+                    occupancies: room.occupancies,
+                    occupancyRate: room.occupancy_rate ?? undefined,
+                  })
+                }
+                if (tempRoomList.length < 50) {
+                  tempRoomList.push({
+                    roomId: room.room_id,
+                    name: room.name,
+                    occupancies: room.occupancies,
+                    occupancyRate: room.occupancy_rate ?? undefined,
+                  })
+                } else {
+                  setRoomList(tempRoomList)
+                }
+              })
+              tempBuildingList.push(...tempBuildings)
+            }
+          } catch (error) {
+            console.log(error)
           }
-        } catch (error) {
-          console.log(error)
         }
+        setBuildingList(tempBuildingList)
+        break
       }
+      break
     }
-    setBuildingList(tempBuildingList)
   }
 
   async function getPosition() {
@@ -166,8 +153,8 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
         latitude,
         longitude,
       })
-      //temporary solution, too inefficient?
-      void findRoomsAvailable(campusList, latitude, longitude)
+      //temporary solution, too inefficient
+      void findRoomsAvailable(latitude, longitude)
 
       setLocationStatus(PermissionStatus.GRANTED)
       setCurrentCoords([latitude, longitude])
@@ -196,7 +183,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
   }
 
   useEffect(() => {
-    const intervalId = setInterval(() => void checkPermission(), 2000) // in milliseconds,call every 2 sec(this could be modified)
+    const intervalId = setInterval(() => void checkPermission(), 2000) //call every 2 sec
     return () => clearInterval(intervalId)
   }, [])
 

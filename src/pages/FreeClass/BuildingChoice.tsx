@@ -1,17 +1,20 @@
-import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
+import { MainStackScreen } from "navigation/NavigationTypes"
 import React, { useState, useEffect } from "react"
-import { View, FlatList, Pressable } from "react-native"
-import { usePalette } from "utils/colors"
+import { View } from "react-native"
 import { Title, BodyText } from "components/Text"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { api, RetryType } from "api"
 import { CampusItem } from "./CampusChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
-import { RoomSimplified } from "api/rooms"
+import { addHours, RoomSimplified } from "api/rooms"
+import { ConstructionType } from "api/rooms"
+import { DefaultList } from "components/FreeClass/DefaultList"
+import { formatBuildingName } from "utils/rooms"
 
 export interface BuildingItem {
+  type: ConstructionType
   campus: CampusItem
-  name: string
+  name: string[]
   latitude?: number
   longitude?: number
   freeRoomList: RoomSimplified[]
@@ -21,24 +24,17 @@ export interface BuildingItem {
  * In this page the user can select the building.
  */
 export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
-  const { palette } = usePalette()
-  const { navigate } = useNavigation()
-
   const { campus, currentDate } = props.route.params
 
   const [buildingList, setBuildingList] = useState<BuildingItem[]>()
+
+  const [error, setError] = useState<boolean>(false)
 
   //non-ISO format for simplicity (local timezone) and
   // compatibility with `handleConfirm` function
   const [date, setDate] = useState<Date>(
     new Date(currentDate) !== new Date() ? new Date(currentDate) : new Date()
   )
-
-  function addHours(dateStart: Date, hours: number) {
-    const tempDate = new Date(dateStart.getTime())
-    tempDate.setHours(tempDate.getHours() + hours)
-    return tempDate
-  }
 
   //the dateEnd is the startDate + 3 hours, the number of hours has not been chosen yet
   const dateEnd = addHours(date, 3).toISOString() //3 hours is an example
@@ -62,10 +58,9 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
           )
           if (!tempBuildingStrings.includes(currentBuildingString)) {
             const currentBuilding: BuildingItem = {
+              type: ConstructionType.BUILDING,
               campus: campus,
-              name: room.building
-                .replace("Edificio ", "Ed. ")
-                .replace("Padiglione", "Pad."),
+              name: formatBuildingName(room.building),
               freeRoomList: [
                 {
                   roomId: room.room_id,
@@ -93,6 +88,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
         setBuildingList(tempBuildings)
       }
     } catch (error) {
+      setError(true)
       console.log(error)
     }
   }
@@ -124,72 +120,22 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
         )}
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
-      <FlatList
-        showsVerticalScrollIndicator={true}
-        style={{
-          flex: 1,
-          marginTop: 53,
-          marginBottom: 93,
-        }}
-        numColumns={2}
-        columnWrapperStyle={{
-          justifyContent: "space-between",
-          marginHorizontal: 22,
-          paddingBottom: 34,
-        }}
-        data={buildingList}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item }) => (
-          <Pressable
-            style={{
-              backgroundColor: palette.primary,
-              borderRadius: 12,
-              width: "45%",
-              height: 93,
-              marginHorizontal: 9,
-              alignItems: "center",
-            }}
-            onPress={() =>
-              navigate("ClassChoice", {
-                building: item,
-                currentDate: date.toString(),
-              })
-            }
-          >
-            <View
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <BodyText
-                style={{
-                  fontWeight: "300",
-                  color: "white",
-                  fontSize: 36,
-                  textAlign: "center",
-                }}
-              >
-                {item.name.split(" ")[0]}
-                <BodyText
-                  style={{
-                    fontWeight: "900",
-                    color: "white",
-                    fontSize: 34,
-                  }}
-                >
-                  {" " + item.name.split(" ")[1]}
-                </BodyText>
-              </BodyText>
-            </View>
-          </Pressable>
-        )}
-      />
+      {error ? (
+        <BodyText
+          style={{
+            alignSelf: "center",
+            marginTop: 100,
+            color: "red",
+            fontWeight: "700",
+            fontSize: 30,
+            textAlign: "center",
+          }}
+        >
+          Non ci sono edifici disponibili
+        </BodyText>
+      ) : buildingList !== undefined ? (
+        <DefaultList dataToShow={buildingList} currentDate={date} />
+      ) : undefined}
     </PageWrapper>
   )
 }

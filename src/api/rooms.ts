@@ -36,6 +36,12 @@ export interface OccupancyInfo {
   occupancy_rate: null | number
 }
 
+export enum ConstructionType {
+  HEADQUARTER,
+  CAMPUS,
+  BUILDING,
+}
+
 const client = HttpClient.getInstance()
 
 /**
