@@ -6,6 +6,10 @@ import { useNavigation } from "navigation/NavigationTypes"
 import { MainStack } from "navigation/MainStackNavigator"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import {
+  logNextTriggerDate,
+  sendScheduledNotification,
+} from "./utils/notifications"
 
 /**
  * The Main Container.
@@ -63,9 +67,20 @@ export const MainContainer: FC = () => {
       <Tray
         onDownloads={() => {
           console.log("downloads")
+          void logNextTriggerDate()
         }}
         onNotifications={() => {
           console.log("notifications")
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const identifier = sendScheduledNotification(
+            {
+              body: "Prova",
+              title: "Prova titolo",
+              categoryIdentifier: "prova",
+              badge: 1,
+            },
+            null
+          )
         }}
         onSettings={() => {
           navigate("SettingsNav", {

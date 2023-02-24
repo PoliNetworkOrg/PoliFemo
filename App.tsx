@@ -23,8 +23,14 @@ import { HttpClient } from "api/HttpClient"
 import { usePalette } from "utils/colors"
 import { StatusBar } from "react-native"
 import { Host } from "react-native-portalize"
+import {
+  InitializeNotificationAppCentre,
+  useNotificationsHandlers,
+} from "utils/notifications"
 
 const client = HttpClient.getInstance()
+
+InitializeNotificationAppCentre()
 
 export default function App() {
   const { homeBackground } = usePalette()
@@ -35,6 +41,8 @@ export default function App() {
 
   //tracking first render
   const firstRender = useRef(true)
+
+  useNotificationsHandlers()
 
   // docs: https://docs.expo.dev/versions/latest/sdk/splash-screen/
   useEffect(() => {
