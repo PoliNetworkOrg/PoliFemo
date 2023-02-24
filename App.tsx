@@ -25,6 +25,7 @@ import { StatusBar } from "react-native"
 import { Host } from "react-native-portalize"
 import {
   InitializeNotificationAppCentre,
+  linking,
   useNotificationsHandlers,
 } from "utils/notifications"
 
@@ -155,6 +156,7 @@ export default function App() {
             background: homeBackground,
           },
         }}
+        linking={linking}
       >
         <StatusBar
           barStyle={"light-content"}
