@@ -1,4 +1,4 @@
-# Polifemo
+# PoliFemo
 
 ### Setup dell'ambiente
 
