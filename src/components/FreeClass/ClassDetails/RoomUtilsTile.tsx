@@ -68,7 +68,7 @@ export const RoomUtilsTile: FC<RoomUtilsTileProps> = props => {
           color: sliderBorderColor,
         }}
       >
-        {props.name} {props.status}
+        {props.name}
       </BodyText>
     </View>
   )
