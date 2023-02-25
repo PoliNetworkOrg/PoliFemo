@@ -36,15 +36,14 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
     new Date(currentDate) !== new Date() ? new Date(currentDate) : new Date()
   )
 
-  //the dateEnd is the startDate + 3 hours, the number of hours has not been chosen yet
-  const dateEnd = addHours(date, 3).toISOString() //3 hours is an example
-
   //main function that handles the call to the API in order to obtain the list of freeclassRooms
   const findRoomsAvailable = async () => {
+    const dateStart = addHours(date, 1) //in order to get italian time zone
+    const dateEnd = addHours(dateStart, 3).toISOString() //3 hours is an example
     try {
       const response = await api.rooms.getFreeRoomsTimeRange(
         campus.acronym,
-        date.toISOString(),
+        dateStart.toISOString(),
         dateEnd,
         { maxRetries: 1, retryType: RetryType.RETRY_N_TIMES }
       )
