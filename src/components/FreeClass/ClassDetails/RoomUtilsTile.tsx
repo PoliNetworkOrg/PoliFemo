@@ -12,6 +12,7 @@ import {
   useSVG,
 } from "@shopify/react-native-skia"
 import tick from "assets/freeClassrooms/tick.svg"
+import x from "assets/freeClassrooms/x.svg"
 
 interface RoomUtilsTileProps {
   name: string
@@ -19,26 +20,13 @@ interface RoomUtilsTileProps {
 }
 
 export const RoomUtilsTile: FC<RoomUtilsTileProps> = props => {
-  const { palette, isLight, sliderBorderColor } = usePalette()
+  const { sliderBorderColor } = usePalette()
 
   const tickSvg = useSVG(tick)
+  const xSvg = useSVG(x)
 
-  const paintTick = useMemo(() => Skia.Paint(), [])
-  paintTick.setColorFilter(
-    Skia.ColorFilter.MakeBlend(
-      Skia.Color(
-        props.status
-          ? isLight
-            ? palette.primary
-            : palette.lighter
-          : isLight
-          ? palette.lighter
-          : palette.primary
-      ),
-      BlendMode.SrcIn
-    )
-  )
-
+  const widthFixed = 15
+  const heightFixed = 15
   return (
     <View
       style={{
@@ -47,27 +35,32 @@ export const RoomUtilsTile: FC<RoomUtilsTileProps> = props => {
         marginTop: 8,
       }}
     >
-      {tick && tickSvg && (
-        <View
+      
+      <View
+        style={{
+          width: widthFixed,
+          height: heightFixed,
+          marginRight: 8,
+        }}
+      >
+        <Canvas
           style={{
-            width: 15,
-            height: 15,
-            marginRight: 8,
+            flex: 1,
+            width: widthFixed,
+            height: heightFixed,
           }}
         >
-          <Canvas
-            style={{
-              flex: 1,
-              width: 15,
-              height: 15,
-            }}
-          >
-            <Group layer={paintTick}>
-              <ImageSVG svg={tickSvg} x={0} y={0} width={15} height={15} />
-            </Group>
-          </Canvas>
-        </View>
-      )}
+
+          <Group>
+            {props.status ? (
+              (tickSvg ? <ImageSVG svg={tickSvg} x={0} y={0} width={widthFixed} height={heightFixed} /> : null)
+            ) : (
+              (xSvg ? <ImageSVG svg={xSvg} x={-10} y={-30} width={widthFixed} height={heightFixed}  /> : null)
+            )}
+          </Group>
+        </Canvas>
+      </View>
+      
       <BodyText
         style={{
           fontSize: 13,
@@ -75,7 +68,7 @@ export const RoomUtilsTile: FC<RoomUtilsTileProps> = props => {
           color: sliderBorderColor,
         }}
       >
-        {props.name}
+        {props.name} {props.status}
       </BodyText>
     </View>
   )
