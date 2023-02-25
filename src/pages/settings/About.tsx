@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import { Alert, Linking, View } from "react-native"
+import { Alert, Linking, Pressable, View } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { BodyText, HyperLink, Text, Title } from "components/Text"
 import { ContentWrapperScroll } from "components/ContentWrapperScroll"
@@ -14,6 +14,8 @@ import { LoginContext } from "contexts/login"
 import { Canvas, Group, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import polifemoIcon from "assets/highlights/polifemo.svg"
 import { Divider } from "components/Divider"
+import { hasGms } from "react-native-device-info"
+import { useState } from "react"
 
 /**
  * Notifications Settings Page
@@ -24,10 +26,23 @@ export const About: SettingsStackScreen<"About"> = () => {
   const { loggedIn, userInfo } = useContext(LoginContext)
   const polifemoSVG = useSVG(polifemoIcon)
 
+  const [hasGsmValue, setHasGsm] = useState<number>(0)
+
   return (
     <ContentWrapperScroll title="Su quest'app">
       <View style={{ paddingTop: 32, paddingBottom: 80 }}>
         <MainTitle />
+        <View style={{ marginVertical: 80, marginHorizontal: 20 }}>
+          <Pressable
+            onPress={() => {hasGms().then(hasGmsResult => {
+              hasGmsResult ?
+              setHasGsm(1):
+              setHasGsm(2)
+            })}}
+          >
+            <Text>Has GSM: {hasGsmValue == 0 ? "don't know" : (hasGsmValue == 1 ? "yes" : "no")}</Text>
+          </Pressable>
+        </View>
         <View
           style={{
             flexDirection: "row",
