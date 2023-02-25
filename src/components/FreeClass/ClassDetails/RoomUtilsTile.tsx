@@ -35,7 +35,6 @@ export const RoomUtilsTile: FC<RoomUtilsTileProps> = props => {
         marginTop: 8,
       }}
     >
-      
       <View
         style={{
           width: widthFixed,
@@ -50,17 +49,30 @@ export const RoomUtilsTile: FC<RoomUtilsTileProps> = props => {
             height: heightFixed,
           }}
         >
-
           <Group>
             {props.status ? (
-              (tickSvg ? <ImageSVG svg={tickSvg} x={0} y={0} width={widthFixed} height={heightFixed} /> : null)
-            ) : (
-              (xSvg ? <ImageSVG svg={xSvg} x={-10} y={-30} width={widthFixed} height={heightFixed}  /> : null)
-            )}
+              tickSvg ? (
+                <ImageSVG
+                  svg={tickSvg}
+                  x={0}
+                  y={0}
+                  width={widthFixed}
+                  height={heightFixed}
+                />
+              ) : null
+            ) : xSvg ? (
+              <ImageSVG
+                svg={xSvg}
+                x={-10}
+                y={-30}
+                width={widthFixed}
+                height={heightFixed}
+              />
+            ) : null}
           </Group>
         </Canvas>
       </View>
-      
+
       <BodyText
         style={{
           fontSize: 13,
