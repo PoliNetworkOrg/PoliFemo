@@ -35,9 +35,11 @@ export const About: SettingsStackScreen<"About"> = () => {
         <View style={{ marginVertical: 80, marginHorizontal: 20 }}>
           <Pressable
             onPress={() => {
-              hasGms().then(hasGmsResult => {
-                hasGmsResult ? setHasGsm(1) : setHasGsm(2)
-              })
+              hasGms()
+                .then(hasGmsResult => {
+                  hasGmsResult ? setHasGsm(1) : setHasGsm(2)
+                })
+                .catch(err => console.log(err))
             }}
           >
             <Text>
