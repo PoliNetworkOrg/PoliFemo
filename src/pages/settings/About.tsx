@@ -34,13 +34,20 @@ export const About: SettingsStackScreen<"About"> = () => {
         <MainTitle />
         <View style={{ marginVertical: 80, marginHorizontal: 20 }}>
           <Pressable
-            onPress={() => {hasGms().then(hasGmsResult => {
-              hasGmsResult ?
-              setHasGsm(1):
-              setHasGsm(2)
-            })}}
+            onPress={() => {
+              hasGms().then(hasGmsResult => {
+                hasGmsResult ? setHasGsm(1) : setHasGsm(2)
+              })
+            }}
           >
-            <Text>Has GSM: {hasGsmValue == 0 ? "don't know" : (hasGsmValue == 1 ? "yes" : "no")}</Text>
+            <Text>
+              Has GSM:{" "}
+              {hasGsmValue == 0
+                ? "don't know"
+                : hasGsmValue == 1
+                ? "yes"
+                : "no"}
+            </Text>
           </Pressable>
         </View>
         <View
