@@ -32,6 +32,8 @@ export interface CarouselItem {
    * string to identify the title of the event contained in the widget
    */
   title: string
+
+  isoDate: string
   /**
    * string to identify eventually the room when the event takes place
    */
@@ -108,6 +110,7 @@ export function createWidget(event: Event) {
     time: event.date_start.toString().slice(11, 16),
     title: event.title.it,
     room: event.room?.acronym_dn,
+    isoDate: event.date_start,
   }
   return nextEvent
 }

@@ -24,6 +24,7 @@ import { usePalette } from "utils/colors"
 import { StatusBar } from "react-native"
 import { Host } from "react-native-portalize"
 import {
+  checkPermission,
   InitializeNotificationAppCentre,
   linking,
   useNotificationsHandlers,
@@ -40,10 +41,18 @@ export default function App() {
     theme: "predefined",
   })
 
-  //tracking first render
-  const firstRender = useRef(true)
+  // get notification grant on first app start
+  const getNotificationPermission = async () => {
+    await checkPermission()
+  }
+  useEffect(() => {
+    void getNotificationPermission()
+  }, [])
 
   useNotificationsHandlers()
+
+  //tracking first render
+  const firstRender = useRef(true)
 
   // docs: https://docs.expo.dev/versions/latest/sdk/splash-screen/
   useEffect(() => {

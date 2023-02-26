@@ -6,10 +6,6 @@ import { useNavigation } from "navigation/NavigationTypes"
 import { MainStack } from "navigation/MainStackNavigator"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import {
-  LogAllScheduledNotifications,
-  sendScheduledNotification,
-} from "./utils/notifications"
 
 /**
  * The Main Container.
@@ -67,41 +63,9 @@ export const MainContainer: FC = () => {
       <Tray
         onDownloads={() => {
           console.log("downloads")
-          void LogAllScheduledNotifications()
         }}
         onNotifications={() => {
           console.log("notifications")
-          void sendScheduledNotification(
-            {
-              body: "descrizione di una notifica standard",
-              title: "Notifica standard",
-              categoryIdentifier: undefined,
-              badge: 1,
-              data: { eventId: 123 },
-            },
-            null
-          )
-          void sendScheduledNotification(
-            {
-              title: "Polifemo si sente solo",
-              body: "Vuoi scrivergli qualcosa?",
-              categoryIdentifier: "message",
-              badge: 1,
-              data: { eventId: 123 },
-            },
-            null
-          )
-          void sendScheduledNotification(
-            {
-              body: "Premi su Leggi per teletrasportarti in un'altra dimensione",
-              title:
-                "La tua associazione preferita ti ha in inviato un messaggio",
-              categoryIdentifier: "action",
-              badge: 1,
-              data: { eventId: 456, url: "polifemo://settings_nav/settings" },
-            },
-            null
-          )
         }}
         onSettings={() => {
           navigate("SettingsNav", {

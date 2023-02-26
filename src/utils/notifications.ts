@@ -3,12 +3,10 @@ import { Subscription } from "expo-clipboard"
 import * as Notifications from "expo-notifications"
 import {
   AndroidImportance,
-  AndroidNotificationVisibility,
   NotificationContentInput,
   NotificationTriggerInput,
 } from "expo-notifications"
 import { useEffect, useRef } from "react"
-import * as TaskManager from "expo-task-manager"
 import { CarouselItem, WidgetType } from "./carousel"
 import { LinkingOptions } from "@react-navigation/native"
 import { RootStackNavigatorParams } from "navigation/NavigationTypes"
@@ -19,11 +17,11 @@ export interface ScheduledNotificationInfo {
   identifier: string
 }
 
-// ? ask Tommaso or desing when notifications should be received
 /**
  * If events starts at 14:00, send notification at 13:30
  */
 const MINUTES_BEFORE_EVENT = 30
+const DELTA_MILLISECONDS = MINUTES_BEFORE_EVENT * 60 * 1000
 
 export const inizializeNotificationHandler = () =>
   Notifications.setNotificationHandler({
@@ -34,6 +32,34 @@ export const inizializeNotificationHandler = () =>
       shouldSetBadge: false,
     }),
   })
+
+// ? Android only, not clear what it should do in terms of differences in the message
+// probably it s only useful for setting importance
+export const setNotificationsChannels = async () => {
+  try {
+    await Notifications.setNotificationChannelAsync("comunicazioni", {
+      name: "comunicazioni",
+      importance: AndroidImportance.MAX,
+    })
+    await Notifications.setNotificationChannelAsync("associazioni", {
+      name: "associazioni",
+      importance: AndroidImportance.MAX,
+    })
+    await Notifications.setNotificationChannelAsync("upload", {
+      name: "upload",
+      importance: AndroidImportance.DEFAULT,
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export const InitializeNotificationAppCentre = () => {
+  // get notification grant on first app start
+  inizializeNotificationHandler()
+
+  void setNotificationsChannels()
+}
 
 /**
  *
@@ -119,64 +145,15 @@ export const useNotificationsHandlers = () => {
 
     return () => {
       if (notificationListener.current) {
-        console.log("removed first sub")
         Notifications.removeNotificationSubscription(
           notificationListener.current
         )
       }
       if (responseListener.current) {
-        console.log("removed second sub")
         Notifications.removeNotificationSubscription(responseListener.current)
       }
     }
   }, [])
-}
-
-//looks like it's not working. Maybe because of Expo Go?
-// ? probably don't even need this for now
-export const setBackgroundTaskOnNotifications = () => {
-  const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK"
-
-  TaskManager.defineTask(
-    BACKGROUND_NOTIFICATION_TASK,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    ({ data, error, executionInfo }) => {
-      console.log("Received a notification in the background!")
-      console.log(data)
-      // Do something with the notification data
-    }
-  )
-
-  void Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK)
-}
-
-/**
- * just for testing
- */
-export const logNextTriggerDate = async () => {
-  try {
-    const nextTriggerDate = await Notifications.getNextTriggerDateAsync(
-      new Date(Date.now() + 60 * 60 * 1000)
-    )
-    console.log(
-      nextTriggerDate === null
-        ? "No next trigger date"
-        : new Date(nextTriggerDate)
-    )
-  } catch (e) {
-    console.warn("Couldn't have calculated next trigger date: " + e)
-  }
-}
-
-/**
- * Removes all scheduled notifications, for testing
- */
-export const clearNotifcationCentreTray = async () => {
-  try {
-    await Notifications.dismissAllNotificationsAsync()
-  } catch (err) {
-    console.log(err)
-  }
 }
 
 /**
@@ -189,7 +166,7 @@ export const removeNotificationFromIdentifier = async (id: string) => {
     let found = false
     for (let i = 0; i < notifications.length && !found; i++) {
       if (notifications[i].request.identifier === id) {
-        await Notifications.dismissNotificationAsync(id)
+        await Notifications.cancelScheduledNotificationAsync(id)
         found = true
       }
     }
@@ -198,155 +175,68 @@ export const removeNotificationFromIdentifier = async (id: string) => {
   }
 }
 
-// ? Android only, not clear what it should do in terms of differences in the message
-// probably it s only useful for setting importance
-export const setNotificationsChannels = async () => {
-  try {
-    await Notifications.setNotificationChannelAsync("comunicazioni", {
-      name: "comunicazioni",
-      importance: AndroidImportance.MAX,
-      // Optional attributes
-      bypassDnd: false,
-      description: "descrizione",
-      groupId: "comunicazioni",
-      lightColor: undefined,
-      lockscreenVisibility: AndroidNotificationVisibility.PUBLIC,
-      showBadge: true,
-      sound: undefined,
-      audioAttributes: undefined,
-      vibrationPattern: undefined,
-      enableLights: undefined,
-      enableVibrate: undefined,
-    })
-    await Notifications.setNotificationChannelAsync("associazioni", {
-      name: "associazioni",
-      importance: AndroidImportance.MAX,
-      // Optional attributes
-      bypassDnd: false,
-      description: "descrizione",
-      groupId: "associazioni",
-      lightColor: undefined,
-      lockscreenVisibility: AndroidNotificationVisibility.PUBLIC,
-      showBadge: true,
-      sound: undefined,
-      audioAttributes: undefined,
-      vibrationPattern: undefined,
-      enableLights: undefined,
-      enableVibrate: undefined,
-    })
-    await Notifications.setNotificationChannelAsync("upload", {
-      name: "upload",
-      importance: AndroidImportance.DEFAULT,
-      // Optional attributes
-      bypassDnd: false,
-      description: "descrizione",
-      groupId: "upload",
-      lightColor: undefined,
-      lockscreenVisibility: AndroidNotificationVisibility.PUBLIC,
-      showBadge: true,
-      sound: undefined,
-      audioAttributes: undefined,
-      vibrationPattern: undefined,
-      enableLights: undefined,
-      enableVibrate: undefined,
-    })
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-// ? ask design for type of notifications
-export const setNotificationCategories = async () => {
-  await Notifications.setNotificationCategoryAsync("action", [
-    {
-      identifier: "link",
-      buttonTitle: "leggi",
-      options: { opensAppToForeground: true },
-    },
-    {
-      identifier: "dismiss",
-      buttonTitle: "Segna come già letto",
-      options: {
-        opensAppToForeground: false,
-        isDestructive: true,
-        isAuthenticationRequired: false,
-      },
-    },
-  ])
-  await Notifications.setNotificationCategoryAsync("message", [
-    {
-      identifier: "identifier",
-      buttonTitle: "Manda un messaggio",
-      options: {},
-      textInput: { placeholder: "scrivi...", submitButtonTitle: "submit" },
-    },
-  ])
+interface MinutesBeforeOptions {
+  deadline: number
+  exam: number
+  lecture: number
 }
 
 /**
- * useful for testing
+ *
+ * @param items
+ * @param minutesBefore lets you set how many minutes before the event's start date send the notification
  */
-export const LogAllScheduledNotifications = async () => {
-  try {
-    const scheduledNotifications =
-      await Notifications.getAllScheduledNotificationsAsync()
-    scheduledNotifications.forEach(notif => {
-      console.log(notif.content.title)
-    })
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-/**
- * useful for testing
- */
-export const cancelAllScheduledNotifications = async () => {
-  try {
-    await Notifications.cancelAllScheduledNotificationsAsync()
-    console.log("notifications cancelled")
-  } catch (err) {
-    console.log(err)
-  }
-}
-
 export const checkNeedSchedulingNotifications = async (
-  items: CarouselItem[]
+  items: CarouselItem[],
+  minutesBefore?: MinutesBeforeOptions
 ) => {
   try {
-    const currentScheduledNotifications =
-      await Notifications.getAllScheduledNotificationsAsync()
+    const isGrant = await checkPermission()
 
-    //for each carousel item check if notification was already scheduled
-    for (const item of items) {
-      let found = false
-      console.log(item.title)
-      for (let i = 0; i < currentScheduledNotifications.length && !found; i++) {
-        if (item.id === currentScheduledNotifications[i].content.data.eventId) {
-          console.log("match")
-          console.log(item.id)
-          found = true
-        }
-      }
-      if (!found) {
-        //allow only DEADLINE and EXAMS notifications (?) and if event isn't in the past
-        if (
-          (item.type === WidgetType.DEADLINE ||
-            item.type === WidgetType.EXAMS) &&
-          new Date(item.time).getTime() > Date.now()
+    if (isGrant) {
+      const currentScheduledNotifications =
+        await Notifications.getAllScheduledNotificationsAsync()
+
+      //for each carousel item check if notification was already scheduled
+      for (const item of items) {
+        let found = false
+        for (
+          let i = 0;
+          i < currentScheduledNotifications.length && !found;
+          i++
         ) {
-          await sendScheduledNotification(
-            {
-              title: item.title,
-              body: `l'evento si svolgerà ${item.date}`,
-              data: { eventId: item.id },
-            },
-            {
-              date: new Date(
-                new Date(item.date).getTime() - MINUTES_BEFORE_EVENT * 60 * 1000
-              ),
-            }
+          if (
+            item.id === currentScheduledNotifications[i].content.data.eventId
+          ) {
+            //already scheduled
+            found = true
+          }
+        }
+        if (!found) {
+          const deltaMilliseconds = getMinutesBeforeInMilliseconds(
+            minutesBefore,
+            item.type
           )
+          //allow only DEADLINE and EXAMS notifications (?) and if event isn't in the past
+          if (
+            (item.type === WidgetType.DEADLINE ||
+              item.type === WidgetType.EXAMS ||
+              item.type === WidgetType.LECTURES) &&
+            new Date(item.isoDate).getTime() - deltaMilliseconds > Date.now()
+          ) {
+            await sendScheduledNotification(
+              {
+                title: item.title,
+                body: `l'evento si svolgerà ${item.date} alle ${item.time}`,
+                data: { eventId: item.id },
+              },
+              {
+                date: new Date(
+                  new Date(item.isoDate).getTime() - deltaMilliseconds
+                ),
+              }
+            )
+          }
         }
       }
     }
@@ -355,34 +245,24 @@ export const checkNeedSchedulingNotifications = async (
   }
 }
 
-export const InitializeNotificationAppCentre = () => {
-  inizializeNotificationHandler()
-
-  /* setBackgroundTaskOnNotifications() */
-
-  void setNotificationsChannels()
-
-  void setNotificationCategories()
-}
-
 //DEEP LINKING
 // ? use more appropriate names
 export const linking: LinkingOptions<RootStackNavigatorParams> = {
   config: {
     screens: {
       MainNav: {
-        path: "/main_nav",
+        path: "/mainNav",
         screens: {
           Home: "/home",
           Article: "/article",
           OtherCategories: "/other",
-          ArticlesList: "/articlelist",
+          ArticlesList: "/articleList",
           Error404: "/error",
           Groups: "/groups",
         },
       },
       SettingsNav: {
-        path: "/settings_nav",
+        path: "/settingsNav",
         screens: {
           Settings: "/settings",
           About: "/about",
@@ -441,8 +321,7 @@ export const linking: LinkingOptions<RootStackNavigatorParams> = {
   ],
 }
 
-// ! this needs testing both on android and IOS
-// ? this could improve
+// ! this needs testing
 export const checkPermission = async () => {
   const settings = await Notifications.getPermissionsAsync()
   if (
@@ -471,12 +350,77 @@ export const checkPermission = async () => {
   return false
 }
 
-/**
- * used for testing permission
- */
-export const logPermission = async () => {
-  const settings = await Notifications.getPermissionsAsync()
-  console.log(settings.android)
-  console.log(settings.ios)
-  console.log(settings.granted)
+export const notificationsTestingUtils = {
+  async logNextTriggerDate() {
+    try {
+      const nextTriggerDate = await Notifications.getNextTriggerDateAsync(
+        new Date(Date.now() + 60 * 60 * 1000)
+      )
+      console.log(
+        nextTriggerDate === null
+          ? "No next trigger date"
+          : new Date(nextTriggerDate)
+      )
+    } catch (e) {
+      console.warn("Couldn't have calculated next trigger date: " + e)
+    }
+  },
+
+  async logPermission() {
+    const settings = await Notifications.getPermissionsAsync()
+    console.log(settings.android)
+    console.log(settings.ios)
+    console.log(settings.granted)
+  },
+
+  async LogAllScheduledNotifications() {
+    try {
+      const scheduledNotifications =
+        await Notifications.getAllScheduledNotificationsAsync()
+      scheduledNotifications.forEach(notif => {
+        console.log(notif.content.title)
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  },
+
+  async cancelAllScheduledNotifications() {
+    try {
+      await Notifications.cancelAllScheduledNotificationsAsync()
+      console.log("notifications cancelled")
+    } catch (err) {
+      console.log(err)
+    }
+  },
+
+  /**
+   * Dismiss all notifications from Tray
+   */
+  async dismissAllNotifications() {
+    try {
+      await Notifications.dismissAllNotificationsAsync()
+      console.log("dismissed all")
+    } catch (err) {
+      console.log(err)
+    }
+  },
+}
+
+const getMinutesBeforeInMilliseconds = (
+  minutesOption?: MinutesBeforeOptions,
+  type?: WidgetType
+) => {
+  let minutes
+  if (type === WidgetType.DEADLINE) {
+    minutes = minutesOption?.deadline
+  } else if (type === WidgetType.EXAMS) {
+    minutes = minutesOption?.exam
+  } else if (type === WidgetType.LECTURES) {
+    minutes = minutesOption?.lecture
+  }
+  if (minutes) {
+    return minutes * 60 * 1000
+  }
+  return DELTA_MILLISECONDS
 }
