@@ -6,7 +6,7 @@ import { MainStackScreen } from "navigation/NavigationTypes"
 import { MainMenu, MainTitle, PoliSearchBar } from "components/Home"
 import { HighlightsManager } from "components/Home/Highlights/HighlightsManager"
 import { usePalette } from "utils/colors"
-import { BoxShadowView } from "components/BoxShadowView"
+import { BoxShadowView } from "components/BoxShadow"
 
 /**
  * Home page containing the POLIFEMO logo, search bar, main horizontal scroll menu and the entry
