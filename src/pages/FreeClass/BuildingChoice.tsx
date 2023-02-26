@@ -107,6 +107,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
             }
           })
         setBuildingList(tempBuildings)
+        setError(false)
       }
     } catch (error) {
       setError(true)
@@ -125,6 +126,16 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
   return (
     <PageWrapper style={{ marginTop: 106 }}>
       <View style={{ paddingTop: 28 }}>
+        <BodyText
+          style={{
+            paddingLeft: 28,
+            marginBottom: -10,
+            fontWeight: "300",
+            fontFamily: "Roboto_300Light",
+          }}
+        >
+          Milano Città Studi
+        </BodyText>
         {campus.name.length > 1 ? (
           <Title
             style={{
