@@ -3,8 +3,9 @@ import { CampusItem } from "pages/FreeClass/CampusChoice"
 import { Occupancies } from "api/rooms"
 
 export function extractRoom(val: string) {
-  const arr = val.split(".")
-  if (arr.length > 2) {
+  //split string on characters "." or " " using Regular Expression
+  const arr = val.split(/[.\s]+/)
+  if (arr.length >= 2 && containsNumber(val)) {
     return arr.slice(1).join(".")
   } else {
     return val
@@ -19,11 +20,11 @@ export function extractBuilding(val: string) {
   return undefined
 }
 
-/* function containsNumber(val: string) {
-    // if has digits
-    const regExp = /\d/g
-    return regExp.test(val)
-} */
+function containsNumber(val: string) {
+  // if has digits
+  const regExp = /\d/g
+  return regExp.test(val)
+}
 
 export function extractTimeLeft(now: Date, targetDate?: Date) {
   if (!targetDate) {

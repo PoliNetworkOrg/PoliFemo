@@ -60,23 +60,25 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
             flex: 1,
           }}
         >
-          <Text
-            style={{
-              fontSize: 40,
-              fontWeight: "300",
-              color: isLight ? palette.variant1 : primary,
-            }}
-          >
-            {building && roomName ? `${building}.` : undefined}
-          </Text>
-          <Text
-            style={{
-              fontSize: 40,
-              fontWeight: "900",
-              color: isLight ? palette.variant1 : primary,
-            }}
-          >
-            {building && roomName ? roomName : props.roomName}
+          <Text>
+            <Text
+              style={{
+                fontSize: 40,
+                fontWeight: "300",
+                color: isLight ? palette.variant1 : primary,
+              }}
+            >
+              {building && roomName ? `${building}.` : undefined}
+            </Text>
+            <Text
+              style={{
+                fontSize: 40,
+                fontWeight: "900",
+                color: isLight ? palette.variant1 : primary,
+              }}
+            >
+              {building && roomName ? roomName : props.roomName}
+            </Text>
           </Text>
         </View>
         <View style={{ marginTop: 14, marginBottom: 8, flex: 1 }}>
