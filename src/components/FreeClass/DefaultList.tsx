@@ -98,7 +98,7 @@ export const DefaultList: FC<
                 style={{
                   fontWeight: "300",
                   color: "white",
-                  fontSize: item.type === ConstructionType.BUILDING ? 36 : 20,
+                  fontSize: item.type === ConstructionType.BUILDING ? 34 : 20,
                   textAlign: "center",
                 }}
               >
@@ -109,7 +109,7 @@ export const DefaultList: FC<
                   style={{
                     fontWeight: "900",
                     color: "white",
-                    fontSize: item.type === ConstructionType.BUILDING ? 36 : 20,
+                    fontSize: item.type === ConstructionType.BUILDING ? 34 : 20,
                     textAlign: "center",
                   }}
                 >

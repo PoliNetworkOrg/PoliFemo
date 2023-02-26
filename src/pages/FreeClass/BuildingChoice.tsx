@@ -1,15 +1,16 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
 import React, { useState, useEffect } from "react"
-import { View } from "react-native"
+import { ActivityIndicator, View } from "react-native"
 import { Title, BodyText } from "components/Text"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { api, RetryType } from "api"
 import { CampusItem } from "./CampusChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
-import { addHours, RoomSimplified } from "api/rooms"
+import { addHours, Room, RoomSimplified } from "api/rooms"
 import { ConstructionType } from "api/rooms"
 import { DefaultList } from "components/FreeClass/DefaultList"
 import { formatBuildingName } from "utils/rooms"
+import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
 
 export interface BuildingItem {
   type: ConstructionType
@@ -36,6 +37,23 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
     new Date(currentDate) !== new Date() ? new Date(currentDate) : new Date()
   )
 
+  const findCorrectCampus = (campus: CampusItem, room: Room) => {
+    for (const h of buildingCoordsJSON) {
+      if (h.acronym === campus.acronym) {
+        for (const c of h.campus) {
+          if (c.name.toString() === campus.name.toString()) {
+            for (const b of c.buildings) {
+              if (room.building === b.name) {
+                return true
+              }
+            }
+          }
+        }
+      }
+    }
+    return false
+  }
+
   //main function that handles the call to the API in order to obtain the list of freeclassRooms
   const findRoomsAvailable = async () => {
     const dateStart = addHours(date, 1) //in order to get italian time zone
@@ -50,40 +68,44 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
       if (response.length > 0) {
         const tempBuildingStrings: string[] = []
         const tempBuildings: BuildingItem[] = []
-        response.map(room => {
-          const currentBuildingString = room.building.replace(
-            "Edificio ",
-            "Ed. "
-          )
-          if (!tempBuildingStrings.includes(currentBuildingString)) {
-            const currentBuilding: BuildingItem = {
-              type: ConstructionType.BUILDING,
-              campus: campus,
-              name: formatBuildingName(room.building),
-              freeRoomList: [
-                {
-                  roomId: room.room_id,
-                  name: room.name,
-                  occupancies: room.occupancies,
-                  occupancyRate: room.occupancy_rate ?? undefined,
-                },
-              ],
-            }
-            tempBuildingStrings.push(currentBuildingString)
-            tempBuildings.push(currentBuilding)
-          } else {
-            //element already present in the list
-            const indexElement = tempBuildingStrings.indexOf(
-              currentBuildingString
+        //console.log(response.filter(room => findCorrectCampus(campus, room)))
+        //console.log(response)
+        response
+          .filter(room => findCorrectCampus(campus, room))
+          .map(room => {
+            const currentBuildingString = room.building.replace(
+              "Edificio ",
+              "Ed. "
             )
-            tempBuildings[indexElement].freeRoomList.push({
-              roomId: room.room_id,
-              name: room.name,
-              occupancies: room.occupancies,
-              occupancyRate: room.occupancy_rate ?? undefined,
-            })
-          }
-        })
+            if (!tempBuildingStrings.includes(currentBuildingString)) {
+              const currentBuilding: BuildingItem = {
+                type: ConstructionType.BUILDING,
+                campus: campus,
+                name: formatBuildingName(room.building),
+                freeRoomList: [
+                  {
+                    roomId: room.room_id,
+                    name: room.name,
+                    occupancies: room.occupancies,
+                    occupancyRate: room.occupancy_rate ?? undefined,
+                  },
+                ],
+              }
+              tempBuildingStrings.push(currentBuildingString)
+              tempBuildings.push(currentBuilding)
+            } else {
+              //element already present in the list
+              const indexElement = tempBuildingStrings.indexOf(
+                currentBuildingString
+              )
+              tempBuildings[indexElement].freeRoomList.push({
+                roomId: room.room_id,
+                name: room.name,
+                occupancies: room.occupancies,
+                occupancyRate: room.occupancy_rate ?? undefined,
+              })
+            }
+          })
         setBuildingList(tempBuildings)
       }
     } catch (error) {
@@ -119,7 +141,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
         )}
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
-      {error ? (
+      {error || buildingList?.length == 0 ? (
         <BodyText
           style={{
             alignSelf: "center",
@@ -134,7 +156,9 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
         </BodyText>
       ) : buildingList !== undefined ? (
         <DefaultList dataToShow={buildingList} currentDate={date} />
-      ) : undefined}
+      ) : (
+        <ActivityIndicator size={"large"} style={{ marginTop: 100 }} />
+      )}
     </PageWrapper>
   )
 }
