@@ -147,5 +147,6 @@ export function formatBuildingName(name: string) {
   return name
     .replace("Edificio", "Ed.")
     .replace("Padiglione", "Pad.")
+    .replace("Palazzina", "Pal.")
     .split(" ")
 }

@@ -68,15 +68,13 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
       if (response.length > 0) {
         const tempBuildingStrings: string[] = []
         const tempBuildings: BuildingItem[] = []
-        //console.log(response.filter(room => findCorrectCampus(campus, room)))
-        //console.log(response)
         response
           .filter(room => findCorrectCampus(campus, room))
           .map(room => {
-            const currentBuildingString = room.building.replace(
-              "Edificio ",
-              "Ed. "
-            )
+            const currentBuildingString = room.building
+              .replace("Edificio ", "Ed. ")
+              .replace("Padiglione ", "Pad. ")
+              .replace("Palazzina ", "Pal. ")
             if (!tempBuildingStrings.includes(currentBuildingString)) {
               const currentBuilding: BuildingItem = {
                 type: ConstructionType.BUILDING,
