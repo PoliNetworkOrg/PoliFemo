@@ -11,12 +11,14 @@ import { PermissionStatus } from "expo-location"
 import { BodyText } from "components/Text"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { CampusItem } from "pages/FreeClass/CampusChoice"
 
 interface MapProps {
   userLatitude: number
   userLongitude: number
   locationStatus: PermissionStatus
   buildingList: BuildingItem[] | undefined
+  campusSearched: CampusItem | undefined
   onPressMarker: (building: BuildingItem) => void
 }
 
@@ -36,6 +38,16 @@ export const Map: FC<MapProps> = props => {
   }, [])
 
   useEffect(() => {
+    const region: Region = {
+      latitude: props.campusSearched?.latitude ?? 0,
+      longitude: props.campusSearched?.longitude ?? 0,
+      latitudeDelta: 0.005,
+      longitudeDelta: 0.005,
+    }
+    setRegion(region)
+  }, [props.campusSearched])
+
+  useEffect(() => {
     AsyncStorage.getItem("lastRegionVisited")
       .then(regionJSON => {
         if (regionJSON) {
@@ -45,6 +57,10 @@ export const Map: FC<MapProps> = props => {
         }
       })
       .catch(err => console.log(err))
+  }, [])
+
+  useEffect(() => {
+    setTimeout(() => setRegion(undefined), 60000) //after 1 min the region returs to the user position
   }, [])
 
   return (

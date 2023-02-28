@@ -6,9 +6,11 @@ import { Map } from "./Map"
 import { FreeClassList } from "./FreeClassList"
 import { PermissionStatus } from "expo-location"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
-import { RoomSimplified } from "api/rooms"
-import { PositionSearchBar } from "./PositionSearchBar"
+import { ConstructionType, RoomSimplified } from "api/rooms"
 import { useNavigation } from "@react-navigation/native"
+import { PositionPicker } from "./PositionPicker"
+import { CampusItem } from "pages/FreeClass/CampusChoice"
+import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
 
 interface PositionModalityProps {
   currentCoords: number[]
@@ -26,7 +28,7 @@ enum ButtonType {
  * It handles the button's state and the two modality: Map or List.
  */
 export const PositionModality: FC<PositionModalityProps> = props => {
-  const [search, setSearch] = useState("")
+  const [campusSearched, setCampusSearched] = useState<CampusItem>()
 
   const { primary, isDark, palette } = usePalette()
 
@@ -34,10 +36,30 @@ export const PositionModality: FC<PositionModalityProps> = props => {
 
   const { navigate } = useNavigation()
 
+  const findCampusCoordinates = (campusName: string) => {
+    const newCampusName = campusName.split(/ (.*)/, 2) //split name by first space(" ") occurence, es: Bovisa La Masa -> ["Bovisa","La Masa"]
+    for (const h of buildingCoordsJSON) {
+      for (const c of h.campus) {
+        if (newCampusName.toString() === c.name.toString()) {
+          setCampusSearched({
+            type: ConstructionType.CAMPUS,
+            name: c.name,
+            acronym: h.acronym,
+            latitude: c.latitude,
+            longitude: c.longitude,
+          })
+          break
+        }
+      }
+    }
+  }
+
   return (
     <>
       <View style={{ marginTop: -23 }}>
-        <PositionSearchBar onChange={searchKey => setSearch(searchKey)} />
+        <PositionPicker
+          onPositionSelected={campusName => findCampusCoordinates(campusName)}
+        />
       </View>
       <View
         style={{
@@ -103,7 +125,6 @@ export const PositionModality: FC<PositionModalityProps> = props => {
         <View
           style={{
             flex: 1,
-            //marginTop: -4,
             marginBottom: 93,
           }}
         >
@@ -122,6 +143,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
           userLongitude={props.currentCoords[1]}
           locationStatus={props.locationStatus}
           buildingList={props.buildingList}
+          campusSearched={campusSearched}
           onPressMarker={(building: BuildingItem) =>
             navigate(
               "ClassChoice" as never,
