@@ -76,12 +76,12 @@ export const BoxShadowCanvas: FC<BoxShadowCanvasProps> = ({
       .MakeFromString(`<svg xmlns="http://www.w3.org/2000/svg" width="${totWidth}" height="${totHeight}" viewBox="${viewBox}" fill="none">
     <g filter="url(#a)">
       <path fill="${String(
-        style.backgroundColor ?? "white"
+        style?.backgroundColor ?? "white"
       )}" d="${createBoxShadowPath(width, height, [
-      style.borderTopLeftRadius ?? 0,
-      style.borderTopRightRadius ?? 0,
-      style.borderBottomRightRadius ?? 0,
-      style.borderBottomLeftRadius ?? 0,
+      style?.borderTopLeftRadius ?? 0,
+      style?.borderTopRightRadius ?? 0,
+      style?.borderBottomRightRadius ?? 0,
+      style?.borderBottomLeftRadius ?? 0,
     ])}" shape-rendering="crispEdges"/>
     </g>
     <defs>
