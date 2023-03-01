@@ -1,6 +1,6 @@
 import { useSVG, Canvas, ImageSVG } from "@shopify/react-native-skia"
 import { BodyText } from "components/Text"
-import React, { FC, useState } from "react"
+import React, { FC } from "react"
 import { View, Pressable, Dimensions } from "react-native"
 import { usePalette } from "utils/colors"
 import timerIcon from "assets/freeClassrooms/timer.svg"
@@ -37,8 +37,6 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
   const fireSVG = useSVG(fireIcon)
   const { navigate } = useNavigation()
 
-  const [isOvercrowded, setIsOvercrowded] = useState<boolean>(false)
-
   const overcrowdingFunction = (occupancyRate: number | undefined) => {
     if (
       occupancyRate === undefined ||
@@ -48,7 +46,6 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
     } else if (occupancyRate >= 2.33 && occupancyRate < 3.66) {
       return OvercrowdingTypes.MEDIAMENTE
     } else {
-      setIsOvercrowded(true)
       return OvercrowdingTypes.MOLTO
     }
   }
@@ -205,7 +202,8 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                   />
                 )}
               </Canvas>
-              {isOvercrowded ? (
+              {item.occupancyRate !== undefined &&
+              item.occupancyRate >= 3.66 ? (
                 <Canvas
                   style={{
                     zIndex: 0,
