@@ -1,30 +1,50 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { View } from "react-native"
 import { SelectList } from "react-native-dropdown-select-list"
 import { usePalette } from "utils/colors"
-import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
+import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
 
 interface PositionPickerProps {
+  headquarter: HeadquarterItem | undefined
   onPositionSelected: (campusName: string) => void
 }
 
+interface PickerItem {
+  key: number
+  value: string
+  disabled?: boolean
+}
+
+/**
+ * This component handles the searchbar with dropdown list. The list displays the campus that are near to the user.
+ */
 export const PositionPicker: FC<PositionPickerProps> = props => {
   const [selected, setSelected] = useState("")
-  const { fieldBackground, bodyText, isLight, primary, background } =
-    usePalette()
+  const { fieldBackground, isLight, primary, background } = usePalette()
 
-  //un po brutto
-  const data = []
-  let cnt = 0
-  for (const h of buildingCoordsJSON) {
-    data.push({ key: cnt, value: h.name.join(" "), disabled: true })
-    cnt += 1
-    for (const c of h.campus) {
-      data.push({ key: cnt, value: c.name.join(" ") })
+  const [data, setData] = useState<PickerItem[]>([]) // the data must be displayed
+
+  //non bellissimo
+  useEffect(() => {
+    //this function fills the "data" array
+    const tempData = []
+    if (props.headquarter !== undefined) {
+      let cnt = 0
+      tempData.push({
+        key: cnt,
+        value: props.headquarter.name.join(" "),
+        disabled: true,
+      })
       cnt += 1
+      if (props.headquarter.campusList !== undefined) {
+        for (const c of props.headquarter.campusList) {
+          tempData.push({ key: cnt, value: c.name.join(" ") })
+          cnt += 1
+        }
+      }
     }
-    cnt += 1
-  }
+    setData(tempData)
+  }, [props.headquarter])
 
   return (
     <View
@@ -43,7 +63,7 @@ export const PositionPicker: FC<PositionPickerProps> = props => {
         onSelect={() => props.onPositionSelected(selected)}
         save="value"
         maxHeight={180}
-        placeholder="Inserisci una posizione"
+        placeholder="Campus più vicini a te"
         searchPlaceholder="Cerca"
         notFoundText="Nessun risultato"
         fontFamily="Roboto_400Regular"
@@ -55,7 +75,7 @@ export const PositionPicker: FC<PositionPickerProps> = props => {
         }}
         inputStyles={{
           fontSize: 15,
-          color: bodyText,
+          color: primary,
         }}
         dropdownTextStyles={{
           fontSize: 15,

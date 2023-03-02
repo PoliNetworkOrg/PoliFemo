@@ -2,13 +2,15 @@
   {
     "acronym": "MIA",
     "name": ["Milano", "Città Studi"],
+    "latitude": 45.478159363957104, 
+    "longitude": 9.223725156096183,
     "campus": [
       {
         "name": [
           "Leonardo"
         ],
-        "latitude": 45.47791263153159,
-        "longitude": 9.227122387828846,
+        "latitude": 45.478130213680814,
+        "longitude": 9.228368169136335,
         "buildings": [
           {
             "name": "Edificio 29",
@@ -504,14 +506,16 @@
   {
     "acronym": "MIB",
     "name": ["Milano", "Bovisa"],
+    "latitude": 45.502732946648216,
+    "longitude": 9.15923948691116,
     "campus": [
       {
         "name": [
           "Bovisa",
           "Durando"
         ],
-        "latitude": 45.504422059752116,
-        "longitude": 9.164129368703703,
+        "latitude": 45.50505421808942,
+        "longitude": 9.166196176181376,
         "buildings": [
           {
             "name": "Edificio B1",
@@ -616,8 +620,8 @@
           "Bovisa",
           "La Masa"
         ],
-        "latitude": 45.50286551603009,
-        "longitude": 9.156452626872522,
+        "latitude": 45.50233077233567,
+        "longitude": 9.156266164940085,
         "buildings": [
           {
             "name": "Edificio B11",
@@ -826,6 +830,8 @@
   {
     "acronym": "CRG",
     "name": ["Cremona"],
+    "latitude": 45.14636683054809,
+    "longitude": 10.002025408405924,
     "campus": [
       {
         "name": [
@@ -865,6 +871,8 @@
   {
     "acronym": "LCF",
     "name": ["Lecco"],
+    "latitude": 45.848982262635516,
+    "longitude": 9.397375312267139,
     "campus": [
       {
         "name": [
@@ -952,6 +960,8 @@
   {
     "acronym": "PCL",
     "name": ["Piacenza"],
+    "latitude": 45.046624066557236,
+    "longitude": 9.70295943795921,
     "campus": [
       {
         "name": [
@@ -1071,6 +1081,8 @@
   {
     "acronym": "MNI",
     "name": ["Mantova"],
+    "latitude": 45.16007288978253,
+    "longitude": 10.78895040720128,
     "campus": [
       {
         "name": [
@@ -1102,6 +1114,8 @@
   {
     "acronym": "MIC",
     "name": ["Residenze"],
+    "latitude": 45.49326461001558,
+    "longitude": 9.21927698715338,
     "campus": [
       {
         "name": [
@@ -1188,6 +1202,8 @@
   {
     "acronym": "MID",
     "name": ["Sesto","Ulteriano"],
+    "latitude": 45.39350641657452,
+    "longitude": 9.257432613353823,
     "campus": [
       {
         "name": [
@@ -1211,6 +1227,8 @@
   {
     "acronym": "COE",
     "name": ["Como"],
+    "latitude": 45.8019386819123,
+    "longitude": 9.093600678263785,
     "campus": [
       {
         "name": [

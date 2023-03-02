@@ -6,11 +6,13 @@ import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePick
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { DefaultList } from "components/FreeClass/DefaultList"
 import { ConstructionType } from "api/rooms"
+import { CampusItem } from "./CampusChoice"
 
 export interface HeadquarterItem {
   type: ConstructionType
   acronym: string
   name: string[]
+  campusList?: CampusItem[]
 }
 
 const headquarterList: HeadquarterItem[] = [

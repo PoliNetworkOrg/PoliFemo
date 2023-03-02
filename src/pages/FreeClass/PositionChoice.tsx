@@ -6,13 +6,12 @@ import * as Location from "expo-location"
 import { LocationGeocodedAddress, PermissionStatus } from "expo-location"
 import { AddressText } from "components/FreeClass/AddressText"
 import { getDistance } from "geolib"
-import { api } from "api"
-import { BuildingItem } from "./BuildingChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { PositionModality } from "components/FreeClass/PositionModality"
-import { addHours, ConstructionType, RoomSimplified } from "api/rooms"
+import { ConstructionType } from "api/rooms"
 import BuildingListJSON from "components/FreeClass/buildingCoords.json"
-import { formatBuildingName, getBuildingCoords } from "utils/rooms"
+import { HeadquarterItem } from "./HeadquarterChoice"
+import { CampusItem } from "./CampusChoice"
 
 /**
  * In this page the user can find a room according to his current position.
@@ -21,126 +20,49 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
   const [locationStatus, setLocationStatus] = useState<PermissionStatus>(
     PermissionStatus.GRANTED
   )
-
   const [currentLocation, setCurrentLocation] =
     useState<LocationGeocodedAddress>()
 
   const [currentCoords, setCurrentCoords] = useState<number[]>([])
+  const [headquarter, setHeadquarter] = useState<HeadquarterItem>() //nearest headquarter according to user position
 
-  const [buildingList, setBuildingList] = useState<BuildingItem[]>()
-
-  const [roomList, setRoomList] = useState<RoomSimplified[]>()
-
-  //the dateEnd is the startDate + 3 hours, the number of hours has not been chosen yet
-  const dateEnd = addHours(new Date(), 3).toISOString() //3 hours is an example
-
-  //main function that handles the call to the API in order to obtain the list of freeclassRooms
-  //da rivedere
-  const findRoomsAvailable = async (
-    currentLat: number,
-    currentLong: number
-  ) => {
-    const tempBuildingList: BuildingItem[] = []
-    const tempRoomList: RoomSimplified[] = []
+  /**
+   * This function finds the nearest headquarter according the user current position.
+   */
+  const findNearestHeadquarter = (currentLat: number, currentLong: number) => {
     for (const h of BuildingListJSON) {
-      for (const c of h.campus) {
-        if (
-          getDistance(
-            { latitude: currentLat, longitude: currentLong },
-            {
-              latitude: c.latitude,
-              longitude: c.longitude,
-            }
-          ) <= 50000 //if the distance between the user and the campus is less than 500m I'll call the API,to test I put 50km
-        ) {
-          //call the API
-          try {
-            const response = await api.rooms.getFreeRoomsTimeRange(
-              h.acronym,
-              new Date().toISOString(),
-              dateEnd
-            )
-            if (response.length > 0) {
-              const tempBuildingStrings: string[] = []
-              const tempBuildings: BuildingItem[] = []
-              response.map(room => {
-                const roomBuilding: string[] = room.building.split(" ")
-                roomBuilding[0] += " "
-                const coords = getBuildingCoords(
-                  {
-                    type: ConstructionType.CAMPUS,
-                    name: c.name,
-                    acronym: h.acronym,
-                    latitude: c.latitude,
-                    longitude: c.longitude,
-                  },
-                  roomBuilding
-                )
-                //console.log(coords)
-                const currentBuildingString = room.building.replace(
-                  "Edificio ",
-                  "Ed. "
-                )
-                if (!tempBuildingStrings.includes(currentBuildingString)) {
-                  const currentBuilding: BuildingItem = {
-                    type: ConstructionType.BUILDING,
-                    campus: {
-                      type: ConstructionType.CAMPUS,
-                      name: c.name,
-                      acronym: h.acronym,
-                      latitude: c.latitude,
-                      longitude: c.longitude,
-                    },
-                    name: formatBuildingName(room.building),
-                    latitude: coords?.latitude,
-                    longitude: coords?.longitude,
-                    freeRoomList: [
-                      {
-                        roomId: room.room_id,
-                        name: room.name,
-                        occupancies: room.occupancies,
-                        occupancyRate: room.occupancy_rate ?? undefined,
-                      },
-                    ],
-                  }
-                  tempBuildingStrings.push(currentBuildingString)
-                  tempBuildings.push(currentBuilding)
-                } else {
-                  //element already in the list
-                  const indexElement = tempBuildingStrings.indexOf(
-                    currentBuildingString
-                  )
-                  tempBuildings[indexElement].freeRoomList.push({
-                    roomId: room.room_id,
-                    name: room.name,
-                    occupancies: room.occupancies,
-                    occupancyRate: room.occupancy_rate ?? undefined,
-                  })
-                }
-                if (tempRoomList.length < 50) {
-                  tempRoomList.push({
-                    roomId: room.room_id,
-                    name: room.name,
-                    occupancies: room.occupancies,
-                    occupancyRate: room.occupancy_rate ?? undefined,
-                  })
-                } else {
-                  setRoomList(tempRoomList)
-                }
-              })
-              tempBuildingList.push(...tempBuildings)
-            }
-          } catch (error) {
-            console.log(error)
+      if (
+        getDistance(
+          { latitude: currentLat, longitude: currentLong },
+          {
+            latitude: h.latitude,
+            longitude: h.longitude,
           }
+        ) <= 2000 //2km
+      ) {
+        const tempCampusList: CampusItem[] = []
+        for (const c of h.campus) {
+          tempCampusList.push({
+            type: ConstructionType.CAMPUS,
+            name: c.name,
+            acronym: h.acronym,
+            latitude: c.latitude,
+            longitude: c.longitude,
+          })
         }
-        setBuildingList(tempBuildingList)
-        break
+        setHeadquarter({
+          type: ConstructionType.HEADQUARTER,
+          name: h.name,
+          acronym: h.acronym,
+          campusList: tempCampusList,
+        })
       }
-      break
     }
   }
 
+  /**
+   * This function finds the user current position.
+   */
   async function getPosition() {
     const { status } = await Location.requestForegroundPermissionsAsync()
     if (status !== "granted") {
@@ -153,8 +75,8 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
         latitude,
         longitude,
       })
-      //temporary solution, too inefficient
-      void findRoomsAvailable(latitude, longitude)
+
+      void findNearestHeadquarter(latitude, longitude)
 
       setLocationStatus(PermissionStatus.GRANTED)
       setCurrentCoords([latitude, longitude])
@@ -162,6 +84,9 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     }
   }
 
+  /**
+   * This function checks if the location permissions have been granted by the user.
+   */
   async function checkPermission() {
     if (Platform.OS === "ios") {
       // idk but hasServicesEnabledAsync does not work on IOS
@@ -205,8 +130,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
       <PositionModality
         currentCoords={currentCoords}
         locationStatus={locationStatus}
-        buildingList={buildingList}
-        roomList={roomList}
+        headquarter={headquarter}
       />
     </PageWrapper>
   )

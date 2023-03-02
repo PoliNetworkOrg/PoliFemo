@@ -109,11 +109,3 @@ export const rooms = {
     return response.data
   },
 }
-/**
- * It simply add an amount of hours to a given date.
- */
-export function addHours(dateStart: Date, hours: number) {
-  const tempDate = new Date(dateStart.getTime())
-  tempDate.setHours(tempDate.getHours() + hours)
-  return tempDate
-}

@@ -6,10 +6,10 @@ import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePick
 import { api, RetryType } from "api"
 import { CampusItem } from "./CampusChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
-import { addHours, Room, RoomSimplified } from "api/rooms"
+import { Room, RoomSimplified } from "api/rooms"
 import { ConstructionType } from "api/rooms"
 import { DefaultList } from "components/FreeClass/DefaultList"
-import { formatBuildingName } from "utils/rooms"
+import { addHours, formatBuildingName } from "utils/rooms"
 import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
 
 export interface BuildingItem {

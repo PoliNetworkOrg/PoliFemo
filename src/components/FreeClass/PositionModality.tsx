@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { View, Pressable, ActivityIndicator } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
@@ -11,12 +11,14 @@ import { useNavigation } from "@react-navigation/native"
 import { PositionPicker } from "./PositionPicker"
 import { CampusItem } from "pages/FreeClass/CampusChoice"
 import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
+import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
+import { api } from "api"
+import { addHours, getBuildingInfo } from "utils/rooms"
 
 interface PositionModalityProps {
   currentCoords: number[]
   locationStatus: PermissionStatus
-  buildingList: BuildingItem[] | undefined
-  roomList: RoomSimplified[] | undefined
+  headquarter: HeadquarterItem | undefined
 }
 
 enum ButtonType {
@@ -25,7 +27,8 @@ enum ButtonType {
 }
 
 /**
- * It handles the button's state and the two modality: Map or List.
+ * This component handles the button's state and the two modalities: Map or List.
+ * In addition it calls the API to find which rooms and buildings are available
  */
 export const PositionModality: FC<PositionModalityProps> = props => {
   const [campusSearched, setCampusSearched] = useState<CampusItem>()
@@ -33,6 +36,10 @@ export const PositionModality: FC<PositionModalityProps> = props => {
   const { primary, isDark, palette } = usePalette()
 
   const [status, setStatus] = useState<ButtonType>(ButtonType.MAP)
+
+  const [roomList, setRoomList] = useState<RoomSimplified[]>()
+
+  const [buildingList, setBuildingList] = useState<BuildingItem[]>()
 
   const { navigate } = useNavigation()
 
@@ -54,10 +61,91 @@ export const PositionModality: FC<PositionModalityProps> = props => {
     }
   }
 
+  const dateEnd = addHours(new Date(), 3)
+
+  const findRoomsAvailable = async (headquarter: HeadquarterItem) => {
+    //call the API
+    try {
+      const response = await api.rooms.getFreeRoomsTimeRange(
+        headquarter.acronym,
+        new Date().toISOString(),
+        dateEnd.toISOString()
+      )
+      if (response.length > 0) {
+        const tempBuildingStrings: string[] = []
+        const tempBuildingList: BuildingItem[] = []
+        const tempRoomList: RoomSimplified[] = []
+
+        response.map(room => {
+          const roomBuilding: string[] = room.building.split(" ")
+          roomBuilding[0] += " "
+
+          const currentBuildingString = room.building.replace(
+            "Edificio ",
+            "Ed. "
+          )
+          if (tempRoomList.length <= 100) {
+            //dispaly the first 100 rooms
+            tempRoomList.push({
+              roomId: room.room_id,
+              name: room.name,
+              occupancies: room.occupancies,
+              occupancyRate: room.occupancy_rate ?? undefined,
+            })
+          } else {
+            setRoomList(tempRoomList)
+          }
+
+          if (props.headquarter?.campusList !== undefined) {
+            if (!tempBuildingStrings.includes(currentBuildingString)) {
+              const currentBuilding = getBuildingInfo(
+                props.headquarter,
+                room.building
+              )
+              if (currentBuilding !== undefined) {
+                currentBuilding.freeRoomList = [
+                  {
+                    roomId: room.room_id,
+                    name: room.name,
+                    occupancies: room.occupancies,
+                    occupancyRate: room.occupancy_rate ?? undefined,
+                  },
+                ]
+                tempBuildingStrings.push(currentBuildingString)
+                tempBuildingList.push(currentBuilding)
+              }
+            } else {
+              //element already in the list
+              const indexElement = tempBuildingStrings.indexOf(
+                currentBuildingString
+              )
+              tempBuildingList[indexElement].freeRoomList.push({
+                roomId: room.room_id,
+                name: room.name,
+                occupancies: room.occupancies,
+                occupancyRate: room.occupancy_rate ?? undefined,
+              })
+            }
+          }
+        })
+        setBuildingList(tempBuildingList)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if (props.headquarter !== undefined) {
+      void findRoomsAvailable(props.headquarter)
+    }
+  }, [props.headquarter])
+
   return (
     <>
       <View style={{ marginTop: -23 }}>
         <PositionPicker
+          headquarter={props.headquarter}
           onPositionSelected={campusName => findCampusCoordinates(campusName)}
         />
       </View>
@@ -128,13 +216,13 @@ export const PositionModality: FC<PositionModalityProps> = props => {
             marginBottom: 93,
           }}
         >
-          {props.roomList === undefined ? (
+          {roomList === undefined ? (
             <ActivityIndicator
               style={{ marginTop: 50, marginLeft: 3 }}
               size="large"
             />
           ) : (
-            <FreeClassList data={props.roomList} date={new Date()} />
+            <FreeClassList data={roomList} date={new Date()} />
           )}
         </View>
       ) : (
@@ -142,7 +230,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
           userLatitude={props.currentCoords[0]}
           userLongitude={props.currentCoords[1]}
           locationStatus={props.locationStatus}
-          buildingList={props.buildingList}
+          buildingList={buildingList}
           campusSearched={campusSearched}
           onPressMarker={(building: BuildingItem) =>
             navigate(

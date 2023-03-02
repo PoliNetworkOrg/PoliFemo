@@ -1,6 +1,8 @@
 import BuildingListJSON from "components/FreeClass/buildingCoords.json"
 import { CampusItem } from "pages/FreeClass/CampusChoice"
-import { Occupancies } from "api/rooms"
+import { ConstructionType, Occupancies } from "api/rooms"
+import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
+import { BuildingItem } from "pages/FreeClass/BuildingChoice"
 
 export function extractRoom(val: string) {
   //split string on characters "." or " " using Regular Expression
@@ -115,6 +117,37 @@ export function getBuildingCoords(campus: CampusItem, buildingName: string[]) {
       }
     }
   }
+}
+
+export function getBuildingInfo(
+  headquarter: HeadquarterItem,
+  buildingName: string
+): BuildingItem | undefined {
+  for (const h of BuildingListJSON) {
+    if (h.acronym === headquarter.acronym) {
+      for (const c of h.campus) {
+        for (const b of c.buildings) {
+          if (b.name === buildingName) {
+            return {
+              type: ConstructionType.BUILDING,
+              name: formatBuildingName(buildingName),
+              campus: {
+                type: ConstructionType.CAMPUS,
+                name: c.name,
+                acronym: h.acronym,
+                latitude: c.latitude,
+                longitude: c.longitude,
+              },
+              latitude: b.coords.latitude,
+              longitude: b.coords.longitude,
+              freeRoomList: [],
+            }
+          }
+        }
+      }
+    }
+  }
+  return undefined
 }
 
 const compareCampusNames = (c1: string[], c2: string[]) => {

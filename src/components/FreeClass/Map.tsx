@@ -1,11 +1,5 @@
 import React, { FC, useEffect, useState } from "react"
-import {
-  View,
-  ActivityIndicator,
-  Platform,
-  Text,
-  Pressable,
-} from "react-native"
+import { View, ActivityIndicator, Platform, Pressable } from "react-native"
 import MapView, { Callout, Marker, Region } from "react-native-maps"
 import { PermissionStatus } from "expo-location"
 import { BodyText } from "components/Text"
@@ -39,10 +33,12 @@ export const Map: FC<MapProps> = props => {
 
   useEffect(() => {
     const region: Region = {
-      latitude: props.campusSearched?.latitude ?? 0,
-      longitude: props.campusSearched?.longitude ?? 0,
-      latitudeDelta: 0.005,
-      longitudeDelta: 0.005,
+      latitude: props.campusSearched?.latitude ?? 45.464172826394595,
+      longitude: props.campusSearched?.longitude ?? 9.189523238744504,
+      latitudeDelta:
+        props.campusSearched?.latitude !== undefined ? 0.0035 : 2.5,
+      longitudeDelta:
+        props.campusSearched?.latitude !== undefined ? 0.0035 : 2.5,
     }
     setRegion(region)
   }, [props.campusSearched])
@@ -57,10 +53,6 @@ export const Map: FC<MapProps> = props => {
         }
       })
       .catch(err => console.log(err))
-  }, [])
-
-  useEffect(() => {
-    setTimeout(() => setRegion(undefined), 60000) //after 1 min the region returs to the user position
   }, [])
 
   return (
@@ -113,7 +105,7 @@ export const Map: FC<MapProps> = props => {
           mapPadding={{
             top: 0,
             right: 0,
-            bottom: Platform.OS === "ios" ? 170 : 165,
+            bottom: Platform.OS === "ios" ? 175 : 170,
             left: 0,
           }}
         >
@@ -159,7 +151,9 @@ export const Map: FC<MapProps> = props => {
               }
             >
               <Callout onPress={() => props.onPressMarker(building)}>
-                <Text>{building.name}</Text>
+                <BodyText style={{ fontWeight: "400", fontSize: 17 }}>
+                  {building.name}
+                </BodyText>
               </Callout>
             </Marker>
           ))}
