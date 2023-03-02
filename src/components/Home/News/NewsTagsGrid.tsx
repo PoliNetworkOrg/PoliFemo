@@ -4,7 +4,7 @@ import { View } from "react-native"
 import { TagWithData } from "contexts/newsPreferences"
 import { CardWithGradient } from "components/CardWithGradient"
 import { useNavigation } from "navigation/NavigationTypes"
-import { capitalize } from "utils/strings"
+import { capitalize } from "utils/functions"
 
 interface NewsTagsGridProps {
   /**

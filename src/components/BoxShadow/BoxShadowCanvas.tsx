@@ -1,5 +1,5 @@
 import React, { FC, useMemo } from "react"
-import { Dimensions, StyleProp, StyleSheet, ViewStyle } from "react-native"
+import { StyleProp, ViewStyle } from "react-native"
 import colorString from "color-string"
 import { Canvas, ImageSVG, Skia } from "@shopify/react-native-skia"
 
@@ -14,17 +14,21 @@ export interface BoxShadowCanvasProps {
     spread?: number
     blur?: number
   }
+  canvasDimensions?: {
+    width?: number
+    height?: number
+    radii?: [number, number, number, number]
+  }
   canvasStyle?: StyleProp<ViewStyle>
-  siblingViewStyle?: StyleProp<ViewStyle>
 }
 
 function createBoxShadowPath(
   width: number,
   height: number,
-  radiuses?: [number, number, number, number]
+  radii: [number, number, number, number]
 ) {
   const path = Skia.Path.Make()
-  const [tl, tr, br, bl] = radiuses ?? [0, 0, 0, 0]
+  const [tl, tr, br, bl] = radii
   path.moveTo(tl, 0)
   path.lineTo(width - tr, 0)
   path.arcToRotated(tr, tr, 90, true, false, width, tr)
@@ -40,7 +44,7 @@ function createBoxShadowPath(
 
 export const BoxShadowCanvas: FC<BoxShadowCanvasProps> = ({
   shadow,
-  siblingViewStyle,
+  canvasDimensions,
   canvasStyle,
 }) => {
   const shad = {
@@ -59,8 +63,8 @@ export const BoxShadowCanvas: FC<BoxShadowCanvasProps> = ({
   const [r, g, b, a] = c
 
   const viewBoxOffset = shad.spread + shad.blur
-  const width = Dimensions.get("window").width
-  const height = 30
+  const width = canvasDimensions?.width ?? 30
+  const height = canvasDimensions?.height ?? 30
   const totWidth = width + viewBoxOffset * 2
   const totHeight = height + viewBoxOffset * 2
 
@@ -70,19 +74,14 @@ export const BoxShadowCanvas: FC<BoxShadowCanvasProps> = ({
   const svg = useMemo(() => {
     const viewBox = `${xnegoffset} ${ynegoffset} ${totWidth} ${totHeight}`
 
-    const style = StyleSheet.flatten(siblingViewStyle)
-
     return Skia.SVG
       .MakeFromString(`<svg xmlns="http://www.w3.org/2000/svg" width="${totWidth}" height="${totHeight}" viewBox="${viewBox}" fill="none">
     <g filter="url(#a)">
-      <path fill="${String(
-        style?.backgroundColor ?? "white"
-      )}" d="${createBoxShadowPath(width, height, [
-      style?.borderTopLeftRadius ?? 0,
-      style?.borderTopRightRadius ?? 0,
-      style?.borderBottomRightRadius ?? 0,
-      style?.borderBottomLeftRadius ?? 0,
-    ])}" shape-rendering="crispEdges"/>
+      <path fill="white" d="${createBoxShadowPath(
+        width,
+        height,
+        canvasDimensions?.radii ?? [0, 0, 0, 0]
+      )}" shape-rendering="crispEdges"/>
     </g>
     <defs>
       <filter id="a" width="${totWidth}" height="${totHeight}" x="${xnegoffset}" y="${ynegoffset}" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
@@ -102,7 +101,17 @@ export const BoxShadowCanvas: FC<BoxShadowCanvasProps> = ({
       </filter>
     </defs>
   </svg>`)
-  }, [shadow, siblingViewStyle])
+  }, [
+    shad.blur,
+    shad.color,
+    shad.offset.x,
+    shad.offset.y,
+    shad.opacity,
+    shad.spread,
+    canvasDimensions?.height,
+    canvasDimensions?.width,
+    canvasDimensions?.radii,
+  ])
 
   if (!svg) {
     throw new Error("Could not create SVG")

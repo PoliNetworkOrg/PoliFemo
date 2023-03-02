@@ -3,7 +3,7 @@ import { View } from "react-native"
 
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { CardWithGradient } from "components/CardWithGradient"
-import { capitalize } from "utils/strings"
+import { capitalize } from "utils/functions"
 import {
   NewsPreferencesContext,
   Preference,

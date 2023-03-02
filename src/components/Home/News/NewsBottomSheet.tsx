@@ -16,7 +16,7 @@ import { CardWithGradient } from "components/CardWithGradient"
 import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
 import { useNavigation } from "navigation/NavigationTypes"
-import { getUsableScreenHeight } from "utils/height"
+import { getUsableScreenHeight } from "utils/layout"
 import { newsSheetEventEmitter } from "utils/events"
 import { NewsBottomSheetHandle } from "./NewsBottomSheetHandle"
 
