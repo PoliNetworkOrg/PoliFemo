@@ -26,7 +26,7 @@ export const BoxShadowView: React.FC<BoxShadowProps> = ({
         shadow={shadow}
         canvasDimensions={{
           width: Dimensions.get("window").width,
-          height: Math.max(...radii),
+          height: Math.max(radii[0], radii[1]) + Math.max(radii[2], radii[3]),
           radii,
           ...overrideCanvasDimensions,
         }}

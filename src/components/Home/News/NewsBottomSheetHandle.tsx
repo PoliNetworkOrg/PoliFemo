@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { View, StyleSheet } from "react-native"
+import { View, StyleSheet, Dimensions } from "react-native"
 import { BoxShadowCanvas } from "components/BoxShadow"
 import { Title } from "components/Text"
 import { usePalette } from "utils/colors"
@@ -22,9 +22,10 @@ export const NewsBottomSheetHandle: FC = () => {
           color: isLight ? palette.primary : "#000",
         }}
         canvasStyle={{ marginTop: 1 }}
-        siblingViewStyle={{
-          borderTopLeftRadius: 33,
-          borderTopRightRadius: 33,
+        canvasDimensions={{
+          width: Dimensions.get("window").width,
+          height: 30,
+          radii: [30, 30, 0, 0],
         }}
       />
       <View style={[styles.topBar, { backgroundColor: background }]}>
