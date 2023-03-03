@@ -107,13 +107,6 @@ export const MainContainer: FC = () => {
         }}
         onNotifications={() => {
           navigate("RoomDetails", {
-            room: {
-              name: "2.0.1",
-              capacity: 380,
-              building: "Edificio 2",
-              address: "Piazza Leonardo da Vinci, 32 - 20133 - Milano (MI)",
-              power: false,
-            },
             startDate: "2023-02-22T16:15:00Z",
             roomId: 32,
             roomLatitude: 45.4788249919485,
