@@ -1,16 +1,16 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import { ActivityIndicator, View } from "react-native"
 import { Title, BodyText } from "components/Text"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
-import { api, RetryType } from "api"
 import { CampusItem } from "./CampusChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { Room, RoomSimplified } from "api/rooms"
 import { ConstructionType } from "api/rooms"
 import { DefaultList } from "components/FreeClass/DefaultList"
-import { addHours, formatBuildingName } from "utils/rooms"
+import { formatBuildingName, isRoomFree } from "utils/rooms"
 import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
+import { RoomsSearchDataContext } from "contexts/rooms"
 
 export interface BuildingItem {
   type: ConstructionType
@@ -19,23 +19,20 @@ export interface BuildingItem {
   latitude?: number
   longitude?: number
   freeRoomList: RoomSimplified[]
+  allRoomList: RoomSimplified[]
 }
 
 /**
  * In this page the user can select the building.
  */
 export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
-  const { campus, currentDate } = props.route.params
+  const { campus } = props.route.params
 
   const [buildingList, setBuildingList] = useState<BuildingItem[]>()
 
   const [error, setError] = useState<boolean>(false)
 
-  //non-ISO format for simplicity (local timezone) and
-  // compatibility with `handleConfirm` function
-  const [date, setDate] = useState<Date>(
-    new Date(currentDate) !== new Date() ? new Date(currentDate) : new Date()
-  )
+  const { rooms, date, setDate } = useContext(RoomsSearchDataContext)
 
   const findCorrectCampus = (campus: CampusItem, room: Room) => {
     for (const h of buildingCoordsJSON) {
@@ -54,22 +51,18 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
     return false
   }
 
-  //main function that handles the call to the API in order to obtain the list of freeclassRooms
-  const findRoomsAvailable = async () => {
-    const dateStart = addHours(date, 1) //in order to get italian time zone
-    const dateEnd = addHours(dateStart, 3).toISOString() //3 hours is an example
+  //filter rooms
+  const findRoomsAvailable = () => {
+    console.log("searching room buildings")
     try {
-      const response = await api.rooms.getFreeRoomsTimeRange(
-        campus.acronym,
-        dateStart.toISOString(),
-        dateEnd,
-        { maxRetries: 1, retryType: RetryType.RETRY_N_TIMES }
-      )
-      if (response.length > 0) {
+      const currRooms = rooms[campus.acronym].rooms
+      if (currRooms.length > 0) {
         const tempBuildingStrings: string[] = []
         const tempBuildings: BuildingItem[] = []
-        response
-          .filter(room => findCorrectCampus(campus, room))
+        currRooms
+          .filter(room => {
+            return findCorrectCampus(campus, room) && isRoomFree(room, date)
+          })
           .map(room => {
             const currentBuildingString = room.building
               .replace("Edificio ", "Ed. ")
@@ -88,6 +81,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
                     occupancyRate: room.occupancy_rate ?? undefined,
                   },
                 ],
+                allRoomList: [],
               }
               tempBuildingStrings.push(currentBuildingString)
               tempBuildings.push(currentBuilding)
@@ -104,8 +98,30 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
               })
             }
           })
+        // populate all rooms list
+        currRooms
+          .filter(room => findCorrectCampus(campus, room))
+          .map(room => {
+            const currentBuildingString = room.building
+              .replace("Edificio ", "Ed. ")
+              .replace("Padiglione ", "Pad. ")
+              .replace("Palazzina ", "Pal. ")
+            if (tempBuildingStrings.includes(currentBuildingString)) {
+              const indexElement = tempBuildingStrings.indexOf(
+                currentBuildingString
+              )
+              tempBuildings[indexElement].allRoomList.push({
+                roomId: room.room_id,
+                name: room.name,
+                occupancies: room.occupancies,
+                occupancyRate: room.occupancy_rate ?? undefined,
+              })
+            }
+          })
         setBuildingList(tempBuildings)
         setError(false)
+      } else {
+        setBuildingList([])
       }
     } catch (error) {
       setError(true)
@@ -115,11 +131,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
 
   useEffect(() => {
     void findRoomsAvailable()
-  }, [date])
-
-  useEffect(() => {
-    setDate(new Date(currentDate))
-  }, [props.route.params.currentDate])
+  }, [rooms[campus.acronym], date])
 
   return (
     <PageWrapper style={{ marginTop: 106 }}>
@@ -154,7 +166,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
           Non ci sono edifici disponibili
         </BodyText>
       ) : buildingList !== undefined ? (
-        <DefaultList dataToShow={buildingList} currentDate={date} />
+        <DefaultList dataToShow={buildingList} />
       ) : (
         <ActivityIndicator size={"large"} style={{ marginTop: 100 }} />
       )}

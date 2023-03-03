@@ -1,29 +1,41 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
-import React, { useState, useEffect } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { View } from "react-native"
 import { Title } from "components/Text"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { PageWrapper } from "components/Groups/PageWrapper"
-import { getBuildingCoords } from "utils/rooms"
+import { getBuildingCoords, isRoomFree } from "utils/rooms"
+import { RoomsSearchDataContext } from "contexts/rooms"
+import { RoomSimplified } from "api/rooms"
+import { useMounted } from "utils/useMounted"
 
 /**
  * In this page the user can select finally the free class he wants.
  */
 export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
-  const { building, currentDate } = props.route.params
+  const { building } = props.route.params
 
-  //non-ISO format for simplicity (local timezone) and
-  // compatibility with `handleConfirm` function
-  const [date, setDate] = useState<Date>(
-    new Date(currentDate) !== new Date() ? new Date(currentDate) : new Date()
-  )
-
-  useEffect(() => {
-    setDate(new Date(currentDate))
-  }, [props.route.params.currentDate])
+  const { date, setDate } = useContext(RoomsSearchDataContext)
 
   const coords = getBuildingCoords(building.campus, building.name)
+
+  const isMounted = useMounted()
+
+  const [filteredRooms, setFilteredRooms] = useState<
+    RoomSimplified[] | undefined
+  >(building.freeRoomList)
+
+  const allRooms = building.allRoomList
+
+  useEffect(() => {
+    if (isMounted) {
+      const newFilteredRooms = allRooms?.filter(room => {
+        return isRoomFree(room, date)
+      })
+      setFilteredRooms(newFilteredRooms)
+    }
+  }, [date])
 
   return (
     <PageWrapper style={{ marginTop: 106 }}>
@@ -45,7 +57,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
       </View>
       <View style={{ flex: 1, marginTop: 26, marginBottom: 93 }}>
         <FreeClassList
-          data={building.freeRoomList}
+          data={filteredRooms}
           date={date}
           latitude={coords?.latitude}
           longitude={coords?.longitude}

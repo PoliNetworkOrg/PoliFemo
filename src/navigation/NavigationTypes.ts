@@ -51,20 +51,26 @@ export type MainStackNavigatorParams = {
   OtherCategories: { tags: TagWithData[] }
   Error404: undefined
   FreeClassrooms: undefined
-  HeadquarterChoice: { currentDate: string }
-  CampusChoice: { headquarter: HeadquarterItem; currentDate: string }
+  HeadquarterChoice: undefined
+  CampusChoice: {
+    headquarter: HeadquarterItem
+  }
   PositionChoice: undefined
-  BuildingChoice: { campus: CampusItem; currentDate: string }
+  BuildingChoice: {
+    campus: CampusItem
+  }
   RoomDetails: {
     room: RoomDetails
     startDate: string
     roomId: number
     roomLatitude?: number
     roomLongitude?: number
-    occupancies?: Occupancies
+    occupancies: Occupancies
     occupancyRate?: number | null
   }
-  ClassChoice: { building: BuildingItem; currentDate: string }
+  ClassChoice: {
+    building: BuildingItem
+  }
   Groups: undefined
 }
 

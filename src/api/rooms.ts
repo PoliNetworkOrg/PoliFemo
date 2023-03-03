@@ -14,7 +14,10 @@ export interface Room {
   occupancies: Occupancies
 }
 
-export type Occupancies = Record<`${number}:${number}`, "FREE" | "OCCUPIED">
+export type Occupancies = Record<
+  string,
+  { status: "FREE" | "OCCUPIED"; text: string | null }
+>
 
 export interface RoomSimplified {
   roomId: number
@@ -68,7 +71,11 @@ export const rooms = {
         },
       }
     )
-    return response.data.free_rooms
+
+    return {
+      data: response.data.free_rooms,
+      expire: response.headers["cache-control"],
+    }
   },
 
   async getOccupancyRate(roomId: number, options?: RequestOptions) {

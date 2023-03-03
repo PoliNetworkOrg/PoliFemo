@@ -13,7 +13,7 @@ import { CampusItem } from "pages/FreeClass/CampusChoice"
 import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
 import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
 import { api } from "api"
-import { addHours, getBuildingInfo } from "utils/rooms"
+import { addHours, getBuildingInfo, ValidAcronym } from "utils/rooms"
 
 interface PositionModalityProps {
   currentCoords: number[]
@@ -51,7 +51,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
           setCampusSearched({
             type: ConstructionType.CAMPUS,
             name: c.name,
-            acronym: h.acronym,
+            acronym: h.acronym as ValidAcronym,
             latitude: c.latitude,
             longitude: c.longitude,
           })
@@ -66,11 +66,12 @@ export const PositionModality: FC<PositionModalityProps> = props => {
   const findRoomsAvailable = async (headquarter: HeadquarterItem) => {
     //call the API
     try {
-      const response = await api.rooms.getFreeRoomsTimeRange(
+      const { data } = await api.rooms.getFreeRoomsTimeRange(
         headquarter.acronym,
         new Date().toISOString(),
         dateEnd.toISOString()
       )
+      const response = data
       if (response.length > 0) {
         const tempBuildingStrings: string[] = []
         const tempBuildingList: BuildingItem[] = []

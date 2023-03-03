@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { View } from "react-native"
 import { Title } from "components/Text"
@@ -7,10 +7,12 @@ import { PageWrapper } from "components/Groups/PageWrapper"
 import { DefaultList } from "components/FreeClass/DefaultList"
 import { ConstructionType } from "api/rooms"
 import { CampusItem } from "./CampusChoice"
+import { ValidAcronym } from "utils/rooms"
+import { RoomsSearchDataContext } from "contexts/rooms"
 
 export interface HeadquarterItem {
   type: ConstructionType
-  acronym: string
+  acronym: ValidAcronym
   name: string[]
   campusList?: CampusItem[]
 }
@@ -42,20 +44,12 @@ const headquarterList: HeadquarterItem[] = [
 /**
  * In this page the user can select the campus.
  */
-export const HeadquarterChoice: MainStackScreen<
-  "HeadquarterChoice"
-> = props => {
-  const { currentDate } = props.route.params
-
-  //non-ISO format for simplicity (local timezone) and
-  // compatibility with `handleConfirm` function
-  const [date, setDate] = useState<Date>(
-    new Date(currentDate) !== new Date() ? new Date(currentDate) : new Date()
-  )
+export const HeadquarterChoice: MainStackScreen<"HeadquarterChoice"> = () => {
+  const { date, setDate, setAcronym } = useContext(RoomsSearchDataContext)
 
   useEffect(() => {
-    setDate(new Date(currentDate))
-  }, [props.route.params.currentDate])
+    setDate(new Date())
+  }, [])
 
   return (
     <PageWrapper style={{ marginTop: 106 }}>
@@ -63,7 +57,7 @@ export const HeadquarterChoice: MainStackScreen<
         <Title style={{ paddingLeft: 28 }}>Sede</Title>
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
-      <DefaultList dataToShow={headquarterList} currentDate={date} />
+      <DefaultList dataToShow={headquarterList} setAcronym={setAcronym} />
     </PageWrapper>
   )
 }

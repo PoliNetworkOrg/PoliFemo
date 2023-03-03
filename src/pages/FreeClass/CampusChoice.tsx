@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { View } from "react-native"
 import { Title } from "components/Text"
@@ -7,11 +7,13 @@ import { PageWrapper } from "components/Groups/PageWrapper"
 import buildingCoords from "components/FreeClass/buildingCoords.json"
 import { ConstructionType } from "api/rooms"
 import { DefaultList } from "components/FreeClass/DefaultList"
+import { ValidAcronym } from "utils/rooms"
+import { RoomsSearchDataContext } from "contexts/rooms"
 
 export interface CampusItem {
   type: ConstructionType
   name: string[]
-  acronym: string
+  acronym: ValidAcronym
   latitude: number
   longitude: number
 }
@@ -20,13 +22,9 @@ export interface CampusItem {
  * In this page the user can select the campus.
  */
 export const CampusChoice: MainStackScreen<"CampusChoice"> = props => {
-  const { headquarter, currentDate } = props.route.params
+  const { headquarter } = props.route.params
 
-  //non-ISO format for simplicity (local timezone) and
-  // compatibility with `handleConfirm` function
-  const [date, setDate] = useState<Date>(
-    new Date(currentDate) !== new Date() ? new Date(currentDate) : new Date()
-  )
+  const { date, setDate } = useContext(RoomsSearchDataContext)
 
   const [campusList, setCampusList] = useState<CampusItem[]>([])
 
@@ -38,7 +36,7 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = props => {
           const campus: CampusItem = {
             type: ConstructionType.CAMPUS,
             name: c.name,
-            acronym: h.acronym,
+            acronym: h.acronym as ValidAcronym,
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             latitude: c.latitude,
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -51,10 +49,6 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = props => {
     }
     setCampusList(tempCampusList)
   }
-
-  useEffect(() => {
-    setDate(new Date(currentDate))
-  }, [props.route.params.currentDate])
 
   useEffect(() => getCampusList(headquarter.acronym), [])
 
@@ -77,7 +71,7 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = props => {
         )}
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
-      <DefaultList dataToShow={campusList} currentDate={date} />
+      <DefaultList dataToShow={campusList} />
     </PageWrapper>
   )
 }

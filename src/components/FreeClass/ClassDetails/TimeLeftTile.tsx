@@ -12,12 +12,12 @@ import {
   useSVG,
 } from "@shopify/react-native-skia"
 import clock from "assets/freeClassrooms/clock.svg"
-import { extractTimeLeft, getEndDate } from "utils/rooms"
+import { extractTimeLeft, getStartEndDate } from "utils/rooms"
 import { Occupancies } from "api/rooms"
 
 interface TimeLeftTileProps {
   startDate: string
-  occupancies?: Occupancies
+  occupancies: Occupancies
 }
 
 export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
@@ -40,12 +40,12 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
 
   const now = new Date()
 
-  const startDate = new Date(props.startDate)
+  const searchDate = new Date(props.startDate)
 
-  const endDate = getEndDate(startDate, props.occupancies)
+  const { startDate, endDate } = getStartEndDate(searchDate, props.occupancies)
 
-  const startHour = startDate.getHours().toString().padStart(2, "0")
-  const startMinutes = startDate.getMinutes().toString().padStart(2, "0")
+  const startHour = startDate?.getHours().toString().padStart(2, "0")
+  const startMinutes = startDate?.getMinutes().toString().padStart(2, "0")
 
   const endhour = endDate?.getHours().toString().padStart(2, "0") ?? undefined
   const endMinutes =
@@ -109,7 +109,9 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                     paddingHorizontal: 2,
                   }}
                 >
-                  {startHour} : {startMinutes}
+                  {startHour && startMinutes
+                    ? `${startHour} : ${startMinutes}`
+                    : "-- : --"}
                 </BodyText>
               </View>
             </View>

@@ -10,7 +10,7 @@ import { useNavigation } from "navigation/NavigationTypes"
 import { api } from "api"
 import { FlatList } from "react-native-gesture-handler"
 import { Occupancies, RoomSimplified } from "api/rooms"
-import { extractTimeLeft, getEndDate } from "utils/rooms"
+import { extractTimeLeft, getStartEndDate } from "utils/rooms"
 
 const { width } = Dimensions.get("window")
 
@@ -53,8 +53,8 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
   let hLeft: string | undefined
   let mLeft: string | undefined
   const findTimeLeft = (occupancies: Occupancies) => {
-    const startDate = new Date(props.date)
-    const endDate = getEndDate(startDate, occupancies)
+    const searchDate = new Date(props.date)
+    const { startDate, endDate } = getStartEndDate(searchDate, occupancies)
     const { hoursLeft, minutesLeft } = extractTimeLeft(startDate, endDate)
     hLeft = hoursLeft
     mLeft = minutesLeft

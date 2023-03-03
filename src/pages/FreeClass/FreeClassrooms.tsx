@@ -1,4 +1,5 @@
-import React, { useState } from "react"
+/* eslint-disable @typescript-eslint/naming-convention */
+import React, { useContext, useEffect, useState } from "react"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { View, Dimensions, Pressable, Alert } from "react-native"
 import { PoliSearchBar } from "components/Home"
@@ -10,6 +11,15 @@ import position1Icon from "assets/freeClassrooms/position1.svg"
 import position2Icon from "assets/freeClassrooms/position2.svg"
 import * as Location from "expo-location"
 import { ContentWrapperScroll } from "components/ContentWrapperScroll"
+import {
+  addHours,
+  getExpirationDateRooms,
+  getSearchEndDate,
+  getSearchStartDate,
+  isSameDay,
+} from "utils/rooms"
+import { api, RetryType } from "api"
+import { RoomsSearchDataContext } from "contexts/rooms"
 
 const { width } = Dimensions.get("window")
 
@@ -42,6 +52,58 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
   const [search, setSearch] = useState("")
   const { navigate } = useNavigation()
   const { palette } = usePalette()
+
+  const { rooms, setRooms, date, acronym } = useContext(RoomsSearchDataContext)
+
+  //main function that handles the call to the API in order to obtain the list of freeclassRooms
+  const getAllRoomsFromApi = async () => {
+    if (!acronym) {
+      return
+    }
+    //Check if stored rooms are still relevant to the current search
+    const prevSearchDateISO = rooms[acronym].searchDate
+    if (prevSearchDateISO) {
+      const prevSearchDate = new Date(prevSearchDateISO)
+      if (isSameDay(prevSearchDate, date)) {
+        const currentExpirationDateISO = rooms[acronym].expireAt
+        if (currentExpirationDateISO) {
+          const currentExpirationDate = new Date(currentExpirationDateISO)
+          if (new Date() < currentExpirationDate) {
+            // not expired and relevant
+            return
+          }
+        }
+      }
+    }
+    //search if expired or is not relevant
+    try {
+      const startDate = addHours(getSearchStartDate(date), 1)
+      const endDate = addHours(getSearchEndDate(date), 1)
+      const { data, expire } = await api.rooms.getFreeRoomsTimeRange(
+        acronym,
+        startDate.toISOString(),
+        endDate.toISOString(),
+        { maxRetries: 1, retryType: RetryType.RETRY_N_TIMES }
+      )
+      if (data.length > 0) {
+        const newGlobalRooms = rooms
+        newGlobalRooms[acronym].rooms = data
+        const expirationDate = getExpirationDateRooms(expire)
+        //update expiration date or reset
+        newGlobalRooms[acronym].expireAt =
+          expirationDate?.toISOString() ?? undefined
+        //update searchDate
+        newGlobalRooms[acronym].searchDate = date.toISOString()
+        setRooms(newGlobalRooms)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    void getAllRoomsFromApi()
+  }, [date, acronym])
 
   const campusSVG = useSVG(campusIcon)
   const position1SVG = useSVG(position1Icon)
@@ -99,10 +161,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
             }}
             onPress={
               item.type === SearchClassType.HEADQUARTER
-                ? () =>
-                    navigate("HeadquarterChoice", {
-                      currentDate: new Date().toString(),
-                    })
+                ? () => navigate("HeadquarterChoice")
                 : () => handlePositionPressed()
             }
           >

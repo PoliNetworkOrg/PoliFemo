@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import React, { FC, useEffect, useState } from "react"
 import { View } from "react-native"
 import { Tray } from "components/Tray"
@@ -6,6 +7,9 @@ import { useNavigation } from "navigation/NavigationTypes"
 import { MainStack } from "navigation/MainStackNavigator"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { RoomsSearchDataContext } from "contexts/rooms"
+import { GlobalRoomListInterface, ValidAcronym } from "utils/rooms"
+import { BuildingItem } from "pages/FreeClass/BuildingChoice"
 
 /**
  * The Main Container.
@@ -19,6 +23,29 @@ export const MainContainer: FC = () => {
   const { navigate } = useNavigation()
 
   const [preferences, setPreferences] = useState<Record<string, Preference>>({})
+
+  //rooms search date
+  const [date, setDate] = useState(new Date())
+
+  const [acronym, setAcronym] = useState<ValidAcronym | undefined>(undefined)
+
+  const [currentBuilding, setCurrentBuilding] = useState<
+    BuildingItem | undefined
+  >(undefined)
+
+  const [globalRoomList, setGlobalRoomList] = useState<GlobalRoomListInterface>(
+    {
+      MIA: { rooms: [] },
+      MIB: { rooms: [] },
+      CRG: { rooms: [] },
+      LCF: { rooms: [] },
+      PCL: { rooms: [] },
+      MNI: { rooms: [] },
+      MIC: { rooms: [] },
+      MID: { rooms: [] },
+      COE: { rooms: [] },
+    }
+  )
 
   useEffect(() => {
     console.log("Loading tags preferences from storage")
@@ -50,16 +77,30 @@ export const MainContainer: FC = () => {
         backgroundColor: homeBackground,
       }}
     >
-      <NewsPreferencesContext.Provider
+      <RoomsSearchDataContext.Provider
         value={{
-          preferences,
-          setArticlesPreferences: pref => {
-            setPreferences(pref.preferences)
-          },
+          currentBuilding: currentBuilding,
+          setCurrentBuilding: (building: BuildingItem | undefined) =>
+            setCurrentBuilding(building),
+          acronym: acronym,
+          setAcronym: (acronym: ValidAcronym) => setAcronym(acronym),
+          date: date,
+          setDate: (date: Date) => setDate(date),
+          rooms: globalRoomList,
+          setRooms: rooms => setGlobalRoomList(rooms),
         }}
       >
-        <MainStack />
-      </NewsPreferencesContext.Provider>
+        <NewsPreferencesContext.Provider
+          value={{
+            preferences,
+            setArticlesPreferences: pref => {
+              setPreferences(pref.preferences)
+            },
+          }}
+        >
+          <MainStack />
+        </NewsPreferencesContext.Provider>
+      </RoomsSearchDataContext.Provider>
       <Tray
         onDownloads={() => {
           console.log("downloads")
@@ -79,9 +120,9 @@ export const MainContainer: FC = () => {
             roomLongitude: 9.227210008150676,
             occupancies: {
               // eslint-disable-next-line @typescript-eslint/naming-convention
-              "19:00": "FREE",
+              "19:00": { status: "FREE", text: null },
               // eslint-disable-next-line @typescript-eslint/naming-convention
-              "19:35": "OCCUPIED",
+              "19:35": { status: "OCCUPIED", text: null },
             },
           })
         }}

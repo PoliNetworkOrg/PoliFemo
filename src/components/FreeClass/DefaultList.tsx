@@ -1,16 +1,17 @@
-import { useNavigation } from "@react-navigation/native"
 import { ConstructionType } from "api/rooms"
 import { BodyText } from "components/Text"
+import { useNavigation } from "navigation/NavigationTypes"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
 import { CampusItem } from "pages/FreeClass/CampusChoice"
 import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
 import React, { FC } from "react"
 import { FlatList, Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
+import { hasAcronymProp, ValidAcronym } from "utils/rooms"
 
 interface DefaultListProps<T> {
   dataToShow: T[]
-  currentDate: Date
+  setAcronym?: (acronym: ValidAcronym) => void
 }
 
 /**
@@ -55,12 +56,17 @@ export const DefaultList: FC<
             alignItems: "center",
           }}
           onPress={() => {
-            if (item.type === ConstructionType.HEADQUARTER) {
+            if (
+              item.type === ConstructionType.HEADQUARTER &&
+              hasAcronymProp(item)
+            ) {
+              if (item.acronym && props.setAcronym) {
+                props.setAcronym(item.acronym)
+              }
               navigate(
                 "CampusChoice" as never,
                 {
                   headquarter: item,
-                  currentDate: props.currentDate.toISOString(),
                 } as never
               )
             } else if (item.type === ConstructionType.CAMPUS) {
@@ -68,7 +74,6 @@ export const DefaultList: FC<
                 "BuildingChoice" as never,
                 {
                   campus: item,
-                  currentDate: props.currentDate.toISOString(),
                 } as never
               )
             } else {
@@ -76,7 +81,6 @@ export const DefaultList: FC<
                 "ClassChoice" as never,
                 {
                   building: item,
-                  currentDate: props.currentDate.toISOString(),
                 } as never
               )
             }
