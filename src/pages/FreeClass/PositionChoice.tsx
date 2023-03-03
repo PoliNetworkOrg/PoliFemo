@@ -12,6 +12,7 @@ import { ConstructionType } from "api/rooms"
 import BuildingListJSON from "components/FreeClass/buildingCoords.json"
 import { HeadquarterItem } from "./HeadquarterChoice"
 import { CampusItem } from "./CampusChoice"
+import { ValidAcronym } from "utils/rooms"
 
 /**
  * In this page the user can find a room according to his current position.
@@ -45,7 +46,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
           tempCampusList.push({
             type: ConstructionType.CAMPUS,
             name: c.name,
-            acronym: h.acronym,
+            acronym: h.acronym as ValidAcronym,
             latitude: c.latitude,
             longitude: c.longitude,
           })
@@ -53,7 +54,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
         setHeadquarter({
           type: ConstructionType.HEADQUARTER,
           name: h.name,
-          acronym: h.acronym,
+          acronym: h.acronym as ValidAcronym,
           campusList: tempCampusList,
         })
       }
