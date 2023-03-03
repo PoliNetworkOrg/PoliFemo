@@ -60,7 +60,6 @@ export type MainStackNavigatorParams = {
     campus: CampusItem
   }
   RoomDetails: {
-    room: RoomDetails
     startDate: string
     roomId: number
     roomLatitude?: number

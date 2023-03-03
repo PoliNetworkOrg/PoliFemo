@@ -15,7 +15,7 @@ import { CampusChoice } from "pages/FreeClass/CampusChoice"
 import { PositionChoice } from "pages/FreeClass/PositionChoice"
 import { BuildingChoice } from "pages/FreeClass/BuildingChoice"
 import { ClassChoice } from "pages/FreeClass/ClassChoice"
-import { RoomDetails } from "pages/FreeClass/RoomDetails"
+import { RoomDetailsPage } from "pages/FreeClass/RoomDetailsPage"
 import { OtherCategories } from "pages/news/OtherCategories"
 import { Groups } from "pages/Groups"
 import { HeadquarterChoice } from "pages/FreeClass/HeadquarterChoice"
@@ -52,7 +52,10 @@ export const MainStack: FC = () => {
         component={BuildingChoice}
       />
       <MainStackNavigator.Screen name="ClassChoice" component={ClassChoice} />
-      <MainStackNavigator.Screen name="RoomDetails" component={RoomDetails} />
+      <MainStackNavigator.Screen
+        name="RoomDetails"
+        component={RoomDetailsPage}
+      />
       <MainStackNavigator.Screen name="Error404" component={Error404} />
       <MainStackNavigator.Screen name="Groups" component={Groups} />
     </MainStackNavigator.Navigator>

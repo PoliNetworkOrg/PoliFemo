@@ -7,7 +7,6 @@ import timerIcon from "assets/freeClassrooms/timer.svg"
 import overcrowdingIcon from "assets/freeClassrooms/overcrowding.svg"
 import fireIcon from "assets/freeClassrooms/fire.svg"
 import { useNavigation } from "navigation/NavigationTypes"
-import { api } from "api"
 import { FlatList } from "react-native-gesture-handler"
 import { Occupancies, RoomSimplified } from "api/rooms"
 import { extractTimeLeft, getStartEndDate } from "utils/rooms"
@@ -82,11 +81,9 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
             marginBottom: 34,
             borderRadius: 12,
           }}
-          onPress={async () => {
+          onPress={() => {
             try {
-              const selectedRoom = await api.rooms.getRoomInfo(item.roomId)
               navigate("RoomDetails", {
-                room: selectedRoom,
                 startDate: props.date.toISOString(),
                 roomId: item.roomId,
                 roomLatitude: props.latitude,

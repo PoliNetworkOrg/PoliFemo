@@ -1,7 +1,7 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
 import React, { useContext, useEffect, useState } from "react"
 import { View } from "react-native"
-import { Title } from "components/Text"
+import { BodyText, Title } from "components/Text"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { PageWrapper } from "components/Groups/PageWrapper"
@@ -56,12 +56,27 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
       <View style={{ flex: 1, marginTop: 26, marginBottom: 93 }}>
-        <FreeClassList
-          data={filteredRooms}
-          date={date}
-          latitude={coords?.latitude}
-          longitude={coords?.longitude}
-        />
+        {filteredRooms?.length === 0 ? (
+          <BodyText
+            style={{
+              alignSelf: "center",
+              marginTop: 100,
+              color: "red",
+              fontWeight: "700",
+              fontSize: 30,
+              textAlign: "center",
+            }}
+          >
+            Non ci sono aule disponibili
+          </BodyText>
+        ) : (
+          <FreeClassList
+            data={filteredRooms}
+            date={date}
+            latitude={coords?.latitude}
+            longitude={coords?.longitude}
+          />
+        )}
       </View>
     </PageWrapper>
   )
