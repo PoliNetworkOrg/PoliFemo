@@ -8,7 +8,6 @@ import { createStackNavigator } from "@react-navigation/stack"
 import { RootStackNavigatorParams } from "navigation/NavigationTypes"
 // ! import with absolute path gives error
 import { MainContainer } from "../MainContainer"
-import { NotificationsContainer } from "../NotificationsContainer"
 import { SettingsContainer } from "../SettingsContainer"
 import { Login } from "pages/Login"
 
@@ -19,10 +18,6 @@ export const RootStack: FC = () => {
   return (
     <RootStackNavigator.Navigator screenOptions={{ headerShown: false }}>
       <RootStackNavigator.Screen name="MainNav" component={MainContainer} />
-      <RootStackNavigator.Screen
-        name="NotificationsNav"
-        component={NotificationsContainer}
-      />
       <RootStackNavigator.Screen
         name="SettingsNav"
         component={SettingsContainer}

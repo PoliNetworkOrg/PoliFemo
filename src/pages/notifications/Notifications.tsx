@@ -1,12 +1,10 @@
 import React, { useState } from "react"
 import { View } from "react-native"
-import { NotificationsStackScreen } from "navigation/NavigationTypes"
+import { MainStackScreen } from "navigation/NavigationTypes"
 import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import { Category } from "components/Notifications/Category"
 
-export const NotificationsPage: NotificationsStackScreen<
-  "Notifications"
-> = () => {
+export const NotificationsPage: MainStackScreen<"Notifications"> = () => {
   const [toggled, setToggled] = useState<boolean>(true)
   const categories = [
     {
@@ -14,21 +12,18 @@ export const NotificationsPage: NotificationsStackScreen<
       title: "Comunicazioni istituzionali",
       notifications: 2, // TODO: get the real number
       onPress: () => console.log("comunicazioni istituzionali!"),
-      key: 0, // better key?
     },
     {
       // icon:
       title: "Associazioni",
       notifications: 3, // TODO: get the real number
       onPress: () => console.log("associazioni!"),
-      key: 1, // better key?
     },
     {
       // icon:
       title: "Nuovi Upload",
       notifications: 0, // TODO: get the real number
       onPress: () => console.log("nuovi upload"),
-      key: 2, // better key?
     },
   ]
 
@@ -41,17 +36,17 @@ export const NotificationsPage: NotificationsStackScreen<
             alignItems: "center",
           }}
         >
-          {categories.map(c => {
+          {categories.map((c, i) => {
             return (
               <Category
                 title={c.title}
-                showSwitch={true}
                 switchControl={{
                   toggled: toggled,
                   onToggle: value => setToggled(value),
                 }}
+                onClick={c.onPress}
                 notifications={c.notifications}
-                key={c.key}
+                key={`__notification-category-${i}`}
               />
             )
           })}
