@@ -6,7 +6,7 @@ import {
   Skia,
   useSVG,
 } from "@shopify/react-native-skia"
-import { Asset } from "expo-asset"
+import { useAssets } from "expo-asset"
 import { FC, useMemo } from "react"
 import { StyleProp, ViewStyle } from "react-native"
 
@@ -41,13 +41,10 @@ export interface IconProps {
  * <Icon source={svg} />
  */
 export const Icon: FC<IconProps> = props => {
-  const icon = Asset.fromModule(props.source)
+  const [assets, error] = useAssets(props.source)
+  if (error) throw error
 
   const { color } = props
-  const scale = props.scale ?? 1
-  const width = (icon.width ?? 0) * scale
-  const height = (icon.height ?? 0) * scale
-
   const paint = useMemo(() => {
     if (!color) return null
     const p = Skia.Paint()
@@ -57,7 +54,11 @@ export const Icon: FC<IconProps> = props => {
     return p
   }, [color])
 
-  const svg = useSVG(icon.uri)
+  const icon = assets?.[0]
+  const scale = props.scale ?? 1
+  const width = (icon?.width ?? 0) * scale
+  const height = (icon?.height ?? 0) * scale
+  const svg = useSVG(icon?.uri)
 
   if (!svg) return null
 
