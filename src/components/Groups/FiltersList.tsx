@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import { FC, useState } from "react"
 import { View } from "react-native"
 import { OutlinedButton } from "./OutlinedButton"
 import { StyleSheet } from "react-native"

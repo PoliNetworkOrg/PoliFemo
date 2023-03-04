@@ -1,5 +1,5 @@
 import { RootStackScreen, useNavigation } from "navigation/NavigationTypes"
-import React, { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { View } from "react-native"
 import { Subtitle, Title } from "components/Text"
 import WebView from "react-native-webview"

@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import { FC } from "react"
 import { View, ViewStyle } from "react-native"
 
 export interface DividerProps {

@@ -2,8 +2,8 @@ import { EventEmitter } from "events"
 import axios, {
   AxiosError,
   AxiosInstance,
-  AxiosRequestConfig,
   AxiosResponse,
+  InternalAxiosRequestConfig,
 } from "axios"
 import { PolimiToken, PoliNetworkToken, Tokens } from "contexts/login"
 import AsyncStorage from "@react-native-async-storage/async-storage"
@@ -146,7 +146,7 @@ export class HttpClient extends EventEmitter {
     )
   }
 
-  private _handleRequest = (config: AxiosRequestConfig) => {
+  private _handleRequest = (config: InternalAxiosRequestConfig) => {
     config.headers = config.headers ?? {}
     if (config.authType === AuthType.POLIMI && this.polimiToken) {
       config.headers["Authorization"] = `Bearer ${this.polimiToken.accessToken}`

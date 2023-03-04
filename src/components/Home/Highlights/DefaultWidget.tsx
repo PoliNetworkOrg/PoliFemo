@@ -1,7 +1,7 @@
 import { Canvas, Group, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import { Divider } from "components/Divider"
 import { BodyText } from "components/Text"
-import React, { FC } from "react"
+import { FC } from "react"
 import { View, Dimensions } from "react-native"
 import { usePalette } from "utils/colors"
 import polifemoIcon from "assets/highlights/polifemo.svg"

@@ -1,18 +1,11 @@
-import React, { FC, useMemo } from "react"
+import { FC } from "react"
 import { ActivityIndicator, View } from "react-native"
 import { TouchableRipple } from "../TouchableRipple"
-import {
-  BlendMode,
-  Canvas,
-  Group,
-  ImageSVG,
-  Skia,
-  useSVG,
-} from "@shopify/react-native-skia"
+
 import { BodyText, Text } from "components/Text"
 import { Divider } from "components/Divider"
 import { usePalette } from "utils/colors"
-import { IconProps } from "assets/settings"
+import { Icon } from "components/Icon"
 
 /**
  * interface representing a setting's UI fields
@@ -20,7 +13,7 @@ import { IconProps } from "assets/settings"
 export interface SettingOptions {
   title: string
   subtitle?: string
-  icon?: IconProps
+  icon?: number
   callback?: () => void
   loading?: boolean
 }
@@ -31,15 +24,7 @@ export interface SettingTileProps {
 
 export const SettingTile: FC<SettingTileProps> = props => {
   const icon = props.setting.icon ?? null
-  const iconSvg = useSVG(icon?.svg)
   const { articleSubtitle } = usePalette()
-
-  //changing icon color
-  //from: https://github.com/Shopify/react-native-skia/issues/462
-  const paint = useMemo(() => Skia.Paint(), [])
-  paint.setColorFilter(
-    Skia.ColorFilter.MakeBlend(Skia.Color(articleSubtitle), BlendMode.SrcIn)
-  )
 
   return (
     <View>
@@ -73,34 +58,11 @@ export const SettingTile: FC<SettingTileProps> = props => {
             alignItems: "center",
           }}
         >
-          {iconSvg && icon && (
-            <View
-              style={{
-                width: 24, // max icon width
-                height: 24, // max icon height
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Canvas
-                style={{
-                  flex: 1,
-                  width: icon?.width,
-                  height: icon?.heigth,
-                }}
-              >
-                <Group layer={paint}>
-                  <ImageSVG
-                    svg={iconSvg}
-                    x={0}
-                    y={0}
-                    width={icon.width}
-                    height={icon.heigth}
-                  />
-                </Group>
-              </Canvas>
+          {icon ? (
+            <View style={{ width: 24, alignItems: "center" }}>
+              <Icon source={icon} color={articleSubtitle} />
             </View>
-          )}
+          ) : null}
 
           <View style={{ marginLeft: icon ? 20 : 0 }}>
             <BodyText>{props.setting.title}</BodyText>

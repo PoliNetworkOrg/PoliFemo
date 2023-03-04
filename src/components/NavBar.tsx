@@ -1,6 +1,5 @@
-import React, { FC } from "react"
+import { FC } from "react"
 import { Pressable, View, StyleSheet } from "react-native"
-import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { Text } from "components/Text"
@@ -9,6 +8,7 @@ import { usePalette } from "utils/colors"
 import { NavbarIcon, navbarIcons } from "assets/navbar"
 import { newsSheetEventEmitter } from "utils/events"
 import { BoxShadowView } from "./BoxShadow"
+import { Icon } from "./Icon"
 
 export interface NavbarProps {
   /**
@@ -62,9 +62,6 @@ export const NavBar: FC<NavbarProps> = props => {
   const back = props.back ?? true
   const home = props.home ?? true
 
-  const homeSVG = useSVG(navbarIcons.home.svg)
-  const backSVG = useSVG(navbarIcons.back.svg)
-
   const elevated = props.elevated ?? true
 
   return (
@@ -96,24 +93,7 @@ export const NavBar: FC<NavbarProps> = props => {
             },
           ]}
         >
-          <Canvas
-            style={{
-              marginLeft: 9,
-              marginRight: "auto",
-              width: navbarIcons.back.width,
-              height: navbarIcons.back.heigth,
-            }}
-          >
-            {backSVG && (
-              <ImageSVG
-                svg={backSVG}
-                x={0}
-                y={0}
-                width={navbarIcons.back.width}
-                height={navbarIcons.back.heigth}
-              />
-            )}
-          </Canvas>
+          <Icon style={{ marginLeft: 9 }} source={navbarIcons.back} />
           <Text
             style={{
               fontWeight: "900",
@@ -140,24 +120,7 @@ export const NavBar: FC<NavbarProps> = props => {
           }
           style={[styles.button, { backgroundColor: buttonFill }]}
         >
-          <Canvas
-            style={{
-              marginLeft: 8,
-              marginRight: "auto",
-              width: navbarIcons.home.width,
-              height: navbarIcons.home.heigth,
-            }}
-          >
-            {homeSVG && (
-              <ImageSVG
-                svg={homeSVG}
-                x={0}
-                y={0}
-                width={navbarIcons.home.width}
-                height={navbarIcons.home.heigth}
-              />
-            )}
-          </Canvas>
+          <Icon source={navbarIcons.home} />
         </Pressable>
       )}
 
@@ -166,40 +129,21 @@ export const NavBar: FC<NavbarProps> = props => {
         style={{ flexDirection: "row", marginLeft: "auto" }}
       >
         {!!props.customButtons &&
-          props.customButtons.map(({ icon, onPress }, i) => {
-            const iconSVG = navbarIcons[icon]
-            const svg = useSVG(iconSVG.svg)
-            return (
-              <Pressable
-                key={"navbar-custom-button-" + i}
-                style={[
-                  styles.button,
-                  {
-                    backgroundColor: buttonFill,
-                    marginLeft: 19,
-                  },
-                ]}
-                onPress={onPress}
-              >
-                <Canvas
-                  style={{
-                    width: iconSVG.width,
-                    height: iconSVG.heigth,
-                  }}
-                >
-                  {svg && (
-                    <ImageSVG
-                      svg={svg}
-                      x={0}
-                      y={0}
-                      width={iconSVG.width}
-                      height={iconSVG.heigth}
-                    />
-                  )}
-                </Canvas>
-              </Pressable>
-            )
-          })}
+          props.customButtons.map(({ icon, onPress }, i) => (
+            <Pressable
+              key={"navbar-custom-button-" + i}
+              style={[
+                styles.button,
+                {
+                  backgroundColor: buttonFill,
+                  marginLeft: 19,
+                },
+              ]}
+              onPress={onPress}
+            >
+              <Icon source={navbarIcons[icon]} />
+            </Pressable>
+          ))}
       </View>
     </BoxShadowView>
   )
