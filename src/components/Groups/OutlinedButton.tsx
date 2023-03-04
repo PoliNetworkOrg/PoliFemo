@@ -1,5 +1,5 @@
 import { BodyText } from "components/Text"
-import React, { FC } from "react"
+import { FC } from "react"
 import { Pressable, StyleProp, ViewStyle } from "react-native"
 import { usePalette } from "utils/colors"
 import { StyleSheet } from "react-native"

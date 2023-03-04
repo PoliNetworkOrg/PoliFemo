@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import { FC } from "react"
 import { Pressable } from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 

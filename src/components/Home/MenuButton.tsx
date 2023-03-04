@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react"
+import { FC, useEffect } from "react"
 import { DataSourceParam } from "@shopify/react-native-skia"
 import { Pressable, View, Animated } from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"

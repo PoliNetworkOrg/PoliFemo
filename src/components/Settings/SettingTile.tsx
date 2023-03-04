@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react"
+import { FC, useMemo } from "react"
 import { ActivityIndicator, View } from "react-native"
 import { TouchableRipple } from "../TouchableRipple"
 import {

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useRef, useContext } from "react"
+import { FC, useEffect, useState, useRef, useContext } from "react"
 import { StyleSheet, View } from "react-native"
 import BottomSheet, {
   BottomSheetScrollView,

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useRef } from "react"
+import { FC, useEffect, useState, useRef } from "react"
 import {
   TextInput,
   Animated,

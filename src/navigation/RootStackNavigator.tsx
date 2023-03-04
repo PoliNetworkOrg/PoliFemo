@@ -3,7 +3,7 @@
  * Component encapsulating the Navigators of the app.
  */
 
-import React, { FC } from "react"
+import { FC } from "react"
 import { createStackNavigator } from "@react-navigation/stack"
 import { RootStackNavigatorParams } from "navigation/NavigationTypes"
 // ! import with absolute path gives error

@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from "react"
+import { FC, useContext, useEffect, useState } from "react"
 import { View } from "react-native"
 import { PoliCarousel } from "./PoliCarousel"
 import { LoginContext } from "contexts/login"

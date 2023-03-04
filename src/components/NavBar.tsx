@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import { FC } from "react"
 import { Pressable, View, StyleSheet } from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import { useSafeAreaInsets } from "react-native-safe-area-context"

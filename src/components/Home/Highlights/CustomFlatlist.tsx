@@ -1,5 +1,5 @@
 import { BodyText } from "components/Text"
-import React, { FC, useState, useRef } from "react"
+import { FC, useState, useRef } from "react"
 import { View, Dimensions, Pressable, ImageBackground } from "react-native"
 import Animated from "react-native-reanimated"
 import { PaginationCarousel } from "./PaginationCarousel"

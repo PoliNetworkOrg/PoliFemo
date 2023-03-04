@@ -1,4 +1,3 @@
-import React from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
