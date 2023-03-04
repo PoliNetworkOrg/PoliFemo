@@ -1,5 +1,12 @@
 import React from "react"
-import { Dimensions, StyleProp, View, ViewProps, ViewStyle } from "react-native"
+import {
+  Dimensions,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewProps,
+  ViewStyle,
+} from "react-native"
 import { getRadiiFromStyle } from "utils/layout"
 import { BoxShadowCanvas, BoxShadowCanvasProps } from "./BoxShadowCanvas"
 
@@ -18,7 +25,8 @@ export const BoxShadowView: React.FC<BoxShadowProps> = ({
   children,
   ...props
 }) => {
-  const radii = getRadiiFromStyle(contentContainerStyle)
+  const ccstyle = StyleSheet.flatten(contentContainerStyle ?? {})
+  const radii = getRadiiFromStyle(ccstyle)
 
   return (
     <View {...props}>
