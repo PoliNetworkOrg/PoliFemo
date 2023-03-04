@@ -40,12 +40,13 @@ export interface IconProps {
  *
  * <Icon source={svg} />
  */
-export const Icon: FC<IconProps> = ({ source, color, scale, style }) => {
-  const icon = Asset.fromModule(source)
+export const Icon: FC<IconProps> = props => {
+  const icon = Asset.fromModule(props.source)
 
-  const s = scale ?? 1
-  const width = (icon.width ?? 0) * s
-  const height = (icon.height ?? 0) * s
+  const { color } = props
+  const scale = props.scale ?? 1
+  const width = (icon.width ?? 0) * scale
+  const height = (icon.height ?? 0) * scale
 
   const paint = useMemo(() => {
     if (!color) return null
@@ -61,9 +62,16 @@ export const Icon: FC<IconProps> = ({ source, color, scale, style }) => {
   if (!svg) return null
 
   return (
-    <Canvas style={[{ width, height }, style ?? {}]}>
+    <Canvas style={[{ width, height }, props.style]}>
       <Group layer={paint}>
-        <ImageSVG x={0} y={0} width={width} height={height} svg={svg} />
+        <ImageSVG
+          x={0}
+          y={0}
+          width={width}
+          height={height}
+          svg={svg}
+          transform={[{ scale }]}
+        />
       </Group>
     </Canvas>
   )

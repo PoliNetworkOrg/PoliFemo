@@ -58,7 +58,11 @@ export const SettingTile: FC<SettingTileProps> = props => {
             alignItems: "center",
           }}
         >
-          {icon ? <Icon source={icon} color={articleSubtitle} /> : null}
+          {icon ? (
+            <View style={{ width: 24, alignItems: "center" }}>
+              <Icon source={icon} color={articleSubtitle} />
+            </View>
+          ) : null}
 
           <View style={{ marginLeft: icon ? 20 : 0 }}>
             <BodyText>{props.setting.title}</BodyText>

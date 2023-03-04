@@ -1,6 +1,5 @@
 import { FC, useEffect } from "react"
 import { Pressable, View, Animated } from "react-native"
-import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 
 import { BodyText } from "components/Text"
 import { usePalette } from "utils/colors"
@@ -26,7 +25,6 @@ export const MenuButton: FC<{
 }> = ({ onPress, onLongPress, buttonIcon, isDeleting, onDelete, inMenu }) => {
   const { palette, isDark } = usePalette()
   const color = isDark && inMenu ? palette.lighter : palette.primary
-  const svg = useSVG(buttonIcon.icon)
 
   const animatedValue = new Animated.Value(0)
 
@@ -87,9 +85,7 @@ export const MenuButton: FC<{
               marginTop: 15, //added margin to the top due to the deleting operation
             }}
           >
-            <Canvas style={{ flex: 1, width: 40 }}>
-              {svg && <ImageSVG svg={svg} x={0} y={0} width={40} height={38} />}
-            </Canvas>
+            <Icon style={{ flex: 1, width: 40 }} source={buttonIcon.icon} />
             <BodyText
               style={{
                 fontSize: 10,
