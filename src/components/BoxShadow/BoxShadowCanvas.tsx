@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react"
+import { FC, useMemo } from "react"
 import { StyleProp, ViewStyle } from "react-native"
 import colorString from "color-string"
 import { Canvas, ImageSVG, Skia } from "@shopify/react-native-skia"

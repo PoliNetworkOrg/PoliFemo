@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import { FC } from "react"
 import { View, StyleSheet, Dimensions } from "react-native"
 import { BoxShadowCanvas } from "components/BoxShadow"
 import { Title } from "components/Text"
