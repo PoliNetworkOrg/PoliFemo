@@ -58,7 +58,7 @@ export const Icon: FC<IconProps> = props => {
   const scale = props.scale ?? 1
   const width = (icon?.width ?? 0) * scale
   const height = (icon?.height ?? 0) * scale
-  const svg = useSVG(icon?.uri)
+  const svg = useSVG(icon?.localUri)
 
   if (!svg) return null
 
