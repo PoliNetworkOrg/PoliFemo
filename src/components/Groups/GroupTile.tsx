@@ -36,7 +36,7 @@ export const GroupTile: FC<GroupTileProps> = props => {
               alignItems: "center",
             }}
           >
-            <Icon source={props.icon} />
+            {props.icon ? <Icon source={props.icon} /> : null}
           </View>
           <View
             style={{

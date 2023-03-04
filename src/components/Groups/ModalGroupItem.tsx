@@ -37,7 +37,7 @@ export const ModalGroupItem: FC<ModalGroupItemProps> = props => {
           alignItems: "center",
         }}
       >
-        <Icon scale={scaleFactor} source={icon} />
+        {icon ? <Icon scale={scaleFactor} source={icon} /> : null}
       </View>
       <BodyText
         style={{

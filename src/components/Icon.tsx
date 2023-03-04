@@ -1,17 +1,23 @@
+import {
+  BlendMode,
+  Canvas,
+  Group,
+  ImageSVG,
+  Skia,
+  useSVG,
+} from "@shopify/react-native-skia"
 import { Asset } from "expo-asset"
-import { Image } from "expo-image"
-import { FC } from "react"
-import { ImageStyle } from "react-native"
+import { FC, useMemo } from "react"
+import { StyleProp, ViewStyle } from "react-native"
 
 export interface IconProps {
   /**
    * the source of the icon, usually a number resulting from an import
    */
-  source: number | null
+  source: number
 
   /**
    * the color of the icon
-   * TODO: implement, currently not in expo-image https://github.com/expo/expo/issues/21321#issuecomment-1439098927
    * */
   color?: string
 
@@ -23,31 +29,42 @@ export interface IconProps {
   /**
    * the style of the icon
    */
-  style?: ImageStyle
+  style?: StyleProp<ViewStyle>
 }
 
 /**
  * Renders an icon with correct size directly from imported svg
- *
- * CURRENT LIMITATIONS:
- * due to the current implementation of the svg rendering within expo-image, the
- * color of the icon cannot be changed on iOS, and SVG effects like drop shadows
- * are not supported.
- * For those cases, keep using Skia `Canvas`.
  *
  * @example import { Icon } from "components/Icon"
  * import svg from "assets/icons/icon.svg"
  *
  * <Icon source={svg} />
  */
-export const Icon: FC<IconProps> = ({ source, scale, style }) => {
-  if (!source) return null
-
+export const Icon: FC<IconProps> = ({ source, color, scale, style }) => {
   const icon = Asset.fromModule(source)
 
   const s = scale ?? 1
   const width = (icon.width ?? 0) * s
   const height = (icon.height ?? 0) * s
 
-  return <Image style={[{ width, height }, style ?? {}]} source={icon.uri} />
+  const paint = useMemo(() => {
+    if (!color) return null
+    const p = Skia.Paint()
+    p.setColorFilter(
+      Skia.ColorFilter.MakeBlend(Skia.Color(color), BlendMode.SrcIn)
+    )
+    return p
+  }, [color])
+
+  const svg = useSVG(icon.uri)
+
+  if (!svg) return null
+
+  return (
+    <Canvas style={[{ width, height }, style ?? {}]}>
+      <Group layer={paint}>
+        <ImageSVG x={0} y={0} width={width} height={height} svg={svg} />
+      </Group>
+    </Canvas>
+  )
 }
