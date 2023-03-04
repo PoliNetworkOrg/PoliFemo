@@ -8,9 +8,8 @@ import {
   Keyboard,
 } from "react-native"
 import { usePalette } from "utils/colors"
-import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
-import searchLight from "assets/menu/searchLight.svg"
 import searchDark from "assets/menu/searchDark.svg"
+import { Icon } from "components/Icon"
 
 /**
  * the search bar, which requests a search everytime the input text changes
@@ -19,9 +18,8 @@ export const PoliSearchBar: FC<{
   onChange: (searchKey: string) => void
   style?: StyleProp<ViewStyle>
 }> = ({ onChange, style }) => {
-  const { fieldBackground, fieldText, bodyText, isLight } = usePalette()
-
-  const svg = useSVG(isLight ? searchLight : searchDark)
+  const { fieldBackground, fieldText, bodyText, isLight, palette } =
+    usePalette()
 
   const [isFocused, setIsFocused] = useState(false)
   const shadowAnim = useRef(new Animated.Value(0)).current
@@ -110,22 +108,10 @@ export const PoliSearchBar: FC<{
           inputText.current?.focus()
         }}
       >
-        <Canvas
-          style={{
-            width: 22,
-            height: 22,
-          }}
-        >
-          {svg && (
-            <ImageSVG
-              svg={svg} /*color??*/
-              x={0}
-              y={0}
-              width={22}
-              height={22}
-            />
-          )}
-        </Canvas>
+        <Icon
+          source={searchDark}
+          color={isLight ? palette.primary : undefined}
+        />
       </Pressable>
     </Animated.View>
   )
