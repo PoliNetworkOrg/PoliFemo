@@ -16,6 +16,11 @@ export interface IconProps {
   color?: string
 
   /**
+   * the scale of the icon
+   */
+  scale?: number
+
+  /**
    * the style of the icon
    */
   style?: ImageStyle
@@ -35,21 +40,14 @@ export interface IconProps {
  *
  * <Icon source={svg} />
  */
-export const Icon: FC<IconProps> = ({ source, style }) => {
+export const Icon: FC<IconProps> = ({ source, scale, style }) => {
   if (!source) return null
 
   const icon = Asset.fromModule(source)
 
-  return (
-    <Image
-      style={[
-        {
-          width: icon.width ?? undefined,
-          height: icon.height ?? undefined,
-        },
-        style ?? {},
-      ]}
-      source={icon.uri}
-    />
-  )
+  const s = scale ?? 1
+  const width = (icon.width ?? 0) * s
+  const height = (icon.height ?? 0) * s
+
+  return <Image style={[{ width, height }, style ?? {}]} source={icon.uri} />
 }
