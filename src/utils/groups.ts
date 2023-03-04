@@ -1,5 +1,7 @@
 import { Group } from "api/groups"
-import { platformIcons } from "assets/groups"
+import whatsapp from "assets/groups/whatsapp.svg"
+import facebook from "assets/groups/facebook.svg"
+import telegram from "assets/groups/telegram.svg"
 
 export interface Filters {
   year?: string
@@ -88,13 +90,13 @@ export function createGroupLink(idLink: string, platform: string) {
 
 export function choosePlatformIcon(platform?: string) {
   if (platform === "TG") {
-    return platformIcons.telegram
+    return telegram
   } else if (platform === "FB") {
-    return platformIcons.facebook
+    return facebook
   } else if (platform === "WA") {
-    return platformIcons.whatsapp
+    return whatsapp
   }
-  return undefined
+  return null
 }
 
 export function applyFilters(groups: Group[], filters: Filters): Group[] {

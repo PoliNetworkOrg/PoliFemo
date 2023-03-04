@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react"
+import { useState, useEffect, useRef, useContext } from "react"
 import { View } from "react-native"
 
 import { api, RetryType } from "api"

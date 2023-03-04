@@ -8,11 +8,11 @@ import {
 } from "react-native"
 import { usePalette } from "utils/colors"
 import { ButtonCustom } from "components/Button"
-import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
-import { deleteSvg as icon } from "assets/modal"
+import deletesvg from "assets/modal/delete.svg"
 import { Group } from "api/groups"
 import Modal from "react-native-modal"
 import { Portal } from "react-native-portalize"
+import { Icon } from "components/Icon"
 
 export interface ModalGroupProps {
   /**
@@ -49,7 +49,6 @@ export interface ModalGroupProps {
 export const ModalGroup: FC<ModalGroupProps> = props => {
   const { backgroundSecondary, modalBarrier, isLight } = usePalette()
   const deviceHeight = Dimensions.get("screen").height
-  const deleteSvg = useSVG(icon.svg)
 
   return (
     <Portal>
@@ -87,22 +86,7 @@ export const ModalGroup: FC<ModalGroupProps> = props => {
                   alignItems: "center",
                 }}
               >
-                <Canvas
-                  style={{
-                    width: icon.width,
-                    height: icon.heigth,
-                  }}
-                >
-                  {deleteSvg && (
-                    <ImageSVG
-                      svg={deleteSvg}
-                      x={0}
-                      y={0}
-                      width={icon.width}
-                      height={icon.heigth}
-                    />
-                  )}
-                </Canvas>
+                <Icon source={deletesvg} />
               </View>
             </Pressable>
             <View
