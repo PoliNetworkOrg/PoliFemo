@@ -36,6 +36,7 @@ import { TagWithData } from "contexts/newsPreferences"
 export type RootStackNavigatorParams = {
   /* eslint-disable @typescript-eslint/naming-convention */
   MainNav: NavigatorScreenParams<MainStackNavigatorParams>
+  NotificationsNav: NavigatorScreenParams<NotificationsStackNavigatorParams>
   SettingsNav: NavigatorScreenParams<SettingsStackNavigatorParams>
   Login: undefined
 }
@@ -47,6 +48,10 @@ export type MainStackNavigatorParams = {
   ArticlesList: { tagName: string }
   Error404: undefined
   Groups: undefined
+}
+
+export type NotificationsStackNavigatorParams = {
+  Notifications: undefined
 }
 
 export type SettingsStackNavigatorParams = {
@@ -88,6 +93,13 @@ export type MainStackProps<T extends keyof MainStackNavigatorParams> =
     StackScreenProps<RootStackNavigatorParams>
   >
 
+export type NotificationsStackProps<
+  T extends keyof NotificationsStackNavigatorParams
+> = CompositeScreenProps<
+  StackScreenProps<NotificationsStackNavigatorParams, T>,
+  StackScreenProps<RootStackNavigatorParams>
+>
+
 export type SettingsStackProps<T extends keyof SettingsStackNavigatorParams> =
   CompositeScreenProps<
     StackScreenProps<SettingsStackNavigatorParams, T>,
@@ -122,6 +134,11 @@ export type MainStackScreen<
   T extends keyof MainStackNavigatorParams,
   P = Record<string, never>
 > = FC<MainStackProps<T> & P>
+
+export type NotificationsStackScreen<
+  T extends keyof NotificationsStackNavigatorParams,
+  P = Record<string, never>
+> = FC<NotificationsStackProps<T> & P>
 
 export type SettingsStackScreen<
   T extends keyof SettingsStackNavigatorParams,
