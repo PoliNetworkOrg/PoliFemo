@@ -2,14 +2,13 @@ import { MainStackScreen } from "navigation/NavigationTypes"
 import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { Text } from "components/Text"
-import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
-import { deleteSvg as icon } from "assets/modal"
+import deletesvg from "assets/modal/delete.svg"
 import { useNavigation } from "navigation/NavigationTypes"
 import { NavBar } from "components/NavBar"
+import { Icon } from "components/Icon"
 
 export const Error404: MainStackScreen<"Error404"> = () => {
   const { background, homeBackground, isLight } = usePalette()
-  const deleteSvg = useSVG(icon.svg)
   const navigation = useNavigation()
   return (
     <View
@@ -49,22 +48,7 @@ export const Error404: MainStackScreen<"Error404"> = () => {
               justifyContent: "center",
             }}
           >
-            <Canvas
-              style={{
-                width: icon.width,
-                height: icon.heigth,
-              }}
-            >
-              {deleteSvg && (
-                <ImageSVG
-                  svg={deleteSvg}
-                  x={0}
-                  y={0}
-                  width={icon.width}
-                  height={icon.heigth}
-                />
-              )}
-            </Canvas>
+            <Icon source={deletesvg} />
           </View>
         </Pressable>
         <Text

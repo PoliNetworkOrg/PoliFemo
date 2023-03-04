@@ -1,16 +1,16 @@
 import { FC, useEffect } from "react"
-import { DataSourceParam } from "@shopify/react-native-skia"
 import { Pressable, View, Animated } from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 
 import { BodyText } from "components/Text"
 import { usePalette } from "utils/colors"
 import deleteIcon from "assets/menu/delete.svg"
+import { Icon } from "components/Icon"
 
 export interface ButtonInterface {
   id: number
   title: string
-  icon: DataSourceParam
+  icon: number
 }
 
 /**
@@ -27,7 +27,6 @@ export const MenuButton: FC<{
   const { palette, isDark } = usePalette()
   const color = isDark && inMenu ? palette.lighter : palette.primary
   const svg = useSVG(buttonIcon.icon)
-  const delIcon = useSVG(deleteIcon)
 
   const animatedValue = new Animated.Value(0)
 
@@ -115,11 +114,7 @@ export const MenuButton: FC<{
             }}
             hitSlop={10}
           >
-            <Canvas style={{ flex: 1, width: 27 }}>
-              {delIcon && (
-                <ImageSVG svg={delIcon} x={0} y={0} width={25} height={25} />
-              )}
-            </Canvas>
+            <Icon source={deleteIcon} />
           </Pressable>
         )}
       </Animated.View>
