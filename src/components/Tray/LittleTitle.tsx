@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from "react"
+import { FC, useEffect, useRef } from "react"
 import { LinearGradient } from "expo-linear-gradient"
 import MaskedView from "@react-native-masked-view/masked-view"
 import { Animated, Easing } from "react-native"
@@ -37,6 +37,9 @@ export const LittleTitle: FC<LittleTitleProps> = ({ titleInCorner }) => {
         opacity: slide,
       }}
     >
+      {/* TODO: update maked-view and remove this comment as soon as they fix the types
+          eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          @ts-ignore  */}
       <MaskedView
         nativeID="little-title"
         style={{ flex: 1, marginLeft: 28 }}

@@ -21,30 +21,10 @@ export interface IconProps {
   heigth: number
 }
 
-export const settingsIcons: Record<SettingIconNames, IconProps> = {
-  notifiche: {
-    svg: notifiche,
-    width: 20,
-    heigth: 24,
-  },
-  privacy: {
-    svg: privacy,
-    width: 18,
-    heigth: 24,
-  },
-  modify: {
-    svg: modify,
-    width: 20,
-    heigth: 20,
-  },
-  help: {
-    svg: help,
-    width: 24,
-    heigth: 24,
-  },
-  disconnect: {
-    svg: disconnect,
-    width: 24,
-    heigth: 24,
-  },
+export const settingsIcons: Record<SettingIconNames, number> = {
+  notifiche,
+  privacy,
+  modify,
+  help,
+  disconnect,
 }

@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import { FC } from "react"
 import { ImageBackground, Pressable, View, ViewStyle } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 

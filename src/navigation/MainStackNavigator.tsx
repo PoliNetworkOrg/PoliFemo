@@ -3,7 +3,7 @@
  * Component encapsulating the pages of the Main Navigator.
  */
 
-import React, { FC } from "react"
+import { FC } from "react"
 import { createStackNavigator } from "@react-navigation/stack"
 import { MainStackNavigatorParams } from "navigation/NavigationTypes"
 import { Home } from "pages/Home"

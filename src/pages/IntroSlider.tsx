@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import { FC } from "react"
 import { StyleSheet, View, Text, Image } from "react-native"
 import AppIntroSlider from "react-native-app-intro-slider"
 import IIcon from "react-native-vector-icons/Ionicons"
