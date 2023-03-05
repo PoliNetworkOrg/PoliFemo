@@ -8,7 +8,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { CampusItem } from "pages/FreeClass/CampusChoice"
 import { Icon } from "components/Icon"
 import iconMaps from "assets/freeClassrooms/iconMaps.svg"
-import { Group } from "@shopify/react-native-skia"
 
 interface MapProps {
   userLatitude: number
