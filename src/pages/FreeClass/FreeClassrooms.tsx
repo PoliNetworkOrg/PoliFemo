@@ -10,14 +10,7 @@ import position1Icon from "assets/freeClassrooms/position1.svg"
 import position2Icon from "assets/freeClassrooms/position2.svg"
 import * as Location from "expo-location"
 import { ContentWrapperScroll } from "components/ContentWrapperScroll"
-import {
-  addHours,
-  formatDate,
-  getExpirationDateRooms,
-  getSearchEndDate,
-  getSearchStartDate,
-  isSameDay,
-} from "utils/rooms"
+import { formatDate, getExpirationDateRooms, isSameDay } from "utils/rooms"
 import { api, RetryType } from "api"
 import { RoomsSearchDataContext } from "contexts/rooms"
 import { Icon } from "components/Icon"
@@ -54,11 +47,33 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
   const { navigate } = useNavigation()
   const { palette } = usePalette()
 
-  const { rooms, setRooms, date, acronym } = useContext(RoomsSearchDataContext)
+  const { rooms, setRooms, date, acronym, setIsRoomsSearching } = useContext(
+    RoomsSearchDataContext
+  )
 
   //main function that handles the call to the API in order to obtain the list of freeclassRooms
   const getAllRoomsFromApi = async () => {
-    console.log("getAllRoomsApi")
+    setIsRoomsSearching(true)
+    const { data, expire } = await api.rooms.getFreeRoomsDay(
+      acronym,
+      formatDate(date),
+      { maxRetries: 1, retryType: RetryType.RETRY_N_TIMES }
+    )
+    if (data.length > 0) {
+      const newGlobalRooms = { ...rooms }
+      newGlobalRooms[acronym].rooms = data
+      const expirationDate = getExpirationDateRooms(expire)
+      //update expiration date or reset
+      newGlobalRooms[acronym].expireAt =
+        expirationDate?.toISOString() ?? undefined
+      //update searchDate
+      newGlobalRooms[acronym].searchDate = date.toISOString()
+      setRooms(newGlobalRooms)
+    }
+    setIsRoomsSearching(false)
+  }
+
+  useEffect(() => {
     if (!acronym) {
       return
     }
@@ -77,33 +92,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
         }
       }
     }
-    console.log("search expired or not relevant")
-    //search if expired or is not relevant
-
-    console.log("calling")
-    const { data, expire } = await api.rooms.getFreeRoomsDay(
-      acronym,
-      formatDate(date),
-      { maxRetries: 1, retryType: RetryType.RETRY_N_TIMES }
-    )
-    console.log("awaited?" + data.length)
-    if (data.length > 0) {
-      const newGlobalRooms = rooms
-      newGlobalRooms[acronym].rooms = data
-      const expirationDate = getExpirationDateRooms(expire)
-      //update expiration date or reset
-      newGlobalRooms[acronym].expireAt =
-        expirationDate?.toISOString() ?? undefined
-      //update searchDate
-      newGlobalRooms[acronym].searchDate = date.toISOString()
-      setRooms(newGlobalRooms)
-      console.log(rooms)
-      console.log(expirationDate?.toISOString())
-      console.log("set new rooms")
-    }
-  }
-
-  useEffect(() => {
+    //expired and not relevant
     void getAllRoomsFromApi()
   }, [date, acronym])
 

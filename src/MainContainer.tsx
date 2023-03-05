@@ -8,7 +8,6 @@ import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { RoomsSearchDataContext } from "contexts/rooms"
 import { GlobalRoomListInterface, ValidAcronym } from "utils/rooms"
-import { BuildingItem } from "pages/FreeClass/BuildingChoice"
 
 /**
  * The Main Container.
@@ -26,11 +25,9 @@ export const MainContainer: FC = () => {
   //rooms search date
   const [date, setDate] = useState(new Date())
 
-  const [acronym, setAcronym] = useState<ValidAcronym | undefined>(undefined)
+  const [acronym, setAcronym] = useState<ValidAcronym>("MIA")
 
-  const [currentBuilding, setCurrentBuilding] = useState<
-    BuildingItem | undefined
-  >(undefined)
+  const [toggleSearchNow, setToggleSearchNow] = useState(false)
 
   const [globalRoomList, setGlobalRoomList] = useState<GlobalRoomListInterface>(
     {
@@ -45,6 +42,8 @@ export const MainContainer: FC = () => {
       COE: { rooms: [] },
     }
   )
+
+  const [isRoomsSearching, setIsRoomSearching] = useState(false)
 
   useEffect(() => {
     console.log("Loading tags preferences from storage")
@@ -78,9 +77,10 @@ export const MainContainer: FC = () => {
     >
       <RoomsSearchDataContext.Provider
         value={{
-          currentBuilding: currentBuilding,
-          setCurrentBuilding: (building: BuildingItem | undefined) =>
-            setCurrentBuilding(building),
+          toggleSearchNow: toggleSearchNow,
+          setToggleSearchNow: val => setToggleSearchNow(val),
+          isRoomsSearching: isRoomsSearching,
+          setIsRoomsSearching: (val: boolean) => setIsRoomSearching(val),
           acronym: acronym,
           setAcronym: (acronym: ValidAcronym) => setAcronym(acronym),
           date: date,

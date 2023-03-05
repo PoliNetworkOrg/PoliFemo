@@ -1,9 +1,8 @@
-import { FC, useMemo } from "react"
+import { FC } from "react"
 import { View } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
 
-import { BlendMode, Skia, useSVG } from "@shopify/react-native-skia"
 import tick from "assets/freeClassrooms/tick.svg"
 import { Icon } from "components/Icon"
 
@@ -14,24 +13,6 @@ interface RoomUtilsTileProps {
 
 export const RoomUtilsTile: FC<RoomUtilsTileProps> = props => {
   const { palette, isLight, sliderBorderColor } = usePalette()
-
-  const tickSvg = useSVG(tick)
-
-  const paintTick = useMemo(() => Skia.Paint(), [])
-  paintTick.setColorFilter(
-    Skia.ColorFilter.MakeBlend(
-      Skia.Color(
-        props.status
-          ? isLight
-            ? palette.primary
-            : palette.lighter
-          : isLight
-          ? palette.lighter
-          : palette.primary
-      ),
-      BlendMode.SrcIn
-    )
-  )
 
   return (
     <View

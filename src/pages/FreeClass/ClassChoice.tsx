@@ -1,14 +1,13 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { useContext, useEffect, useState } from "react"
-import { View } from "react-native"
+import { ActivityIndicator, View } from "react-native"
 import { Title } from "components/Text"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { getBuildingCoords, isRoomFree } from "utils/rooms"
 import { RoomsSearchDataContext } from "contexts/rooms"
-import { Room, RoomSimplified } from "api/rooms"
-import { useMounted } from "utils/useMounted"
+import { Room } from "api/rooms"
 import { Switch } from "react-native-switch"
 import { usePalette } from "utils/colors"
 import { ErrorMessage } from "components/FreeClass/ErrorMessage"
@@ -19,7 +18,15 @@ import { ErrorMessage } from "components/FreeClass/ErrorMessage"
 export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
   const { building } = props.route.params
 
-  const { date, setDate, rooms, acronym } = useContext(RoomsSearchDataContext)
+  const {
+    date,
+    setDate,
+    rooms,
+    acronym,
+    isRoomsSearching,
+    toggleSearchNow,
+    setToggleSearchNow,
+  } = useContext(RoomsSearchDataContext)
 
   const coords = getBuildingCoords(building.campus, building.name)
 
@@ -27,30 +34,25 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
 
   const [filteredRooms, setFilteredRooms] = useState<Room[]>([])
 
-  const [toggle, setToggle] = useState(false)
-
   const { backgroundSecondary, palette, isLight } = usePalette()
 
-  //apply date filters
+  //update rooms from which to apply date filters
   useEffect(() => {
-    console.log("FILTERING CLASS CHOICE")
-    const newFilteredRooms = buildingRooms.filter(room => {
-      return isRoomFree(room, date, toggle)
-    })
-    setFilteredRooms(newFilteredRooms ?? [])
-  }, [buildingRooms, toggle])
-
-  //update room from which to apply date filters
-  useEffect(() => {
-    console.log("CALL SET ROOM BUILDINGS")
-    console.log(rooms[building.campus.acronym].expireAt)
     const newBuildingRooms = rooms[building.campus.acronym].rooms.filter(
       room => {
         return building.fullName === room.building
       }
     )
     setBuildingRooms(newBuildingRooms)
-  }, [rooms[acronym ?? "MIA"].expireAt])
+  }, [rooms[acronym].rooms])
+
+  //apply date and toggle filters
+  useEffect(() => {
+    const newFilteredRooms = buildingRooms.filter(room => {
+      return isRoomFree(room, date, toggleSearchNow)
+    })
+    setFilteredRooms(newFilteredRooms ?? [])
+  }, [buildingRooms, toggleSearchNow, date])
 
   return (
     <PageWrapper style={{ marginTop: 106 }}>
@@ -90,9 +92,9 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
               textAlign: "auto",
               fontFamily: "Roboto_700Bold",
             }}
-            value={toggle}
+            value={toggleSearchNow}
             onValueChange={value => {
-              setToggle(value)
+              setToggleSearchNow(value)
             }}
             changeValueImmediately={true}
             barHeight={40}
@@ -103,7 +105,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
             circleBorderWidth={0}
             innerCircleStyle={{
               borderWidth: 1,
-              borderColor: toggle
+              borderColor: toggleSearchNow
                 ? palette.accent
                 : isLight
                 ? "#EBEBEB"
@@ -123,7 +125,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
       <View style={{ flex: 1, marginTop: 26, marginBottom: 93 }}>
-        {filteredRooms?.length === 0 ? (
+        {filteredRooms?.length === 0 && !isRoomsSearching ? (
           <ErrorMessage
             message="Non ci sono aule disponibili"
             styleView={{ marginTop: 100, marginHorizontal: 20 }}
@@ -135,13 +137,15 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
               textAlign: "center",
             }}
           />
-        ) : (
+        ) : !isRoomsSearching && filteredRooms.length > 0 ? (
           <FreeClassList
             data={filteredRooms}
             date={date}
             latitude={coords?.latitude}
             longitude={coords?.longitude}
           />
+        ) : (
+          <ActivityIndicator size={"large"} style={{ marginTop: 100 }} />
         )}
       </View>
     </PageWrapper>

@@ -6,19 +6,14 @@ import { Map } from "./Map"
 import { FreeClassList } from "./FreeClassList"
 import { PermissionStatus } from "expo-location"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
-import { ConstructionType, Room, RoomSimplified } from "api/rooms"
+import { ConstructionType, Room } from "api/rooms"
 import { useNavigation } from "@react-navigation/native"
 import { PositionPicker } from "./PositionPicker"
 import { CampusItem } from "pages/FreeClass/CampusChoice"
 import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
 import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
 import { api } from "api"
-import {
-  addHours,
-  formatDate,
-  getBuildingInfo,
-  ValidAcronym,
-} from "utils/rooms"
+import { formatDate, getBuildingInfo, ValidAcronym } from "utils/rooms"
 import { ErrorMessage } from "./ErrorMessage"
 
 interface PositionModalityProps {
@@ -66,8 +61,6 @@ export const PositionModality: FC<PositionModalityProps> = props => {
       }
     }
   }
-
-  const dateEnd = addHours(new Date(), 3)
 
   const findRoomsAvailable = async (headquarter: HeadquarterItem) => {
     //call the API

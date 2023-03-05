@@ -1,14 +1,17 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { BuildingItem } from "pages/FreeClass/BuildingChoice"
 import React from "react"
 import { GlobalRoomListInterface, ValidAcronym } from "utils/rooms"
 
 export type RoomsSearchDataContextProps = {
-  currentBuilding: BuildingItem | undefined
+  toggleSearchNow: boolean
 } & {
-  setCurrentBuilding: (building: BuildingItem | undefined) => void
+  setToggleSearchNow: (val: boolean) => void
 } & {
-  acronym: ValidAcronym | undefined
+  isRoomsSearching: boolean
+} & {
+  setIsRoomsSearching: (val: boolean) => void
+} & {
+  acronym: ValidAcronym
 } & {
   setAcronym: (acronym: ValidAcronym) => void
 } & { date: Date } & {
@@ -19,8 +22,10 @@ export type RoomsSearchDataContextProps = {
 
 export const RoomsSearchDataContext =
   React.createContext<RoomsSearchDataContextProps>({
-    currentBuilding: undefined,
-    setCurrentBuilding: () => null,
+    toggleSearchNow: false,
+    setToggleSearchNow: () => null,
+    isRoomsSearching: false,
+    setIsRoomsSearching: () => null,
     acronym: "COE",
     setAcronym: () => null,
     date: new Date("2022-05-18T12:15:00Z"),

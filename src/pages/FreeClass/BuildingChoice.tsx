@@ -5,7 +5,7 @@ import { Title } from "components/Text"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { CampusItem } from "./CampusChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
-import { Room, RoomSimplified } from "api/rooms"
+import { Room } from "api/rooms"
 import { ConstructionType } from "api/rooms"
 import { DefaultList } from "components/FreeClass/DefaultList"
 import { formatBuildingName, isCampusCorrect, isRoomFree } from "utils/rooms"
@@ -30,14 +30,15 @@ export interface BuildingItem {
 export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
   const { campus } = props.route.params
 
-  const [buildingList, setBuildingList] = useState<BuildingItem[]>()
+  const [buildingList, setBuildingList] = useState<BuildingItem[]>([])
 
   const [error, setError] = useState<boolean>(false)
 
-  const { rooms, date, setDate } = useContext(RoomsSearchDataContext)
+  const { rooms, date, setDate, isRoomsSearching } = useContext(
+    RoomsSearchDataContext
+  )
 
   const findAvailableBuildings = () => {
-    console.log("findAvailableBuildings")
     try {
       const currRooms = rooms[campus.acronym].rooms
       if (currRooms.length > 0) {
@@ -100,7 +101,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
         )}
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
-      {error || buildingList?.length == 0 ? (
+      {error || (!isRoomsSearching && buildingList.length === 0) ? (
         <ErrorMessage
           message="Non ci sono edifici disponibili"
           styleView={{ marginTop: 100, marginHorizontal: 20 }}
@@ -112,7 +113,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
             textAlign: "center",
           }}
         />
-      ) : buildingList !== undefined ? (
+      ) : !isRoomsSearching && buildingList ? (
         <DefaultList dataToShow={buildingList} />
       ) : (
         <ActivityIndicator size={"large"} style={{ marginTop: 100 }} />
