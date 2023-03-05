@@ -10,14 +10,23 @@ import {
 import { getRadiiFromStyle } from "utils/layout"
 import { BoxShadowCanvas, BoxShadowCanvasProps } from "./BoxShadowCanvas"
 
-interface BoxShadowProps extends ViewProps {
+export interface BoxShadowViewProps extends ViewProps {
   shadow: BoxShadowCanvasProps["shadow"]
   canvasStyle?: BoxShadowCanvasProps["canvasStyle"]
   overrideCanvasDimensions?: BoxShadowCanvasProps["canvasDimensions"]
   contentContainerStyle?: StyleProp<ViewStyle>
 }
 
-export const BoxShadowView: React.FC<BoxShadowProps> = ({
+/**
+ * A view that renders a box shadow on the upper corner of the view.
+ * This has static dimensions for performance reasons, defaults to the width of
+ * the screen and the minimum height to contain all corner radii.
+ * To use custom dimensions, use `{@link overrideCanvasDimensions}`.
+ *
+ * If you need to render a shadow on a view with dynamic dimensions, use
+ * `{@link AdaptiveShadowView}`.
+ */
+export const BoxShadowView: React.FC<BoxShadowViewProps> = ({
   shadow,
   canvasStyle,
   overrideCanvasDimensions,

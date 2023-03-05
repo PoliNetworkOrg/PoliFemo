@@ -1,8 +1,6 @@
 import React, { useEffect } from "react"
-import { ModalCustom } from "components/Modal"
+import { Modal } from "components/Modal"
 import { Picker } from "@react-native-picker/picker"
-import { ButtonCustom } from "components/Button"
-import { View } from "react-native"
 import { usePalette } from "utils/colors"
 
 interface ModalPickerProps<T> {
@@ -57,12 +55,22 @@ export function ModalPicker<T>(props: ModalPickerProps<T>) {
   }, [props.selectedValue, props.elements])
 
   return (
-    <ModalCustom
+    <Modal
       isShowing={props.isShowing}
-      onClose={props.onClose}
       centerText={props.centerText}
       title={props.title}
       subTitle={props.subTitle}
+      buttons={[
+        {
+          light: true,
+          text: "Annulla",
+          onPress: () => props.onClose(),
+        },
+        {
+          text: "OK",
+          onPress: () => props.onSelect(selectedValue),
+        },
+      ]}
     >
       <Picker
         style={{
@@ -84,27 +92,6 @@ export function ModalPicker<T>(props: ModalPickerProps<T>) {
           />
         ))}
       </Picker>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-          alignItems: "flex-end",
-          marginBottom: 32,
-          marginTop: 16,
-        }}
-      >
-        <ButtonCustom
-          light={true}
-          text="Annulla"
-          onPress={() => props.onClose()}
-        />
-        <ButtonCustom
-          light={false}
-          text="OK"
-          onPress={() => props.onSelect(selectedValue)}
-        />
-      </View>
-    </ModalCustom>
+    </Modal>
   )
 }

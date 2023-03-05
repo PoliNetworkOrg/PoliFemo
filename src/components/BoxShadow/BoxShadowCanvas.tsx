@@ -62,7 +62,7 @@ export const BoxShadowCanvas: FC<BoxShadowCanvasProps> = ({
   }
   const [r, g, b, a] = c
 
-  const viewBoxOffset = shad.spread + shad.blur
+  const viewBoxOffset = shad.spread + shad.blur * 2
   const width = canvasDimensions?.width ?? 30
   const height = canvasDimensions?.height ?? 30
   const totWidth = width + viewBoxOffset * 2
