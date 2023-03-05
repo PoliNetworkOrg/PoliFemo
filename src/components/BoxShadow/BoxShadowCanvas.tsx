@@ -108,14 +108,16 @@ export const BoxShadowCanvas: FC<BoxShadowCanvasProps> = ({
     shad.offset.y,
     shad.opacity,
     shad.spread,
-    canvasDimensions?.height,
-    canvasDimensions?.width,
+    height,
+    width,
     canvasDimensions?.radii,
   ])
 
   if (!svg) {
     throw new Error("Could not create SVG")
   }
+
+  if (width === 0 || height === 0) return null
 
   return (
     <Canvas
