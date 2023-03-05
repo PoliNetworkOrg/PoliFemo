@@ -5,7 +5,7 @@ import { BodyText, Text } from "components/Text"
 import { extractBuilding, extractRoom } from "utils/rooms"
 import MapView from "react-native-maps"
 import expand from "assets/freeClassrooms/expand.svg"
-import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
+import { Icon } from "components/Icon"
 
 interface InfoMapTileProps {
   roomName: string
@@ -21,8 +21,6 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
 
   const building = extractBuilding(props.building)
   const roomName = extractRoom(props.roomName)
-
-  const expandSvg = useSVG(expand)
 
   const latitude = props.latitude
   const longitude = props.longitude
@@ -161,34 +159,18 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
                   elevation: 15,
                 }}
               >
-                {expand && expandSvg && (
-                  <View
-                    style={{
-                      position: "absolute",
-                      width: 20,
-                      height: 20,
-                      bottom: 8,
-                      right: 8,
-                      zIndex: 2,
-                    }}
-                  >
-                    <Canvas
-                      style={{
-                        flex: 1,
-                        width: 20,
-                        height: 20,
-                      }}
-                    >
-                      <ImageSVG
-                        svg={expandSvg}
-                        x={0}
-                        y={0}
-                        width={20}
-                        height={20}
-                      />
-                    </Canvas>
-                  </View>
-                )}
+                <View
+                  style={{
+                    position: "absolute",
+                    width: 20,
+                    height: 20,
+                    bottom: 8,
+                    right: 8,
+                    zIndex: 2,
+                  }}
+                >
+                  <Icon source={expand} />
+                </View>
                 <MapView
                   style={{
                     position: "absolute",

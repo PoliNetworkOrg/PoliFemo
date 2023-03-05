@@ -20,6 +20,7 @@ import {
 } from "utils/rooms"
 import { api, RetryType } from "api"
 import { RoomsSearchDataContext } from "contexts/rooms"
+import { Icon } from "components/Icon"
 
 const { width } = Dimensions.get("window")
 
@@ -105,10 +106,6 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
     void getAllRoomsFromApi()
   }, [date, acronym])
 
-  const campusSVG = useSVG(campusIcon)
-  const position1SVG = useSVG(position1Icon)
-  const position2SVG = useSVG(position2Icon)
-
   const [geolocation, setGeoloaction] = useState<boolean>(false)
 
   const handlePositionPressed = async () => {
@@ -165,41 +162,24 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
                 : () => handlePositionPressed()
             }
           >
-            <Canvas
-              style={{
-                flex: 1,
-                width: item.type === SearchClassType.HEADQUARTER ? 90 : 80,
-                alignSelf: "center",
-                marginTop: item.type === SearchClassType.HEADQUARTER ? 33 : 28,
-              }}
-            >
-              {item.type === SearchClassType.GPS_POSITION && position1SVG && (
-                <ImageSVG
-                  svg={position1SVG}
-                  x={11}
-                  y={0}
-                  width={54}
-                  height={76}
+            {item.type === SearchClassType.HEADQUARTER ? (
+              <Icon
+                style={{ marginTop: 33, marginBottom: 25 }}
+                source={campusIcon}
+              />
+            ) : (
+              <>
+                <Icon style={{ marginTop: 28 }} source={position1Icon} />
+                <Icon
+                  style={{ marginTop: -11, marginLeft: 3, marginBottom: 25 }}
+                  source={position2Icon}
                 />
-              )}
-              {item.type === SearchClassType.GPS_POSITION && position2SVG && (
-                <ImageSVG
-                  svg={position2SVG}
-                  x={0}
-                  y={65}
-                  width={79}
-                  height={27}
-                />
-              )}
-              {item.type === SearchClassType.HEADQUARTER && campusSVG && (
-                <ImageSVG svg={campusSVG} x={0} y={0} width={90} height={85} />
-              )}
-            </Canvas>
+              </>
+            )}
             <BodyText
               style={{
                 fontWeight: "300",
                 color: "white",
-                marginBottom: 23,
               }}
             >
               {item.text[0]}{" "}
