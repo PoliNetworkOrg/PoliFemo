@@ -13,6 +13,7 @@ import * as Location from "expo-location"
 import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import {
   addHours,
+  formatDate,
   getExpirationDateRooms,
   getSearchEndDate,
   getSearchStartDate,
@@ -57,6 +58,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
 
   //main function that handles the call to the API in order to obtain the list of freeclassRooms
   const getAllRoomsFromApi = async () => {
+    console.log("getAllRoomsApi")
     if (!acronym) {
       return
     }
@@ -75,29 +77,29 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
         }
       }
     }
+    console.log("search expired or not relevant")
     //search if expired or is not relevant
-    try {
-      const startDate = addHours(getSearchStartDate(date), 1)
-      const endDate = addHours(getSearchEndDate(date), 1)
-      const { data, expire } = await api.rooms.getFreeRoomsTimeRange(
-        acronym,
-        startDate.toISOString(),
-        endDate.toISOString(),
-        { maxRetries: 1, retryType: RetryType.RETRY_N_TIMES }
-      )
-      if (data.length > 0) {
-        const newGlobalRooms = rooms
-        newGlobalRooms[acronym].rooms = data
-        const expirationDate = getExpirationDateRooms(expire)
-        //update expiration date or reset
-        newGlobalRooms[acronym].expireAt =
-          expirationDate?.toISOString() ?? undefined
-        //update searchDate
-        newGlobalRooms[acronym].searchDate = date.toISOString()
-        setRooms(newGlobalRooms)
-      }
-    } catch (err) {
-      console.log(err)
+
+    console.log("calling")
+    const { data, expire } = await api.rooms.getFreeRoomsDay(
+      acronym,
+      formatDate(date),
+      { maxRetries: 1, retryType: RetryType.RETRY_N_TIMES }
+    )
+    console.log("awaited?" + data.length)
+    if (data.length > 0) {
+      const newGlobalRooms = rooms
+      newGlobalRooms[acronym].rooms = data
+      const expirationDate = getExpirationDateRooms(expire)
+      //update expiration date or reset
+      newGlobalRooms[acronym].expireAt =
+        expirationDate?.toISOString() ?? undefined
+      //update searchDate
+      newGlobalRooms[acronym].searchDate = date.toISOString()
+      setRooms(newGlobalRooms)
+      console.log(rooms)
+      console.log(expirationDate?.toISOString())
+      console.log("set new rooms")
     }
   }
 

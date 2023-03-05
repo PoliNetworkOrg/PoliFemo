@@ -6,14 +6,19 @@ import { Map } from "./Map"
 import { FreeClassList } from "./FreeClassList"
 import { PermissionStatus } from "expo-location"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
-import { ConstructionType, RoomSimplified } from "api/rooms"
+import { ConstructionType, Room, RoomSimplified } from "api/rooms"
 import { useNavigation } from "@react-navigation/native"
 import { PositionPicker } from "./PositionPicker"
 import { CampusItem } from "pages/FreeClass/CampusChoice"
 import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
 import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
 import { api } from "api"
-import { addHours, getBuildingInfo, ValidAcronym } from "utils/rooms"
+import {
+  addHours,
+  formatDate,
+  getBuildingInfo,
+  ValidAcronym,
+} from "utils/rooms"
 
 interface PositionModalityProps {
   currentCoords: number[]
@@ -37,7 +42,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
 
   const [status, setStatus] = useState<ButtonType>(ButtonType.MAP)
 
-  const [roomList, setRoomList] = useState<RoomSimplified[]>()
+  const [roomList, setRoomList] = useState<Room[]>()
 
   const [buildingList, setBuildingList] = useState<BuildingItem[]>()
 
@@ -66,16 +71,15 @@ export const PositionModality: FC<PositionModalityProps> = props => {
   const findRoomsAvailable = async (headquarter: HeadquarterItem) => {
     //call the API
     try {
-      const { data } = await api.rooms.getFreeRoomsTimeRange(
+      const { data } = await api.rooms.getFreeRoomsDay(
         headquarter.acronym,
-        new Date().toISOString(),
-        dateEnd.toISOString()
+        formatDate(new Date())
       )
       const response = data
       if (response.length > 0) {
         const tempBuildingStrings: string[] = []
         const tempBuildingList: BuildingItem[] = []
-        const tempRoomList: RoomSimplified[] = []
+        const tempRoomList: Room[] = []
 
         response.map(room => {
           const roomBuilding: string[] = room.building.split(" ")
@@ -87,12 +91,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
           )
           if (tempRoomList.length <= 100) {
             //dispaly the first 100 rooms
-            tempRoomList.push({
-              roomId: room.room_id,
-              name: room.name,
-              occupancies: room.occupancies,
-              occupancyRate: room.occupancy_rate ?? undefined,
-            })
+            tempRoomList.push(room)
           } else {
             setRoomList(tempRoomList)
           }
@@ -104,14 +103,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
                 room.building
               )
               if (currentBuilding !== undefined) {
-                currentBuilding.freeRoomList = [
-                  {
-                    roomId: room.room_id,
-                    name: room.name,
-                    occupancies: room.occupancies,
-                    occupancyRate: room.occupancy_rate ?? undefined,
-                  },
-                ]
+                currentBuilding.freeRoomList = [room]
                 tempBuildingStrings.push(currentBuildingString)
                 tempBuildingList.push(currentBuilding)
               }
@@ -120,12 +112,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
               const indexElement = tempBuildingStrings.indexOf(
                 currentBuildingString
               )
-              tempBuildingList[indexElement].freeRoomList.push({
-                roomId: room.room_id,
-                name: room.name,
-                occupancies: room.occupancies,
-                occupancyRate: room.occupancy_rate ?? undefined,
-              })
+              tempBuildingList[indexElement].freeRoomList.push(room)
             }
           }
         })

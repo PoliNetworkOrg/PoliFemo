@@ -54,20 +54,18 @@ export const rooms = {
   /**
    * Retrieves available rooms from PoliNetwork server in a given time range.
    */
-  async getFreeRoomsTimeRange(
+  async getFreeRoomsDay(
     campusAcronym: string,
-    dateStart: string,
-    dateEnd: string,
+    date: string,
     options?: RequestOptions
   ) {
     const response = await client.poliNetworkInstance.get<Rooms>(
-      "/v1/rooms/search",
+      "/v1/rooms/search_day",
       {
         ...options,
         params: {
           sede: campusAcronym,
-          hourStart: dateStart,
-          hourStop: dateEnd,
+          date: date,
         },
       }
     )

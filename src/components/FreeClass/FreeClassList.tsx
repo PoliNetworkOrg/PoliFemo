@@ -8,13 +8,13 @@ import overcrowdingIcon from "assets/freeClassrooms/overcrowding.svg"
 import fireIcon from "assets/freeClassrooms/fire.svg"
 import { useNavigation } from "navigation/NavigationTypes"
 import { FlatList } from "react-native-gesture-handler"
-import { Occupancies, RoomSimplified } from "api/rooms"
+import { Occupancies, Room } from "api/rooms"
 import { extractTimeLeft, getStartEndDate } from "utils/rooms"
 
 const { width } = Dimensions.get("window")
 
 interface FreeClassListProps {
-  data: RoomSimplified[] | undefined
+  data: Room[] | undefined
   date: Date
   latitude?: number
   longitude?: number
@@ -54,7 +54,11 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
   const findTimeLeft = (occupancies: Occupancies) => {
     const searchDate = new Date(props.date)
     const { startDate, endDate } = getStartEndDate(searchDate, occupancies)
-    const { hoursLeft, minutesLeft } = extractTimeLeft(startDate, endDate)
+    const { hoursLeft, minutesLeft } = extractTimeLeft(
+      startDate,
+      endDate,
+      searchDate
+    )
     hLeft = hoursLeft
     mLeft = minutesLeft
   }
@@ -85,11 +89,11 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
             try {
               navigate("RoomDetails", {
                 startDate: props.date.toISOString(),
-                roomId: item.roomId,
+                roomId: item.room_id,
                 roomLatitude: props.latitude,
                 roomLongitude: props.longitude,
                 occupancies: item.occupancies,
-                occupancyRate: item.occupancyRate,
+                occupancyRate: item.occupancy_rate,
               })
             } catch (err) {
               console.log(err)
@@ -161,7 +165,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                 marginTop: 12,
               }}
             >
-              {overcrowdingFunction(item.occupancyRate)}
+              {overcrowdingFunction(item.occupancy_rate ?? 0)}
               {"\n"}
               <BodyText
                 style={{
@@ -199,8 +203,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                   />
                 )}
               </Canvas>
-              {item.occupancyRate !== undefined &&
-              item.occupancyRate >= 3.66 ? (
+              {item.occupancy_rate && item.occupancy_rate >= 3.66 ? (
                 <Canvas
                   style={{
                     zIndex: 0,

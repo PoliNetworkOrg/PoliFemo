@@ -4,6 +4,7 @@ import { CampusItem } from "pages/FreeClass/CampusChoice"
 import { ConstructionType, Occupancies, Room, RoomSimplified } from "api/rooms"
 import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
+import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
 
 export function extractRoom(val: string) {
   //split string on characters "." or " " using Regular Expression
@@ -29,23 +30,45 @@ function containsNumber(val: string) {
   return regExp.test(val)
 }
 
-export function extractTimeLeft(now?: Date, targetDate?: Date) {
-  if (!targetDate || !now) {
+export function extractTimeLeft(
+  startDate?: Date,
+  targetDate?: Date,
+  searchDate?: Date
+) {
+  if (!targetDate || !startDate) {
     return { hoursLeft: undefined, minutesLeft: undefined }
   }
-  const deltaMilliseconds = targetDate.getTime() - now.getTime()
-  if (deltaMilliseconds <= 0) {
-    return { hoursLeft: undefined, minutesLeft: undefined }
-  }
-  const hours = Math.floor(deltaMilliseconds / 3.6e6)
-  const minutes = Math.floor(
-    (deltaMilliseconds - hours * 60 * 60 * 1000) / 60000
-  )
-  const hoursLeft = hours.toString()
-  const minutesLeft = minutes.toString()
-  return {
-    hoursLeft: hoursLeft,
-    minutesLeft: minutesLeft,
+  if (
+    searchDate &&
+    searchDate?.getTime() > startDate.getTime() &&
+    searchDate?.getTime() < targetDate.getTime()
+  ) {
+    const deltaMilliseconds = targetDate.getTime() - searchDate.getTime()
+    const hours = Math.floor(deltaMilliseconds / 3.6e6)
+    const minutes = Math.floor(
+      (deltaMilliseconds - hours * 60 * 60 * 1000) / 60000
+    )
+    const hoursLeft = hours.toString()
+    const minutesLeft = minutes.toString()
+    return {
+      hoursLeft: hoursLeft,
+      minutesLeft: minutesLeft,
+    }
+  } else {
+    const deltaMilliseconds = targetDate.getTime() - startDate.getTime()
+    if (deltaMilliseconds <= 0) {
+      return { hoursLeft: undefined, minutesLeft: undefined }
+    }
+    const hours = Math.floor(deltaMilliseconds / 3.6e6)
+    const minutes = Math.floor(
+      (deltaMilliseconds - hours * 60 * 60 * 1000) / 60000
+    )
+    const hoursLeft = hours.toString()
+    const minutesLeft = minutes.toString()
+    return {
+      hoursLeft: hoursLeft,
+      minutesLeft: minutesLeft,
+    }
   }
 }
 
@@ -237,6 +260,23 @@ const compareCampusNames = (c1: string[], c2: string[]) => {
   }
 }
 
+export const isCampusCorrect = (campus: CampusItem, room: Room) => {
+  for (const h of buildingCoordsJSON) {
+    if (h.acronym === campus.acronym) {
+      for (const c of h.campus) {
+        if (c.name.toString() === campus.name.toString()) {
+          for (const b of c.buildings) {
+            if (room.building === b.name) {
+              return true
+            }
+          }
+        }
+      }
+    }
+  }
+  return false
+}
+
 export function addHours(dateStart: Date, hours: number) {
   const tempDate = new Date(dateStart.getTime())
   tempDate.setHours(tempDate.getHours() + hours)
@@ -278,11 +318,23 @@ export const getExpirationDateRooms = (cacheControl?: string) => {
   return undefined
 }
 
-export const isRoomFree = (room: Room | RoomSimplified, date: Date) => {
+export const isRoomFree = (
+  room: Room | RoomSimplified,
+  date: Date,
+  mustBeFreeNow?: boolean
+) => {
   const limitDate = new Date(date)
+
   limitDate.setHours(20, 0, 0, 0)
   if (date.getTime() > limitDate.getTime()) {
+    console.log(room.name + " false")
     return false
+  }
+  if (mustBeFreeNow) {
+    limitDate.setHours(8, 0, 0, 0)
+    if (date.getTime() < limitDate.getTime()) {
+      return false
+    }
   }
 
   const occupancies = room.occupancies
@@ -290,31 +342,87 @@ export const isRoomFree = (room: Room | RoomSimplified, date: Date) => {
 
   const minutesDate = date.getMinutes()
   const hoursDate = date.getHours()
-  Object.keys(occupancies).map(time => {
+  const times = Object.keys(occupancies)
+
+  if (times.length === 0) {
+    //something went terribly wrong (?)
+    return false
+  } else if (times.length === 1) {
+    const time = times[0]
     const hourStr = time.substring(0, 2)
     const minutesStr = time.substring(3)
-    const hour = parseInt(hourStr)
-    const minutes = parseInt(minutesStr)
-
     const isFree = occupancies[`${hourStr}:${minutesStr}`].status === "FREE"
-    if (
-      isFree &&
-      (hour < hoursDate || (hour === hoursDate && minutes < minutesDate))
-    ) {
-      //FREE and before
-      windowFound = true
-    } else if (isFree) {
-      //FREE and after
-      windowFound = true
-    } else if (
-      !isFree &&
-      (hour < hoursDate || (hour === hoursDate && minutes <= minutesDate))
-    ) {
-      windowFound = false
-    }
-  })
+    return isFree
+  }
+  if (!mustBeFreeNow) {
+    times.map(time => {
+      const hourStr = time.substring(0, 2)
+      const minutesStr = time.substring(3)
+      const hour = parseInt(hourStr)
+      const minutes = parseInt(minutesStr)
 
-  return windowFound
+      const isFree = occupancies[`${hourStr}:${minutesStr}`].status === "FREE"
+      if (
+        isFree &&
+        (hour < hoursDate || (hour === hoursDate && minutes < minutesDate))
+      ) {
+        //FREE and before
+        windowFound = true
+      } else if (isFree) {
+        //FREE and after
+        windowFound = true
+      } else if (
+        !isFree &&
+        (hour < hoursDate || (hour === hoursDate && minutes <= minutesDate))
+      ) {
+        windowFound = false
+      }
+    })
+    return windowFound
+  } else {
+    const len = times.length
+    for (let i = 0; i < len - 1; i++) {
+      const prevTime = times[i]
+      const prevTimeHour = prevTime.substring(0, 2)
+      const prevTimeMin = prevTime.substring(3)
+      const prevTimeMinNum = parseInt(prevTimeMin)
+      const prevTimeHourNum = parseInt(prevTimeHour)
+      const isFreePrevTime =
+        occupancies[`${prevTimeHour}:${prevTimeMin}`].status === "FREE"
+      const succTime = times[i + 1]
+      const succTimeHour = succTime.substring(0, 2)
+      const succTimeMin = succTime.substring(3)
+      const succTimeMinNum = parseInt(succTimeMin)
+      const succTimeHourNum = parseInt(succTimeHour)
+      const isFreeSuccTime =
+        occupancies[`${succTimeHour}:${succTimeMin}`].status === "FREE"
+      if (
+        isFreePrevTime &&
+        !isFreeSuccTime &&
+        (hoursDate > prevTimeHourNum ||
+          (hoursDate === prevTimeHourNum && minutesDate >= prevTimeMinNum)) &&
+        (hoursDate < succTimeHourNum ||
+          (hoursDate === succTimeHourNum && minutesDate <= succTimeMinNum))
+      ) {
+        return true
+      }
+    }
+    const lastTime = times[len - 1]
+    const lastTimeHour = lastTime.substring(0, 2)
+    const lastTimeMin = lastTime.substring(3)
+    const lastTimeMinNum = parseInt(lastTimeMin)
+    const lastTimeHourNum = parseInt(lastTimeHour)
+    const isFreeLastTime =
+      occupancies[`${lastTimeHour}:${lastTimeMin}`].status === "FREE"
+    if (
+      isFreeLastTime &&
+      (hoursDate > lastTimeHourNum ||
+        (hoursDate === lastTimeHourNum && minutesDate >= lastTimeMinNum))
+    ) {
+      return true
+    }
+    return false
+  }
 }
 
 export const isSameDay = (date1: Date, date2: Date) => {
@@ -323,6 +431,13 @@ export const isSameDay = (date1: Date, date2: Date) => {
     date1.getMonth() === date2.getMonth() &&
     date1.getDate() === date2.getDate()
   )
+}
+
+export const formatDate = (date: Date) => {
+  const year = date.getFullYear().toString()
+  const month = (date.getMonth() + 1).toString().padStart(2, "0")
+  const day = date.getDate().toString().padStart(2, "0")
+  return `${year}-${month}-${day}`
 }
 
 export type ValidAcronym =

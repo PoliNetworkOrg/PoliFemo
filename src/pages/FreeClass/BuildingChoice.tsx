@@ -8,8 +8,8 @@ import { PageWrapper } from "components/Groups/PageWrapper"
 import { Room, RoomSimplified } from "api/rooms"
 import { ConstructionType } from "api/rooms"
 import { DefaultList } from "components/FreeClass/DefaultList"
-import { formatBuildingName, isRoomFree } from "utils/rooms"
-import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
+import { formatBuildingName, isCampusCorrect, isRoomFree } from "utils/rooms"
+
 import { RoomsSearchDataContext } from "contexts/rooms"
 
 export interface BuildingItem {
@@ -18,8 +18,9 @@ export interface BuildingItem {
   name: string[]
   latitude?: number
   longitude?: number
-  freeRoomList: RoomSimplified[]
-  allRoomList: RoomSimplified[]
+  freeRoomList: Room[]
+  allRoomList: Room[]
+  fullName?: string
 }
 
 /**
@@ -34,26 +35,8 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
 
   const { rooms, date, setDate } = useContext(RoomsSearchDataContext)
 
-  const findCorrectCampus = (campus: CampusItem, room: Room) => {
-    for (const h of buildingCoordsJSON) {
-      if (h.acronym === campus.acronym) {
-        for (const c of h.campus) {
-          if (c.name.toString() === campus.name.toString()) {
-            for (const b of c.buildings) {
-              if (room.building === b.name) {
-                return true
-              }
-            }
-          }
-        }
-      }
-    }
-    return false
-  }
-
-  //filter rooms
-  const findRoomsAvailable = () => {
-    console.log("searching room buildings")
+  const findAvailableBuildings = () => {
+    console.log("findAvailableBuildings")
     try {
       const currRooms = rooms[campus.acronym].rooms
       if (currRooms.length > 0) {
@@ -61,7 +44,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
         const tempBuildings: BuildingItem[] = []
         currRooms
           .filter(room => {
-            return findCorrectCampus(campus, room) && isRoomFree(room, date)
+            return isCampusCorrect(campus, room) && isRoomFree(room, date)
           })
           .map(room => {
             const currentBuildingString = room.building
@@ -71,53 +54,17 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
             if (!tempBuildingStrings.includes(currentBuildingString)) {
               const currentBuilding: BuildingItem = {
                 type: ConstructionType.BUILDING,
-                campus: campus,
                 name: formatBuildingName(room.building),
-                freeRoomList: [
-                  {
-                    roomId: room.room_id,
-                    name: room.name,
-                    occupancies: room.occupancies,
-                    occupancyRate: room.occupancy_rate ?? undefined,
-                  },
-                ],
-                allRoomList: [],
+                campus: campus,
+                freeRoomList: [], //not used
+                allRoomList: [], // not used
+                fullName: room.building,
               }
               tempBuildingStrings.push(currentBuildingString)
               tempBuildings.push(currentBuilding)
-            } else {
-              //element already present in the list
-              const indexElement = tempBuildingStrings.indexOf(
-                currentBuildingString
-              )
-              tempBuildings[indexElement].freeRoomList.push({
-                roomId: room.room_id,
-                name: room.name,
-                occupancies: room.occupancies,
-                occupancyRate: room.occupancy_rate ?? undefined,
-              })
             }
           })
         // populate all rooms list
-        currRooms
-          .filter(room => findCorrectCampus(campus, room))
-          .map(room => {
-            const currentBuildingString = room.building
-              .replace("Edificio ", "Ed. ")
-              .replace("Padiglione ", "Pad. ")
-              .replace("Palazzina ", "Pal. ")
-            if (tempBuildingStrings.includes(currentBuildingString)) {
-              const indexElement = tempBuildingStrings.indexOf(
-                currentBuildingString
-              )
-              tempBuildings[indexElement].allRoomList.push({
-                roomId: room.room_id,
-                name: room.name,
-                occupancies: room.occupancies,
-                occupancyRate: room.occupancy_rate ?? undefined,
-              })
-            }
-          })
         setBuildingList(tempBuildings)
         setError(false)
       } else {
@@ -130,8 +77,8 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
   }
 
   useEffect(() => {
-    void findRoomsAvailable()
-  }, [rooms[campus.acronym], date])
+    void findAvailableBuildings()
+  }, [rooms[campus.acronym].rooms])
 
   return (
     <PageWrapper style={{ marginTop: 106 }}>
