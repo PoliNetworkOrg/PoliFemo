@@ -1,12 +1,5 @@
 import React, { FC } from "react"
-import {
-  View,
-  StyleSheet,
-  Pressable,
-  Dimensions,
-  ViewStyle,
-  StyleProp,
-} from "react-native"
+import { View, StyleSheet, Pressable, ViewStyle, StyleProp } from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import deletesvg from "assets/modal/delete.svg"
@@ -78,7 +71,6 @@ export interface ModalCustomProps {
  *
  */
 export const Modal: FC<ModalCustomProps> = props => {
-  const deviceHeight = Dimensions.get("screen").height
   const { backgroundSecondary, homeBackground, modalBarrier, isLight } =
     usePalette()
   const centerText = props.centerText ?? false
@@ -94,7 +86,7 @@ export const Modal: FC<ModalCustomProps> = props => {
         animationIn={"fadeIn"}
         animationOut={"fadeOut"}
         backdropColor={modalBarrier}
-        deviceHeight={deviceHeight}
+        style={{ margin: 0 }}
         coverScreen={false}
         animationInTiming={props.animationTiming ?? 200}
         animationOutTiming={props.animationTiming ?? 200}
@@ -104,13 +96,8 @@ export const Modal: FC<ModalCustomProps> = props => {
       >
         <View style={[styles.pageWrapper]}>
           {props.onClose && (
-            <Pressable
-              style={{ alignSelf: "flex-end", zIndex: 1 }}
-              onPress={() => props.onClose?.()}
-            >
-              <View style={styles.circle}>
-                <Icon source={deletesvg} />
-              </View>
+            <Pressable style={styles.circle} onPress={() => props.onClose?.()}>
+              <Icon source={deletesvg} />
             </Pressable>
           )}
           <AdaptiveShadowView
@@ -119,13 +106,7 @@ export const Modal: FC<ModalCustomProps> = props => {
               offset: { y: -8 },
               opacity: 0.37,
             }}
-            style={[
-              {
-                width: 320,
-                marginHorizontal: 15,
-              },
-              props.style,
-            ]}
+            style={[{ width: 320 }, props.style]}
             contentContainerStyle={[
               {
                 borderRadius: 12,
@@ -200,6 +181,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   circle: {
+    left: 157, // (modal.width / 2) - (circle.width / 2) + 12
+    zIndex: 1,
     width: 30,
     height: 30,
     backgroundColor: "#ffffff",
