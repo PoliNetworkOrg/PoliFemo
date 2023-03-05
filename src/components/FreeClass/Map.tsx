@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { CampusItem } from "pages/FreeClass/CampusChoice"
 import { Icon } from "components/Icon"
 import iconMaps from "assets/freeClassrooms/iconMaps.svg"
+import { ErrorMessage } from "./ErrorMessage"
 
 interface MapProps {
   userLatitude: number
@@ -66,17 +67,18 @@ export const Map: FC<MapProps> = props => {
     >
       {props.userLatitude === undefined || props.userLongitude === undefined ? (
         props.locationStatus !== PermissionStatus.GRANTED || timer === true ? (
-          <BodyText
-            style={{
-              alignSelf: "center",
+          <ErrorMessage
+            message="Mappa non disponibile"
+            styleView={{
               marginTop: 100,
+            }}
+            styleMessage={{
+              alignSelf: "center",
               color: "red",
-              fontWeight: "700",
+              fontWeight: "400",
               fontSize: 30,
             }}
-          >
-            Mappa non Disponibile
-          </BodyText>
+          />
         ) : (
           <ActivityIndicator
             style={{ marginTop: 50, marginLeft: 3 }}

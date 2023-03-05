@@ -9,6 +9,7 @@ import { getBuildingCoords, isRoomFree } from "utils/rooms"
 import { RoomsSearchDataContext } from "contexts/rooms"
 import { RoomSimplified } from "api/rooms"
 import { useMounted } from "utils/useMounted"
+import { ErrorMessage } from "components/FreeClass/ErrorMessage"
 
 /**
  * In this page the user can select finally the free class he wants.
@@ -57,18 +58,17 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
       </View>
       <View style={{ flex: 1, marginTop: 26, marginBottom: 93 }}>
         {filteredRooms?.length === 0 ? (
-          <BodyText
-            style={{
+          <ErrorMessage
+            message="Non ci sono aule disponibili"
+            styleView={{ marginTop: 100, marginHorizontal: 20 }}
+            styleMessage={{
               alignSelf: "center",
-              marginTop: 100,
               color: "red",
-              fontWeight: "700",
+              fontWeight: "400",
               fontSize: 30,
               textAlign: "center",
             }}
-          >
-            Non ci sono aule disponibili
-          </BodyText>
+          />
         ) : (
           <FreeClassList
             data={filteredRooms}

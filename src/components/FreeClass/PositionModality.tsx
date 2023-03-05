@@ -14,6 +14,7 @@ import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
 import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
 import { api } from "api"
 import { addHours, getBuildingInfo, ValidAcronym } from "utils/rooms"
+import { ErrorMessage } from "./ErrorMessage"
 
 interface PositionModalityProps {
   currentCoords: number[]
@@ -217,13 +218,27 @@ export const PositionModality: FC<PositionModalityProps> = props => {
             marginBottom: 93,
           }}
         >
-          {roomList === undefined ? (
-            <ActivityIndicator
-              style={{ marginTop: 50, marginLeft: 3 }}
-              size="large"
-            />
+          {props.headquarter !== undefined ? (
+            roomList === undefined ? (
+              <ActivityIndicator
+                style={{ marginTop: 50, marginLeft: 3 }}
+                size="large"
+              />
+            ) : (
+              <FreeClassList data={roomList} date={new Date()} />
+            )
           ) : (
-            <FreeClassList data={roomList} date={new Date()} />
+            <ErrorMessage
+              message="Non ci sono aule libere nelle vicinanze"
+              styleView={{ marginTop: 100, marginHorizontal: 20 }}
+              styleMessage={{
+                alignSelf: "center",
+                color: "red",
+                fontWeight: "400",
+                fontSize: 30,
+                textAlign: "center",
+              }}
+            />
           )}
         </View>
       ) : (
