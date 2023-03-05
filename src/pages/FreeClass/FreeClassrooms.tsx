@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { View, Dimensions, Pressable, Alert } from "react-native"
 import { PoliSearchBar } from "components/Home"

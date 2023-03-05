@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react"
+import { FC, useEffect, useState } from "react"
 import { View, Pressable, ActivityIndicator } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"

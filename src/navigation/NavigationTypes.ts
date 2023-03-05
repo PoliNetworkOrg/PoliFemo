@@ -25,7 +25,7 @@ import { Article } from "api/articles"
 import { CampusItem } from "pages/FreeClass/CampusChoice"
 import { NavigatorScreenParams } from "@react-navigation/native"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
-import { Occupancies, RoomDetails } from "api/rooms"
+import { Occupancies } from "api/rooms"
 import { TagWithData } from "contexts/newsPreferences"
 import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
 

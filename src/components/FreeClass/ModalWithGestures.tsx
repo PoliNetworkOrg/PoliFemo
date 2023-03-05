@@ -1,9 +1,9 @@
 import React, { FC } from "react"
 import { View, Modal, StyleSheet, Pressable } from "react-native"
 import { usePalette } from "utils/colors"
-import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
-import { deleteSvg as icon } from "assets/modal"
+import icon from "assets/modal/delete.svg"
 import { gestureHandlerRootHOC } from "react-native-gesture-handler"
+import { Icon } from "components/Icon"
 export interface ModalWithGesturesProps {
   /**
    * content of the modal
@@ -29,8 +29,6 @@ export interface ModalWithGesturesProps {
 export const ModalWithGestures: FC<ModalWithGesturesProps> = props => {
   const { backgroundSecondary, modalBarrier } = usePalette()
 
-  const deleteSvg = useSVG(icon.svg)
-
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const ContentRootHOC = gestureHandlerRootHOC(() => (
     <Pressable
@@ -49,22 +47,7 @@ export const ModalWithGestures: FC<ModalWithGesturesProps> = props => {
           onPress={() => props.onClose()}
         >
           <View style={styles.circle}>
-            <Canvas
-              style={{
-                width: icon.width,
-                height: icon.heigth,
-              }}
-            >
-              {deleteSvg && (
-                <ImageSVG
-                  svg={deleteSvg}
-                  x={0}
-                  y={0}
-                  width={icon.width}
-                  height={icon.heigth}
-                />
-              )}
-            </Canvas>
+            <Icon source={icon} />
           </View>
         </Pressable>
         <Pressable

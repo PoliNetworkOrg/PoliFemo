@@ -1,4 +1,3 @@
-import React from "react"
 import licenses from "assets/settings/licenses.json"
 import { SettingsStackScreen } from "navigation/NavigationTypes"
 import { NavBar } from "components/NavBar"

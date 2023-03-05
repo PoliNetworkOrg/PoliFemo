@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import { FC } from "react"
 import { View } from "react-native"
 import { usePalette } from "utils/colors"
 import { SettingsStack } from "navigation/SettingsNavigator"

@@ -1,5 +1,5 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
-import React, { useState, useEffect, useContext } from "react"
+import { useState, useEffect, useContext } from "react"
 import { ActivityIndicator, View } from "react-native"
 import { Title, BodyText } from "components/Text"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"

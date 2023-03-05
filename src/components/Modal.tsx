@@ -8,10 +8,10 @@ import {
 } from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
-import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
-import { deleteSvg as icon } from "assets/modal"
+import deletesvg from "assets/modal/delete.svg"
 import Modal from "react-native-modal"
 import { Portal } from "react-native-portalize"
+import { Icon } from "./Icon"
 export interface ModalCustomProps {
   /**
    * content of the modal
@@ -49,7 +49,6 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
   const { backgroundSecondary, homeBackground, modalBarrier, isLight } =
     usePalette()
   const centerText = props.centerText ?? false
-  const deleteSvg = useSVG(icon.svg)
 
   return (
     <Portal>
@@ -77,22 +76,7 @@ export const ModalCustom: FC<ModalCustomProps> = props => {
               onPress={() => props.onClose()}
             >
               <View style={styles.circle}>
-                <Canvas
-                  style={{
-                    width: icon.width,
-                    height: icon.heigth,
-                  }}
-                >
-                  {deleteSvg && (
-                    <ImageSVG
-                      svg={deleteSvg}
-                      x={0}
-                      y={0}
-                      width={icon.width}
-                      height={icon.heigth}
-                    />
-                  )}
-                </Canvas>
+                <Icon source={deletesvg} />
               </View>
             </Pressable>
             <View

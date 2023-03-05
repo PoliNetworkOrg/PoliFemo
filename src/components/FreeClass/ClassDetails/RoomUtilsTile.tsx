@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react"
+import { FC, useMemo } from "react"
 import { View } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"

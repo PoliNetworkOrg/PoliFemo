@@ -74,7 +74,8 @@ export const rooms = {
 
     return {
       data: response.data.free_rooms,
-      expire: response.headers["cache-control"],
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      expire: response.headers["cache-control"] as string | undefined,
     }
   },
 

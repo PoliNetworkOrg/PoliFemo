@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { Platform, View } from "react-native"
 import { Title } from "components/Text"

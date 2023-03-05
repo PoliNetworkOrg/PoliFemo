@@ -1,5 +1,14 @@
 import { Group } from "api/groups"
-import { platformIcons } from "assets/groups"
+import whatsapp from "assets/groups/whatsapp.svg"
+import facebook from "assets/groups/facebook.svg"
+import telegram from "assets/groups/telegram.svg"
+
+export interface Filters {
+  year?: string
+  course?: string
+  platform?: string
+  type?: string
+}
 /**
  * return groups ordered by most recent year using a bubble sort algorithm
  * see {@link Groups} Page
@@ -81,11 +90,45 @@ export function createGroupLink(idLink: string, platform: string) {
 
 export function choosePlatformIcon(platform?: string) {
   if (platform === "TG") {
-    return platformIcons.telegram
+    return telegram
   } else if (platform === "FB") {
-    return platformIcons.facebook
+    return facebook
   } else if (platform === "WA") {
-    return platformIcons.whatsapp
+    return whatsapp
   }
-  return undefined
+  return null
+}
+
+export function applyFilters(groups: Group[], filters: Filters): Group[] {
+  let newGroups: Group[] = groups
+  if (filters.year !== undefined) {
+    newGroups = newGroups.filter(group => {
+      return group.year === filters.year
+    })
+  }
+  if (filters.platform !== undefined) {
+    newGroups = newGroups.filter(group => {
+      return group.platform === filters.platform
+    })
+  }
+  if (filters.type !== undefined) {
+    newGroups = newGroups.filter(group => {
+      return group.type === filters.type
+    })
+  }
+  if (filters.course !== undefined) {
+    newGroups = newGroups.filter(group => {
+      return group.degree === filters.course
+    })
+  }
+  return newGroups
+}
+
+export function searchGroups(groups: Group[], search: string): Group[] {
+  return groups.filter(group => {
+    if (!group.class) {
+      return false
+    }
+    return group.class.toLowerCase().includes(search.trimEnd().toLowerCase())
+  })
 }

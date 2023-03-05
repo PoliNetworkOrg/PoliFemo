@@ -2,8 +2,8 @@ import { EventEmitter } from "events"
 import axios, {
   AxiosError,
   AxiosInstance,
-  AxiosRequestConfig,
   AxiosResponse,
+  InternalAxiosRequestConfig,
 } from "axios"
 import { PolimiToken, PoliNetworkToken, Tokens } from "contexts/login"
 import AsyncStorage from "@react-native-async-storage/async-storage"
@@ -87,6 +87,7 @@ export class HttpClient extends EventEmitter {
 
   readonly polimiInstance: AxiosInstance
   readonly poliNetworkInstance: AxiosInstance
+  readonly generalInstance: AxiosInstance
 
   private polimiToken?: PolimiToken
   private poliNetworkToken?: PoliNetworkToken
@@ -118,6 +119,9 @@ export class HttpClient extends EventEmitter {
       baseURL: baseUrlPolimi,
       timeout: 30000,
     })
+    this.generalInstance = axios.create({
+      timeout: 2000,
+    })
     this._initializeInterceptors()
   }
 
@@ -135,9 +139,14 @@ export class HttpClient extends EventEmitter {
       val => this._handleResponse(val),
       err => this._handleError(err as AxiosError, this.polimiInstance)
     )
+    this.generalInstance.interceptors.request.use(this._handleRequest)
+    this.generalInstance.interceptors.response.use(
+      val => this._handleResponse(val),
+      err => this._handleError(err as AxiosError, this.generalInstance)
+    )
   }
 
-  private _handleRequest = (config: AxiosRequestConfig) => {
+  private _handleRequest = (config: InternalAxiosRequestConfig) => {
     config.headers = config.headers ?? {}
     if (config.authType === AuthType.POLIMI && this.polimiToken) {
       config.headers["Authorization"] = `Bearer ${this.polimiToken.accessToken}`

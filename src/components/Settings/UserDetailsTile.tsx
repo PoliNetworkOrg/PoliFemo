@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import { FC } from "react"
 import { View, Image } from "react-native"
 import { TouchableRipple } from "components/TouchableRipple"
 import { Text } from "components/Text"

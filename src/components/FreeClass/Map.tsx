@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react"
+import { FC, useEffect, useState } from "react"
 import { View, ActivityIndicator, Platform, Pressable } from "react-native"
 import MapView, { Callout, Marker, Region } from "react-native-maps"
 import { PermissionStatus } from "expo-location"

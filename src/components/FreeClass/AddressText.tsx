@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import { FC } from "react"
 import { View, ActivityIndicator } from "react-native"
 import { useSVG, Canvas, ImageSVG } from "@shopify/react-native-skia"
 import PositionArrowIcon from "assets/freeClassrooms/positionArrow.svg"

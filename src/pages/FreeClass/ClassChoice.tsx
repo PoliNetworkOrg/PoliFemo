@@ -1,5 +1,5 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
-import React, { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { View } from "react-native"
 import { BodyText, Title } from "components/Text"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
