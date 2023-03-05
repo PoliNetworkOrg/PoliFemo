@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import { View } from "react-native"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { ContentWrapperScroll } from "components/ContentWrapperScroll"
