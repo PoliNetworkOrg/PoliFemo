@@ -3,14 +3,7 @@ import { View } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
 
-import {
-  BlendMode,
-  Canvas,
-  Group,
-  ImageSVG,
-  Skia,
-  useSVG,
-} from "@shopify/react-native-skia"
+import { BlendMode, Skia, useSVG } from "@shopify/react-native-skia"
 import tick from "assets/freeClassrooms/tick.svg"
 import { Icon } from "components/Icon"
 
@@ -48,24 +41,27 @@ export const RoomUtilsTile: FC<RoomUtilsTileProps> = props => {
         marginTop: 8,
       }}
     >
-        <View
-          style={{
-            width: 15,
-            height: 15,
-            marginRight: 8,
-          }}
-        >
-          <Icon source={tick} color={
+      <View
+        style={{
+          width: 15,
+          height: 15,
+          marginRight: 8,
+        }}
+      >
+        <Icon
+          source={tick}
+          color={
             props.status
-            ? isLight
-              ? palette.primary
-              : palette.lighter
-            : isLight
-            ? palette.lighter
-            : palette.primary
-          } />
-        </View>
-      
+              ? isLight
+                ? palette.primary
+                : palette.lighter
+              : isLight
+              ? palette.lighter
+              : palette.primary
+          }
+        />
+      </View>
+
       <BodyText
         style={{
           fontSize: 13,

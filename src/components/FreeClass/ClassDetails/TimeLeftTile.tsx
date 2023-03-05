@@ -3,7 +3,7 @@ import { View } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
 
-import { BlendMode, Skia, useSVG } from "@shopify/react-native-skia"
+import { BlendMode, Skia } from "@shopify/react-native-skia"
 import clock from "assets/freeClassrooms/clock.svg"
 import { extractTimeLeft, getStartEndDate } from "utils/rooms"
 import { Occupancies } from "api/rooms"

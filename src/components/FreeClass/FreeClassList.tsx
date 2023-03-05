@@ -1,4 +1,3 @@
-import { useSVG, Canvas, ImageSVG } from "@shopify/react-native-skia"
 import { BodyText } from "components/Text"
 import { FC } from "react"
 import { View, Pressable, Dimensions } from "react-native"
