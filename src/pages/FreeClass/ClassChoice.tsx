@@ -1,7 +1,7 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
-import React, { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { View } from "react-native"
-import { BodyText, Title } from "components/Text"
+import { Title } from "components/Text"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { PageWrapper } from "components/Groups/PageWrapper"
@@ -11,6 +11,7 @@ import { Room, RoomSimplified } from "api/rooms"
 import { useMounted } from "utils/useMounted"
 import { Switch } from "react-native-switch"
 import { usePalette } from "utils/colors"
+import { ErrorMessage } from "components/FreeClass/ErrorMessage"
 
 /**
  * In this page the user can select finally the free class he wants.
@@ -123,18 +124,17 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
       </View>
       <View style={{ flex: 1, marginTop: 26, marginBottom: 93 }}>
         {filteredRooms?.length === 0 ? (
-          <BodyText
-            style={{
+          <ErrorMessage
+            message="Non ci sono aule disponibili"
+            styleView={{ marginTop: 100, marginHorizontal: 20 }}
+            styleMessage={{
               alignSelf: "center",
-              marginTop: 100,
               color: "red",
-              fontWeight: "700",
+              fontWeight: "400",
               fontSize: 30,
               textAlign: "center",
             }}
-          >
-            Non ci sono aule disponibili
-          </BodyText>
+          />
         ) : (
           <FreeClassList
             data={filteredRooms}

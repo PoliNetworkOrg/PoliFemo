@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-import React, { FC, useEffect, useState } from "react"
+import { FC, useEffect, useState } from "react"
 import { View } from "react-native"
 import { Tray } from "components/Tray"
 import { usePalette } from "utils/colors"

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react"
+import { FC, useEffect, useState } from "react"
 import { View, Pressable, ActivityIndicator } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
@@ -19,6 +19,7 @@ import {
   getBuildingInfo,
   ValidAcronym,
 } from "utils/rooms"
+import { ErrorMessage } from "./ErrorMessage"
 
 interface PositionModalityProps {
   currentCoords: number[]
@@ -204,13 +205,27 @@ export const PositionModality: FC<PositionModalityProps> = props => {
             marginBottom: 93,
           }}
         >
-          {roomList === undefined ? (
-            <ActivityIndicator
-              style={{ marginTop: 50, marginLeft: 3 }}
-              size="large"
-            />
+          {props.headquarter !== undefined ? (
+            roomList === undefined ? (
+              <ActivityIndicator
+                style={{ marginTop: 50, marginLeft: 3 }}
+                size="large"
+              />
+            ) : (
+              <FreeClassList data={roomList} date={new Date()} />
+            )
           ) : (
-            <FreeClassList data={roomList} date={new Date()} />
+            <ErrorMessage
+              message="Non ci sono aule libere nelle vicinanze"
+              styleView={{ marginTop: 100, marginHorizontal: 20 }}
+              styleMessage={{
+                alignSelf: "center",
+                color: "red",
+                fontWeight: "400",
+                fontSize: 30,
+                textAlign: "center",
+              }}
+            />
           )}
         </View>
       ) : (

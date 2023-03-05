@@ -1,6 +1,5 @@
-import { useSVG, Canvas, ImageSVG } from "@shopify/react-native-skia"
 import { BodyText } from "components/Text"
-import React, { FC } from "react"
+import { FC } from "react"
 import { View, Pressable, Dimensions } from "react-native"
 import { usePalette } from "utils/colors"
 import timerIcon from "assets/freeClassrooms/timer.svg"
@@ -10,6 +9,7 @@ import { useNavigation } from "navigation/NavigationTypes"
 import { FlatList } from "react-native-gesture-handler"
 import { Occupancies, Room } from "api/rooms"
 import { extractTimeLeft, getStartEndDate } from "utils/rooms"
+import { Icon } from "components/Icon"
 
 const { width } = Dimensions.get("window")
 
@@ -31,9 +31,6 @@ enum OvercrowdingTypes {
  */
 export const FreeClassList: FC<FreeClassListProps> = props => {
   const { palette, labelsHighContrast } = usePalette()
-  const timerSVG = useSVG(timerIcon)
-  const overcrowdingSVG = useSVG(overcrowdingIcon)
-  const fireSVG = useSVG(fireIcon)
   const { navigate } = useNavigation()
 
   const overcrowdingFunction = (occupancyRate: number | undefined) => {
@@ -83,7 +80,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
             height: 93,
             backgroundColor: "#8791BD",
             marginBottom: 34,
-            borderRadius: 12,
+            borderRadius: 16,
           }}
           onPress={() => {
             try {
@@ -104,24 +101,12 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
             style={{
               flexDirection: "row",
               width: width - 65,
-              height: 30,
               alignSelf: "center",
               marginTop: 12,
               justifyContent: "center",
             }}
           >
-            <Canvas
-              style={{
-                position: "absolute",
-                width: 28,
-                height: 33,
-                alignSelf: "center",
-              }}
-            >
-              {timerSVG && (
-                <ImageSVG svg={timerSVG} x={0} y={0} width={28} height={33} />
-              )}
-            </Canvas>
+            <Icon source={timerIcon} />
             <BodyText
               style={{
                 position: "absolute",
@@ -130,7 +115,6 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                 color: "white",
                 textAlign: "left",
                 paddingLeft: 100,
-                marginTop: 3,
               }}
             >
               Libera per{"\n"}
@@ -148,79 +132,57 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
           </View>
           <View
             style={{
+              flex: 1,
               flexDirection: "row",
               width: width - 65,
-              height: 51,
               justifyContent: "flex-end",
+              marginTop: 10,
             }}
           >
-            <BodyText
-              style={{
-                position: "absolute",
-                fontWeight: "500",
-                fontSize: 12,
-                color: "#424967",
-                textAlign: "right",
-                paddingRight: 45,
-                marginTop: 12,
-              }}
-            >
-              {overcrowdingFunction(item.occupancy_rate ?? 0)}
-              {"\n"}
+            <View>
               <BodyText
                 style={{
-                  fontWeight: "300",
+                  fontWeight: "500",
                   fontSize: 12,
-                  color: "#414867",
+                  color: "#424967",
+                  textAlign: "right",
                 }}
               >
-                affollato
-              </BodyText>
-            </BodyText>
-            <View
-              style={{
-                position: "relative",
-                width: 40,
-                height: 51,
-              }}
-            >
-              <Canvas
-                style={{
-                  position: "absolute",
-                  zIndex: 1,
-                  width: 40,
-                  height: 51,
-                  marginTop: 10,
-                }}
-              >
-                {overcrowdingSVG && (
-                  <ImageSVG
-                    svg={overcrowdingSVG}
-                    x={3}
-                    y={7}
-                    width={24}
-                    height={19}
-                  />
-                )}
-              </Canvas>
-              {item.occupancy_rate && item.occupancy_rate >= 3.66 ? (
-                <Canvas
+                {overcrowdingFunction(item.occupancy_rate ?? 0)}
+                {"\n"}
+                <BodyText
                   style={{
-                    zIndex: 0,
-                    width: 40,
-                    height: 51,
+                    fontWeight: "300",
+                    fontSize: 12,
+                    color: "#414867",
                   }}
                 >
-                  {fireSVG && (
-                    <ImageSVG
-                      svg={fireSVG}
-                      x={0}
-                      y={4}
-                      width={29}
-                      height={39}
-                    />
-                  )}
-                </Canvas>
+                  affollato
+                </BodyText>
+              </BodyText>
+            </View>
+            <View style={{ marginLeft: 10 }}>
+              <Icon
+                scale={1.2}
+                style={{
+                  marginTop: 4,
+                  zIndex: 1,
+                  height: 50,
+                  marginRight: 10,
+                }}
+                source={overcrowdingIcon}
+              />
+              {item.occupancy_rate && item.occupancy_rate >= 3.66 ? (
+                <Icon
+                  scale={1.1}
+                  style={{
+                    zIndex: 0,
+                    position: "absolute",
+                    marginTop: -12,
+                    marginLeft: -2,
+                  }}
+                  source={fireIcon}
+                />
               ) : undefined}
             </View>
           </View>

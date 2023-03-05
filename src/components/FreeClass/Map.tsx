@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react"
+import { FC, useEffect, useState } from "react"
 import { View, ActivityIndicator, Platform, Pressable } from "react-native"
 import MapView, { Callout, Marker, Region } from "react-native-maps"
 import { PermissionStatus } from "expo-location"
@@ -6,6 +6,9 @@ import { BodyText } from "components/Text"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { CampusItem } from "pages/FreeClass/CampusChoice"
+import { Icon } from "components/Icon"
+import iconMaps from "assets/freeClassrooms/iconMaps.svg"
+import { ErrorMessage } from "./ErrorMessage"
 
 interface MapProps {
   userLatitude: number
@@ -64,17 +67,18 @@ export const Map: FC<MapProps> = props => {
     >
       {props.userLatitude === undefined || props.userLongitude === undefined ? (
         props.locationStatus !== PermissionStatus.GRANTED || timer === true ? (
-          <BodyText
-            style={{
-              alignSelf: "center",
+          <ErrorMessage
+            message="Mappa non disponibile"
+            styleView={{
               marginTop: 100,
+            }}
+            styleMessage={{
+              alignSelf: "center",
               color: "red",
-              fontWeight: "700",
+              fontWeight: "400",
               fontSize: 30,
             }}
-          >
-            Mappa non Disponibile
-          </BodyText>
+          />
         ) : (
           <ActivityIndicator
             style={{ marginTop: 50, marginLeft: 3 }}
@@ -113,13 +117,12 @@ export const Map: FC<MapProps> = props => {
             <Pressable
               //this pressable is a button to return to user current location, on MapKit this feature is not provided by react-native-maps
               style={{
-                backgroundColor: "red",
-                width: 30,
-                height: 30,
+                width: 43,
+                height: 43,
                 alignSelf: "flex-end",
-                marginRight: 12,
+                marginRight: 5,
                 marginTop: 55,
-                borderRadius: 5,
+                borderRadius: 20,
               }}
               onPress={() => {
                 const region: Region = {
@@ -134,7 +137,9 @@ export const Map: FC<MapProps> = props => {
                   JSON.stringify(region)
                 ).catch(err => console.log(err))
               }}
-            />
+            >
+              <Icon source={iconMaps} scale={0.5} />
+            </Pressable>
           ) : undefined}
           {props.buildingList?.map((building, index) => (
             <Marker

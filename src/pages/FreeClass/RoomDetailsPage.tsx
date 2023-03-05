@@ -1,5 +1,5 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { InfoMapTile } from "components/FreeClass/ClassDetails/InfoMapTile"
 import { TimeLeftTile } from "components/FreeClass/ClassDetails/TimeLeftTile"
 import { RoomUtilsSection } from "components/FreeClass/ClassDetails/RoomUtilsSection"

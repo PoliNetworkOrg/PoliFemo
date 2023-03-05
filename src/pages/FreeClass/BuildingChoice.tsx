@@ -1,7 +1,7 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
-import React, { useState, useEffect, useContext } from "react"
+import { useState, useEffect, useContext } from "react"
 import { ActivityIndicator, View } from "react-native"
-import { Title, BodyText } from "components/Text"
+import { Title } from "components/Text"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { CampusItem } from "./CampusChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
@@ -11,6 +11,7 @@ import { DefaultList } from "components/FreeClass/DefaultList"
 import { formatBuildingName, isCampusCorrect, isRoomFree } from "utils/rooms"
 
 import { RoomsSearchDataContext } from "contexts/rooms"
+import { ErrorMessage } from "components/FreeClass/ErrorMessage"
 
 export interface BuildingItem {
   type: ConstructionType
@@ -100,18 +101,17 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
       {error || buildingList?.length == 0 ? (
-        <BodyText
-          style={{
+        <ErrorMessage
+          message="Non ci sono edifici disponibili"
+          styleView={{ marginTop: 100, marginHorizontal: 20 }}
+          styleMessage={{
             alignSelf: "center",
-            marginTop: 100,
             color: "red",
-            fontWeight: "700",
+            fontWeight: "400",
             fontSize: 30,
             textAlign: "center",
           }}
-        >
-          Non ci sono edifici disponibili
-        </BodyText>
+        />
       ) : buildingList !== undefined ? (
         <DefaultList dataToShow={buildingList} />
       ) : (

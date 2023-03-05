@@ -11,6 +11,7 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "prettier",
@@ -24,15 +25,29 @@ module.exports = {
     sourceType: "module",
     tsconfigRootDir: __dirname,
   },
-  plugins: ["react", "@typescript-eslint", "prettier"],
+  plugins: ["react", "@typescript-eslint", "prettier", "unused-imports"],
   rules: {
     "prettier/prettier": "error",
     "no-extra-parens": ["off"],
     "linebreak-style": ["error", "unix"],
     quotes: ["error", "double"],
+
     "react/prop-types": ["off"],
     "react/no-multi-comp": ["error"],
     "react/self-closing-comp": ["error"],
+
+    "@typescript-eslint/no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        vars: "all",
+        varsIgnorePattern: "^_",
+        args: "after-used",
+        argsIgnorePattern: "^_",
+      },
+    ],
+
     "@typescript-eslint/naming-convention": [
       "error",
       {
@@ -52,7 +67,12 @@ module.exports = {
         leadingUnderscore: "allow",
         trailingUnderscore: "allow",
       },
-
+      {
+        selector: "memberLike",
+        format: ["camelCase", "UPPER_CASE"],
+        leadingUnderscore: "allow",
+        trailingUnderscore: "allow",
+      },
       {
         selector: "typeLike",
         format: ["PascalCase"],
@@ -62,6 +82,7 @@ module.exports = {
         format: ["UPPER_CASE"],
       },
     ],
+
     "@typescript-eslint/restrict-plus-operands": "off",
     "@typescript-eslint/no-misused-promises": [
       "error",

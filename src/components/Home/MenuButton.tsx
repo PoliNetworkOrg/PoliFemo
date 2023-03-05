@@ -1,16 +1,15 @@
-import React, { FC, useEffect } from "react"
-import { DataSourceParam } from "@shopify/react-native-skia"
+import { FC, useEffect } from "react"
 import { Pressable, View, Animated } from "react-native"
-import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
 
 import { BodyText } from "components/Text"
 import { usePalette } from "utils/colors"
 import deleteIcon from "assets/menu/delete.svg"
+import { Icon } from "components/Icon"
 
 export interface ButtonInterface {
   id: number
   title: string
-  icon: DataSourceParam
+  icon: number
   onClick: () => void
 }
 
@@ -27,8 +26,6 @@ export const MenuButton: FC<{
 }> = ({ onPress, onLongPress, buttonIcon, isDeleting, onDelete, inMenu }) => {
   const { palette, isDark } = usePalette()
   const color = isDark && inMenu ? palette.lighter : palette.primary
-  const svg = useSVG(buttonIcon.icon)
-  const delIcon = useSVG(deleteIcon)
 
   const animatedValue = new Animated.Value(0)
 
@@ -89,9 +86,7 @@ export const MenuButton: FC<{
               marginTop: 15, //added margin to the top due to the deleting operation
             }}
           >
-            <Canvas style={{ flex: 1, width: 40 }}>
-              {svg && <ImageSVG svg={svg} x={0} y={0} width={40} height={38} />}
-            </Canvas>
+            <Icon style={{ flex: 1, width: 40 }} source={buttonIcon.icon} />
             <BodyText
               style={{
                 fontSize: 10,
@@ -116,11 +111,7 @@ export const MenuButton: FC<{
             }}
             hitSlop={10}
           >
-            <Canvas style={{ flex: 1, width: 27 }}>
-              {delIcon && (
-                <ImageSVG svg={delIcon} x={0} y={0} width={25} height={25} />
-              )}
-            </Canvas>
+            <Icon source={deleteIcon} />
           </Pressable>
         )}
       </Animated.View>

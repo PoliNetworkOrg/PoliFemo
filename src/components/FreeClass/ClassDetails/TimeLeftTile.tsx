@@ -1,19 +1,13 @@
-import React, { FC, useMemo } from "react"
+import { FC, useMemo } from "react"
 import { View } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
 
-import {
-  BlendMode,
-  Canvas,
-  Group,
-  ImageSVG,
-  Skia,
-  useSVG,
-} from "@shopify/react-native-skia"
+import { BlendMode, Skia } from "@shopify/react-native-skia"
 import clock from "assets/freeClassrooms/clock.svg"
 import { extractTimeLeft, getStartEndDate } from "utils/rooms"
 import { Occupancies } from "api/rooms"
+import { Icon } from "components/Icon"
 
 interface TimeLeftTileProps {
   startDate: string
@@ -24,18 +18,9 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
   const { isLight, labelsHighContrast, iconHighContrast, primary } =
     usePalette()
 
-  const clockSvg = useSVG(clock)
-
   const paint = useMemo(() => Skia.Paint(), [])
   paint.setColorFilter(
     Skia.ColorFilter.MakeBlend(Skia.Color(labelsHighContrast), BlendMode.SrcIn)
-  )
-  const paintClock = useMemo(() => Skia.Paint(), [])
-  paintClock.setColorFilter(
-    Skia.ColorFilter.MakeBlend(
-      Skia.Color(isLight ? primary : "#fff"),
-      BlendMode.SrcIn
-    )
   )
 
   const now = new Date()
@@ -170,34 +155,16 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
               alignItems: "center",
             }}
           >
-            {clock && clockSvg && (
-              <View
-                style={{
-                  width: 42,
-                  height: 49,
-                  marginLeft: 12,
-                  marginRight: 16,
-                }}
-              >
-                <Canvas
-                  style={{
-                    flex: 1,
-                    width: 42,
-                    height: 49,
-                  }}
-                >
-                  <Group layer={paintClock}>
-                    <ImageSVG
-                      svg={clockSvg}
-                      x={0}
-                      y={0}
-                      width={42}
-                      height={49}
-                    />
-                  </Group>
-                </Canvas>
-              </View>
-            )}
+            <View
+              style={{
+                width: 42,
+                height: 49,
+                marginLeft: 12,
+                marginRight: 16,
+              }}
+            >
+              <Icon source={clock} color={isLight ? primary : "#fff"} />
+            </View>
             <View>
               <BodyText
                 style={{

@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import { useContext } from "react"
 import { View } from "react-native"
 
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"

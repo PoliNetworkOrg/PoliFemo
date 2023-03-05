@@ -36,10 +36,11 @@ export const Tray: FC<{
     <View
       style={{
         position: "absolute",
-        padding: 5,
-        paddingTop: 56,
+        paddingHorizontal: 5,
+        marginTop: 61,
         flexDirection: "row",
         justifyContent: "flex-end",
+        alignItems: "center",
         width: Dimensions.get("window").width,
       }}
     >
@@ -48,6 +49,7 @@ export const Tray: FC<{
       <TrayButton
         label="notifications"
         onClick={() => props.onNotifications()}
+        style={{ marginTop: 1 }}
       />
       <TrayButton label="settings" onClick={() => props.onSettings()} />
     </View>
