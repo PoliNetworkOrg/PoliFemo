@@ -440,6 +440,26 @@ export const formatDate = (date: Date) => {
   return `${year}-${month}-${day}`
 }
 
+export const getRoomFromId = (
+  rooms: GlobalRoomListInterface,
+  acrList: ValidAcronym[],
+  roomId?: number
+) => {
+  if (!roomId) {
+    return undefined
+  }
+
+  for (const acr of acrList) {
+    const campusRooms = rooms[acr]
+    for (const room of campusRooms.rooms) {
+      if (room.room_id === roomId) {
+        return room
+      }
+    }
+  }
+  return undefined
+}
+
 export type ValidAcronym =
   | "MIA"
   | "MIB"
@@ -466,4 +486,20 @@ export interface GlobalRoomListInterface {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function hasAcronymProp(obj: any): obj is HeadquarterItem {
   return "acronym" in obj
+}
+
+export function isValidAcronym(value: string): value is ValidAcronym {
+  return (
+    value === "MIA" ||
+    value === "MIB" ||
+    value === "MIA" ||
+    value === "MIB" ||
+    value === "CRG" ||
+    value === "LCF" ||
+    value === "PCL" ||
+    value === "MNI" ||
+    value === "MIC" ||
+    value === "MID" ||
+    value === "COE"
+  )
 }
