@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { Platform, View } from "react-native"
 import { Title } from "components/Text"
@@ -13,6 +13,7 @@ import BuildingListJSON from "components/FreeClass/buildingCoords.json"
 import { HeadquarterItem } from "./HeadquarterChoice"
 import { CampusItem } from "./CampusChoice"
 import { ValidAcronym } from "utils/rooms"
+import { RoomsSearchDataContext } from "contexts/rooms"
 
 /**
  * In this page the user can find a room according to his current position.
@@ -26,6 +27,8 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
 
   const [currentCoords, setCurrentCoords] = useState<number[]>([])
   const [headquarter, setHeadquarter] = useState<HeadquarterItem>() //nearest headquarter according to user position
+
+  const { setDate, setAcronym } = useContext(RoomsSearchDataContext)
 
   /**
    * This function finds the nearest headquarter according the user current position.
@@ -57,9 +60,17 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
           acronym: h.acronym as ValidAcronym,
           campusList: tempCampusList,
         })
+        break
       }
     }
   }
+
+  useEffect(() => {
+    if (headquarter) {
+      setAcronym(headquarter.acronym)
+    }
+    setDate(new Date())
+  }, [headquarter])
 
   /**
    * This function finds the user current position.

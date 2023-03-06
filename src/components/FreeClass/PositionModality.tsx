@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react"
+import { FC, useContext, useEffect, useState } from "react"
 import { View, Pressable, ActivityIndicator } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
@@ -6,15 +6,15 @@ import { Map } from "./Map"
 import { FreeClassList } from "./FreeClassList"
 import { PermissionStatus } from "expo-location"
 import { BuildingItem } from "pages/FreeClass/BuildingChoice"
-import { ConstructionType, Room } from "api/rooms"
+import { ConstructionType } from "api/rooms"
 import { useNavigation } from "@react-navigation/native"
 import { PositionPicker } from "./PositionPicker"
 import { CampusItem } from "pages/FreeClass/CampusChoice"
 import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
 import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
-import { api } from "api"
-import { formatDate, getBuildingInfo, ValidAcronym } from "utils/rooms"
+import { getBuildingInfo, ValidAcronym } from "utils/rooms"
 import { ErrorMessage } from "./ErrorMessage"
+import { RoomsSearchDataContext } from "contexts/rooms"
 
 interface PositionModalityProps {
   currentCoords: number[]
@@ -38,11 +38,11 @@ export const PositionModality: FC<PositionModalityProps> = props => {
 
   const [status, setStatus] = useState<ButtonType>(ButtonType.MAP)
 
-  const [roomList, setRoomList] = useState<Room[]>()
-
   const [buildingList, setBuildingList] = useState<BuildingItem[]>()
 
   const { navigate } = useNavigation()
+
+  const { rooms, acronym } = useContext(RoomsSearchDataContext)
 
   const findCampusCoordinates = (campusName: string) => {
     const newCampusName = campusName.split(/ (.*)/, 2) //split name by first space(" ") occurence, es: Bovisa La Masa -> ["Bovisa","La Masa"]
@@ -62,66 +62,45 @@ export const PositionModality: FC<PositionModalityProps> = props => {
     }
   }
 
-  const findRoomsAvailable = async (headquarter: HeadquarterItem) => {
-    //call the API
-    try {
-      const { data } = await api.rooms.getFreeRoomsDay(
-        headquarter.acronym,
-        formatDate(new Date())
-      )
-      const response = data
-      if (response.length > 0) {
-        const tempBuildingStrings: string[] = []
-        const tempBuildingList: BuildingItem[] = []
-        const tempRoomList: Room[] = []
+  const findRoomsAvailable = () => {
+    if (rooms[acronym].rooms.length > 0) {
+      const tempBuildingStrings: string[] = []
+      const tempBuildingList: BuildingItem[] = []
 
-        response.map(room => {
-          const roomBuilding: string[] = room.building.split(" ")
-          roomBuilding[0] += " "
+      rooms[acronym].rooms.map(room => {
+        const roomBuilding: string[] = room.building.split(" ")
+        roomBuilding[0] += " "
 
-          const currentBuildingString = room.building.replace(
-            "Edificio ",
-            "Ed. "
-          )
-          if (tempRoomList.length <= 100) {
-            //dispaly the first 100 rooms
-            tempRoomList.push(room)
-          } else {
-            setRoomList(tempRoomList)
-          }
+        const currentBuildingString = room.building.replace("Edificio ", "Ed. ")
 
-          if (props.headquarter?.campusList !== undefined) {
-            if (!tempBuildingStrings.includes(currentBuildingString)) {
-              const currentBuilding = getBuildingInfo(
-                props.headquarter,
-                room.building
-              )
-              if (currentBuilding !== undefined) {
-                currentBuilding.freeRoomList = [room]
-                tempBuildingStrings.push(currentBuildingString)
-                tempBuildingList.push(currentBuilding)
-              }
-            } else {
-              //element already in the list
-              const indexElement = tempBuildingStrings.indexOf(
-                currentBuildingString
-              )
-              tempBuildingList[indexElement].freeRoomList.push(room)
+        if (props.headquarter?.campusList !== undefined) {
+          if (!tempBuildingStrings.includes(currentBuildingString)) {
+            const currentBuilding = getBuildingInfo(
+              props.headquarter,
+              room.building
+            )
+            if (currentBuilding !== undefined) {
+              currentBuilding.freeRoomList = [room]
+              currentBuilding.fullName = room.building
+              tempBuildingStrings.push(currentBuildingString)
+              tempBuildingList.push(currentBuilding)
             }
+          } else {
+            //element already in the list
+            const indexElement = tempBuildingStrings.indexOf(
+              currentBuildingString
+            )
+            tempBuildingList[indexElement].freeRoomList.push(room)
           }
-        })
-        setBuildingList(tempBuildingList)
-      }
-    } catch (error) {
-      console.log(error)
+        }
+      })
+      setBuildingList(tempBuildingList)
     }
   }
 
   useEffect(() => {
-    if (props.headquarter !== undefined) {
-      void findRoomsAvailable(props.headquarter)
-    }
-  }, [props.headquarter])
+    void findRoomsAvailable()
+  }, [rooms[acronym].rooms])
 
   return (
     <>
@@ -199,13 +178,13 @@ export const PositionModality: FC<PositionModalityProps> = props => {
           }}
         >
           {props.headquarter !== undefined ? (
-            roomList === undefined ? (
+            rooms[acronym].rooms === undefined ? (
               <ActivityIndicator
                 style={{ marginTop: 50, marginLeft: 3 }}
                 size="large"
               />
             ) : (
-              <FreeClassList data={roomList} date={new Date()} />
+              <FreeClassList data={rooms[acronym].rooms} date={new Date()} />
             )
           ) : (
             <ErrorMessage
@@ -228,15 +207,14 @@ export const PositionModality: FC<PositionModalityProps> = props => {
           locationStatus={props.locationStatus}
           buildingList={buildingList}
           campusSearched={campusSearched}
-          onPressMarker={(building: BuildingItem) =>
+          onPressMarker={(building: BuildingItem) => {
             navigate(
               "ClassChoice" as never,
               {
                 building: building,
-                currentDate: new Date().toString(),
               } as never
             )
-          }
+          }}
         />
       )}
     </>
