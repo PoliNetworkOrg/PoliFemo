@@ -28,6 +28,7 @@ import { BuildingItem } from "pages/FreeClass/BuildingChoice"
 import { Occupancies } from "api/rooms"
 import { TagWithData } from "contexts/newsPreferences"
 import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
+import { ValidAcronym } from "utils/rooms"
 
 /**
  * interface containing the info about the params for each page of the stack navigator
@@ -66,6 +67,7 @@ export type MainStackNavigatorParams = {
     roomLongitude?: number
     occupancies: Occupancies
     occupancyRate?: number | null
+    acronymList?: ValidAcronym[]
   }
   ClassChoice: {
     building: BuildingItem

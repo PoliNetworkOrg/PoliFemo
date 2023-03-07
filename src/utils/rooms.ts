@@ -7,9 +7,16 @@ import { BuildingItem } from "pages/FreeClass/BuildingChoice"
 import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
 
 export function extractRoom(val: string) {
+  if (val.toLowerCase().includes("corridoio")) {
+    return val
+  }
   //split string on characters "." or " " using Regular Expression
   const arr = val.split(/[.\s]+/)
   if (arr.length >= 2 && containsNumber(val)) {
+    //for T.0.1 in building 13 -----> 13.T.0.1, idem for L.0.1
+    if (containsLOrT(val)) {
+      return arr.join(".")
+    }
     return arr.slice(1).join(".")
   } else {
     return val
@@ -27,6 +34,11 @@ export function extractBuilding(val: string) {
 function containsNumber(val: string) {
   // if has digits
   const regExp = /\d/g
+  return regExp.test(val)
+}
+
+function containsLOrT(val: string) {
+  const regExp = /(L\.|T\.)/
   return regExp.test(val)
 }
 
@@ -208,6 +220,44 @@ export function getBuildingCoords(
   }
 }
 
+// A slower version of getBuildingCoords but works without knowing campus
+export function getBuildingCoordsWithoutCampus(
+  acronyms?: ValidAcronym[],
+  buildingName?: string
+) {
+  if (!buildingName) {
+    return undefined
+  }
+
+  const acronymList = acronyms ?? [
+    "MIA",
+    "MIB",
+    "MIA",
+    "MIB",
+    "CRG",
+    "LCF",
+    "PCL",
+    "MNI",
+    "MIC",
+    "MID",
+    "COE",
+  ]
+
+  for (const element of BuildingListJSON) {
+    for (const acr of acronymList) {
+      if (element.acronym === acr) {
+        for (const c of element.campus) {
+          for (const b of c.buildings) {
+            if (b.name === buildingName) {
+              return b.coords
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 export function getBuildingInfo(
   headquarter: HeadquarterItem,
   buildingName: string
@@ -301,6 +351,12 @@ export const getSearchStartDate = (searchDate: Date) => {
   const newDate = new Date(searchDate)
   newDate.setHours(8, 0, 0, 0)
   return newDate
+}
+
+export const findTimeLeft = (occupancies: Occupancies, date: Date) => {
+  const { startDate, endDate } = getStartEndDate(date, occupancies)
+  const { hoursLeft, minutesLeft } = extractTimeLeft(startDate, endDate, date)
+  return { hoursLeft, minutesLeft }
 }
 
 export const getExpirationDateRooms = (cacheControl?: string) => {

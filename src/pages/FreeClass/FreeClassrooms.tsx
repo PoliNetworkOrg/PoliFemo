@@ -30,6 +30,7 @@ import roomsJSON from "components/FreeClass/rooms.json"
 import { Room } from "api/rooms"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { PageWrapper } from "components/Groups/PageWrapper"
+import { ScrollView } from "react-native-gesture-handler"
 
 const { width } = Dimensions.get("window")
 
@@ -242,67 +243,82 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
       {isSearchBarSearching ? (
         <ActivityIndicator size={"large"} style={{ marginTop: 100 }} />
       ) : actualSearchableRooms.length === 0 ? (
-        <View style={{ width, alignItems: "center" }}>
-          {freeClassButtons.map(item => (
-            <Pressable
-              key={"freeClass_" + item.id}
-              style={{
-                marginTop: 18,
-                backgroundColor: palette.primary,
-                width: width - 54,
-                height: 190,
-                borderRadius: 12,
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 7,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 4,
-                alignItems: "center",
-              }}
-              onPress={
-                item.type === SearchClassType.HEADQUARTER
-                  ? () => navigate("HeadquarterChoice")
-                  : () => handlePositionPressed()
-              }
-            >
-              {item.type === SearchClassType.HEADQUARTER ? (
-                <Icon
-                  style={{ marginTop: 33, marginBottom: 25 }}
-                  source={campusIcon}
-                />
-              ) : (
-                <>
-                  <Icon style={{ marginTop: 28 }} source={position1Icon} />
-                  <Icon
-                    style={{ marginTop: -11, marginLeft: 3, marginBottom: 25 }}
-                    source={position2Icon}
-                  />
-                </>
-              )}
-              <BodyText
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{
+            paddingBottom: 100,
+          }}
+        >
+          <View style={{ width, alignItems: "center" }}>
+            {freeClassButtons.map(item => (
+              <Pressable
+                key={"freeClass_" + item.id}
                 style={{
-                  fontWeight: "300",
-                  color: "white",
+                  marginTop: 18,
+                  backgroundColor: palette.primary,
+                  width: width - 54,
+                  height: 190,
+                  borderRadius: 12,
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 7,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 4,
+                  alignItems: "center",
                 }}
+                onPress={
+                  item.type === SearchClassType.HEADQUARTER
+                    ? () => navigate("HeadquarterChoice")
+                    : () => handlePositionPressed()
+                }
               >
-                {item.text[0]}{" "}
+                {item.type === SearchClassType.HEADQUARTER ? (
+                  <Icon
+                    style={{ marginTop: 33, marginBottom: 25 }}
+                    source={campusIcon}
+                  />
+                ) : (
+                  <>
+                    <Icon style={{ marginTop: 28 }} source={position1Icon} />
+                    <Icon
+                      style={{
+                        marginTop: -11,
+                        marginLeft: 3,
+                        marginBottom: 25,
+                      }}
+                      source={position2Icon}
+                    />
+                  </>
+                )}
                 <BodyText
                   style={{
-                    fontWeight: "900",
+                    fontWeight: "300",
                     color: "white",
                   }}
                 >
-                  {item.text[1]}
+                  {item.text[0]}{" "}
+                  <BodyText
+                    style={{
+                      fontWeight: "900",
+                      color: "white",
+                    }}
+                  >
+                    {item.text[1]}
+                  </BodyText>
                 </BodyText>
-              </BodyText>
-            </Pressable>
-          ))}
-        </View>
+              </Pressable>
+            ))}
+          </View>
+        </ScrollView>
       ) : (
         <View style={{ flex: 1, marginTop: 12, marginBottom: 93 }}>
-          <FreeClassList data={actualSearchableRooms} date={new Date()} />
+          <FreeClassList
+            data={actualSearchableRooms}
+            date={new Date()}
+            acronymList={acronymList}
+          />
         </View>
       )}
     </PageWrapper>

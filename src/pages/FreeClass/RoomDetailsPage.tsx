@@ -8,18 +8,40 @@ import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import { api } from "api"
 import { RoomDetails } from "api/rooms"
 import { ActivityIndicator } from "react-native"
+import { getBuildingCoordsWithoutCampus } from "utils/rooms"
+import { useMounted } from "utils/useMounted"
 
 export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
-  const { startDate, roomId, roomLatitude, roomLongitude, occupancies } =
-    props.route.params
+  const {
+    startDate,
+    roomId,
+    roomLatitude,
+    roomLongitude,
+    occupancies,
+    acronymList,
+  } = props.route.params
+
+  const isMounted = useMounted()
 
   const [room, setRoom] = useState<RoomDetails>()
+
+  const [latitude, setLatituide] = useState<number | undefined>()
+
+  const [longitude, setLongitude] = useState<number | undefined>()
 
   const getRoomInfo = async () => {
     const selectedRoom = await api.rooms.getRoomInfo(roomId)
     setRoom(selectedRoom)
   }
   useEffect(() => void getRoomInfo(), [])
+
+  useEffect(() => {
+    if ((!roomLatitude || !roomLongitude) && isMounted) {
+      const coords = getBuildingCoordsWithoutCampus(acronymList, room?.building)
+      setLatituide(coords?.latitude)
+      setLongitude(coords?.longitude)
+    }
+  }, [room])
 
   return (
     <ContentWrapperScroll
@@ -33,8 +55,8 @@ export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
             building={room.building}
             capacity={room.capacity}
             roomName={room.name}
-            latitude={roomLatitude}
-            longitude={roomLongitude}
+            latitude={latitude}
+            longitude={longitude}
           />
           <TimeLeftTile startDate={startDate} occupancies={occupancies} />
           <CrowdingSection roomId={roomId} />

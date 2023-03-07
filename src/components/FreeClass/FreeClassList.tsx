@@ -7,8 +7,8 @@ import overcrowdingIcon from "assets/freeClassrooms/overcrowding.svg"
 import fireIcon from "assets/freeClassrooms/fire.svg"
 import { useNavigation } from "navigation/NavigationTypes"
 import { FlatList } from "react-native-gesture-handler"
-import { Occupancies, Room } from "api/rooms"
-import { extractTimeLeft, getStartEndDate } from "utils/rooms"
+import { Room } from "api/rooms"
+import { findTimeLeft, ValidAcronym } from "utils/rooms"
 import { Icon } from "components/Icon"
 
 const { width } = Dimensions.get("window")
@@ -18,6 +18,7 @@ interface FreeClassListProps {
   date: Date
   latitude?: number
   longitude?: number
+  acronymList?: ValidAcronym[]
 }
 
 enum OvercrowdingTypes {
@@ -46,20 +47,6 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
     }
   }
 
-  let hLeft: string | undefined
-  let mLeft: string | undefined
-  const findTimeLeft = (occupancies: Occupancies) => {
-    const searchDate = new Date(props.date)
-    const { startDate, endDate } = getStartEndDate(searchDate, occupancies)
-    const { hoursLeft, minutesLeft } = extractTimeLeft(
-      startDate,
-      endDate,
-      searchDate
-    )
-    hLeft = hoursLeft
-    mLeft = minutesLeft
-  }
-
   return (
     <FlatList
       showsVerticalScrollIndicator={true}
@@ -73,149 +60,158 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
       }}
       data={props.data}
       keyExtractor={(_, index) => index.toString()}
-      renderItem={({ item }) => (
-        <Pressable
-          style={{
-            width: width - 65,
-            height: 93,
-            backgroundColor: "#8791BD",
-            marginBottom: 34,
-            borderRadius: 16,
-          }}
-          onPress={() => {
-            try {
-              navigate("RoomDetails", {
-                startDate: props.date.toISOString(),
-                roomId: item.room_id,
-                roomLatitude: props.latitude,
-                roomLongitude: props.longitude,
-                occupancies: item.occupancies,
-                occupancyRate: item.occupancy_rate,
-              })
-            } catch (err) {
-              console.log(err)
-            }
-          }}
-        >
-          <View
+      renderItem={({ item }) => {
+        const { hoursLeft, minutesLeft } = findTimeLeft(
+          item.occupancies,
+          props.date
+        )
+        return (
+          <Pressable
             style={{
-              flexDirection: "row",
               width: width - 65,
-              alignSelf: "center",
-              marginTop: 12,
-              justifyContent: "center",
+              height: 93,
+              backgroundColor: "#8791BD",
+              marginBottom: 34,
+              borderRadius: 16,
+            }}
+            onPress={() => {
+              try {
+                navigate("RoomDetails", {
+                  startDate: props.date.toISOString(),
+                  roomId: item.room_id,
+                  roomLatitude: props.latitude,
+                  roomLongitude: props.longitude,
+                  occupancies: item.occupancies,
+                  occupancyRate: item.occupancy_rate,
+                  acronymList: props.acronymList,
+                })
+              } catch (err) {
+                console.log(err)
+              }
             }}
           >
-            <Icon source={timerIcon} />
-            <BodyText
+            <View
               style={{
-                position: "absolute",
-                fontWeight: "300",
-                fontSize: 12,
-                color: "white",
-                textAlign: "left",
-                paddingLeft: 100,
+                flexDirection: "row",
+                width: width - 65,
+                alignSelf: "center",
+                marginTop: 12,
+                justifyContent: "center",
               }}
             >
-              Libera per{"\n"}
+              <Icon source={timerIcon} />
               <BodyText
                 style={{
-                  fontWeight: "700",
-                  fontSize: 14,
-                  color: hLeft !== "0" ? labelsHighContrast : palette.accent,
-                }}
-              >
-                {void findTimeLeft(item.occupancies)}
-                {hLeft && mLeft ? `${hLeft} h ${mLeft} '` : "-- h -- '"}
-              </BodyText>
-            </BodyText>
-          </View>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              width: width - 65,
-              justifyContent: "flex-end",
-              marginTop: 10,
-            }}
-          >
-            <View>
-              <BodyText
-                style={{
-                  fontWeight: "500",
+                  position: "absolute",
+                  fontWeight: "300",
                   fontSize: 12,
-                  color: "#424967",
-                  textAlign: "right",
+                  color: "white",
+                  textAlign: "left",
+                  paddingLeft: 100,
                 }}
               >
-                {overcrowdingFunction(item.occupancy_rate ?? 0)}
-                {"\n"}
+                Libera per{"\n"}
                 <BodyText
                   style={{
-                    fontWeight: "300",
-                    fontSize: 12,
-                    color: "#414867",
+                    fontWeight: "700",
+                    fontSize: 14,
+                    color:
+                      hoursLeft !== "0" ? labelsHighContrast : palette.accent,
                   }}
                 >
-                  affollato
+                  {hoursLeft && minutesLeft
+                    ? `${hoursLeft} h ${minutesLeft} '`
+                    : "-- h -- '"}
                 </BodyText>
               </BodyText>
             </View>
-            <View style={{ marginLeft: 10 }}>
-              <Icon
-                scale={1.2}
-                style={{
-                  marginTop: 4,
-                  zIndex: 1,
-                  height: 50,
-                  marginRight: 10,
-                }}
-                source={overcrowdingIcon}
-              />
-              {item.occupancy_rate && item.occupancy_rate >= 3.66 ? (
-                <Icon
-                  scale={1.1}
-                  style={{
-                    zIndex: 0,
-                    position: "absolute",
-                    marginTop: -12,
-                    marginLeft: -2,
-                  }}
-                  source={fireIcon}
-                />
-              ) : undefined}
-            </View>
-          </View>
-          <View
-            style={{
-              position: "absolute",
-              backgroundColor: palette.primary,
-              width: "40%",
-              height: 93,
-              borderRadius: 12,
-              alignItems: "center",
-              justifyContent: "center",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 7,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 4,
-            }}
-          >
-            <BodyText
+            <View
               style={{
-                fontWeight: "700",
-                color: "white",
-                fontSize: 24,
+                flex: 1,
+                flexDirection: "row",
+                width: width - 65,
+                justifyContent: "flex-end",
+                marginTop: 10,
               }}
             >
-              {item.name}
-            </BodyText>
-          </View>
-        </Pressable>
-      )}
+              <View>
+                <BodyText
+                  style={{
+                    fontWeight: "500",
+                    fontSize: 12,
+                    color: "#424967",
+                    textAlign: "right",
+                  }}
+                >
+                  {overcrowdingFunction(item.occupancy_rate ?? 0)}
+                  {"\n"}
+                  <BodyText
+                    style={{
+                      fontWeight: "300",
+                      fontSize: 12,
+                      color: "#414867",
+                    }}
+                  >
+                    affollato
+                  </BodyText>
+                </BodyText>
+              </View>
+              <View style={{ marginLeft: 10 }}>
+                <Icon
+                  scale={1.2}
+                  style={{
+                    marginTop: 4,
+                    zIndex: 1,
+                    height: 50,
+                    marginRight: 10,
+                  }}
+                  source={overcrowdingIcon}
+                />
+                {item.occupancy_rate && item.occupancy_rate >= 3.66 ? (
+                  <Icon
+                    scale={1.1}
+                    style={{
+                      zIndex: 0,
+                      position: "absolute",
+                      marginTop: -12,
+                      marginLeft: -2,
+                    }}
+                    source={fireIcon}
+                  />
+                ) : undefined}
+              </View>
+            </View>
+            <View
+              style={{
+                position: "absolute",
+                backgroundColor: palette.primary,
+                width: "40%",
+                height: 93,
+                borderRadius: 12,
+                alignItems: "center",
+                justifyContent: "center",
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 7,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 4,
+              }}
+            >
+              <BodyText
+                style={{
+                  fontWeight: "700",
+                  color: "white",
+                  fontSize: 24,
+                }}
+              >
+                {item.name}
+              </BodyText>
+            </View>
+          </Pressable>
+        )
+      }}
     />
   )
 }
