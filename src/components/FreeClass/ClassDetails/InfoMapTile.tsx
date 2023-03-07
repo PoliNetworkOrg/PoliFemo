@@ -34,7 +34,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
     const latLng = `${lat},${lng}`
     if (scheme) {
       const url = Platform.select({
-        ios: `${scheme}${label}@${latLng}`,
+        ios: `${scheme}${label.replace(" ", "%20")}@${latLng}`,
         android: `${scheme}${latLng}(${label})`,
       })
       if (url) {
