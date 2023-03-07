@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react"
+import { FC, useEffect, useMemo, useState } from "react"
 import { StyleProp, ViewStyle } from "react-native"
 import colorString from "color-string"
 import { Canvas, ImageSVG, Skia } from "@shopify/react-native-skia"
@@ -47,6 +47,8 @@ export const BoxShadowCanvas: FC<BoxShadowCanvasProps> = ({
   canvasDimensions,
   canvasStyle,
 }) => {
+  const [shouldRepaint, setShouldRepaint] = useState(false)
+
   const shad = {
     color: "black",
     opacity: 1,
@@ -71,16 +73,19 @@ export const BoxShadowCanvas: FC<BoxShadowCanvasProps> = ({
   const xnegoffset = -viewBoxOffset + shad.offset.x
   const ynegoffset = -viewBoxOffset + shad.offset.y
 
+  const radii = canvasDimensions?.radii ?? [0, 0, 0, 0]
+
   const svg = useMemo(() => {
     const viewBox = `${xnegoffset} ${ynegoffset} ${totWidth} ${totHeight}`
 
+    setShouldRepaint(true)
     return Skia.SVG
       .MakeFromString(`<svg xmlns="http://www.w3.org/2000/svg" width="${totWidth}" height="${totHeight}" viewBox="${viewBox}" fill="none">
     <g filter="url(#a)">
       <path fill="white" d="${createBoxShadowPath(
         width,
         height,
-        canvasDimensions?.radii ?? [0, 0, 0, 0]
+        radii
       )}" shape-rendering="crispEdges"/>
     </g>
     <defs>
@@ -108,16 +113,22 @@ export const BoxShadowCanvas: FC<BoxShadowCanvasProps> = ({
     shad.offset.y,
     shad.opacity,
     shad.spread,
-    height,
     width,
-    canvasDimensions?.radii,
+    height,
+    radii[0],
+    radii[1],
+    radii[2],
+    radii[3],
   ])
 
-  if (!svg) {
-    throw new Error("Could not create SVG")
-  }
+  if (!svg) throw new Error("Could not create SVG")
+
+  useEffect(() => {
+    if (shouldRepaint) setImmediate(() => setShouldRepaint(false))
+  }, [shouldRepaint])
 
   if (width === 0 || height === 0) return null
+  if (shouldRepaint) return null
 
   return (
     <Canvas
