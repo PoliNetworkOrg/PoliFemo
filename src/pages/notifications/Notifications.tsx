@@ -2,7 +2,6 @@ import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import { NotificationData } from "components/Notifications"
 import { Title } from "components/Text"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
-import React from "react"
 import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 

@@ -4,7 +4,7 @@ import { NotificationDisplayer } from "components/Notifications/NotificationDisp
 import { NotificationTile } from "components/Notifications/NotificationTile"
 import { Title } from "components/Text"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
-import React, { useState } from "react"
+import { useState } from "react"
 import { View } from "react-native"
 
 export const NotificationsCategory: MainStackScreen<

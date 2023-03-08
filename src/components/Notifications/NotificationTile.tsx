@@ -1,7 +1,7 @@
 import { Divider } from "components/Divider"
 import { BodyText, HyperLink } from "components/Text"
 import { TouchableRipple } from "components/TouchableRipple"
-import React, { FC } from "react"
+import { FC } from "react"
 import { View, Image } from "react-native"
 import { usePalette } from "utils/colors"
 import { NotificationData } from "."
