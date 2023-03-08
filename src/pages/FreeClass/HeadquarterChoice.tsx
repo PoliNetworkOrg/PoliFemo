@@ -32,13 +32,6 @@ const headquarterList: HeadquarterItem[] = [
   { type: ConstructionType.HEADQUARTER, acronym: "LCF", name: ["Lecco"] },
   { type: ConstructionType.HEADQUARTER, acronym: "PCL", name: ["Piacenza"] },
   { type: ConstructionType.HEADQUARTER, acronym: "MNI", name: ["Mantova"] },
-  { type: ConstructionType.HEADQUARTER, acronym: "MIC", name: ["Residenze"] },
-  {
-    type: ConstructionType.HEADQUARTER,
-    acronym: "MID",
-    name: ["Sesto", "Ulteriano"],
-  },
-  { type: ConstructionType.HEADQUARTER, acronym: "COE", name: ["Como"] },
 ]
 
 /**

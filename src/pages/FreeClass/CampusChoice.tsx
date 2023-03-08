@@ -37,9 +37,7 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = props => {
             type: ConstructionType.CAMPUS,
             name: c.name,
             acronym: h.acronym as ValidAcronym,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             latitude: c.latitude,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             longitude: c.longitude,
           }
           tempCampusList.push(campus)
