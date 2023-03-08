@@ -8,6 +8,8 @@ import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import { api } from "api"
 import { RoomDetails } from "api/rooms"
 import { ActivityIndicator } from "react-native"
+import { useMounted } from "utils/useMounted"
+import { getBuildingCoordsWithoutCampus } from "utils/rooms"
 
 export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
   const {
@@ -19,13 +21,13 @@ export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
     acronymList,
   } = props.route.params
 
-  //const isMounted = useMounted()
+  const isMounted = useMounted()
 
   const [room, setRoom] = useState<RoomDetails>()
 
-  //const [latitude, setLatituide] = useState<number | undefined>()
+  const [latitude, setLatituide] = useState<number | undefined>(roomLatitude)
 
-  //const [longitude, setLongitude] = useState<number | undefined>()
+  const [longitude, setLongitude] = useState<number | undefined>(roomLongitude)
 
   const getRoomInfo = async () => {
     const selectedRoom = await api.rooms.getRoomInfo(roomId)
@@ -33,14 +35,13 @@ export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
   }
   useEffect(() => void getRoomInfo(), [])
 
-  /*useEffect(() => {
-    console.log(roomLatitude, roomLongitude, isMounted)
+  useEffect(() => {
     if ((!roomLatitude || !roomLongitude) && isMounted) {
       const coords = getBuildingCoordsWithoutCampus(acronymList, room?.building)
       setLatituide(coords?.latitude)
       setLongitude(coords?.longitude)
     }
-  }, [room])*/
+  }, [room])
 
   return (
     <ContentWrapperScroll
@@ -54,8 +55,8 @@ export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
             building={room.building}
             capacity={room.capacity}
             roomName={room.name}
-            latitude={roomLatitude}
-            longitude={roomLongitude}
+            latitude={latitude}
+            longitude={longitude}
           />
           <TimeLeftTile startDate={startDate} occupancies={occupancies} />
           <CrowdingSection roomId={roomId} />

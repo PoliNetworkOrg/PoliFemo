@@ -233,9 +233,6 @@ export function getBuildingCoordsWithoutCampus(
     "LCF",
     "PCL",
     "MNI",
-    "MIC",
-    "MID",
-    "COE",
   ]
 
   for (const element of BuildingListJSON) {
