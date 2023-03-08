@@ -2,7 +2,7 @@ import { FC } from "react"
 import { ImageBackground, Pressable, View, ViewStyle } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 
-import { CardTitle } from "components/Text"
+import { BodyText, CardTitle } from "components/Text"
 
 export interface CardWithGradientProps {
   /**
@@ -28,6 +28,11 @@ export interface CardWithGradientProps {
    * @default { marginBottom: 17, borderRadius: 12 }
    */
   style?: ViewStyle
+
+  /**
+   * optional, used for "In Evidenza" card
+   */
+  articleTitle?: string
 }
 
 /**
@@ -66,10 +71,24 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
         >
           <View
             style={{
+              flex: 1,
               margin: closerToCorner ? 9 : 17,
+              justifyContent: "space-between",
             }}
           >
             <CardTitle style={{ lineHeight: 19 }}>{props.title}</CardTitle>
+            {props.articleTitle && (
+              <BodyText
+                style={{
+                  lineHeight: 19,
+                  color: "#fff",
+                  fontSize: 16,
+                  fontWeight: "900",
+                }}
+              >
+                {props.articleTitle}
+              </BodyText>
+            )}
           </View>
         </LinearGradient>
       </ImageBackground>
