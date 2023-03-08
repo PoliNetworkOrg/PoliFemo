@@ -34,13 +34,16 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
   const { palette, labelsHighContrast } = usePalette()
   const { navigate } = useNavigation()
 
+  const limInf = 0
+  const limSup = 5
+  const range = (limSup - limInf) / 3
   const overcrowdingFunction = (occupancyRate: number | undefined) => {
     if (
       occupancyRate === undefined ||
-      (occupancyRate >= 1 && occupancyRate < 2.33)
+      (occupancyRate >= limInf && occupancyRate < range)
     ) {
       return OvercrowdingTypes.POCO
-    } else if (occupancyRate >= 2.33 && occupancyRate < 3.66) {
+    } else if (occupancyRate >= range && occupancyRate < 2 * range) {
       return OvercrowdingTypes.MEDIAMENTE
     } else {
       return OvercrowdingTypes.MOLTO
@@ -70,7 +73,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
             style={{
               width: width - 65,
               height: 93,
-              backgroundColor: "#8791BD",
+              backgroundColor: palette.lighter,
               marginBottom: 34,
               borderRadius: 16,
             }}
@@ -149,7 +152,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                     style={{
                       fontWeight: "300",
                       fontSize: 12,
-                      color: "#414867",
+                      color: palette.variant1,
                     }}
                   >
                     affollato
@@ -167,7 +170,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                   }}
                   source={overcrowdingIcon}
                 />
-                {item.occupancy_rate && item.occupancy_rate >= 3.66 ? (
+                {item.occupancy_rate && item.occupancy_rate >= 2 * range ? (
                   <Icon
                     scale={1.1}
                     style={{
