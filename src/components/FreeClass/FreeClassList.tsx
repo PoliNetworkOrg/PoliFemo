@@ -206,7 +206,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                 style={{
                   fontWeight: "700",
                   color: "white",
-                  fontSize: 24,
+                  fontSize: item.name.length <= 10 ? 24 : 18,
                 }}
               >
                 {item.name}
