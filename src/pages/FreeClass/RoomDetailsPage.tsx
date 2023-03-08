@@ -8,8 +8,6 @@ import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import { api } from "api"
 import { RoomDetails } from "api/rooms"
 import { ActivityIndicator } from "react-native"
-import { getBuildingCoordsWithoutCampus } from "utils/rooms"
-import { useMounted } from "utils/useMounted"
 
 export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
   const {
@@ -21,13 +19,13 @@ export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
     acronymList,
   } = props.route.params
 
-  const isMounted = useMounted()
+  //const isMounted = useMounted()
 
   const [room, setRoom] = useState<RoomDetails>()
 
-  const [latitude, setLatituide] = useState<number | undefined>()
+  //const [latitude, setLatituide] = useState<number | undefined>()
 
-  const [longitude, setLongitude] = useState<number | undefined>()
+  //const [longitude, setLongitude] = useState<number | undefined>()
 
   const getRoomInfo = async () => {
     const selectedRoom = await api.rooms.getRoomInfo(roomId)
@@ -35,13 +33,14 @@ export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
   }
   useEffect(() => void getRoomInfo(), [])
 
-  useEffect(() => {
+  /*useEffect(() => {
+    console.log(roomLatitude, roomLongitude, isMounted)
     if ((!roomLatitude || !roomLongitude) && isMounted) {
       const coords = getBuildingCoordsWithoutCampus(acronymList, room?.building)
       setLatituide(coords?.latitude)
       setLongitude(coords?.longitude)
     }
-  }, [room])
+  }, [room])*/
 
   return (
     <ContentWrapperScroll
@@ -55,8 +54,8 @@ export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
             building={room.building}
             capacity={room.capacity}
             roomName={room.name}
-            latitude={latitude}
-            longitude={longitude}
+            latitude={roomLatitude}
+            longitude={roomLongitude}
           />
           <TimeLeftTile startDate={startDate} occupancies={occupancies} />
           <CrowdingSection roomId={roomId} />

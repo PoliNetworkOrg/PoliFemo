@@ -196,21 +196,16 @@ const wasYesterdayRearward = (date: Date) => {
   return false
 }
 
-export function getBuildingCoords(
-  campus?: CampusItem,
-  buildingName?: string[]
-) {
+export function getBuildingCoords(campus?: CampusItem, buildingName?: string) {
   if (!campus || !buildingName) {
     return undefined
   }
-  const newBuildingName: string =
-    buildingName[0].replace("Ed.", "Edificio ") + buildingName[1]
   for (const element of BuildingListJSON) {
     if (element.acronym === campus.acronym) {
       for (const c of element.campus) {
         if (compareCampusNames(c.name, campus.name)) {
           for (const b of c.buildings) {
-            if (b.name === newBuildingName) {
+            if (b.name === buildingName) {
               return b.coords
             }
           }

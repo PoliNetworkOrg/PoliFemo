@@ -105,18 +105,7 @@ export const MainContainer: FC = () => {
           console.log("downloads")
         }}
         onNotifications={() => {
-          navigate("RoomDetails", {
-            startDate: "2023-02-22T16:15:00Z",
-            roomId: 32,
-            roomLatitude: 45.4788249919485,
-            roomLongitude: 9.227210008150676,
-            occupancies: {
-              // eslint-disable-next-line @typescript-eslint/naming-convention
-              "19:00": { status: "FREE", text: null },
-              // eslint-disable-next-line @typescript-eslint/naming-convention
-              "19:35": { status: "OCCUPIED", text: null },
-            },
-          })
+          console.log("downloads")
         }}
         onSettings={() => {
           navigate("SettingsNav", {

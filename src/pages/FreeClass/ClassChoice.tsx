@@ -28,7 +28,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
     setToggleSearchNow,
   } = useContext(RoomsSearchDataContext)
 
-  const coords = getBuildingCoords(building.campus, building.name)
+  const coords = getBuildingCoords(building.campus, building.fullName)
 
   const [buildingRooms, setBuildingRooms] = useState<Room[]>([])
 
