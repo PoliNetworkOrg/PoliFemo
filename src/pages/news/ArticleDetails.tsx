@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { useState } from "react"
+import { useState } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { Image, Linking } from "react-native"
 import { WebView } from "react-native-webview"

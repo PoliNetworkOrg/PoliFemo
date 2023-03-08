@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 
 import { api } from "api"
 import { Article, Tag } from "api/articles"

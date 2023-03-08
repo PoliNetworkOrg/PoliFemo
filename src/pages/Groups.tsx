@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { FlatList, Linking, View } from "react-native"
 import { Title } from "components/Text"

@@ -32,9 +32,11 @@ function isTapInsideComponent(
   target: GestureResponderEvent["target"],
   component: React.Component
 ) {
+  // everything below here is fucked beyond repair
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   if (target === component) return true
 
-  // everything below here is fucked beyond repair
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
   const curr = component as any
 

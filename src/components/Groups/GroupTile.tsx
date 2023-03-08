@@ -1,26 +1,19 @@
-import {
-  Canvas,
-  DataSourceParam,
-  ImageSVG,
-  useSVG,
-} from "@shopify/react-native-skia"
 import { Divider } from "components/Divider"
+import { Icon } from "components/Icon"
 import { BodyText } from "components/Text"
-import React, { FC } from "react"
+import { FC } from "react"
 import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 
 export interface GroupTileProps {
   text?: string
-  icon?: { svg: DataSourceParam; width: number; heigth: number }
+  icon: number | null
   members?: string
   onClick?: () => void
 }
 
 export const GroupTile: FC<GroupTileProps> = props => {
   const { isLight } = usePalette()
-
-  const iconSvg = useSVG(props.icon?.svg)
 
   return (
     <View style={{ flex: 1, paddingHorizontal: 28 }}>
@@ -43,31 +36,7 @@ export const GroupTile: FC<GroupTileProps> = props => {
               alignItems: "center",
             }}
           >
-            {props.icon && iconSvg && (
-              <View
-                style={{
-                  width: props.icon.width,
-                  height: props.icon.heigth,
-                }}
-              >
-                <Canvas
-                  style={{
-                    width: props.icon.width,
-                    height: props.icon.heigth,
-                  }}
-                >
-                  {iconSvg && (
-                    <ImageSVG
-                      svg={iconSvg}
-                      x={0}
-                      y={0}
-                      width={props.icon.width}
-                      height={props.icon.heigth}
-                    />
-                  )}
-                </Canvas>
-              </View>
-            )}
+            {props.icon ? <Icon source={props.icon} /> : null}
           </View>
           <View
             style={{

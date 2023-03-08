@@ -1,10 +1,10 @@
 import { BodyText } from "components/Text"
-import React, { FC } from "react"
+import { FC } from "react"
 import { View } from "react-native"
 import { usePalette } from "utils/colors"
 import { Group } from "api/groups"
 import { choosePlatformIcon } from "utils/groups"
-import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
+import { Icon } from "components/Icon"
 
 export interface ModalGroupItemProps {
   /**
@@ -16,7 +16,6 @@ export interface ModalGroupItemProps {
 export const ModalGroupItem: FC<ModalGroupItemProps> = props => {
   const { isLight } = usePalette()
   const icon = choosePlatformIcon(props.group?.platform)
-  const iconSvg = useSVG(icon?.svg)
 
   const scaleFactor = 2.5
 
@@ -38,25 +37,7 @@ export const ModalGroupItem: FC<ModalGroupItemProps> = props => {
           alignItems: "center",
         }}
       >
-        {icon && iconSvg && (
-          <Canvas
-            style={{
-              width: icon.width * scaleFactor,
-              height: icon.heigth * scaleFactor,
-            }}
-          >
-            {iconSvg && (
-              <ImageSVG
-                svg={iconSvg}
-                x={0}
-                y={0}
-                width={icon.width}
-                height={icon.heigth}
-                transform={[{ scale: scaleFactor }]}
-              />
-            )}
-          </Canvas>
-        )}
+        {icon ? <Icon scale={scaleFactor} source={icon} /> : null}
       </View>
       <BodyText
         style={{

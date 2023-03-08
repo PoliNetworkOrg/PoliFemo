@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import { FC } from "react"
 import { Text as _Text, TextProps } from "react-native"
 
 import { usePalette } from "utils/colors"
