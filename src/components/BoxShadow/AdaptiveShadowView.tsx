@@ -1,5 +1,5 @@
 import React from "react"
-import { StyleSheet, View } from "react-native"
+import { Pressable, StyleSheet, View } from "react-native"
 import { getRadiiFromStyle } from "utils/layout"
 import { BoxShadowCanvas } from "./BoxShadowCanvas"
 import { BoxShadowViewProps } from "./BoxShadowView"
@@ -47,7 +47,7 @@ export const AdaptiveShadowView: React.FC<AdaptiveShadowViewProps> = ({
           canvasStyle,
         ]}
       />
-      <View
+      <Pressable
         onLayout={event => {
           const { width, height } = event.nativeEvent.layout
           setWidth(width)
@@ -56,7 +56,7 @@ export const AdaptiveShadowView: React.FC<AdaptiveShadowViewProps> = ({
         style={contentContainerStyle}
       >
         {children}
-      </View>
+      </Pressable>
     </View>
   )
 }

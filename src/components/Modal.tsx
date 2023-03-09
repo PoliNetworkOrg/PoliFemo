@@ -1,5 +1,12 @@
 import React, { FC } from "react"
-import { View, StyleSheet, Pressable, ViewStyle, StyleProp } from "react-native"
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  ViewStyle,
+  StyleProp,
+  Dimensions,
+} from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import deletesvg from "assets/modal/delete.svg"
@@ -87,14 +94,15 @@ export const Modal: FC<ModalCustomProps> = props => {
         animationOut={"fadeOut"}
         backdropColor={modalBarrier}
         style={{ margin: 0 }}
+        deviceHeight={Dimensions.get("screen").height}
         coverScreen={false}
         animationInTiming={props.animationTiming ?? 200}
         animationOutTiming={props.animationTiming ?? 200}
-        onBackdropPress={props.onClose}
+        hasBackdrop={false}
         useNativeDriverForBackdrop={true}
         useNativeDriver={true}
       >
-        <View style={[styles.pageWrapper]}>
+        <Pressable style={styles.pageWrapper} onPress={props.onClose}>
           {props.onClose && (
             <Pressable style={styles.circle} onPress={() => props.onClose?.()}>
               <Icon source={deletesvg} />
@@ -168,7 +176,7 @@ export const Modal: FC<ModalCustomProps> = props => {
               </View>
             )}
           </AdaptiveShadowView>
-        </View>
+        </Pressable>
       </_Modal>
     </Portal>
   )
@@ -179,6 +187,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#011B2973", // very specific color on Figma
   },
   circle: {
     left: 157, // (modal.width / 2) - (circle.width / 2) + 12

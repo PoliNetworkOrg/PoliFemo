@@ -42,6 +42,7 @@ export const ModalGroup: FC<ModalGroupProps> = props => {
   return (
     <Modal
       isShowing={props.isShowing}
+      centerText
       title={props.group.class ?? ""}
       icon={icon ? { source: icon, scale: scaleFactor } : undefined}
       onClose={props.onClose}
