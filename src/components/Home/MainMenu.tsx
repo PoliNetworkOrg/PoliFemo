@@ -86,7 +86,9 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
   ]
 
   const [icons, setIcons] = useState<ButtonState[]>(
-    defaultIcons.map(icon => ({ ...icon, shown: true }))
+    defaultIcons.map(icon =>
+      icon.id === 9 ? { ...icon, shown: false } : { ...icon, shown: true }
+    )
   )
 
   const [isModalVisible, setModalVisible] = useState(false)
@@ -118,6 +120,10 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
   }, [])
 
   useEffect(() => {
+    const visibleIcons = icons.filter(icon => icon.shown)
+    if (visibleIcons.length === icons.length) {
+      icons[9].shown = false
+    }
     AsyncStorage.setItem(
       "menu:icons",
       JSON.stringify(icons.filter(i => i.shown).map(i => i.id))
@@ -209,7 +215,13 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
             onDelete={() => {
               const { id } = buttonIcon
               setIcons(
-                icons.map(i => (i.id === id ? { ...i, shown: false } : i))
+                icons.map(i =>
+                  i.id === 9 && !i.shown
+                    ? { ...i, shown: true }
+                    : i.id === id
+                    ? { ...i, shown: false }
+                    : i
+                )
               )
             }}
             key={"menu_" + buttonIcon.id}
