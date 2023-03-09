@@ -130,6 +130,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
     const visibleIcons = icons.filter(icon => icon.shown)
     if (visibleIcons.length === icons.length) {
       icons[9].shown = false
+      setModalVisible(false)
     }
     AsyncStorage.setItem(
       "menu:icons",
