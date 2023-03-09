@@ -3,6 +3,7 @@ import { ScrollView, View } from "react-native"
 import { Text } from "components/Text"
 import { NavBar, NavbarProps } from "components/NavBar"
 import { usePalette } from "utils/colors"
+import { BoxShadowView } from "./BoxShadow"
 
 /**
  * General component useful for pages with a scrollable content.
@@ -23,7 +24,7 @@ export const ContentWrapperScroll: FC<{
   navbarOptions?: NavbarProps
   marginTop?: number
 }> = props => {
-  const { background, isLight, primary } = usePalette()
+  const { background, isLight, primary, palette } = usePalette()
 
   const navbar = !props.hideNavbar
 
@@ -55,38 +56,29 @@ export const ContentWrapperScroll: FC<{
         </View>
       )}
 
-      <View
+      <BoxShadowView
+        shadow={{
+          color: isLight ? palette.primary : "#000",
+          offset: { y: -8 },
+          opacity: isLight ? 0.1 : 0.45,
+          blur: isLight ? 19 : 32,
+        }}
         style={{
           flex: 1,
-          backgroundColor: background,
           marginTop: props.marginTop ?? 86,
-
+        }}
+        contentContainerStyle={{
+          flex: 1,
+          backgroundColor: background,
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
-
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 0,
-          },
-          shadowOpacity: 0.2,
-          shadowRadius: 8.3,
-          elevation: 13,
+          overflow: "hidden",
         }}
       >
-        <View
-          style={{
-            flex: 1,
-            borderTopLeftRadius: 30,
-            borderTopRightRadius: 30,
-            overflow: "hidden",
-          }}
-        >
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={{ paddingBottom: 50 }}>{props.children}</View>
-          </ScrollView>
-        </View>
-      </View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={{ paddingBottom: 50 }}>{props.children}</View>
+        </ScrollView>
+      </BoxShadowView>
       {navbar ? <NavBar {...props.navbarOptions} /> : null}
     </View>
   )

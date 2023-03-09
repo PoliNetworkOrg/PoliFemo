@@ -12,13 +12,13 @@ import {
   TagWithData,
 } from "contexts/newsPreferences"
 import { NewsTagsGrid } from "./NewsTagsGrid"
-import { Title } from "components/Text"
 import { CardWithGradient } from "components/CardWithGradient"
 import { NavBar } from "components/NavBar"
 import { usePalette } from "utils/colors"
 import { useNavigation } from "navigation/NavigationTypes"
-import { getUsableScreenHeight } from "utils/height"
+import { getUsableScreenHeight } from "utils/layout"
 import { newsSheetEventEmitter } from "utils/events"
+import { NewsBottomSheetHandle } from "./NewsBottomSheetHandle"
 
 interface NewsBottomSheetProps {
   /**
@@ -39,7 +39,7 @@ interface NewsBottomSheetProps {
  */
 export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
   const navigation = useNavigation()
-  const { isLight, background } = usePalette()
+  const { background } = usePalette()
 
   const { preferences } = useContext(NewsPreferencesContext)
 
@@ -91,23 +91,7 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
   return (
     <BottomSheet
       ref={bottomSheetRef}
-      handleComponent={() => (
-        <View style={[styles.topBar, { backgroundColor: background }]}>
-          <View
-            style={[
-              styles.dragBar,
-              {
-                backgroundColor: isLight
-                  ? "rgba(135, 145, 189, 0.5)"
-                  : "#424967",
-              },
-            ]}
-          />
-          <Title style={{ fontFamily: "Roboto_700Bold", fontSize: 48 }}>
-            News
-          </Title>
-        </View>
-      )}
+      handleComponent={NewsBottomSheetHandle}
       style={[styles.bottomSheet, { backgroundColor: background }]}
       backgroundStyle={{
         backgroundColor: background,
@@ -193,28 +177,5 @@ const styles = StyleSheet.create({
     flex: 1,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 7,
-    },
-    shadowOpacity: 0.43,
-    shadowRadius: 9.51,
-    elevation: 20,
-  },
-  topBar: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 26,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingBottom: 8,
-  },
-  dragBar: {
-    alignSelf: "center",
-    width: 120,
-    height: 5,
-    marginVertical: 16,
-    borderRadius: 4,
   },
 })

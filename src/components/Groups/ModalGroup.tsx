@@ -1,25 +1,12 @@
-import React, { FC } from "react"
-import {
-  View,
-  StyleSheet,
-  Pressable,
-  ViewStyle,
-  Dimensions,
-} from "react-native"
+import { FC } from "react"
+import { ViewStyle } from "react-native"
 import { usePalette } from "utils/colors"
-import { ButtonCustom } from "components/Button"
-import deletesvg from "assets/modal/delete.svg"
 import { Group } from "api/groups"
-import Modal from "react-native-modal"
-import { Portal } from "react-native-portalize"
-import { Icon } from "components/Icon"
+import { BodyText } from "components/Text"
+import { Modal } from "components/Modal"
+import { choosePlatformIcon } from "utils/groups"
 
 export interface ModalGroupProps {
-  /**
-   * content of the modal
-   */
-  children: React.ReactNode
-
   /**
    * whether ot not to show the modal
    */
@@ -34,7 +21,7 @@ export interface ModalGroupProps {
    */
   onJoin: (group?: Group) => void
 
-  group?: Group
+  group: Group
 
   animationTiming?: number
 
@@ -47,104 +34,48 @@ export interface ModalGroupProps {
  *
  */
 export const ModalGroup: FC<ModalGroupProps> = props => {
-  const { backgroundSecondary, modalBarrier, isLight } = usePalette()
-  const deviceHeight = Dimensions.get("screen").height
+  const { isLight } = usePalette()
+
+  const icon = choosePlatformIcon(props.group?.platform)
+  const scaleFactor = 2.5
 
   return (
-    <Portal>
-      <Modal
-        needsOffscreenAlphaCompositing={true}
-        renderToHardwareTextureAndroid={true}
-        onBackButtonPress={props.onClose}
-        statusBarTranslucent={true}
-        isVisible={props.isShowing}
-        animationIn={"fadeIn"}
-        animationOut={"fadeOut"}
-        backdropColor={modalBarrier}
-        deviceHeight={deviceHeight}
-        coverScreen={false}
-        animationInTiming={props.animationTiming ?? 200}
-        animationOutTiming={props.animationTiming ?? 200}
-        onBackdropPress={props.onClose}
-        useNativeDriverForBackdrop={true}
-        useNativeDriver={true}
+    <Modal
+      isShowing={props.isShowing}
+      centerText
+      title={props.group.class ?? ""}
+      icon={icon ? { source: icon, scale: scaleFactor } : undefined}
+      onClose={props.onClose}
+      buttons={[
+        {
+          text: "JOIN GROUP",
+          onPress: () => props.onJoin(props.group),
+        },
+      ]}
+    >
+      {props.group?.members && (
+        <BodyText
+          style={{
+            fontSize: 13,
+            fontWeight: "400",
+            color: isLight ? "#8791BD" : "#fff",
+            textAlign: "center",
+          }}
+        >
+          {props.group.members} members
+        </BodyText>
+      )}
+      <BodyText
+        style={{
+          fontSize: 13,
+          fontWeight: "400",
+          color: isLight ? "#414867" : "#fff",
+          textAlign: "center",
+          marginTop: 16,
+        }}
       >
-        <View style={[styles.pageWrapper]}>
-          <View>
-            <Pressable
-              style={{ alignSelf: "flex-end" }}
-              onPress={() => props.onClose()}
-            >
-              <View
-                style={{
-                  width: 30,
-                  height: 30,
-                  backgroundColor: "#ffffff",
-                  borderRadius: 15,
-                  marginBottom: 8,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Icon source={deletesvg} />
-              </View>
-            </Pressable>
-            <View
-              style={[
-                {
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  width: 320,
-                  borderRadius: 12,
-                  marginHorizontal: 15,
-
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 3,
-                  },
-                  shadowOpacity: 0.27,
-                  shadowRadius: 4.65,
-                  backgroundColor: backgroundSecondary,
-                  elevation: 6,
-                },
-                props.style,
-              ]}
-            >
-              <View>{props.children}</View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  marginBottom: 32,
-                  marginTop: 16,
-                }}
-              >
-                <ButtonCustom
-                  style={{
-                    backgroundColor: isLight ? "#424967" : "#8791BD",
-                  }}
-                  text={"JOIN GROUP"}
-                  onPress={() => props.onJoin(props.group)}
-                />
-              </View>
-            </View>
-          </View>
-        </View>
-      </Modal>
-    </Portal>
+        {props.group?.year}
+      </BodyText>
+    </Modal>
   )
 }
-
-const styles = StyleSheet.create({
-  pageWrapper: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  title: {
-    fontSize: 32,
-    fontWeight: "900",
-  },
-})

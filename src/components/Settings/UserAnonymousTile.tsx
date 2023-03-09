@@ -1,7 +1,7 @@
 import { FC } from "react"
 import { View, Image } from "react-native"
 import { TouchableRipple } from "components/TouchableRipple"
-import { ButtonCustom } from "components/Button"
+import { Button } from "components/Button"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 
@@ -59,7 +59,7 @@ export const UserAnonymousTile: FC<UserAnonymousTileProps> = props => {
               Utente Anonimo
             </Text>
             <View style={{ alignSelf: "flex-end", marginTop: 42 }}>
-              <ButtonCustom text="Login" onPress={props.onLogin} />
+              <Button text="Login" onPress={props.onLogin} />
             </View>
           </View>
         </View>
