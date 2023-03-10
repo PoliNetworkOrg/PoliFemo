@@ -1,9 +1,7 @@
-import { FC, useMemo } from "react"
+import { FC } from "react"
 import { View } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
-
-import { BlendMode, Skia } from "@shopify/react-native-skia"
 import clock from "assets/freeClassrooms/clock.svg"
 import { extractTimeLeft, getStartEndDate } from "utils/rooms"
 import { Occupancies } from "api/rooms"
@@ -17,11 +15,6 @@ interface TimeLeftTileProps {
 export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
   const { isLight, labelsHighContrast, iconHighContrast, primary } =
     usePalette()
-
-  const paint = useMemo(() => Skia.Paint(), [])
-  paint.setColorFilter(
-    Skia.ColorFilter.MakeBlend(Skia.Color(labelsHighContrast), BlendMode.SrcIn)
-  )
 
   const now = new Date()
 
