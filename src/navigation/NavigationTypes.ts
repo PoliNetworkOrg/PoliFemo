@@ -24,6 +24,7 @@ import {
 import { Article } from "api/articles"
 import { NavigatorScreenParams } from "@react-navigation/native"
 import { TagWithData } from "contexts/newsPreferences"
+import { NotificationData } from "components/Notifications"
 
 /**
  * interface containing the info about the params for each page of the stack navigator
@@ -47,6 +48,11 @@ export type MainStackNavigatorParams = {
   ArticlesList: { tagName: string }
   Error404: undefined
   Groups: undefined
+  Notifications: undefined
+  NotificationsCategory: {
+    category: string
+    notifications: NotificationData[]
+  }
 }
 
 export type SettingsStackNavigatorParams = {
