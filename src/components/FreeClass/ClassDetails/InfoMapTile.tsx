@@ -189,6 +189,13 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
                 zoomTapEnabled={false}
                 zoomControlEnabled={false}
                 zoomEnabled={false}
+                onPress={() =>
+                  openAddressOnMap(
+                    props.building,
+                    latitude.toString(),
+                    longitude.toString()
+                  )
+                }
               />
             </View>
             <View
