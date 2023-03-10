@@ -10,7 +10,7 @@ import { RoomsSearchDataContext } from "contexts/rooms"
 import { Room } from "api/rooms"
 import { Switch } from "react-native-switch"
 import { usePalette } from "utils/colors"
-import { ErrorMessage } from "components/FreeClass/ErrorMessage"
+import { ErrorMessage } from "components/ErrorMessage"
 
 /**
  * In this page the user can select finally the free class he wants.
@@ -128,14 +128,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
         {filteredRooms?.length === 0 && !isRoomsSearching ? (
           <ErrorMessage
             message="Non ci sono aule disponibili"
-            styleView={{ marginTop: 100, marginHorizontal: 20 }}
-            styleMessage={{
-              alignSelf: "center",
-              color: "red",
-              fontWeight: "400",
-              fontSize: 30,
-              textAlign: "center",
-            }}
+            styleView={{ marginTop: 100 }}
           />
         ) : !isRoomsSearching && filteredRooms.length > 0 ? (
           <FreeClassList

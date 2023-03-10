@@ -13,7 +13,7 @@ import { CampusItem } from "pages/FreeClass/CampusChoice"
 import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
 import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
 import { getBuildingInfo, ValidAcronym } from "utils/rooms"
-import { ErrorMessage } from "./ErrorMessage"
+import { ErrorMessage } from "../ErrorMessage"
 import { RoomsSearchDataContext } from "contexts/rooms"
 
 interface PositionModalityProps {

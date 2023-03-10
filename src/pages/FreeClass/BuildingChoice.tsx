@@ -3,26 +3,13 @@ import { useState, useEffect, useContext } from "react"
 import { ActivityIndicator, View } from "react-native"
 import { Title } from "components/Text"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
-import { CampusItem } from "./CampusChoice"
 import { PageWrapper } from "components/Groups/PageWrapper"
-import { Room } from "api/rooms"
 import { ConstructionType } from "api/rooms"
-import { DefaultList } from "components/FreeClass/DefaultList"
+import { BuildingItem, DefaultList } from "components/FreeClass/DefaultList"
 import { formatBuildingName, isCampusCorrect, isRoomFree } from "utils/rooms"
 
 import { RoomsSearchDataContext } from "contexts/rooms"
-import { ErrorMessage } from "components/FreeClass/ErrorMessage"
-
-export interface BuildingItem {
-  type: ConstructionType
-  campus: CampusItem
-  name: string[]
-  latitude?: number
-  longitude?: number
-  freeRoomList: Room[]
-  allRoomList: Room[]
-  fullName?: string
-}
+import { ErrorMessage } from "components/ErrorMessage"
 
 /**
  * In this page the user can select the building.

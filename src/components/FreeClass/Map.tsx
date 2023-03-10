@@ -3,12 +3,11 @@ import { View, ActivityIndicator, Platform, Pressable } from "react-native"
 import MapView, { Callout, Marker, Region } from "react-native-maps"
 import { PermissionStatus } from "expo-location"
 import { BodyText } from "components/Text"
-import { BuildingItem } from "pages/FreeClass/BuildingChoice"
+import { BuildingItem, CampusItem } from "./DefaultList"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { CampusItem } from "pages/FreeClass/CampusChoice"
 import { Icon } from "components/Icon"
 import iconMaps from "assets/freeClassrooms/iconMaps.svg"
-import { ErrorMessage } from "./ErrorMessage"
+import { ErrorMessage } from "components/ErrorMessage"
 
 interface MapProps {
   userLatitude: number
@@ -26,7 +25,12 @@ interface MapProps {
 export const Map: FC<MapProps> = props => {
   const [timer, setTimer] = useState<boolean>(false)
 
-  const [region, setRegion] = useState<Region>()
+  const [region, setRegion] = useState<Region>({
+    latitude: props.userLatitude,
+    longitude: props.userLongitude,
+    latitudeDelta: 0.002,
+    longitudeDelta: 0.002,
+  })
 
   useEffect(() => {
     if (props.userLatitude === undefined && props.userLongitude === undefined) {
@@ -88,16 +92,7 @@ export const Map: FC<MapProps> = props => {
       ) : (
         <MapView
           style={{ marginTop: 23, width: "100%", height: "100%" }}
-          region={
-            region !== undefined
-              ? region
-              : {
-                  latitude: props.userLatitude,
-                  longitude: props.userLongitude,
-                  latitudeDelta: 0.002,
-                  longitudeDelta: 0.002,
-                }
-          }
+          region={region}
           onRegionChangeComplete={region => {
             setRegion(region)
             AsyncStorage.setItem(
@@ -141,27 +136,23 @@ export const Map: FC<MapProps> = props => {
               <Icon source={iconMaps} scale={0.5} />
             </Pressable>
           ) : undefined}
-          {props.buildingList?.map((building, index) => (
-            <Marker
-              key={index}
-              coordinate={
-                building.latitude !== undefined &&
-                building.longitude !== undefined
-                  ? {
-                      latitude: building.latitude,
-                      longitude: building.longitude,
-                    }
-                  : { latitude: 0, longitude: 0 } // fa schifo sta soluzione ma è l'unica che non mi dà errori.
-                //come faccio in questi casi quando le props latitude e longitude del marker non possono essere undefined?
-              }
-            >
-              <Callout onPress={() => props.onPressMarker(building)}>
-                <BodyText style={{ fontWeight: "400", fontSize: 17 }}>
-                  {building.name}
-                </BodyText>
-              </Callout>
-            </Marker>
-          ))}
+          {props.buildingList
+            ?.filter(b => b.latitude && b.longitude)
+            .map((building, index) => (
+              <Marker
+                key={index}
+                coordinate={{
+                  latitude: building.latitude ?? 0,
+                  longitude: building.longitude ?? 0,
+                }}
+              >
+                <Callout onPress={() => props.onPressMarker(building)}>
+                  <BodyText style={{ fontWeight: "400", fontSize: 17 }}>
+                    {building.name}
+                  </BodyText>
+                </Callout>
+              </Marker>
+            ))}
         </MapView>
       )}
     </View>

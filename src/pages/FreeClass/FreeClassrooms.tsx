@@ -248,6 +248,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
           contentContainerStyle={{
             paddingBottom: 100,
           }}
+          bounces={false}
         >
           <View style={{ width, alignItems: "center" }}>
             {freeClassButtons.map(item => (

@@ -19,7 +19,7 @@ interface AddressTextProps {
  * - GPS not enabled: there is a red text saying that the gps signal is missing
  */
 export const AddressText: FC<AddressTextProps> = props => {
-  const { background, isDark } = usePalette()
+  const { background, isDark, palette } = usePalette()
   const positionArrowSVG = useSVG(PositionArrowIcon)
 
   return (
@@ -55,14 +55,14 @@ export const AddressText: FC<AddressTextProps> = props => {
             props.locationStatus === PermissionStatus.GRANTED
               ? isDark
                 ? "white"
-                : "#454773"
-              : "red",
+                : palette.variant3
+              : "gray",
           fontSize: 20,
         }}
       >
         {props.currentLocation === undefined ? (
           props.locationStatus !== PermissionStatus.GRANTED ? (
-            "Segnale GPS mancante"
+            "Localizzazione disattivata"
           ) : (
             <ActivityIndicator
               style={{
