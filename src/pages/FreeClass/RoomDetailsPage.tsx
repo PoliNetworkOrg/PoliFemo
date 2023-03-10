@@ -46,7 +46,6 @@ export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
   return (
     <ContentWrapperScroll
       scrollViewStyle={{ paddingHorizontal: 28, paddingBottom: 60 }}
-      style={{ marginTop: 106 }}
     >
       {room !== undefined ? (
         <>

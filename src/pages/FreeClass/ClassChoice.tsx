@@ -55,7 +55,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
   }, [buildingRooms, toggleSearchNow, date])
 
   return (
-    <PageWrapper style={{ marginTop: 106 }}>
+    <PageWrapper>
       <View style={{ paddingTop: 28 }}>
         <View
           style={{

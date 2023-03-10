@@ -235,7 +235,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
   }, [rooms, isSearchBarSearching, searchableRooms])
 
   return (
-    <PageWrapper style={{ marginTop: 106 }}>
+    <PageWrapper>
       <View style={{ paddingTop: 28 }}>
         <Title style={{ paddingLeft: 28, marginBottom: 17 }}>Aule Libere</Title>
         <PoliSearchBar onChange={searchKey => setSearch(searchKey)} />

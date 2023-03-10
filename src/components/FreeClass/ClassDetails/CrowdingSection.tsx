@@ -5,7 +5,7 @@ import { BodyText } from "components/Text"
 import { CrowdSliderStatic } from "./CrowdSlider/CrowdSliderStatic"
 import { CrowdSliderDynamic } from "./CrowdSlider/CrowdSliderDynamic"
 import { CrowdSliderLabels } from "./CrowdSlider/CrowdSliderLabels"
-import { ButtonCustom } from "components/Button"
+import { Button } from "components/Button"
 import { ModalWithGestures } from "../ModalWithGestures"
 import { api, RetryType } from "api"
 
@@ -129,7 +129,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
             <CrowdSliderLabels />
           </View>
 
-          <ButtonCustom
+          <Button
             text="Conferma"
             light={false}
             style={{ alignSelf: "center", minWidth: 103 }}

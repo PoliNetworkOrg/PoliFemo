@@ -83,7 +83,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
   }, [rooms[campus.acronym].rooms])
 
   return (
-    <PageWrapper style={{ marginTop: 106 }}>
+    <PageWrapper>
       <View style={{ paddingTop: 28 }}>
         {campus.name.length > 1 ? (
           <Title

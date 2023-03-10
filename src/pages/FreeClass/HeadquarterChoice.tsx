@@ -45,7 +45,7 @@ export const HeadquarterChoice: MainStackScreen<"HeadquarterChoice"> = () => {
   }, [])
 
   return (
-    <PageWrapper style={{ marginTop: 106 }}>
+    <PageWrapper>
       <View style={{ paddingTop: 28 }}>
         <Title style={{ paddingLeft: 28 }}>Sede</Title>
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />

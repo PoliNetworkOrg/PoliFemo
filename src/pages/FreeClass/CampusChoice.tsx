@@ -51,7 +51,7 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = props => {
   useEffect(() => getCampusList(headquarter.acronym), [])
 
   return (
-    <PageWrapper style={{ marginTop: 106 }}>
+    <PageWrapper>
       <View style={{ paddingTop: 28 }}>
         {headquarter.name.length > 1 ? (
           <Title
