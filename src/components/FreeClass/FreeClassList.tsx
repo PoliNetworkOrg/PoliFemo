@@ -21,12 +21,6 @@ interface FreeClassListProps {
   acronymList?: ValidAcronym[]
 }
 
-enum OvercrowdingTypes {
-  POCO = "Poco",
-  MEDIAMENTE = "Mediamente",
-  MOLTO = "Molto",
-}
-
 /**
  * It handles a list of freeclassrooms available.
  */
@@ -42,11 +36,11 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
       occupancyRate === undefined ||
       (occupancyRate >= limInf && occupancyRate < range)
     ) {
-      return OvercrowdingTypes.POCO
+      return "Poco"
     } else if (occupancyRate >= range && occupancyRate < 2 * range) {
-      return OvercrowdingTypes.MEDIAMENTE
+      return "Mediamente"
     } else {
-      return OvercrowdingTypes.MOLTO
+      return "Molto"
     }
   }
 

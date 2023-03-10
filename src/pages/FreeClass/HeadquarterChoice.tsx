@@ -4,18 +4,9 @@ import { View } from "react-native"
 import { Title } from "components/Text"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { PageWrapper } from "components/Groups/PageWrapper"
-import { DefaultList } from "components/FreeClass/DefaultList"
+import { DefaultList, HeadquarterItem } from "components/FreeClass/DefaultList"
 import { ConstructionType } from "api/rooms"
-import { CampusItem } from "./CampusChoice"
-import { ValidAcronym } from "utils/rooms"
 import { RoomsSearchDataContext } from "contexts/rooms"
-
-export interface HeadquarterItem {
-  type: ConstructionType
-  acronym: ValidAcronym
-  name: string[]
-  campusList?: CampusItem[]
-}
 
 const headquarterList: HeadquarterItem[] = [
   {

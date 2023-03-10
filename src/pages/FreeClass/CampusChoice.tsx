@@ -6,17 +6,9 @@ import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePick
 import { PageWrapper } from "components/Groups/PageWrapper"
 import buildingCoords from "components/FreeClass/buildingCoords.json"
 import { ConstructionType } from "api/rooms"
-import { DefaultList } from "components/FreeClass/DefaultList"
+import { CampusItem, DefaultList } from "components/FreeClass/DefaultList"
 import { ValidAcronym } from "utils/rooms"
 import { RoomsSearchDataContext } from "contexts/rooms"
-
-export interface CampusItem {
-  type: ConstructionType
-  name: string[]
-  acronym: ValidAcronym
-  latitude: number
-  longitude: number
-}
 
 /**
  * In this page the user can select the campus.

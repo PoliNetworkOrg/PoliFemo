@@ -1,9 +1,6 @@
-import { ConstructionType } from "api/rooms"
+import { ConstructionType, Room } from "api/rooms"
 import { BodyText } from "components/Text"
 import { useNavigation } from "navigation/NavigationTypes"
-import { BuildingItem } from "pages/FreeClass/BuildingChoice"
-import { CampusItem } from "pages/FreeClass/CampusChoice"
-import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
 import { FC } from "react"
 import { FlatList, Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
@@ -12,6 +9,32 @@ import { hasAcronymProp, ValidAcronym } from "utils/rooms"
 interface DefaultListProps<T> {
   dataToShow: T[]
   setAcronym?: (acronym: ValidAcronym) => void
+}
+
+export interface HeadquarterItem {
+  type: ConstructionType.HEADQUARTER
+  acronym: ValidAcronym
+  name: string[]
+  campusList?: CampusItem[]
+}
+
+export interface CampusItem {
+  type: ConstructionType.CAMPUS
+  name: string[]
+  acronym: ValidAcronym
+  latitude: number
+  longitude: number
+}
+
+export interface BuildingItem {
+  type: ConstructionType.BUILDING
+  campus: CampusItem
+  name: string[]
+  latitude?: number
+  longitude?: number
+  freeRoomList: Room[]
+  allRoomList: Room[]
+  fullName?: string
 }
 
 /**
@@ -63,26 +86,17 @@ export const DefaultList: FC<
               if (item.acronym && props.setAcronym) {
                 props.setAcronym(item.acronym)
               }
-              navigate(
-                "CampusChoice" as never,
-                {
-                  headquarter: item,
-                } as never
-              )
+              navigate("CampusChoice", {
+                headquarter: item,
+              })
             } else if (item.type === ConstructionType.CAMPUS) {
-              navigate(
-                "BuildingChoice" as never,
-                {
-                  campus: item,
-                } as never
-              )
+              navigate("BuildingChoice", {
+                campus: item,
+              })
             } else {
-              navigate(
-                "ClassChoice" as never,
-                {
-                  building: item,
-                } as never
-              )
+              navigate("ClassChoice", {
+                building: item,
+              })
             }
           }}
         >
