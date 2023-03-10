@@ -6,6 +6,7 @@ import { extractBuilding, extractRoom } from "utils/rooms"
 import MapView from "react-native-maps"
 import expand from "assets/freeClassrooms/expand.svg"
 import { Icon } from "components/Icon"
+import { AdaptiveShadowView } from "components/BoxShadow"
 
 interface InfoMapTileProps {
   roomName: string
@@ -141,63 +142,69 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
               )
             }
           >
-            <View
-              style={{
-                width: 100,
-                height: 100,
-                backgroundColor: labelsHighContrast,
-                borderRadius: 10,
-                overflow: "hidden",
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 7,
+            <AdaptiveShadowView
+              style={{ width: 100, height: 100 }}
+              shadow={{
+                color: "#000",
+                offset: {
+                  y: 4,
                 },
-                shadowOpacity: 0.43,
-                shadowRadius: 9.51,
-
-                elevation: 15,
+                opacity: 0.25,
+                blur: 4,
+              }}
+              contentContainerStyle={{
+                flex: 1,
+                borderRadius: 10,
               }}
             >
               <View
                 style={{
-                  position: "absolute",
-                  width: 20,
-                  height: 20,
-                  bottom: 8,
-                  right: 8,
-                  zIndex: 2,
+                  borderRadius: 10,
+                  overflow: "hidden",
+                  height: 100,
+                  width: 100,
                 }}
               >
-                <Icon source={expand} />
+                <View
+                  style={{
+                    position: "absolute",
+                    width: 20,
+                    height: 20,
+                    bottom: 8,
+                    right: 8,
+                    zIndex: 2,
+                  }}
+                >
+                  <Icon source={expand} />
+                </View>
+                <MapView
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: -25,
+                  }}
+                  initialRegion={{
+                    latitude: latitude,
+                    longitude: longitude,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
+                  }}
+                  scrollEnabled={false}
+                  zoomTapEnabled={false}
+                  zoomControlEnabled={false}
+                  zoomEnabled={false}
+                  onPress={() =>
+                    openAddressOnMap(
+                      props.building,
+                      latitude.toString(),
+                      longitude.toString()
+                    )
+                  }
+                />
               </View>
-              <MapView
-                style={{
-                  position: "absolute",
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: -25,
-                }}
-                initialRegion={{
-                  latitude: latitude,
-                  longitude: longitude,
-                  latitudeDelta: 0.01,
-                  longitudeDelta: 0.01,
-                }}
-                scrollEnabled={false}
-                zoomTapEnabled={false}
-                zoomControlEnabled={false}
-                zoomEnabled={false}
-                onPress={() =>
-                  openAddressOnMap(
-                    props.building,
-                    latitude.toString(),
-                    longitude.toString()
-                  )
-                }
-              />
-            </View>
+            </AdaptiveShadowView>
             <View
               style={{
                 flexDirection: "row",
