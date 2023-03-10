@@ -128,96 +128,95 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
             height: "100%",
           }}
         >
-          <View style={{ marginTop: 65 }}>
-            <Pressable
+          <Pressable
+            style={{
+              alignItems: "flex-end",
+              marginTop: 65,
+            }}
+            onPress={() =>
+              openAddressOnMap(
+                props.building,
+                latitude.toString(),
+                longitude.toString()
+              )
+            }
+          >
+            <View
               style={{
-                alignItems: "flex-end",
+                width: 100,
+                height: 100,
+                backgroundColor: labelsHighContrast,
+                borderRadius: 10,
+                overflow: "hidden",
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 7,
+                },
+                shadowOpacity: 0.43,
+                shadowRadius: 9.51,
+
+                elevation: 15,
               }}
-              onPress={() =>
-                openAddressOnMap(
-                  props.building,
-                  latitude.toString(),
-                  longitude.toString()
-                )
-              }
             >
               <View
                 style={{
-                  width: 100,
-                  height: 100,
-                  backgroundColor: labelsHighContrast,
-                  borderRadius: 10,
-                  overflow: "hidden",
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 7,
-                  },
-                  shadowOpacity: 0.43,
-                  shadowRadius: 9.51,
-
-                  elevation: 15,
+                  position: "absolute",
+                  width: 20,
+                  height: 20,
+                  bottom: 8,
+                  right: 8,
+                  zIndex: 2,
                 }}
               >
-                <View
-                  style={{
-                    position: "absolute",
-                    width: 20,
-                    height: 20,
-                    bottom: 8,
-                    right: 8,
-                    zIndex: 2,
-                  }}
-                >
-                  <Icon source={expand} />
-                </View>
-                <MapView
-                  style={{
-                    position: "absolute",
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    bottom: -25,
-                  }}
-                  initialRegion={{
-                    latitude: latitude,
-                    longitude: longitude,
-                    latitudeDelta: 0.01,
-                    longitudeDelta: 0.01,
-                  }}
-                  scrollEnabled={false}
-                  zoomTapEnabled={false}
-                  zoomControlEnabled={false}
-                  zoomEnabled={false}
-                />
+                <Icon source={expand} />
               </View>
-              <View
+              <MapView
                 style={{
-                  flexDirection: "row",
-                  alignItems: "baseline",
+                  position: "absolute",
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: -25,
+                }}
+                initialRegion={{
+                  latitude: latitude,
+                  longitude: longitude,
+                  latitudeDelta: 0.01,
+                  longitudeDelta: 0.01,
+                }}
+                scrollEnabled={false}
+                zoomTapEnabled={false}
+                zoomControlEnabled={false}
+                zoomEnabled={false}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "baseline",
+              }}
+            >
+              <BodyText
+                style={{
+                  fontSize: 13,
+                  fontWeight: "400",
+                  color: labelsHighContrast,
                 }}
               >
-                <BodyText
-                  style={{
-                    fontSize: 13,
-                    fontWeight: "400",
-                    color: labelsHighContrast,
-                  }}
-                >
-                  consulta la{" "}
-                </BodyText>
-                <BodyText
-                  style={{
-                    fontSize: 16,
-                    fontWeight: "900",
-                    color: labelsHighContrast,
-                  }}
-                >
-                  mappa
-                </BodyText>
-              </View>
-            </Pressable>
-          </View>
+                consulta la{" "}
+              </BodyText>
+              <BodyText
+                style={{
+                  fontSize: 16,
+                  fontWeight: "900",
+                  color: labelsHighContrast,
+                }}
+              >
+                mappa
+              </BodyText>
+            </View>
+          </Pressable>
         </View>
       )}
     </View>
