@@ -1,7 +1,7 @@
 import { FC } from "react"
 import { View } from "react-native"
 import { TouchableRipple } from "components/TouchableRipple"
-import { ButtonCustom } from "components/Button"
+import { Button } from "components/Button"
 import { CareerColumn } from "./CareerColumn"
 import { Career } from "api/user"
 
@@ -28,7 +28,7 @@ export const CareerTile: FC<CareerTileProps> = props => {
           paddingRight: 46,
         }}
       >
-        <ButtonCustom
+        <Button
           onPress={props.onPress}
           text={"Cambia matricola"}
           style={{ paddingHorizontal: 8 }}
