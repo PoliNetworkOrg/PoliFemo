@@ -199,7 +199,7 @@ export const usePalette: () => ColorTheme &
     articleTitle: palette.darker,
     articleSubtitle: palette.primary,
     cardTitle: palette.variant2, // "#010B40"
-    sliderBorderColor: "#454773",
+    sliderBorderColor: palette.variant3,
     labelsHighContrast: palette.variant1, // "#414867",
     iconHighContrast: palette.variant3, // "#454773",
   }
