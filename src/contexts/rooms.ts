@@ -4,19 +4,14 @@ import { GlobalRoomListInterface, ValidAcronym } from "utils/rooms"
 
 export type RoomsSearchDataContextProps = {
   toggleSearchNow: boolean
-} & {
   setToggleSearchNow: (val: boolean) => void
-} & {
   isRoomsSearching: boolean
-} & {
   setIsRoomsSearching: (val: boolean) => void
-} & {
   acronym: ValidAcronym
-} & {
   setAcronym: (acronym: ValidAcronym) => void
-} & { date: Date } & {
+  date: Date
   setDate: (date: Date) => void
-} & { rooms: GlobalRoomListInterface } & {
+  rooms: GlobalRoomListInterface
   setRooms: (newRooms: GlobalRoomListInterface) => void
 }
 
