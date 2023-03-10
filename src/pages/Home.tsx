@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import { View } from "react-native"
 
 import { NewsManager } from "components/Home/News"
@@ -6,6 +6,7 @@ import { MainStackScreen } from "navigation/NavigationTypes"
 import { MainMenu, MainTitle, PoliSearchBar } from "components/Home"
 import { HighlightsManager } from "components/Home/Highlights/HighlightsManager"
 import { usePalette } from "utils/colors"
+import { BoxShadowView } from "components/BoxShadow"
 
 /**
  * Home page containing the POLIFEMO logo, search bar, main horizontal scroll menu and the entry
@@ -31,30 +32,27 @@ export const Home: MainStackScreen<"Home"> = () => {
         }}
       >
         <MainTitle />
-        <View
+        <BoxShadowView
+          shadow={{
+            offset: { y: -8 },
+            opacity: 0.2,
+            blur: 19,
+          }}
           // section containing the search bar and the main menu
           style={{
             marginTop: 35,
+          }}
+          contentContainerStyle={{
             paddingBottom: 300,
             backgroundColor: background,
             borderTopLeftRadius: 30,
             borderTopRightRadius: 30,
-
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 7,
-            },
-            shadowOpacity: 0.43,
-            shadowRadius: 9.51,
-
-            elevation: 15,
           }}
         >
           <PoliSearchBar onChange={searchKey => setSearch(searchKey)} />
           <MainMenu filter={search} />
           <HighlightsManager />
-        </View>
+        </BoxShadowView>
       </View>
       <NewsManager />
     </View>

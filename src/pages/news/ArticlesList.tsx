@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react"
+import { useState, useEffect, useRef, useContext } from "react"
 import { View } from "react-native"
 
 import { api, RetryType } from "api"
@@ -6,7 +6,7 @@ import { Article } from "api/articles"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ScrollPageInfinite } from "components/ScrollPageInfinite"
 import { CardWithGradient } from "components/CardWithGradient"
-import { capitalize } from "utils/strings"
+import { capitalize } from "utils/functions"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 
 const MAX_ARTICLES_PER_REQUEST = 8

@@ -1,9 +1,9 @@
-import React, { FC } from "react"
+import { FC } from "react"
 import { Pressable, StyleSheet, ViewStyle } from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 
-export interface ButtonCustomProps {
+export interface ButtonProps {
   text?: string
   /**
    * when true the button is "light type" in Light Mode and "dark type"
@@ -17,7 +17,7 @@ export interface ButtonCustomProps {
  * Custom button component. Specify param `light` to select button type
  *
  */
-export const ButtonCustom: FC<ButtonCustomProps> = props => {
+export const Button: FC<ButtonProps> = props => {
   const { palette, isLight } = usePalette()
   return (
     <Pressable
@@ -29,7 +29,7 @@ export const ButtonCustom: FC<ButtonCustomProps> = props => {
               ? palette.lighter
               : palette.darker
             : isLight
-            ? palette.darker
+            ? palette.primary
             : palette.lighter,
           minWidth: 130,
         },

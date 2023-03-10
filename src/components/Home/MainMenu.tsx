@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react"
+import { FC, useEffect, useState } from "react"
 import { ScrollView, View } from "react-native"
 
 import { useNavigation } from "navigation/NavigationTypes"
@@ -15,7 +15,7 @@ import marks from "assets/menu/marks.svg"
 import grading_book from "assets/menu/grading_book.svg"
 import tests from "assets/menu/tests.svg"
 import add from "assets/menu/add.svg"
-import { ModalCustom } from "components/Modal"
+import { Modal } from "components/Modal"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useOutsideClick } from "utils/outsideClick"
 
@@ -101,12 +101,15 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
       contentContainerStyle={{ paddingHorizontal: 21, marginTop: 5 }}
       showsHorizontalScrollIndicator={false}
     >
-      <ModalCustom
+      <Modal
         centerText={false}
         title={"Aggiungi features"}
         subTitle={"Personalizza la tua bacheca"}
         isShowing={isModalVisible}
         onClose={() => setModalVisible(false)}
+        contentContainerStyle={{
+          minHeight: 420,
+        }}
       >
         <View
           style={{
@@ -141,7 +144,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
             </View>
           ))}
         </View>
-      </ModalCustom>
+      </Modal>
       {icons
         .filter(i => i.shown)
         .filter(

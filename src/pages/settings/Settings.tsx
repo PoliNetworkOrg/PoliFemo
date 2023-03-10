@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import { useContext, useState } from "react"
 import { View } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ContentWrapperScroll } from "components/Settings"
@@ -9,12 +9,12 @@ import { UserDetailsTile } from "components/Settings"
 import { CareerTile } from "components/Settings"
 import { SelectTile } from "components/Settings"
 import { UserAnonymousTile } from "components/Settings"
-import { ModalWithButtons } from "components/ModalWithButtons"
 import { SettingsContext, ValidColorSchemeName } from "contexts/settings"
 import { CareerColumn } from "components/Settings"
 import { LoginContext } from "contexts/login"
 import { Career } from "api/user"
 import { HttpClient } from "api/HttpClient"
+import { Modal } from "components/Modal"
 
 const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
 const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
@@ -113,18 +113,28 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
         })}
       </ContentWrapperScroll>
 
-      <ModalWithButtons
+      <Modal
         title={"Scegli Tema"}
+        centerText
         isShowing={isModalThemeVisible}
-        onClose={() => {
-          //restore real theme value
-          setSelectedTheme(theme)
-          setModalThemeVisible(false)
-        }}
-        onOK={() => {
-          setSettings({ ...settings, theme: selectedTheme })
-          setModalThemeVisible(false)
-        }}
+        buttons={[
+          {
+            light: true,
+            text: "Annulla",
+            onPress: () => {
+              //restore real theme value
+              setSelectedTheme(theme)
+              setModalThemeVisible(false)
+            },
+          },
+          {
+            text: "OK",
+            onPress: () => {
+              setSettings({ ...settings, theme: selectedTheme })
+              setModalThemeVisible(false)
+            },
+          },
+        ]}
       >
         {themes?.map((themeName, index) => {
           return (
@@ -138,20 +148,30 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
             />
           )
         })}
-      </ModalWithButtons>
-      <ModalWithButtons
+      </Modal>
+      <Modal
         title={"Cambia Matricola"}
+        centerText
         isShowing={isModalCareerVisible}
-        onClose={() => {
-          //restore selectedCareer to career
-          if (career) setSelectedCareer(career)
-          setModalCareerVisible(false)
-        }}
-        onOK={() => {
-          //change career to selectedCareer
-          setCareer(selectedCareer)
-          setModalCareerVisible(false)
-        }}
+        buttons={[
+          {
+            light: true,
+            text: "Annulla",
+            onPress: () => {
+              //restore selectedCareer to career
+              if (career) setSelectedCareer(career)
+              setModalCareerVisible(false)
+            },
+          },
+          {
+            text: "OK",
+            onPress: () => {
+              //change career to selectedCareer
+              setCareer(selectedCareer)
+              setModalCareerVisible(false)
+            },
+          },
+        ]}
       >
         {userInfo?.careers?.map((careerOfIndex, index) => {
           return (
@@ -167,7 +187,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
             </SelectTile>
           )
         })}
-      </ModalWithButtons>
+      </Modal>
     </View>
   )
 }

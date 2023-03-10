@@ -3,7 +3,6 @@ import {
   RefreshControl,
   FlatList,
   View,
-  Animated,
   ActivityIndicator,
   StyleSheet,
 } from "react-native"
@@ -12,6 +11,7 @@ import { Switch } from "react-native-switch"
 import { Title, Subtitle } from "components/Text"
 import { NavBar, NavbarProps } from "components/NavBar"
 import { usePalette } from "utils/colors"
+import { BoxShadowView } from "./BoxShadow"
 
 interface PageProps<T> {
   /**
@@ -127,20 +127,30 @@ export const ScrollPageInfinite = <T,>(props: PageProps<T>): JSX.Element => {
           {props.backdropElement}
         </View>
       )}
-      <View
+      <BoxShadowView
+        shadow={{
+          color: isLight ? palette.primary : "#000",
+          offset: { y: -8 },
+          opacity: isLight ? 0.1 : 0.45,
+          blur: isLight ? 19 : 32,
+        }}
         // wrapper to make the borders of every child rounded
         style={{
-          backgroundColor: background,
           marginTop: 106 + (props.scrollOffset || 0),
-          flex: 1,
+        }}
+        contentContainerStyle={{
+          backgroundColor: background,
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
-          overflow: "hidden",
-          elevation: 15,
         }}
       >
         <FlatList
           data={props.items}
+          style={{
+            borderTopLeftRadius: 30,
+            borderTopRightRadius: 30,
+            overflow: "hidden",
+          }}
           renderItem={({ item, index }) => props.render(item, index)}
           onEndReached={props.fetchControl?.onFetch}
           onEndReachedThreshold={endThreshold}
@@ -156,7 +166,7 @@ export const ScrollPageInfinite = <T,>(props: PageProps<T>): JSX.Element => {
           ListHeaderComponent={
             showHeader ? (
               // Sticky page header with the title, subtitle and toggle switch
-              <Animated.View
+              <View
                 style={[
                   styles.header,
                   {
@@ -164,49 +174,47 @@ export const ScrollPageInfinite = <T,>(props: PageProps<T>): JSX.Element => {
                   },
                 ]}
               >
-                <View style={{ flexDirection: "row" }}>
-                  <View>
-                    <Title>{props.title}</Title>
-                    {props.subtitle && <Subtitle>{props.subtitle}</Subtitle>}
-                  </View>
-                  {showSwitch && (
-                    // Toggle switch
-                    <View style={styles.switch}>
-                      <Switch
-                        value={props.switchControl?.toggled}
-                        onValueChange={value => {
-                          props.switchControl?.onToggle(value)
-                        }}
-                        changeValueImmediately={true}
-                        renderActiveText={false}
-                        renderInActiveText={false}
-                        barHeight={27}
-                        switchWidthMultiplier={3}
-                        circleSize={18}
-                        circleActiveColor={backgroundSecondary}
-                        circleInActiveColor={palette.accent}
-                        circleBorderWidth={0}
-                        innerCircleStyle={{
-                          borderWidth: 1,
-                          borderColor: !props.switchControl?.toggled
-                            ? palette.accent
-                            : isLight
-                            ? "#EBEBEB"
-                            : "#3A4257",
-                        }}
-                        backgroundActive={palette.accent}
-                        backgroundInactive={"#FFF"}
-                        containerStyle={{
-                          borderWidth: 1,
-                          borderColor: palette.accent,
-                        }}
-                        switchLeftPx={1.5}
-                        switchRightPx={1.3}
-                      />
-                    </View>
-                  )}
+                <View>
+                  <Title>{props.title}</Title>
+                  {props.subtitle && <Subtitle>{props.subtitle}</Subtitle>}
                 </View>
-              </Animated.View>
+                {showSwitch && (
+                  // Toggle switch
+                  <View style={styles.switch}>
+                    <Switch
+                      value={props.switchControl?.toggled}
+                      onValueChange={value => {
+                        props.switchControl?.onToggle(value)
+                      }}
+                      changeValueImmediately={true}
+                      renderActiveText={false}
+                      renderInActiveText={false}
+                      barHeight={27}
+                      switchWidthMultiplier={3}
+                      circleSize={18}
+                      circleActiveColor={backgroundSecondary}
+                      circleInActiveColor={palette.accent}
+                      circleBorderWidth={0}
+                      innerCircleStyle={{
+                        borderWidth: 1,
+                        borderColor: !props.switchControl?.toggled
+                          ? palette.accent
+                          : isLight
+                          ? "#EBEBEB"
+                          : "#3A4257",
+                      }}
+                      backgroundActive={palette.accent}
+                      backgroundInactive={"#FFF"}
+                      containerStyle={{
+                        borderWidth: 1,
+                        borderColor: palette.accent,
+                      }}
+                      switchLeftPx={1.5}
+                      switchRightPx={1.3}
+                    />
+                  </View>
+                )}
+              </View>
             ) : undefined
           }
           ListFooterComponent={
@@ -222,7 +230,7 @@ export const ScrollPageInfinite = <T,>(props: PageProps<T>): JSX.Element => {
             paddingBottom: 120,
           }}
         />
-      </View>
+      </BoxShadowView>
       {navbar ? <NavBar {...props.navbarOptions} /> : null}
     </View>
   )
@@ -234,13 +242,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
     paddingVertical: 22,
     marginBottom: 16,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowRadius: 4.65,
+    flexDirection: "row",
   },
   backdrop: {
     zIndex: -1,
@@ -253,6 +255,6 @@ const styles = StyleSheet.create({
   switch: {
     position: "absolute",
     alignSelf: "center",
-    right: 5,
+    right: 5 + 28,
   },
 })

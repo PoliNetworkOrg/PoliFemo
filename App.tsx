@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native"
 import { hideAsync } from "expo-splash-screen"
 import { useFonts } from "@expo-google-fonts/roboto"
@@ -156,32 +156,32 @@ export default function App() {
   if (!settingsReady || !fontsLoaded || !tokensLoaded) return null
 
   return (
-    <Host>
-      <NavigationContainer
-        theme={{
-          ...DefaultTheme,
-          colors: {
-            ...DefaultTheme.colors,
-            background: homeBackground,
-          },
-        }}
-        linking={linking}
-      >
-        <StatusBar
-          barStyle={"light-content"}
-          translucent={true}
-          backgroundColor={"transparent"}
-        />
-        <OutsideClickProvider>
-          <SettingsContext.Provider
-            value={{ settings: settings, setSettings: setSettings }}
-          >
+    <SettingsContext.Provider
+      value={{ settings: settings, setSettings: setSettings }}
+    >
+      <Host>
+        <NavigationContainer
+          theme={{
+            ...DefaultTheme,
+            colors: {
+              ...DefaultTheme.colors,
+              background: homeBackground,
+            },
+          }}
+          linking={linking}
+        >
+          <StatusBar
+            barStyle={"light-content"}
+            translucent={true}
+            backgroundColor={"transparent"}
+          />
+          <OutsideClickProvider>
             <LoginContext.Provider value={{ ...loginState, setLoginState }}>
               <AppContainer />
             </LoginContext.Provider>
-          </SettingsContext.Provider>
-        </OutsideClickProvider>
-      </NavigationContainer>
-    </Host>
+          </OutsideClickProvider>
+        </NavigationContainer>
+      </Host>
+    </SettingsContext.Provider>
   )
 }
