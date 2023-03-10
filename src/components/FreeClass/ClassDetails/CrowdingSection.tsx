@@ -5,9 +5,10 @@ import { BodyText } from "components/Text"
 import { CrowdSliderStatic } from "./CrowdSlider/CrowdSliderStatic"
 import { CrowdSliderDynamic } from "./CrowdSlider/CrowdSliderDynamic"
 import { CrowdSliderLabels } from "./CrowdSlider/CrowdSliderLabels"
-import { Button } from "components/Button"
 import { ModalWithGestures } from "../ModalWithGestures"
 import { api, RetryType } from "api"
+
+const contentPadding = 20
 
 interface CrowdingSectionProps {
   roomId: number
@@ -90,54 +91,39 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
       <ModalWithGestures
         isShowing={isModalVisible}
         onClose={() => setIsModalVisible(false)}
-      >
-        <View
-          style={{
-            flex: 1,
-            paddingHorizontal: 26,
-            flexDirection: "column",
-            justifyContent: "space-between",
-            marginBottom: 44,
-            marginTop: 72,
-          }}
-        >
-          <BodyText
-            style={{
-              fontSize: 32,
-              fontWeight: "900",
-              color: iconHighContrast,
-              textAlign: "center",
-            }}
-          >
-            Esprimi{"\n"}Opinione
-          </BodyText>
-          <BodyText
-            style={{
-              fontSize: 13,
-              fontWeight: "900",
-              color: iconHighContrast,
-              textAlign: "center",
-            }}
-          >
-            Indica il livello di affollamento {"\n"} dell&apos;aula
-          </BodyText>
-          <View>
-            <CrowdSliderDynamic
-              startingPos={occupancyRateUser}
-              onSlideEnd={(pos: number) => (occupancyRateUser = pos)}
-            />
-            <CrowdSliderLabels />
-          </View>
-
-          <Button
-            text="Conferma"
-            light={false}
-            style={{ alignSelf: "center", minWidth: 103 }}
-            onPress={() => {
+        title={"Esprimi\nOpinione"}
+        subTitle={"Indica il livello di affollamento\ndell'aula"}
+        subTitleStyle={{
+          fontWeight: "900",
+          color: iconHighContrast,
+          marginTop: 58,
+          marginVertical: 0,
+        }}
+        centerText={true}
+        buttons={[
+          {
+            text: "Conferma",
+            light: false,
+            style: {
+              alignSelf: "center",
+              minWidth: 103,
+              marginTop: 16,
+              marginBottom: 10,
+            },
+            onPress: () => {
               void postOccupancyRate()
               setIsModalVisible(false)
-            }}
+            },
+          },
+        ]}
+      >
+        <View style={{ marginTop: 26, paddingHorizontal: contentPadding }}>
+          <CrowdSliderDynamic
+            startingPos={occupancyRateUser}
+            onSlideEnd={(pos: number) => (occupancyRateUser = pos)}
+            contentPadding={contentPadding}
           />
+          <CrowdSliderLabels />
         </View>
       </ModalWithGestures>
     </View>

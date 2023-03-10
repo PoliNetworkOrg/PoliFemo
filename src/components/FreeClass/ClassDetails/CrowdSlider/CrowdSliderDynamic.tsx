@@ -14,9 +14,10 @@ import {
 import { getCrowdStatus } from "utils/rooms"
 
 interface CrowdSliderDynamicProps {
-  usableWidth?: number
   startingPos: number
   onSlideEnd: (pos: number) => void
+  usableWidth?: number
+  contentPadding?: number
 }
 
 export const CrowdSliderDynamic: FC<CrowdSliderDynamicProps> = props => {
@@ -31,7 +32,8 @@ export const CrowdSliderDynamic: FC<CrowdSliderDynamicProps> = props => {
   const circleWidth = 28
 
   //320 is modal width, 52 is content padding
-  const usableWidth = props.usableWidth ?? 320 - 52 - circleWidth
+  const usableWidth =
+    props.usableWidth ?? 320 - (props.contentPadding ?? 26) * 2 - circleWidth
 
   const startingPos = ((props.startingPos - 1) / 4) * usableWidth
 

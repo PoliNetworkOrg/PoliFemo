@@ -1,23 +1,83 @@
 import React, { FC } from "react"
-import { View, Modal, StyleSheet, Pressable } from "react-native"
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  StyleProp,
+  ViewStyle,
+  Dimensions,
+  TextStyle,
+} from "react-native"
 import { usePalette } from "utils/colors"
-import icon from "assets/modal/delete.svg"
 import { gestureHandlerRootHOC } from "react-native-gesture-handler"
-import { Icon } from "components/Icon"
+import { Icon, IconProps } from "components/Icon"
+import { AdaptiveShadowView } from "components/BoxShadow"
+import { ButtonProps, Button } from "components/Button"
+import deletesvg from "assets/modal/delete.svg"
+import { Text } from "components/Text"
+import _Modal from "react-native-modal"
+import { Portal } from "react-native-portalize"
+
 export interface ModalWithGesturesProps {
-  /**
-   * content of the modal
-   */
   children: React.ReactNode
+
+  /**
+   * Big title, can be centered with `centerText` prop
+   **/
+  title: string
+
+  /**
+   * Optional, way smaller subtitle
+   **/
+  subTitle?: string
 
   /**
    * whether ot not to show the modal
    */
   isShowing: boolean
+
   /**
-   * this function hides the modal by changing the state in the parent component
+   * This function gets called on press of the close X button, if missing the
+   * button will not be rendered
    */
-  onClose: () => void
+  onClose?: () => void
+
+  /**
+   * whether ot not to center title and subtitle and apply different margins
+   * @default false
+   */
+  centerText?: boolean
+
+  /**
+   * duration of fade animation in ms
+   * @default 200
+   **/
+  animationTiming?: number
+
+  /**
+   * override outer container's style, for example changing height
+   **/
+  style?: StyleProp<ViewStyle>
+
+  /**
+   * override subtitle style
+   */
+  subTitleStyle?: StyleProp<TextStyle>
+
+  /**
+   * override the content container's style, for example changing padding
+   **/
+  contentContainerStyle?: StyleProp<ViewStyle>
+
+  /**
+   * array of buttons to be displayed at the bottom of the modal
+   * */
+  buttons?: ButtonProps[]
+
+  /**
+   * optional icon to be displayed at the top of the modal
+   **/
+  icon?: IconProps
 }
 
 /**
@@ -27,54 +87,113 @@ export interface ModalWithGesturesProps {
  *
  */
 export const ModalWithGestures: FC<ModalWithGesturesProps> = props => {
-  const { backgroundSecondary, modalBarrier } = usePalette()
+  const { backgroundSecondary, homeBackground, modalBarrier, isLight } =
+    usePalette()
+  const centerText = props.centerText ?? false
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const ContentRootHOC = gestureHandlerRootHOC(() => (
-    <Pressable
-      onPress={props.onClose}
-      style={[styles.pageWrapper, { backgroundColor: modalBarrier }]}
-    >
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Pressable
-          style={{ alignSelf: "flex-end" }}
-          onPress={() => props.onClose()}
-        >
-          <View style={styles.circle}>
-            <Icon source={icon} />
-          </View>
+    <Pressable style={styles.pageWrapper} onPress={props.onClose}>
+      {props.onClose && (
+        <Pressable style={styles.circle} onPress={() => props.onClose?.()}>
+          <Icon source={deletesvg} />
         </Pressable>
-        <Pressable
-          // this is a pressable just to prevent the modal from closing when clicking
-          // on the content
+      )}
+      <AdaptiveShadowView
+        shadow={{
+          blur: 50,
+          offset: { y: -8 },
+          opacity: 0.37,
+        }}
+        style={[{ width: 320 }, props.style]}
+        contentContainerStyle={[
+          {
+            borderRadius: 12,
+            backgroundColor: backgroundSecondary,
+            paddingTop: 24,
+          },
+          props.contentContainerStyle,
+        ]}
+      >
+        {props.icon && (
+          <View
+            style={{
+              borderRadius: 44,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Icon {...props.icon} />
+          </View>
+        )}
+        <Text
           style={[
-            styles.contentWrapper,
-            { backgroundColor: backgroundSecondary },
+            styles.title,
+            {
+              color: isLight ? homeBackground : "#ffffff",
+              textAlign: centerText ? "center" : "left",
+            },
           ]}
         >
-          <View style={{ width: 320, height: 420 }}>{props.children}</View>
-        </Pressable>
-      </View>
+          {props.title}
+        </Text>
+        {props.subTitle && (
+          <Text
+            style={[
+              styles.subTitle,
+              {
+                color: isLight ? homeBackground : "#ffffff",
+                textAlign: centerText ? "center" : "left",
+                marginVertical: 8,
+              },
+              props.subTitleStyle,
+            ]}
+          >
+            {props.subTitle}
+          </Text>
+        )}
+        <View>{props.children}</View>
+        {props.buttons && (
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              marginBottom: 32,
+              marginTop: 16,
+            }}
+          >
+            {props.buttons.map((props, i) => (
+              <Button {...props} key={i} />
+            ))}
+          </View>
+        )}
+      </AdaptiveShadowView>
     </Pressable>
   ))
 
   return (
-    //TODO: animationType fade or slide?
-    <Modal
-      onRequestClose={props.onClose}
-      statusBarTranslucent={true}
-      visible={props.isShowing}
-      animationType="fade"
-      transparent={true}
-    >
-      <ContentRootHOC />
-    </Modal>
+    <Portal>
+      <_Modal
+        needsOffscreenAlphaCompositing={true}
+        renderToHardwareTextureAndroid={true}
+        onBackButtonPress={props.onClose}
+        statusBarTranslucent={true}
+        isVisible={props.isShowing}
+        animationIn={"fadeIn"}
+        animationOut={"fadeOut"}
+        backdropColor={modalBarrier}
+        style={{ margin: 0 }}
+        deviceHeight={Dimensions.get("screen").height}
+        coverScreen={false}
+        animationInTiming={props.animationTiming ?? 200}
+        animationOutTiming={props.animationTiming ?? 200}
+        hasBackdrop={false}
+        useNativeDriverForBackdrop={true}
+        useNativeDriver={true}
+      >
+        <ContentRootHOC />
+      </_Modal>
+    </Portal>
   )
 }
 
@@ -83,27 +202,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  contentWrapper: {
-    borderRadius: 12,
-
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.27,
-    shadowRadius: 4.65,
-    elevation: 6,
+    backgroundColor: "#011B2973", // very specific color on Figma
   },
   circle: {
+    left: 157, // (modal.width / 2) - (circle.width / 2) + 12
+    zIndex: 1,
     width: 30,
     height: 30,
     backgroundColor: "#ffffff",
     borderRadius: 15,
-    marginTop: 96,
     marginBottom: 8,
     justifyContent: "center",
     alignItems: "center",
+  },
+  title: {
+    fontSize: 32,
+    marginHorizontal: 27,
+    marginTop: 12,
+    fontWeight: "900",
+  },
+  subTitle: {
+    fontSize: 13,
+    marginHorizontal: 27,
+    fontWeight: "600",
   },
 })

@@ -6,6 +6,7 @@ import {
   ViewStyle,
   StyleProp,
   Dimensions,
+  TextStyle,
 } from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
@@ -56,6 +57,11 @@ export interface ModalCustomProps {
    * override outer container's style, for example changing height
    **/
   style?: StyleProp<ViewStyle>
+
+  /**
+   * override subtitle style
+   */
+  subTitleStyle?: StyleProp<TextStyle>
 
   /**
    * override the content container's style, for example changing padding
@@ -155,6 +161,7 @@ export const Modal: FC<ModalCustomProps> = props => {
                     textAlign: centerText ? "center" : "left",
                     marginVertical: 8,
                   },
+                  props.subTitleStyle,
                 ]}
               >
                 {props.subTitle}
