@@ -11,13 +11,13 @@ export interface DateTimeBoxProps {
  * inside {@link DateTimePicker}
  */
 export const DateTimeBox: FC<DateTimeBoxProps> = props => {
-  const { isLight } = usePalette()
+  const { isLight, palette } = usePalette()
   return (
     <View
       style={{
         width: 38,
         height: 27,
-        borderColor: isLight ? "#454773" : "#fff",
+        borderColor: isLight ? palette.variant3 : "#fff",
         borderWidth: 0.5,
         borderRadius: 5,
         justifyContent: "center",
@@ -28,7 +28,7 @@ export const DateTimeBox: FC<DateTimeBoxProps> = props => {
         style={{
           fontSize: 20,
           fontWeight: "400",
-          color: isLight ? "#454773" : "#fff",
+          color: isLight ? palette.variant3 : "#fff",
           opacity: 0.4,
         }}
       >
