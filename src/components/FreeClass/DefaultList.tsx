@@ -55,7 +55,8 @@ export const DefaultList: FC<
     <FlatList
       style={{
         flex: 1,
-        marginTop: 53,
+        marginTop: 26,
+        paddingTop: 27,
         marginBottom: 93,
       }}
       showsVerticalScrollIndicator={true}
