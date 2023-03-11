@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import BuildingListJSON from "components/FreeClass/buildingCoords.json"
-import { CampusItem } from "pages/FreeClass/CampusChoice"
 import { ConstructionType, Occupancies, Room, RoomSimplified } from "api/rooms"
-import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
-import { BuildingItem } from "pages/FreeClass/BuildingChoice"
 import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
+import {
+  HeadquarterItem,
+  CampusItem,
+  BuildingItem,
+} from "components/FreeClass/DefaultList"
 
 export function extractRoom(val: string) {
   if (val.toLowerCase().includes("corridoio")) {
@@ -325,12 +327,13 @@ export function addHours(dateStart: Date, hours: number) {
   return tempDate
 }
 
-export function formatBuildingName(name: string) {
-  return name
+export function formatBuildingName(name: string): [string, string] {
+  const newName = name
     .replace("Edificio", "Ed.")
     .replace("Padiglione", "Pad.")
     .replace("Palazzina", "Pal.")
     .split(" ")
+  return [newName[0], newName[1]]
 }
 
 export const getSearchEndDate = (searchDate: Date) => {

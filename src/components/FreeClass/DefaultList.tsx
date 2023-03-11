@@ -29,7 +29,7 @@ export interface CampusItem {
 export interface BuildingItem {
   type: ConstructionType.BUILDING
   campus: CampusItem
-  name: string[]
+  name: [string, string]
   latitude?: number
   longitude?: number
   freeRoomList: Room[]
