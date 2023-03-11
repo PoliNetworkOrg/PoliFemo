@@ -4,7 +4,7 @@
 
 Prerequisiti:
 
-- [NodeJS](http://nodejs.org/) versione lts 16.14.2 (che su linux/mac consiglio di installare
+- [NodeJS](http://nodejs.org/) versione lts 18.15.0 (che su linux/mac consiglio di installare
   tramite [nvm](https://github.com/nvm-sh/nvm))
 - [Yarn](https://yarnpkg.com) che una volta installato Node si può installare con
   ```sh
