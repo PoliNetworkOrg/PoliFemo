@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from "react"
 import { View } from "react-native"
 import { SelectList } from "react-native-dropdown-select-list"
 import { usePalette } from "utils/colors"
-import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
+import { HeadquarterItem } from "./DefaultList"
 
 interface PositionPickerProps {
   headquarter: HeadquarterItem | undefined
