@@ -112,11 +112,12 @@ export const Map: FC<MapProps> = props => {
             <Pressable
               //this pressable is a button to return to user current location, on MapKit this feature is not provided by react-native-maps
               style={{
+                position: "absolute",
+                bottom: 200,
+                right: 5,
                 width: 43,
                 height: 43,
                 alignSelf: "flex-end",
-                marginRight: 5,
-                marginTop: 55,
                 borderRadius: 20,
               }}
               onPress={() => {
