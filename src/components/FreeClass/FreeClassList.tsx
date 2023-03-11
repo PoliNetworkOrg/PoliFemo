@@ -10,6 +10,7 @@ import { FlatList } from "react-native-gesture-handler"
 import { Room } from "api/rooms"
 import { findTimeLeft, ValidAcronym } from "utils/rooms"
 import { Icon } from "components/Icon"
+import { AdaptiveShadowView } from "components/BoxShadow"
 
 const { width } = Dimensions.get("window")
 
@@ -178,34 +179,42 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                 ) : undefined}
               </View>
             </View>
-            <View
+            <AdaptiveShadowView
               style={{
                 position: "absolute",
-                backgroundColor: palette.primary,
                 width: "40%",
-                height: 93,
                 borderRadius: 12,
-                alignItems: "center",
-                justifyContent: "center",
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 7,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 4,
+              }}
+              shadow={{
+                offset: { y: 7 },
+                color: "#000",
+                opacity: 0.25,
+                blur: 4,
+              }}
+              contentContainerStyle={{
+                borderRadius: 12,
               }}
             >
-              <BodyText
+              <View
                 style={{
-                  fontWeight: "700",
-                  color: "white",
-                  fontSize: item.name.length <= 10 ? 24 : 18,
+                  height: 93,
+                  backgroundColor: palette.primary,
+                  borderRadius: 12,
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                {item.name}
-              </BodyText>
-            </View>
+                <BodyText
+                  style={{
+                    fontWeight: "700",
+                    color: "white",
+                    fontSize: item.name.length <= 10 ? 24 : 18,
+                  }}
+                >
+                  {item.name}
+                </BodyText>
+              </View>
+            </AdaptiveShadowView>
           </Pressable>
         )
       }}
