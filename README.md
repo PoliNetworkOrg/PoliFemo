@@ -30,6 +30,11 @@ la finestra perché non si rende conto che le dependencies sono state installate
 
 ### Esecuzione
 
+La prima volta bisogna fare il login
+```sh
+expo login
+```
+
 L'app può essere eseguita da linea di comando sul dispositivo con:
 
 ```sh
