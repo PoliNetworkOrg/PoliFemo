@@ -33,7 +33,7 @@ la finestra perché non si rende conto che le dependencies sono state installate
 L'app può essere eseguita da linea di comando sul dispositivo con:
 
 ```sh
-yarn start
+yarn start --lan
 ```
 
 e inquadrando il codice QR che viene sputato nella linea di comando, e il bundle javascript verrà
