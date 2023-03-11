@@ -70,7 +70,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
         </View>
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
-      <View style={{ flex: 1, marginTop: 26, marginBottom: 93 }}>
+      <View style={{ flex: 1, marginTop: 27, marginBottom: 93 }}>
         {filteredRooms?.length === 0 && !isRoomsSearching ? (
           <ErrorMessage
             message="Non ci sono aule disponibili"
