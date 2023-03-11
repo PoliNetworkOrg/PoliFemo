@@ -120,7 +120,7 @@ export class HttpClient extends EventEmitter {
       timeout: 30000,
     })
     this.generalInstance = axios.create({
-      timeout: 2000,
+      timeout: 30000,
     })
     this._initializeInterceptors()
   }
