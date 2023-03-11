@@ -27,8 +27,6 @@ export const MainContainer: FC = () => {
 
   const [acronym, setAcronym] = useState<ValidAcronym>("MIA")
 
-  const [toggleSearchNow, setToggleSearchNow] = useState(false)
-
   const [globalRoomList, setGlobalRoomList] = useState<GlobalRoomListInterface>(
     {
       MIA: { rooms: [] },
@@ -77,8 +75,6 @@ export const MainContainer: FC = () => {
     >
       <RoomsSearchDataContext.Provider
         value={{
-          toggleSearchNow: toggleSearchNow,
-          setToggleSearchNow: val => setToggleSearchNow(val),
           isRoomsSearching: isRoomsSearching,
           setIsRoomsSearching: (val: boolean) => setIsRoomSearching(val),
           acronym: acronym,

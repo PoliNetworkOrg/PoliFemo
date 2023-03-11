@@ -33,7 +33,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
         const tempBuildings: BuildingItem[] = []
         currRooms
           .filter(room => {
-            return isCampusCorrect(campus, room) && isRoomFree(room, date)
+            return isCampusCorrect(campus, room) && isRoomFree(room, date, true)
           })
           .map(room => {
             const currentBuildingString = room.building
@@ -67,7 +67,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
 
   useEffect(() => {
     void findAvailableBuildings()
-  }, [rooms[campus.acronym].rooms])
+  }, [rooms[campus.acronym].rooms, date])
 
   return (
     <PageWrapper>

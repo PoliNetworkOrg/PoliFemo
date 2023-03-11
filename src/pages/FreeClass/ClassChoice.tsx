@@ -8,8 +8,6 @@ import { PageWrapper } from "components/Groups/PageWrapper"
 import { getBuildingCoords, isRoomFree } from "utils/rooms"
 import { RoomsSearchDataContext } from "contexts/rooms"
 import { Room } from "api/rooms"
-import { Switch } from "react-native-switch"
-import { usePalette } from "utils/colors"
 import { ErrorMessage } from "components/ErrorMessage"
 
 /**
@@ -18,23 +16,15 @@ import { ErrorMessage } from "components/ErrorMessage"
 export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
   const { building } = props.route.params
 
-  const {
-    date,
-    setDate,
-    rooms,
-    acronym,
-    isRoomsSearching,
-    toggleSearchNow,
-    setToggleSearchNow,
-  } = useContext(RoomsSearchDataContext)
+  const { date, setDate, rooms, acronym, isRoomsSearching } = useContext(
+    RoomsSearchDataContext
+  )
 
   const coords = getBuildingCoords(building.campus, building.fullName)
 
   const [buildingRooms, setBuildingRooms] = useState<Room[]>([])
 
   const [filteredRooms, setFilteredRooms] = useState<Room[]>([])
-
-  const { backgroundSecondary, palette, isLight } = usePalette()
 
   //update rooms from which to apply date filters
   useEffect(() => {
@@ -49,10 +39,10 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
   //apply date and toggle filters
   useEffect(() => {
     const newFilteredRooms = buildingRooms.filter(room => {
-      return isRoomFree(room, date, toggleSearchNow)
+      return isRoomFree(room, date, true)
     })
     setFilteredRooms(newFilteredRooms ?? [])
-  }, [buildingRooms, toggleSearchNow, date])
+  }, [buildingRooms, date])
 
   return (
     <PageWrapper>
@@ -77,50 +67,6 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
               .replace("Pal.", "Palazzina")}
             <Title>{" " + building.name[1]}</Title>
           </Title>
-          <Switch
-            activeTextStyle={{
-              fontSize: 16,
-              color: palette.darker,
-              textAlign: "auto",
-              fontFamily: "Roboto_700Bold",
-            }}
-            activeText={"FREE NOW"}
-            inActiveText={"FREE NOW"}
-            inactiveTextStyle={{
-              fontSize: 16,
-              color: "#D9D9D9",
-              textAlign: "auto",
-              fontFamily: "Roboto_700Bold",
-            }}
-            value={toggleSearchNow}
-            onValueChange={value => {
-              setToggleSearchNow(value)
-            }}
-            changeValueImmediately={true}
-            barHeight={40}
-            switchWidthMultiplier={5.2}
-            circleSize={24}
-            circleActiveColor={backgroundSecondary}
-            circleInActiveColor={palette.accent}
-            circleBorderWidth={0}
-            innerCircleStyle={{
-              borderWidth: 1,
-              borderColor: toggleSearchNow
-                ? palette.accent
-                : isLight
-                ? "#EBEBEB"
-                : "#3A4257",
-            }}
-            backgroundActive={palette.accent}
-            backgroundInactive={"#FFF"}
-            containerStyle={{
-              borderWidth: 1,
-              borderColor: palette.accent,
-              marginRight: 36,
-            }}
-            switchLeftPx={-20}
-            switchRightPx={20}
-          />
         </View>
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>

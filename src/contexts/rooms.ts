@@ -3,8 +3,6 @@ import React from "react"
 import { GlobalRoomListInterface, ValidAcronym } from "utils/rooms"
 
 export type RoomsSearchDataContextProps = {
-  toggleSearchNow: boolean
-  setToggleSearchNow: (val: boolean) => void
   isRoomsSearching: boolean
   setIsRoomsSearching: (val: boolean) => void
   acronym: ValidAcronym
@@ -17,8 +15,6 @@ export type RoomsSearchDataContextProps = {
 
 export const RoomsSearchDataContext =
   React.createContext<RoomsSearchDataContextProps>({
-    toggleSearchNow: false,
-    setToggleSearchNow: () => null,
     isRoomsSearching: false,
     setIsRoomsSearching: () => null,
     acronym: "COE",

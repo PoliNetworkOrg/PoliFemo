@@ -378,7 +378,6 @@ export const isRoomFree = (
 
   limitDate.setHours(20, 0, 0, 0)
   if (date.getTime() > limitDate.getTime()) {
-    console.log(room.name + " false")
     return false
   }
   if (mustBeFreeNow) {
