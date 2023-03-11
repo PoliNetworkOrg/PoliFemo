@@ -10,8 +10,7 @@ import { PageWrapper } from "components/Groups/PageWrapper"
 import { PositionModality } from "components/FreeClass/PositionModality"
 import { ConstructionType } from "api/rooms"
 import BuildingListJSON from "components/FreeClass/buildingCoords.json"
-import { HeadquarterItem } from "./HeadquarterChoice"
-import { CampusItem } from "./CampusChoice"
+import { HeadquarterItem, CampusItem } from "components/FreeClass/DefaultList"
 import { ValidAcronym } from "utils/rooms"
 import { RoomsSearchDataContext } from "contexts/rooms"
 
@@ -25,7 +24,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
   const [currentLocation, setCurrentLocation] =
     useState<LocationGeocodedAddress>()
 
-  const [currentCoords, setCurrentCoords] = useState<number[]>([])
+  const [currentCoords, setCurrentCoords] = useState<[number, number]>()
   const [headquarter, setHeadquarter] = useState<HeadquarterItem>() //nearest headquarter according to user position
 
   const { setDate, setAcronym } = useContext(RoomsSearchDataContext)
@@ -73,26 +72,36 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
   }, [headquarter])
 
   /**
-   * This function finds the user current position.
+   * This function finds the user current coordinates.
    */
-  async function getPosition() {
+  async function getUserCoordinates() {
     const { status } = await Location.requestForegroundPermissionsAsync()
     if (status !== "granted") {
-      setLocationStatus(PermissionStatus.UNDETERMINED)
+      setLocationStatus(status)
       setCurrentLocation(undefined)
     } else {
-      const { coords } = await Location.getCurrentPositionAsync({})
-      const { latitude, longitude } = coords
+      const lastPosition = await Location.getLastKnownPositionAsync()
+      if (lastPosition) {
+        setCurrentCoords([
+          lastPosition.coords.latitude,
+          lastPosition.coords.longitude,
+        ])
+      }
+      const { coords } = await Location.getCurrentPositionAsync({}) //in order to get more accurate information
+      setCurrentCoords([coords.latitude, coords.longitude])
+    }
+  }
+
+  async function getUserLocation() {
+    if (currentCoords) {
       const response = await Location.reverseGeocodeAsync({
-        latitude,
-        longitude,
+        latitude: currentCoords[0],
+        longitude: currentCoords[1],
       })
-
-      void findNearestHeadquarter(latitude, longitude)
-
       setLocationStatus(PermissionStatus.GRANTED)
-      setCurrentCoords([latitude, longitude])
       setCurrentLocation(response[0])
+
+      void findNearestHeadquarter(currentCoords[0], currentCoords[1])
     }
   }
 
@@ -106,6 +115,8 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
       if (status !== "granted") {
         setLocationStatus(PermissionStatus.UNDETERMINED)
         setCurrentLocation(undefined)
+      } else {
+        setLocationStatus(PermissionStatus.GRANTED)
       }
     } else {
       const res = await Location.hasServicesEnabledAsync()
@@ -125,8 +136,16 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
   }, [])
 
   useEffect(() => {
-    void getPosition()
-  }, [])
+    if (locationStatus !== PermissionStatus.GRANTED) {
+      return
+    } else {
+      void getUserCoordinates()
+    }
+  }, [locationStatus])
+
+  useEffect(() => {
+    void getUserLocation()
+  }, [currentCoords])
 
   return (
     <PageWrapper>
@@ -140,7 +159,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
         </View>
       </View>
       <PositionModality
-        currentCoords={currentCoords}
+        currentCoords={currentCoords ?? [0, 0]}
         locationStatus={locationStatus}
         headquarter={headquarter}
       />

@@ -5,19 +5,17 @@ import { BodyText } from "components/Text"
 import { Map } from "./Map"
 import { FreeClassList } from "./FreeClassList"
 import { PermissionStatus } from "expo-location"
-import { BuildingItem } from "pages/FreeClass/BuildingChoice"
+import { HeadquarterItem, CampusItem, BuildingItem } from "./DefaultList"
 import { ConstructionType } from "api/rooms"
 import { useNavigation } from "@react-navigation/native"
 import { PositionPicker } from "./PositionPicker"
-import { CampusItem } from "pages/FreeClass/CampusChoice"
 import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
-import { HeadquarterItem } from "pages/FreeClass/HeadquarterChoice"
 import { getBuildingInfo, ValidAcronym } from "utils/rooms"
 import { ErrorMessage } from "../ErrorMessage"
 import { RoomsSearchDataContext } from "contexts/rooms"
 
 interface PositionModalityProps {
-  currentCoords: number[]
+  currentCoords: [number, number]
   locationStatus: PermissionStatus
   headquarter: HeadquarterItem | undefined
 }
