@@ -7,6 +7,7 @@ import { useNavigation } from "navigation/NavigationTypes"
 import { usePalette } from "utils/colors"
 import { NavbarIcon, navbarIcons } from "assets/navbar"
 import { newsSheetEventEmitter } from "utils/events"
+import { BoxShadowView } from "./BoxShadow"
 import { Icon } from "./Icon"
 
 export interface NavbarProps {
@@ -56,7 +57,7 @@ export interface NavbarProps {
 export const NavBar: FC<NavbarProps> = props => {
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
-  const { buttonFill, background } = usePalette()
+  const { isLight, palette, buttonFill, background } = usePalette()
 
   const back = props.back ?? true
   const home = props.home ?? true
@@ -64,14 +65,20 @@ export const NavBar: FC<NavbarProps> = props => {
   const elevated = props.elevated ?? true
 
   return (
-    <View
-      style={[
-        styles.wrapper,
+    <BoxShadowView
+      shadow={{
+        color: elevated ? (isLight ? palette.primary : "#000") : "transparent",
+        offset: { y: -4 },
+        opacity: isLight ? 0.2 : 0.63,
+        blur: isLight ? 17 : 9,
+      }}
+      style={styles.wrapper}
+      contentContainerStyle={[
+        styles.contentContainer,
         {
           backgroundColor: background,
           paddingBottom: insets.bottom ? insets.bottom + 10 : undefined,
         },
-        elevated ? styles.wrapperElevated : {},
       ]}
     >
       {back && (
@@ -138,7 +145,7 @@ export const NavBar: FC<NavbarProps> = props => {
             </Pressable>
           ))}
       </View>
-    </View>
+    </BoxShadowView>
   )
 }
 
@@ -148,25 +155,18 @@ const styles = StyleSheet.create({
     width: "100%",
     bottom: 0,
     zIndex: 3,
+  },
+  contentContainer: {
+    flex: 1,
     paddingHorizontal: 25,
     paddingVertical: 30,
 
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-  },
-  wrapperElevated: {
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
 
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 8.3,
-    elevation: 13,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
   },
   button: {
     height: 32,
