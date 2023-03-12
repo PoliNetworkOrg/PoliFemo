@@ -193,7 +193,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                   }}
                   buttonIcon={buttonIcon}
                   isDeleting={false}
-                  key={"menu_add_icon" + index}
+                  key={"menu_add_icon" + buttonIcon.type}
                   inMenu
                 />
               ))}
