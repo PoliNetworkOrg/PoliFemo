@@ -4,7 +4,7 @@
 
 Prerequisiti:
 
-- [NodeJS](http://nodejs.org/) versione lts 16.14.2 (che su linux/mac consiglio di installare
+- [NodeJS](http://nodejs.org/) versione lts 18.15.0 (che su linux/mac consiglio di installare
   tramite [nvm](https://github.com/nvm-sh/nvm))
 - [Yarn](https://yarnpkg.com) che una volta installato Node si può installare con
   ```sh
@@ -29,6 +29,11 @@ Poi c'è anche un bug in vscode alla prima installazione, a quanto pare bisogna 
 la finestra perché non si rende conto che le dependencies sono state installate
 
 ### Esecuzione
+
+La prima volta bisogna fare il login
+```sh
+expo login
+```
 
 L'app può essere eseguita da linea di comando sul dispositivo con:
 
