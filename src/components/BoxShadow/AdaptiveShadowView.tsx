@@ -22,6 +22,7 @@ export const AdaptiveShadowView: React.FC<AdaptiveShadowViewProps> = ({
   shadow,
   canvasStyle,
   contentContainerStyle,
+  onPress,
   children,
   ...props
 }) => {
@@ -48,6 +49,7 @@ export const AdaptiveShadowView: React.FC<AdaptiveShadowViewProps> = ({
         ]}
       />
       <Pressable
+        onPress={onPress}
         onLayout={event => {
           const { width, height } = event.nativeEvent.layout
           setWidth(width)

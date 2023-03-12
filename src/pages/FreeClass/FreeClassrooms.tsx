@@ -1,19 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useContext, useEffect, useState } from "react"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
-import {
-  View,
-  Dimensions,
-  Pressable,
-  Alert,
-  ActivityIndicator,
-} from "react-native"
+import { View, Alert, ActivityIndicator, StyleSheet } from "react-native"
 import { PoliSearchBar } from "components/Home"
 import { usePalette } from "utils/colors"
 import { Title, BodyText } from "components/Text"
 import campusIcon from "assets/freeClassrooms/campus.svg"
-import position1Icon from "assets/freeClassrooms/position1.svg"
-import position2Icon from "assets/freeClassrooms/position2.svg"
+import positionIcon from "assets/freeClassrooms/position.svg"
 import * as Location from "expo-location"
 import {
   formatDate,
@@ -31,27 +24,7 @@ import { Room } from "api/rooms"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { ScrollView } from "react-native-gesture-handler"
-
-const { width } = Dimensions.get("window")
-
-enum SearchClassType {
-  GPS_POSITION,
-  HEADQUARTER,
-}
-interface FreeClassInterface {
-  id: number
-  type: SearchClassType
-  text: string[]
-}
-
-const freeClassButtons: FreeClassInterface[] = [
-  {
-    id: 0,
-    type: SearchClassType.GPS_POSITION,
-    text: ["In base alla tua", "posizione"],
-  },
-  { id: 1, type: SearchClassType.HEADQUARTER, text: ["Scegli la tua", "sede"] },
-]
+import { AdaptiveShadowView } from "components/BoxShadow"
 
 let searchTimeout: NodeJS.Timeout
 const deltaTime = 200 //ms
@@ -250,67 +223,42 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
           }}
           bounces={false}
         >
-          <View style={{ width, alignItems: "center" }}>
-            {freeClassButtons.map(item => (
-              <Pressable
-                key={"freeClass_" + item.id}
-                style={{
-                  marginTop: 18,
-                  backgroundColor: palette.primary,
-                  width: width - 54,
-                  height: 190,
-                  borderRadius: 12,
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 7,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 4,
-                  alignItems: "center",
-                }}
-                onPress={
-                  item.type === SearchClassType.HEADQUARTER
-                    ? () => navigate("HeadquarterChoice")
-                    : () => handlePositionPressed()
-                }
-              >
-                {item.type === SearchClassType.HEADQUARTER ? (
-                  <Icon
-                    style={{ marginTop: 33, marginBottom: 25 }}
-                    source={campusIcon}
-                  />
-                ) : (
-                  <>
-                    <Icon style={{ marginTop: 28 }} source={position1Icon} />
-                    <Icon
-                      style={{
-                        marginTop: -11,
-                        marginLeft: 3,
-                        marginBottom: 25,
-                      }}
-                      source={position2Icon}
-                    />
-                  </>
-                )}
-                <BodyText
-                  style={{
-                    fontWeight: "300",
-                    color: "white",
-                  }}
-                >
-                  {item.text[0]}{" "}
-                  <BodyText
-                    style={{
-                      fontWeight: "900",
-                      color: "white",
-                    }}
-                  >
-                    {item.text[1]}
-                  </BodyText>
+          <View style={{ alignItems: "stretch" }}>
+            <AdaptiveShadowView
+              style={styles.choiceButton}
+              contentContainerStyle={[
+                styles.choiceContent,
+                { backgroundColor: palette.primary },
+              ]}
+              onPress={() => handlePositionPressed()}
+              shadow={{ offset: { y: 4 }, opacity: 0.25, blur: 4 }}
+            >
+              <Icon style={{ marginTop: 5 }} source={positionIcon} />
+              <BodyText style={{ fontWeight: "300", color: "white" }}>
+                In base alla tua{" "}
+                <BodyText style={{ fontWeight: "900", color: "white" }}>
+                  posizione
                 </BodyText>
-              </Pressable>
-            ))}
+              </BodyText>
+            </AdaptiveShadowView>
+
+            <AdaptiveShadowView
+              shadow={{ offset: { y: 4 }, opacity: 0.25, blur: 4 }}
+              style={styles.choiceButton}
+              contentContainerStyle={[
+                styles.choiceContent,
+                { backgroundColor: palette.primary },
+              ]}
+              onPress={() => navigate("HeadquarterChoice")}
+            >
+              <Icon style={{ marginTop: 5 }} source={campusIcon} />
+              <BodyText style={{ fontWeight: "300", color: "white" }}>
+                Scegli la tua{" "}
+                <BodyText style={{ fontWeight: "900", color: "white" }}>
+                  sede
+                </BodyText>
+              </BodyText>
+            </AdaptiveShadowView>
           </View>
         </ScrollView>
       ) : (
@@ -325,3 +273,17 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
     </PageWrapper>
   )
 }
+
+const styles = StyleSheet.create({
+  choiceButton: {
+    marginTop: 18,
+    marginHorizontal: 28,
+  },
+  choiceContent: {
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderRadius: 12,
+    padding: 23,
+    height: 190,
+  },
+})

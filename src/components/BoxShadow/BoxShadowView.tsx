@@ -16,6 +16,7 @@ export interface BoxShadowViewProps extends ViewProps {
   canvasStyle?: BoxShadowCanvasProps["canvasStyle"]
   overrideCanvasDimensions?: BoxShadowCanvasProps["canvasDimensions"]
   contentContainerStyle?: StyleProp<ViewStyle>
+  onPress?: () => void
 }
 
 /**
@@ -32,6 +33,7 @@ export const BoxShadowView: React.FC<BoxShadowViewProps> = ({
   canvasStyle,
   overrideCanvasDimensions,
   contentContainerStyle,
+  onPress,
   children,
   ...props
 }) => {
@@ -55,7 +57,9 @@ export const BoxShadowView: React.FC<BoxShadowViewProps> = ({
           canvasStyle,
         ]}
       />
-      <Pressable style={contentContainerStyle}>{children}</Pressable>
+      <Pressable onPress={onPress} style={contentContainerStyle}>
+        {children}
+      </Pressable>
     </View>
   )
 }
