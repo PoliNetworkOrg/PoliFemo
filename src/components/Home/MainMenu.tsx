@@ -182,7 +182,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                 width: 288,
               }}
             >
-              {triplet.map((buttonIcon, index) => (
+              {triplet.map(buttonIcon => (
                 <MenuButton
                   onPress={() => {
                     setIcons(
@@ -234,6 +234,12 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                     : i
                 )
               )
+              if (
+                icons.filter(icon => icon.shown && icon.type !== ButtonType.ADD)
+                  .length === 1
+              ) {
+                setIsDeleting(false)
+              }
             }}
             key={"menu_" + buttonIcon.type}
           />
