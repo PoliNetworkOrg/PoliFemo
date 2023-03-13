@@ -35,9 +35,6 @@ export const MainContainer: FC = () => {
       LCF: { rooms: [] },
       PCL: { rooms: [] },
       MNI: { rooms: [] },
-      MIC: { rooms: [] },
-      MID: { rooms: [] },
-      COE: { rooms: [] },
     }
   )
 

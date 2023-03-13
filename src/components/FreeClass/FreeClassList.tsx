@@ -70,6 +70,22 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
           ? endDate?.getHours() - props.date.getHours()
           : 0
 
+        const navigateToRoom = () => {
+          try {
+            navigate("RoomDetails", {
+              startDate: props.date.toISOString(),
+              roomId: item.room_id,
+              roomLatitude: props.latitude,
+              roomLongitude: props.longitude,
+              occupancies: item.occupancies,
+              occupancyRate: item.occupancy_rate,
+              acronymList: props.acronymList,
+            })
+          } catch (err) {
+            console.log(err)
+          }
+        }
+
         return (
           <Pressable
             style={{
@@ -79,21 +95,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
               marginBottom: 34,
               borderRadius: 16,
             }}
-            onPress={() => {
-              try {
-                navigate("RoomDetails", {
-                  startDate: props.date.toISOString(),
-                  roomId: item.room_id,
-                  roomLatitude: props.latitude,
-                  roomLongitude: props.longitude,
-                  occupancies: item.occupancies,
-                  occupancyRate: item.occupancy_rate,
-                  acronymList: props.acronymList,
-                })
-              } catch (err) {
-                console.log(err)
-              }
-            }}
+            onPress={navigateToRoom}
           >
             <View
               style={{
@@ -201,6 +203,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
               contentContainerStyle={{
                 borderRadius: 12,
               }}
+              onPress={navigateToRoom}
             >
               <View
                 style={{
