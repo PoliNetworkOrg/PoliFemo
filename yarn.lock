@@ -4869,6 +4869,13 @@ expo-linear-gradient@~12.1.1:
   resolved "https://registry.yarnpkg.com/expo-linear-gradient/-/expo-linear-gradient-12.1.1.tgz#7ddfbfb0916b4da9e461a9c5b59e0573b07de913"
   integrity sha512-W5WV9+SOlRSog/SLvDbpd0L/7g8WzoOKDE4WHv5wNk6m9iM1K0eAuP+MC+8JzVXoZOOj9OPuh9rkZ4KCzTOM1A==
 
+expo-localization@^14.1.1:
+  version "14.1.1"
+  resolved "https://registry.yarnpkg.com/expo-localization/-/expo-localization-14.1.1.tgz#7733ca7da9e13d242cb8b395ddff23a4d2c84adf"
+  integrity sha512-wmozyF82i6muCBWTX+atzqQv9JUjSbEQ0QKYg1Th4QX/qcVd+ajVjFUytSMzg/ME1vGUP1s+LN+SiZ98YokWWw==
+  dependencies:
+    rtl-detect "^1.0.2"
+
 expo-manifests@~0.5.0:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/expo-manifests/-/expo-manifests-0.5.2.tgz#60f91ad196cd5a37248c28c6f307df806c5a27ad"
@@ -9277,6 +9284,11 @@ rn-slick-bottom-tabs@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/rn-slick-bottom-tabs/-/rn-slick-bottom-tabs-1.1.1.tgz#7467e4e25aca1e6dc093b9cade388d13aa110ce5"
   integrity sha512-uIsb0gHH8Z17tSoI6a2v7yi+6E2+tYtEe/blxruoAQbv+HwgtpznsrTHK0PEM5Fw50JLpFQAqIzEVZXgEW368A==
+
+rtl-detect@^1.0.2:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/rtl-detect/-/rtl-detect-1.0.4.tgz#40ae0ea7302a150b96bc75af7d749607392ecac6"
+  integrity sha512-EBR4I2VDSSYr7PkBmFy04uhycIpDKp+21p/jARYXlCSjQksTBQcJ0HFUPOO79EPPH5JS6VAhiIQbycf0O3JAxQ==
 
 run-parallel@^1.1.9:
   version "1.2.0"

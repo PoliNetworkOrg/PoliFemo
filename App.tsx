@@ -23,6 +23,8 @@ import { HttpClient } from "api/HttpClient"
 import { usePalette } from "utils/colors"
 import { StatusBar } from "react-native"
 import { Host } from "react-native-portalize"
+// eslint-disable-next-line unused-imports/no-unused-imports
+import "./src/locales/i18n"
 
 const client = HttpClient.getInstance()
 
