@@ -8,7 +8,7 @@ import fireIcon from "assets/freeClassrooms/fire.svg"
 import { useNavigation } from "navigation/NavigationTypes"
 import { FlatList } from "react-native-gesture-handler"
 import { Room } from "api/rooms"
-import { findTimeLeft, ValidAcronym } from "utils/rooms"
+import { getStartEndDate, ValidAcronym } from "utils/rooms"
 import { Icon } from "components/Icon"
 import { AdaptiveShadowView } from "components/BoxShadow"
 
@@ -59,10 +59,17 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
       data={props.data}
       keyExtractor={(_, index) => index.toString()}
       renderItem={({ item }) => {
-        const { hoursLeft, minutesLeft } = findTimeLeft(
-          item.occupancies,
-          props.date
-        )
+        const { endDate } = getStartEndDate(props.date, item.occupancies)
+
+        const endhour =
+          endDate?.getHours().toString().padStart(2, "0") ?? undefined
+        const endMinutes =
+          endDate?.getMinutes().toString().padStart(2, "0") ?? undefined
+
+        const hoursLeft = endDate
+          ? endDate?.getHours() - props.date.getHours()
+          : 0
+
         return (
           <Pressable
             style={{
@@ -105,21 +112,21 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                   fontSize: 12,
                   color: "white",
                   textAlign: "left",
-                  paddingLeft: 100,
+                  paddingLeft: 130,
                 }}
               >
-                Libera per{"\n"}
+                Libera fino alle{"\n"}
                 <BodyText
                   style={{
                     fontWeight: "700",
                     fontSize: 14,
-                    color:
-                      hoursLeft !== "0" ? labelsHighContrast : palette.accent,
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    color: hoursLeft <= 1 ? palette.accent : labelsHighContrast,
                   }}
                 >
-                  {hoursLeft && minutesLeft
-                    ? `${hoursLeft} h ${minutesLeft} '`
-                    : "-- h -- '"}
+                  {endhour && endMinutes
+                    ? `${endhour}.${endMinutes}`
+                    : "-- : --"}
                 </BodyText>
               </BodyText>
             </View>
