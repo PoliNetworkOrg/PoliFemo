@@ -104,7 +104,7 @@ export const Map: FC<MapProps> = props => {
           mapPadding={{
             top: 0,
             right: 0,
-            bottom: Platform.OS === "ios" ? 175 : 170,
+            bottom: Platform.OS === "ios" ? 120 : 115,
             left: 0,
           }}
         >
@@ -113,7 +113,7 @@ export const Map: FC<MapProps> = props => {
               //this pressable is a button to return to user current location, on MapKit this feature is not provided by react-native-maps
               style={{
                 position: "absolute",
-                bottom: 200,
+                bottom: 150,
                 right: 5,
                 width: 43,
                 height: 43,

@@ -8,7 +8,6 @@ import { PermissionStatus } from "expo-location"
 import { HeadquarterItem, CampusItem, BuildingItem } from "./DefaultList"
 import { ConstructionType } from "api/rooms"
 import { useNavigation } from "@react-navigation/native"
-import { PositionPicker } from "./PositionPicker"
 import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
 import { getBuildingInfo, ValidAcronym } from "utils/rooms"
 import { ErrorMessage } from "../ErrorMessage"
@@ -102,15 +101,9 @@ export const PositionModality: FC<PositionModalityProps> = props => {
 
   return (
     <>
-      <View style={{ marginTop: -23 }}>
-        <PositionPicker
-          headquarter={props.headquarter}
-          onPositionSelected={campusName => findCampusCoordinates(campusName)}
-        />
-      </View>
       <View
         style={{
-          marginTop: 10,
+          marginTop: 30,
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
