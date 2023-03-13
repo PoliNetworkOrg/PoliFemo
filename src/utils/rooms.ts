@@ -510,16 +510,7 @@ export const getRoomFromId = (
   return undefined
 }
 
-export type ValidAcronym =
-  | "MIA"
-  | "MIB"
-  | "CRG"
-  | "LCF"
-  | "PCL"
-  | "MNI"
-  | "MIC"
-  | "MID"
-  | "COE"
+export type ValidAcronym = "MIA" | "MIB" | "CRG" | "LCF" | "PCL" | "MNI"
 
 export interface GlobalRoomListInterface {
   MIA: { rooms: Room[]; expireAt?: string; searchDate?: string }
@@ -528,9 +519,6 @@ export interface GlobalRoomListInterface {
   LCF: { rooms: Room[]; expireAt?: string; searchDate?: string }
   PCL: { rooms: Room[]; expireAt?: string; searchDate?: string }
   MNI: { rooms: Room[]; expireAt?: string; searchDate?: string }
-  MIC: { rooms: Room[]; expireAt?: string; searchDate?: string }
-  MID: { rooms: Room[]; expireAt?: string; searchDate?: string }
-  COE: { rooms: Room[]; expireAt?: string; searchDate?: string }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -547,9 +535,6 @@ export function isValidAcronym(value: string): value is ValidAcronym {
     value === "CRG" ||
     value === "LCF" ||
     value === "PCL" ||
-    value === "MNI" ||
-    value === "MIC" ||
-    value === "MID" ||
-    value === "COE"
+    value === "MNI"
   )
 }

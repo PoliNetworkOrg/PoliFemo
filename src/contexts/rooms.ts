@@ -17,7 +17,7 @@ export const RoomsSearchDataContext =
   React.createContext<RoomsSearchDataContextProps>({
     isRoomsSearching: false,
     setIsRoomsSearching: () => null,
-    acronym: "COE",
+    acronym: "MIA",
     setAcronym: () => null,
     date: new Date("2022-05-18T12:15:00Z"),
     setDate: () => null,
@@ -28,9 +28,6 @@ export const RoomsSearchDataContext =
       LCF: { rooms: [] },
       PCL: { rooms: [] },
       MNI: { rooms: [] },
-      MIC: { rooms: [] },
-      MID: { rooms: [] },
-      COE: { rooms: [] },
     },
     setRooms: () => null,
   })
