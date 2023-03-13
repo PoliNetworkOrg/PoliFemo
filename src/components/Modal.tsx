@@ -16,6 +16,7 @@ import { Portal } from "react-native-portalize"
 import { Icon, IconProps } from "./Icon"
 import { AdaptiveShadowView } from "./BoxShadow"
 import { ButtonProps, Button } from "components/Button"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 
 export interface ModalCustomProps {
   children: React.ReactNode
@@ -108,82 +109,87 @@ export const Modal: FC<ModalCustomProps> = props => {
         useNativeDriverForBackdrop={true}
         useNativeDriver={true}
       >
-        <Pressable style={styles.pageWrapper} onPress={props.onClose}>
-          {props.onClose && (
-            <Pressable style={styles.circle} onPress={() => props.onClose?.()}>
-              <Icon source={deletesvg} />
-            </Pressable>
-          )}
-          <AdaptiveShadowView
-            shadow={{
-              blur: 50,
-              offset: { y: -8 },
-              opacity: 0.37,
-            }}
-            style={[{ width: 320 }, props.style]}
-            contentContainerStyle={[
-              {
-                borderRadius: 12,
-                backgroundColor: backgroundSecondary,
-                paddingTop: 24,
-              },
-              props.contentContainerStyle,
-            ]}
-          >
-            {props.icon && (
-              <View
-                style={{
-                  borderRadius: 44,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <Pressable style={styles.pageWrapper} onPress={props.onClose}>
+            {props.onClose && (
+              <Pressable
+                style={styles.circle}
+                onPress={() => props.onClose?.()}
               >
-                <Icon {...props.icon} />
-              </View>
+                <Icon source={deletesvg} />
+              </Pressable>
             )}
-            <Text
-              style={[
-                styles.title,
+            <AdaptiveShadowView
+              shadow={{
+                blur: 50,
+                offset: { y: -8 },
+                opacity: 0.37,
+              }}
+              style={[{ width: 320 }, props.style]}
+              contentContainerStyle={[
                 {
-                  color: isLight ? homeBackground : "#ffffff",
-                  textAlign: centerText ? "center" : "left",
+                  borderRadius: 12,
+                  backgroundColor: backgroundSecondary,
+                  paddingTop: 24,
                 },
+                props.contentContainerStyle,
               ]}
             >
-              {props.title}
-            </Text>
-            {props.subTitle && (
+              {props.icon && (
+                <View
+                  style={{
+                    borderRadius: 44,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Icon {...props.icon} />
+                </View>
+              )}
               <Text
                 style={[
-                  styles.subTitle,
+                  styles.title,
                   {
                     color: isLight ? homeBackground : "#ffffff",
                     textAlign: centerText ? "center" : "left",
-                    marginVertical: 8,
                   },
-                  props.subTitleStyle,
                 ]}
               >
-                {props.subTitle}
+                {props.title}
               </Text>
-            )}
-            <View>{props.children}</View>
-            {props.buttons && (
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                  marginBottom: 32,
-                  marginTop: 16,
-                }}
-              >
-                {props.buttons.map((props, i) => (
-                  <Button {...props} key={i} />
-                ))}
-              </View>
-            )}
-          </AdaptiveShadowView>
-        </Pressable>
+              {props.subTitle && (
+                <Text
+                  style={[
+                    styles.subTitle,
+                    {
+                      color: isLight ? homeBackground : "#ffffff",
+                      textAlign: centerText ? "center" : "left",
+                      marginVertical: 8,
+                    },
+                    props.subTitleStyle,
+                  ]}
+                >
+                  {props.subTitle}
+                </Text>
+              )}
+              <View>{props.children}</View>
+              {props.buttons && (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                    marginBottom: 32,
+                    marginTop: 16,
+                  }}
+                >
+                  {props.buttons.map((props, i) => (
+                    <Button {...props} key={i} />
+                  ))}
+                </View>
+              )}
+            </AdaptiveShadowView>
+          </Pressable>
+        </GestureHandlerRootView>
       </_Modal>
     </Portal>
   )

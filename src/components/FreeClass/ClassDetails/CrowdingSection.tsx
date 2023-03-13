@@ -5,8 +5,8 @@ import { BodyText } from "components/Text"
 import { CrowdSliderStatic } from "./CrowdSlider/CrowdSliderStatic"
 import { CrowdSliderDynamic } from "./CrowdSlider/CrowdSliderDynamic"
 import { CrowdSliderLabels } from "./CrowdSlider/CrowdSliderLabels"
-import { ModalWithGestures } from "../ModalWithGestures"
 import { api, RetryType } from "api"
+import { Modal } from "components/Modal"
 
 const contentPadding = 20
 
@@ -88,7 +88,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
         </Pressable>
       </View>
 
-      <ModalWithGestures
+      <Modal
         isShowing={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         title={"Esprimi\nOpinione"}
@@ -125,7 +125,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
           />
           <CrowdSliderLabels />
         </View>
-      </ModalWithGestures>
+      </Modal>
     </View>
   )
 }
