@@ -10,10 +10,6 @@ Prerequisiti:
   ```sh
   corepack enable
   ```
-- La CLI Expo che si può installare con il comando
-  ```sh
-  npm install --global expo-cli
-  ```
 - L'applicazione Expo GO installata sul proprio telefono (https://expo.dev/client)
 
 Una volta clonata la repo la prima cosa da fare è installare le dependencies con
