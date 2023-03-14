@@ -16,7 +16,7 @@ import { Career } from "api/user"
 import { HttpClient } from "api/HttpClient"
 import { Modal } from "components/Modal"
 import { checkPlayServicesExample } from "utils/checkGooglePlayServices"
-import { StyleSheet, Button, Alert } from "react-native"
+import { Alert } from "react-native"
 
 const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
 const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
@@ -76,7 +76,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
       subtitle:
         "Informativa sulla privacy\nImpostazioni del tuo account relative alla privacy",
       icon: settingsIcons.privacy,
-      callback: async () => {
+      callback: () => {
         navigate("Privacy")
       },
     },
@@ -84,8 +84,8 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
       title: "Check Google",
       subtitle: "Check Google",
       icon: settingsIcons.privacy,
-      callback: async () => {
-        var result = checkPlayServicesExample()
+      callback: () => {
+        const result = checkPlayServicesExample()
         console.log(result)
         Alert.alert(
           "Google",
