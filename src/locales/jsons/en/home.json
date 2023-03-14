@@ -1,5 +1,4 @@
 {
-    "search": "Search",
     "menu_calendar": "Calendar",
     "menu_timetable": "Class Timetable",
     "menu_associations": "PoliAssociations",
@@ -9,5 +8,11 @@
     "menu_marks": "Marks",
     "menu_gradingBook": "Grading Book",
     "menu_test": "Test",
-    "menu_add": "Add"
+    "menu_add": "Add",
+
+    "modal_add": "Add features",
+    "modal_message": "Customize your wall",
+
+    "highlights_defaultTitle": "Enjoy your leisure, you can relax",
+    "highlights_defualtSubtitle": "No notice prominently"
 }

@@ -5,6 +5,7 @@ import { FC } from "react"
 import { View, Dimensions } from "react-native"
 import { usePalette } from "utils/colors"
 import polifemoIcon from "assets/highlights/polifemo.svg"
+import { useTranslation } from "react-i18next"
 
 const { width } = Dimensions.get("window")
 
@@ -12,6 +13,8 @@ export const DefaultWidget: FC = () => {
   const { isLight, palette } = usePalette()
 
   const polifemoSVG = useSVG(polifemoIcon)
+
+  const { t } = useTranslation()
 
   return (
     <View
@@ -68,7 +71,7 @@ export const DefaultWidget: FC = () => {
               textAlign: "center",
             }}
           >
-            Goditi la tua tranquillità, puoi rilassarti
+            {t("highlights_defaultTitle", { ns: "home" })}
           </BodyText>
         </View>
       </View>
@@ -82,7 +85,7 @@ export const DefaultWidget: FC = () => {
           marginTop: 14,
         }}
       >
-        Nessun avviso in evidenza
+        {t("highlights_defualtSubtitle", { ns: "home" })}
       </BodyText>
     </View>
   )

@@ -68,13 +68,13 @@ export type ValidModalType = "year" | "course" | "type" | "platform"
 
 export const getNameFromMode = (mode: ValidModalType) => {
   if (mode === "year") {
-    return "Anno"
+    return "group_year"
   } else if (mode === "course") {
-    return "Corso"
+    return "group_course"
   } else if (mode === "platform") {
-    return "Piattaforma"
+    return "group_platform"
   } else {
-    return "Tipo"
+    return "group_type"
   }
 }
 

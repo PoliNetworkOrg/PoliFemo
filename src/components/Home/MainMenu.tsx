@@ -18,21 +18,22 @@ import add from "assets/menu/add.svg"
 import { ModalCustom } from "components/Modal"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useOutsideClick } from "utils/outsideClick"
+import { useTranslation } from "react-i18next"
 
 /**
  * the buttons and their features
  */
 export const defaultIcons: ButtonInterface[] = [
-  { id: 0, title: "Calendario", icon: calendar },
-  { id: 1, title: "Orario Lezioni", icon: clock },
-  { id: 2, title: "PoliAssociazioni", icon: association },
-  { id: 3, title: "Aule Libere", icon: free_classrooms },
-  { id: 4, title: "Materiali", icon: materials },
-  { id: 5, title: "Gruppi", icon: groups },
-  { id: 6, title: "Valutazioni", icon: marks },
-  { id: 7, title: "Libretto", icon: grading_book },
-  { id: 8, title: "Test e Prove", icon: tests },
-  { id: 9, title: "Aggiungi", icon: add },
+  { id: 0, title: "menu_calendar", icon: calendar },
+  { id: 1, title: "menu_timetable", icon: clock },
+  { id: 2, title: "menu_associations", icon: association },
+  { id: 3, title: "menu_freeclass", icon: free_classrooms },
+  { id: 4, title: "menu_materials", icon: materials },
+  { id: 5, title: "menu_groups", icon: groups },
+  { id: 6, title: "menu_marks", icon: marks },
+  { id: 7, title: "menu_gradingBook", icon: grading_book },
+  { id: 8, title: "menu_test", icon: tests },
+  { id: 9, title: "menu_add", icon: add },
 ]
 
 type ButtonState = ButtonInterface & { shown: boolean }
@@ -49,6 +50,8 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
 
   const [isModalVisible, setModalVisible] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+
+  const { t } = useTranslation() //i18n hook
 
   const scrollView = useOutsideClick<ScrollView>(() => {
     setIsDeleting(false)
@@ -103,8 +106,8 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
     >
       <ModalCustom
         centerText={false}
-        title={"Aggiungi features"}
-        subTitle={"Personalizza la tua bacheca"}
+        title={"" + t("modal_add", { ns: "home" })}
+        subTitle={"" + t("modal_message", { ns: "home" })}
         isShowing={isModalVisible}
         onClose={() => setModalVisible(false)}
       >

@@ -1,0 +1,35 @@
+{
+    "search": "Cerca",
+
+    "sunday": "Domenica",
+    "monday": "Lunedì",
+    "tuesday": "Martedì",
+    "wednesday": "Mercoledì",
+    "thursday": "Giovedì",
+    "friday": "Venerdì",
+    "saturday": "Sabato",
+
+    "january": "Gennaio",
+    "february": "Febbraio",
+    "march": "Marzo",
+    "april": "Aprile",
+    "may": "Maggio",
+    "june": "Giugno",
+    "july": "Luglio",
+    "august": "Agosto",
+    "september": "Settembre",
+    "october": "Ottobre",
+    "november": "Novembre",
+    "december": "Dicembre",
+
+    "groups_title": "Gruppi Corsi",
+    "group_year": "Anno",
+    "groups_all": "Tutti",
+    "group_course": "Corso",
+    "bachelor": "Triennale",
+    "master": "Magistrale",
+    "single_cycle": "Ciclo unico",
+    "group_type": "Tipo",
+    "school": "Scuola",
+    "group_platform": "Piattaforma"
+}

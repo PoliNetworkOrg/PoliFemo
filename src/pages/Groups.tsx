@@ -20,6 +20,7 @@ import { PageWrapper } from "components/Groups/PageWrapper"
 import { ModalGroup } from "components/Groups/ModalGroup"
 import { ModalGroupItem } from "components/Groups/ModalGroupItem"
 import { PoliSearchBar } from "components/Home/PoliSearchBar"
+import { useTranslation } from "react-i18next"
 
 const deltaTime = 100 //ms
 let searchTimeout: NodeJS.Timeout
@@ -41,6 +42,8 @@ export const Groups: MainStackScreen<"Groups"> = () => {
 
   //tracking first render
   const isMounted = useMounted()
+
+  const { t } = useTranslation()
 
   const getGroups = async () => {
     try {
@@ -85,7 +88,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
   return (
     <PageWrapper>
       <View style={{ paddingHorizontal: 28, paddingTop: 56 }}>
-        <Title>Gruppi Corsi</Title>
+        <Title>{t("groups_title", { ns: "common" })}</Title>
         <View style={{ marginTop: 36, marginBottom: 22 }}>
           <PoliSearchBar
             onChange={val => {

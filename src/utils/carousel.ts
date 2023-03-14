@@ -1,4 +1,5 @@
 import { Event } from "api/event"
+import { useTranslation } from "react-i18next"
 /**
  * enum to differentiate the different types of widget we could have
  * different widget types have different background images
@@ -69,36 +70,37 @@ export function checkEventType(typeId: number) {
 }
 
 export function createWidget(event: Event) {
+  const { t } = useTranslation()
   const days = [
-    "Domenica",
-    "Lunedì",
-    "Martedì",
-    "Mercoledì",
-    "Giovedì",
-    "Venerdì",
-    "Sabato",
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
   ]
   const months = [
-    "Gennaio",
-    "Febbraio",
-    "Marzo",
-    "Aprile",
-    "Maggio",
-    "Giugno",
-    "Luglio",
-    "Agosto",
-    "Settembre",
-    "Ottobre",
-    "Novembre",
-    "Dicembre",
+    "january",
+    "february",
+    "march",
+    "april",
+    "may",
+    "june",
+    "july",
+    "august",
+    "september",
+    "october",
+    "november",
+    "december",
   ]
   const dateObj = new Date(event.date_start)
   const resultDate =
-    days[dateObj.getDay()] +
+    t(days[dateObj.getDay()], { ns: "common" }) +
     " " +
     dateObj.getDate().toString().padStart(2, "0") +
     " " +
-    months[dateObj.getMonth()] +
+    t(months[dateObj.getMonth()], { ns: "common" }) +
     " " +
     dateObj.getFullYear()
   const nextEvent: CarouselItem = {

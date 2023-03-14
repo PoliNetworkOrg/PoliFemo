@@ -1,0 +1,35 @@
+{
+    "search": "Search",
+
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December",
+
+    "groups_title": "Course Groups",
+    "group_year": "Year",
+    "groups_all": "All",
+    "group_course": "Course",
+    "bachelor": "Bachelor",
+    "master": "Master",
+    "single_cycle": "Single cycle",
+    "group_type": "Type",
+    "school": "School",
+    "group_platform": "Platform"
+}
