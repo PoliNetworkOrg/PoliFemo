@@ -24,7 +24,7 @@ import {
 import { Article } from "api/articles"
 import { NavigatorScreenParams } from "@react-navigation/native"
 import { TagWithData } from "contexts/newsPreferences"
-import { NotificationData } from "components/Notifications"
+import { ValidCategoryId } from "utils/notifications"
 
 /**
  * interface containing the info about the params for each page of the stack navigator
@@ -51,7 +51,7 @@ export type MainStackNavigatorParams = {
   Notifications: undefined
   NotificationsCategory: {
     category: string
-    notifications: NotificationData[]
+    categoryId: ValidCategoryId
   }
 }
 

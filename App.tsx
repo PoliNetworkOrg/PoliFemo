@@ -29,6 +29,7 @@ import {
   linking,
   useNotificationsHandlers,
 } from "utils/notifications"
+import * as Notifications from "expo-notifications"
 
 const client = HttpClient.getInstance()
 
@@ -50,6 +51,14 @@ export default function App() {
   }, [])
 
   useNotificationsHandlers()
+
+  const lastNotificationResponse = Notifications.useLastNotificationResponse()
+
+  useEffect(() => {
+    if (lastNotificationResponse) {
+      console.log("bho")
+    }
+  }, [lastNotificationResponse])
 
   //tracking first render
   const firstRender = useRef(true)

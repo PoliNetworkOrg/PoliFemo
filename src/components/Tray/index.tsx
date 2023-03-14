@@ -1,6 +1,7 @@
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useNavigationState } from "@react-navigation/native"
 import React, { FC, useEffect } from "react"
-import { Dimensions, View } from "react-native"
+import { Dimensions, Pressable, View } from "react-native"
 import { newsSheetEventEmitter } from "utils/events"
 import { LittleTitle } from "./LittleTitle"
 import { TrayButton } from "./TrayButton"
@@ -45,6 +46,17 @@ export const Tray: FC<{
       }}
     >
       <LittleTitle titleInCorner={notInHome || newsOpen} />
+      <Pressable
+        style={{
+          width: 20,
+          height: 20,
+          backgroundColor: "yellow",
+          marginRight: 15,
+        }}
+        onPress={() => {
+          void AsyncStorage.clear()
+        }}
+      />
       <TrayButton label="downloads" onClick={() => props.onDownloads()} />
       <TrayButton
         label="notifications"

@@ -4,10 +4,10 @@ import { TouchableRipple } from "components/TouchableRipple"
 import { FC } from "react"
 import { View, Image } from "react-native"
 import { usePalette } from "utils/colors"
-import { NotificationData } from "."
+import { NotificationStorage } from "utils/notifications"
 
 export interface NotificationTileProps {
-  notification: NotificationData
+  notification: NotificationStorage
   overrideDividerBehaviour?: boolean
   showRipple?: boolean
   onPress?: () => void
@@ -15,6 +15,13 @@ export interface NotificationTileProps {
 
 export const NotificationTile: FC<NotificationTileProps> = props => {
   const { palette, isLight } = usePalette()
+
+  const sender = props.notification.notification.content.data.sender
+  const association = props.notification.notification.content.data.association
+  const object = props.notification.notification.content.data.object
+
+  const linkUrl = props.notification.notification.content.data.linkUrl
+
   return (
     <TouchableRipple onClick={props.onPress} showRipple={props.showRipple}>
       <View style={{ paddingVertical: 10, paddingHorizontal: 28 }}>
@@ -50,10 +57,8 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
                 color: isLight ? palette.purpleVariant : "#fff",
               }}
             >
-              {props.notification.sender}
-              {props.notification.association
-                ? ` - ${props.notification.association}`
-                : ""}
+              {sender}
+              {association ? ` - ${association}` : ""}
             </BodyText>
             <BodyText
               style={{
@@ -62,14 +67,14 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
                 color: isLight ? palette.purpleVariant : "#fff",
               }}
             >
-              {props.notification.object}
+              {object}
             </BodyText>
           </View>
         </View>
-        {props.notification.linkUrl && (
+        {linkUrl && (
           <View style={{ marginLeft: 56 }}>
             <HyperLink
-              href={props.notification.linkUrl}
+              href={linkUrl}
               style={{
                 fontSize: 12,
                 fontWeight: "400",

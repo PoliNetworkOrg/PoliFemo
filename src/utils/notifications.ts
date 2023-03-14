@@ -11,11 +11,64 @@ import { CarouselItem, WidgetType } from "./carousel"
 import { LinkingOptions } from "@react-navigation/native"
 import { RootStackNavigatorParams } from "navigation/NavigationTypes"
 import { Linking } from "react-native"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export interface ScheduledNotificationInfo {
   eventId: number
   identifier: string
 }
+
+export interface NotificationInfo {
+  identifier: string
+  content: MyNotificationContentInput
+}
+
+/**
+ * interface for notifications stored in the AsyncStorage
+ */
+export interface NotificationStorage {
+  notification: NotificationInfo
+  /**
+   * true if User checked the notification as seen in the Notifications Page (?)
+   */
+  isRead: boolean
+  /**
+   * true if notification was received at the right time,
+   * false: for example phone was turned off (?)
+   */
+  hasBeenReceived?: boolean
+  /**
+   * a string representing the date at which the notification is scheduled to
+   * appear. undefined if notification wasn't scheduled by the device.
+   */
+  isRelevantAt?: string
+}
+
+// Extend Content Input to explicitly define interesting props in the data field.
+interface MyNotificationContentInput extends NotificationContentInput {
+  data: {
+    sender?: string
+    linkUrl?: string
+    content?: string
+    object?: string
+    categoryId?: ValidCategoryId
+    association?: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any
+  }
+}
+
+export interface MyNotificationOptions {
+  cacheOnSchedule?: boolean
+}
+
+export interface MyNotification extends Notifications.Notification {
+  content: {
+    data: MyNotificationContentInput
+  }
+}
+
+export type ValidCategoryId = "associazioni" | "upload" | "comunicazioni"
 
 /**
  * If events starts at 14:00, send notification at 13:30
@@ -26,11 +79,13 @@ const DELTA_MILLISECONDS = MINUTES_BEFORE_EVENT * 60 * 1000
 export const inizializeNotificationHandler = () =>
   Notifications.setNotificationHandler({
     // eslint-disable-next-line @typescript-eslint/require-await
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: false,
-      shouldSetBadge: false,
-    }),
+    handleNotification: async () => {
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+      }
+    },
   })
 
 // ? Android only, not clear what it should do in terms of differences in the message
@@ -95,8 +150,9 @@ export const InitializeNotificationAppCentre = () => {
  *
  */
 export const sendScheduledNotification = async (
-  content: NotificationContentInput,
-  trigger: NotificationTriggerInput
+  content: MyNotificationContentInput,
+  trigger: NotificationTriggerInput,
+  options?: MyNotificationOptions
 ) => {
   try {
     const grant = await checkPermission()
@@ -105,6 +161,14 @@ export const sendScheduledNotification = async (
         content: content,
         trigger: trigger,
       })
+
+      let relevantDate: Date | undefined
+      if (options?.cacheOnSchedule ?? true) {
+        relevantDate = calculateDateFromTrigger(trigger)
+      }
+
+      await setNotificationInStorage({ content, identifier }, relevantDate)
+
       return identifier
     }
   } catch (err) {
@@ -124,10 +188,25 @@ export const useNotificationsHandlers = () => {
   useEffect(() => {
     //fired when notification pops up in the status bar
     notificationListener.current =
-      Notifications.addNotificationReceivedListener(notification => {
+      Notifications.addNotificationReceivedListener(async notification => {
         console.log(
           "received notification request " + notification.request.content.title
         )
+        if (!notification.request.content.data.cacheOnSchedule) {
+          const notificationList = await getAllNotificationsFromStorage()
+          if (notificationList) {
+            notificationList.push({
+              notification: {
+                content: notification.request
+                  .content as MyNotificationContentInput,
+                identifier: notification.request.identifier,
+              },
+              isRead: false,
+              hasBeenReceived: true,
+            })
+            await setNotificationsListInStorage(notificationList)
+          }
+        }
       })
 
     //fired when user taps on notification, evreything is dismissed by default
@@ -154,6 +233,105 @@ export const useNotificationsHandlers = () => {
       }
     }
   }, [])
+}
+
+export const popNotificationFromStorage = async (identifier: string) => {
+  try {
+    const notificationsJSON = await AsyncStorage.getItem("notifications")
+
+    let updatedList: NotificationStorage[] = []
+    if (notificationsJSON) {
+      updatedList = JSON.parse(notificationsJSON) as NotificationStorage[]
+    }
+
+    let found = false
+    for (let i = 0; i < updatedList.length && !found; i++) {
+      if (updatedList[i].notification.identifier === identifier) {
+        updatedList.splice(i, 1)
+        found = true
+      }
+    }
+
+    await AsyncStorage.setItem("notifications", JSON.stringify(updatedList))
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export const getAllNotificationsFromStorage = async () => {
+  try {
+    const notificationsJSON = await AsyncStorage.getItem("notifications")
+    if (notificationsJSON) {
+      const notificationsList = JSON.parse(
+        notificationsJSON
+      ) as NotificationStorage[]
+
+      return notificationsList
+    } else {
+      return []
+    }
+  } catch (err) {
+    console.log(err)
+  }
+
+  return []
+}
+
+/**
+ * Function to set notifications list in AsyncStorage
+ * @return true if successful, false otherwise
+ */
+export const setNotificationsListInStorage = async (
+  notification: NotificationStorage[]
+) => {
+  try {
+    await AsyncStorage.setItem("notifications", JSON.stringify(notification))
+    return true
+  } catch (err) {
+    console.log(err)
+    return false
+  }
+}
+
+export const setNotificationInStorage = async (
+  notif: NotificationInfo,
+  date: Date | undefined
+) => {
+  try {
+    const notifications = await getAllNotificationsFromStorage()
+
+    notifications?.push({
+      notification: notif,
+      isRead: false,
+      hasBeenReceived: false,
+      isRelevantAt: date?.toISOString() ?? new Date().toISOString(),
+    })
+
+    await AsyncStorage.setItem("notifications", JSON.stringify(notifications))
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export const getAllNotificationsOfCategory = async (
+  categoryId: ValidCategoryId
+) => {
+  const notificationList = await getAllNotificationsFromStorage()
+  if (!notificationList) {
+    return []
+  }
+  const categoryList: NotificationStorage[] = []
+  for (let i = 0; i < notificationList?.length; i++) {
+    const date = notificationList[i].isRelevantAt
+    if (
+      notificationList[i].notification.content.data.categoryId === categoryId &&
+      date &&
+      new Date(date).getTime() < new Date().getTime()
+    ) {
+      categoryList.push(notificationList[i])
+    }
+  }
+  return categoryList
 }
 
 /**
@@ -284,6 +462,7 @@ export const linking: LinkingOptions<RootStackNavigatorParams> = {
 
     // Handle URL from expo push notifications
     const response = await Notifications.getLastNotificationResponseAsync()
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const newUrl = response?.notification.request.content.data.url
     if (newUrl && typeof newUrl === "string") {
       return newUrl
@@ -298,7 +477,8 @@ export const linking: LinkingOptions<RootStackNavigatorParams> = {
     // Listen to expo notifications, we use this handler only for deepLinking
     const expoNotificationSubscription =
       Notifications.addNotificationResponseReceivedListener(response => {
-        const url = response.notification.request.content.data.url
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const url = response?.notification.request.content.data.url
         const action = response.actionIdentifier
 
         // Any custom logic to see whether the URL needs to be handled
@@ -373,12 +553,23 @@ export const notificationsTestingUtils = {
     console.log(settings.granted)
   },
 
-  async LogAllScheduledNotifications() {
+  async logAllScheduledNotifications() {
     try {
       const scheduledNotifications =
         await Notifications.getAllScheduledNotificationsAsync()
       scheduledNotifications.forEach(notif => {
         console.log(notif.content.title)
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  },
+  async logAllPresentedNotifications() {
+    try {
+      const scheduledNotifications =
+        await Notifications.getPresentedNotificationsAsync()
+      scheduledNotifications.forEach(notif => {
+        console.log(notif.request.content.title)
       })
     } catch (err) {
       console.log(err)
@@ -423,4 +614,94 @@ const getMinutesBeforeInMilliseconds = (
     return minutes * 60 * 1000
   }
   return DELTA_MILLISECONDS
+}
+
+//User defined typeguard to check trigger input. Only check relevant info
+interface MyDateTriggerInterface {
+  date: Date | number
+}
+
+function isDateTriggerInput(input: unknown): input is MyDateTriggerInterface {
+  return (
+    typeof input === "object" &&
+    input !== null &&
+    "date" in input &&
+    (typeof input.date === "number" || input.date instanceof Date)
+  )
+}
+
+function isTimeIntervalTriggerInput(
+  input: unknown
+): input is { seconds: number } {
+  return (
+    typeof input === "object" &&
+    input !== null &&
+    "seconds" in input &&
+    typeof input.seconds === "number"
+  )
+}
+
+function isWeeklyTriggerInput(
+  input: unknown
+): input is { weekday: number; hour: number; minute: number } {
+  return (
+    typeof input === "object" &&
+    input !== null &&
+    "weekday" in input &&
+    typeof input.weekday === "number" &&
+    "hour" in input &&
+    typeof input.hour === "number" &&
+    "minute" in input &&
+    typeof input.minute === "number"
+  )
+}
+
+function isDailyTriggerInput(
+  input: unknown
+): input is { hour: number; minute: number } {
+  return (
+    typeof input === "object" &&
+    input !== null &&
+    "hour" in input &&
+    "minute" in input &&
+    typeof input.minute === "number" &&
+    typeof input.hour === "number"
+  )
+}
+
+const calculateDateFromTrigger = (trigger: NotificationTriggerInput) => {
+  let relevantDate: Date | undefined
+  if (trigger instanceof Date) {
+    relevantDate = trigger
+  } else if (typeof trigger === "number") {
+    relevantDate = new Date(trigger)
+  } else if (isDateTriggerInput(trigger)) {
+    if (typeof trigger.date === "number") {
+      relevantDate = new Date(trigger.date)
+    } else {
+      relevantDate = trigger.date
+    }
+  } else if (isTimeIntervalTriggerInput(trigger)) {
+    relevantDate = new Date(new Date().getTime() + trigger.seconds * 1000)
+  } else if (isDailyTriggerInput(trigger)) {
+    relevantDate = new Date(
+      new Date().getTime() +
+        trigger.minute * 60 * 1000 +
+        trigger.hour * 60 * 60 * 1000
+    )
+  } else if (isWeeklyTriggerInput(trigger)) {
+    const weekDay = trigger.weekday
+    const nowDay = new Date().getDay()
+    let dayDifference = weekDay - nowDay
+    if (dayDifference < 0) {
+      dayDifference += 7
+    }
+    relevantDate = new Date(
+      new Date().getTime() +
+        trigger.minute * 60 * 1000 +
+        trigger.hour * 60 * 60 * 1000 +
+        dayDifference * 24 * 60 * 60 * 1000
+    )
+  }
+  return relevantDate
 }
