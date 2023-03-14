@@ -3,12 +3,15 @@ import { Platform } from "react-native"
 
 export function checkPlayServicesExample() {
   try {
-    const { isAvailable } = utils().playServicesAvailability
+    const result = utils().playServicesAvailability
 
-    if (isAvailable && Platform.OS == "android") return true
+    console.log(result)
+
+    if (result.isAvailable && Platform.OS == "android") return true
 
     return false
   } catch (err) {
+    console.error(err)
     return false
   }
 }
