@@ -15,6 +15,6 @@ export const logger = (...messages: any[]) => {
 
   console.log(log)
 
-  const string: string = log.toString()
-  logs.push({ content: string, date: new Date() })
+  const content: string = log.toString()
+  logs.push({ content: content, date: new Date() })
 }
