@@ -78,14 +78,14 @@ export const Login: RootStackScreen<"Login"> = () => {
   const [polimiToken, setPolimiToken] = useState<PolimiToken | undefined>()
 
   useEffect(() => {
-    console.log(`Login stage: ${LoginStage[loginStage]}`)
+    logger(`Login stage: ${LoginStage[loginStage]}`)
   }, [loginStage])
 
   useEffect(() => {
     // when both tokens are locally set, we are done!
     // the tokens should get registered in the api wrapper to be used in calls
     if (poliNetworkToken && polimiToken) {
-      console.log("Login completed! Registering tokens...")
+      logger("Login completed! Registering tokens...")
       void client.setTokens({ poliNetworkToken, polimiToken }).then(() => {
         setTimeout(() => {
           navigation.goBack()
@@ -136,9 +136,9 @@ export const Login: RootStackScreen<"Login"> = () => {
               setPoliNetworkToken(JSON.parse(data))
               setCurrentURL(magicTokenUrl)
             } catch (e) {
-              console.log("error while parsing!!")
-              console.log(url)
-              console.log(data)
+              logger("error while parsing!!")
+              logger(url)
+              logger(data)
             }
           }
         }}

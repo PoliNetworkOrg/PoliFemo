@@ -21,26 +21,26 @@ export const MainContainer: FC = () => {
   const [preferences, setPreferences] = useState<Record<string, Preference>>({})
 
   useEffect(() => {
-    console.log("Loading tags preferences from storage")
+    logger("Loading tags preferences from storage")
     AsyncStorage.getItem("newstags:preferences")
       .then(preferencesJSON => {
         if (preferencesJSON) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const data: Record<string, Preference> = JSON.parse(preferencesJSON)
-          console.log(data)
+          logger(data)
           setPreferences(data)
         }
       })
-      .catch(err => console.log(err))
+      .catch(err => logger(err))
   }, [])
 
   useEffect(() => {
-    console.log("Saving tags preferences to storage")
-    console.log(preferences)
+    logger("Saving tags preferences to storage")
+    logger(preferences)
     AsyncStorage.setItem(
       "newstags:preferences",
       JSON.stringify(preferences)
-    ).catch(err => console.log(err))
+    ).catch(err => logger(err))
   }, [preferences])
 
   return (
@@ -62,10 +62,10 @@ export const MainContainer: FC = () => {
       </NewsPreferencesContext.Provider>
       <Tray
         onDownloads={() => {
-          console.log("downloads")
+          logger("downloads")
         }}
         onNotifications={() => {
-          console.log("notifications")
+          logger("notifications")
         }}
         onSettings={() => {
           navigate("SettingsNav", {

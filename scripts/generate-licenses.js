@@ -19,7 +19,7 @@ crawler.dumpLicenses(
     const licenses = Object.entries(res)
     for (let i = 0; i < licenses.length; i++) {
       const [package, license] = licenses[i]
-      console.log(
+      logger(
         `Retrieving license for package ${i + 1} of ${
           licenses.length
         }: ${package}`
@@ -41,7 +41,7 @@ crawler.dumpLicenses(
           console.error(e)
         }
       } else {
-        console.log("skip")
+        logger("skip")
       }
       final.push({
         package,

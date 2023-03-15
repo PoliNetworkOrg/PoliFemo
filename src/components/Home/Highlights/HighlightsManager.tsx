@@ -60,7 +60,7 @@ export const HighlightsManager: FC = () => {
         setWidgets(newWidgets)
       }
     } catch (error) {
-      console.log(error)
+      logger(error)
     }
   }
 

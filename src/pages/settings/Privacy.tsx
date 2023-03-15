@@ -59,7 +59,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
           setAutodeleteTime(settings.expire_in_days)
         })
         .catch(() => {
-          console.log("Error while getting settings in privacy page")
+          logger("Error while getting settings in privacy page")
         })
     }
   }, [loggedIn])

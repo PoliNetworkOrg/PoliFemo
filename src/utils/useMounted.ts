@@ -16,7 +16,7 @@ import { useEffect, useState } from "react"
  * //first time
  * React.useEffect(() => {
  *   if (isMounted) {
- *     console.log("valueFirst ran")
+ *     logger("valueFirst ran")
  *   }
  *
  * }, [valueFirst])
@@ -26,7 +26,7 @@ import { useEffect, useState } from "react"
  *  //first time
  *  React.useEffect(() => {
  *    if (isMounted) {
- *      console.log("valueSecond ran")
+ *      logger("valueSecond ran")
  *    }
  *
  *  }, [valueSecond])

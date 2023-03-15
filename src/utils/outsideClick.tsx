@@ -59,7 +59,7 @@ function isTapInsideComponent(
  * ```tsx
  * const [isListening, setIsListening] = useState(true)
  * const ref = useOutsideClick(() => {
- *     console.log("click outside of the view!")
+ *     logger("click outside of the view!")
  *     setIsListening(false)
  * }, isListening)
  *

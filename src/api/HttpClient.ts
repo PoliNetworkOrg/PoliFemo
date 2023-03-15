@@ -110,7 +110,7 @@ export class HttpClient extends EventEmitter {
 
   private constructor(baseUrlPoliNetwork: string, baseUrlPolimi: string) {
     super()
-    console.log("HttpClient constructor called")
+    logger("HttpClient constructor called")
     this.poliNetworkInstance = axios.create({
       baseURL: baseUrlPoliNetwork,
       timeout: 2000,
@@ -184,21 +184,21 @@ export class HttpClient extends EventEmitter {
 
     if (response?.status === 500) {
       if (config.retryType === RetryType.RETRY_INDEFINETELY) {
-        console.log("Retrying until request is successful")
+        logger("Retrying until request is successful")
         await wait(config.waitingTime)
         return instance(config)
       } else if (config.retryType === RetryType.RETRY_N_TIMES) {
         const retryCount = (config.retryCount ?? 0) + 1
         if (retryCount <= config.maxRetries) {
-          console.log(`Try number ${retryCount}/${config.maxRetries}`)
+          logger(`Try number ${retryCount}/${config.maxRetries}`)
           await wait(config.waitingTime)
           return instance({ ...config, retryCount })
         }
       } else {
-        console.log("You selected NO_RETRY!")
+        logger("You selected NO_RETRY!")
         throw error
       }
-      console.log("Maximum numbers of retries reached!")
+      logger("Maximum numbers of retries reached!")
       throw error
     } else if (response?.status === 401) {
       if (config.authType === AuthType.POLIMI) {
@@ -272,9 +272,9 @@ export class HttpClient extends EventEmitter {
    * @returns true if the token was refreshed, false otherwise
    */
   async refreshPolimiToken() {
-    console.log("Refreshing polimi token")
+    logger("Refreshing polimi token")
     if (!this.polimiToken || !this.poliNetworkToken) {
-      console.log("Tokens went missing while trying to refresh Polimi token")
+      logger("Tokens went missing while trying to refresh Polimi token")
       return false
     }
 
@@ -285,7 +285,7 @@ export class HttpClient extends EventEmitter {
         retryType: RetryType.RETRY_N_TIMES,
       })
       if (typeof response.data.accessToken === "string") {
-        console.log("Refreshed polimi token")
+        logger("Refreshed polimi token")
 
         this.polimiToken = response.data
         const tokens: Tokens = {
@@ -308,9 +308,9 @@ export class HttpClient extends EventEmitter {
   }
 
   async refreshPoliNetworkToken() {
-    console.log("Refreshing polinetwork token")
+    logger("Refreshing polinetwork token")
     if (!this.polimiToken || !this.poliNetworkToken) {
-      console.log(
+      logger(
         "Tokens went missing while trying to refresh PoliNetwork token"
       )
       return false
@@ -329,7 +329,7 @@ export class HttpClient extends EventEmitter {
         }
       )
       if (typeof response.data.access_token === "string") {
-        console.log("Refreshed polinetwork token")
+        logger("Refreshed polinetwork token")
 
         this.poliNetworkToken = response.data
 
@@ -361,13 +361,13 @@ export class HttpClient extends EventEmitter {
     if (tokens) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const parsedTokens: Tokens = JSON.parse(tokens)
-      console.log("Loaded tokens from local storage")
+      logger("Loaded tokens from local storage")
       this.polimiToken = parsedTokens.polimiToken
       this.poliNetworkToken = parsedTokens.poliNetworkToken
       this.emit("login")
       this.emit("login_event", true)
     } else {
-      console.log("No tokens found in local storage")
+      logger("No tokens found in local storage")
     }
   }
   /**
@@ -383,13 +383,13 @@ export class HttpClient extends EventEmitter {
 
     // save the tokens in local storage
     await AsyncStorage.setItem("api:tokens", JSON.stringify(tokens))
-    console.log("Saved tokens in local storage")
+    logger("Saved tokens in local storage")
   }
   /**
    * remove the tokens from storage, essentially log out
    */
   async destroyTokens() {
-    console.log("Destroying tokens, logging out")
+    logger("Destroying tokens, logging out")
 
     this.polimiToken = undefined
     this.poliNetworkToken = undefined

@@ -29,7 +29,7 @@ export function orderByMostRecentYear(groups: Group[]) {
       }
     } while (hasChanged === true)
   } catch (error) {
-    console.log(error)
+    logger(error)
   }
   return groups
 }

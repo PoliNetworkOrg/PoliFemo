@@ -25,9 +25,9 @@ const execAsync = promisify(exec)
     .filter(b => !currentBranchNames.includes(b))
     .filter(b => b !== "main")
 
-  console.log("\nCurrent git branches:\n" + currentBranchNames.join("\n - "))
-  console.log("\nCurrent EAS branches:\n" + easBranchNames.join("\n - "))
-  console.log("\nBranches to be deleted:\n" + branchesToDelete.join("\n - "))
+  logger("\nCurrent git branches:\n" + currentBranchNames.join("\n - "))
+  logger("\nCurrent EAS branches:\n" + easBranchNames.join("\n - "))
+  logger("\nBranches to be deleted:\n" + branchesToDelete.join("\n - "))
 
   // delete branches from eas
   for (const branch of branchesToDelete) {
@@ -41,6 +41,6 @@ const execAsync = promisify(exec)
 
     // delete branch
     await execAsync(`eas branch:delete ${branch} --non-interactive`)
-    console.log(`Deleted branch ${branch} from EAS`)
+    logger(`Deleted branch ${branch} from EAS`)
   }
 })()

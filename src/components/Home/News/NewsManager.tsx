@@ -39,7 +39,7 @@ export const NewsManager = () => {
             tempArticles[tag.name] = article
           })
           .catch(err => {
-            console.log(err)
+            logger(err)
           })
       )
     }
@@ -55,7 +55,7 @@ export const NewsManager = () => {
       setTags(responseTags)
       setLastArticles(responseArticles)
     }
-    fetchData().catch(err => console.log(err))
+    fetchData().catch(err => logger(err))
   }, [])
 
   // Function that calculates heights and columns of tag cards using hardcoded patterns.

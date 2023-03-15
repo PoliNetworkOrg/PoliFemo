@@ -72,14 +72,14 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
           )
         }
       })
-      .catch(err => console.log(err))
+      .catch(err => logger(err))
   }, [])
 
   useEffect(() => {
     AsyncStorage.setItem(
       "menu:icons",
       JSON.stringify(icons.filter(i => i.shown).map(i => i.id))
-    ).catch(err => console.log(err))
+    ).catch(err => logger(err))
   }, [icons])
 
   // divide iconsToAdd in triplets

@@ -47,7 +47,7 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
         setArticles(response)
       }
     } catch (error) {
-      console.log(error)
+      logger(error)
     }
   }
 

@@ -59,7 +59,7 @@ export const articles = {
    *          const articles: Article[] = response
    *          //do something
    *      })
-   *      .catch(err => console.log(err))
+   *      .catch(err => logger(err))
    * }
    * ```
    */

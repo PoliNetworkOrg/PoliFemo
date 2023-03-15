@@ -44,7 +44,7 @@ export default function App() {
         if (settingsJSON) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const parsedSettings: Settings = JSON.parse(settingsJSON)
-          console.log("loaded theme: " + parsedSettings.theme)
+          logger("loaded theme: " + parsedSettings.theme)
           setSettings(parsedSettings)
         }
       } catch (e) {
@@ -64,9 +64,9 @@ export default function App() {
       firstRender.current = false
     } else {
       AsyncStorage.setItem("settings", JSON.stringify(settings)).catch(err =>
-        console.log(err)
+        logger(err)
       )
-      console.log("Set theme " + settings.theme)
+      logger("Set theme " + settings.theme)
     }
   }, [settings])
   const [fontsLoaded] = useFonts({
@@ -128,8 +128,8 @@ export default function App() {
     if (settingsReady && fontsLoaded && tokensLoaded) {
       void hideAsync().then(async () => {
         if (loginState.loggedIn) {
-          console.log(await api.user.getPoliNetworkMe())
-          console.log(await api.user.getPolimiUserInfo())
+          logger(await api.user.getPoliNetworkMe())
+          logger(await api.user.getPolimiUserInfo())
         }
       })
     }

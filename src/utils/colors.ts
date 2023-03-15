@@ -136,9 +136,9 @@ export interface ColorSchemeInfo {
  * @example You can also extract info about the color theme ({@link ColorSchemeInfo})
  * ```tsx
  * const { isLight, isDark, colorScheme } = useColors()
- * console.log("The color scheme is set to: " + colorScheme) // "dark" or "light"
+ * logger("The color scheme is set to: " + colorScheme) // "dark" or "light"
  * if (isLight) {
- *    console.log("The color scheme is light")
+ *    logger("The color scheme is light")
  * }
  * // you get the gist of it
  * ```

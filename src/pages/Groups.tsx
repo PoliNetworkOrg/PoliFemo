@@ -46,7 +46,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
       const res = await api.groups.getFromGithub()
       setGroups(res)
     } catch (err) {
-      console.log(err)
+      logger(err)
     }
   }
 
