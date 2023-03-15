@@ -6,13 +6,12 @@ import { Divider } from "components/Divider"
 import { SettingTile } from "components/Settings/SettingTile"
 import { BodyText, HyperLink } from "components/Text"
 import { api } from "api"
-import * as Sharing from "expo-sharing"
-import * as FileSystem from "expo-file-system"
 import { HttpClient } from "api/HttpClient"
 import { LoginContext } from "contexts/login"
 import { ModalPicker } from "components/Settings/ModalPicker"
 import { Description } from "components/Settings/Description"
 import { logger } from "utils/logger"
+import { exportAndShareFile } from "utils/file"
 
 const client = HttpClient.getInstance()
 
@@ -100,14 +99,10 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
               callback: async () => {
                 setLoadingExport(true)
                 try {
-                  const data = await api.user.exportPoliNetworkMe()
-                  const uri =
-                    FileSystem.cacheDirectory + "polinetwork_data.json"
-                  await FileSystem.writeAsStringAsync(
-                    uri,
-                    JSON.stringify(data, null, 2)
-                  )
-                  void Sharing.shareAsync(uri)
+                  const data: Record<string, unknown> =
+                    await api.user.exportPoliNetworkMe()
+                  const content = JSON.stringify(data, null, 2)
+                  await exportAndShareFile(content, "polinetwork_data.json")
                 } catch (e) {
                   Alert.alert("Errore durante l'esportazione dei dati", e + "")
                   console.error(e)
