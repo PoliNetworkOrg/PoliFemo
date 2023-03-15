@@ -79,6 +79,14 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
       },
     },
     {
+      title: "Logs",
+      subtitle: "Storico dei log",
+      icon: settingsIcons.privacy,
+      callback: () => {
+        navigate("Logs")
+      },
+    },
+    {
       title: "Disconnetti",
       icon: settingsIcons.disconnect,
       callback: async () => {
