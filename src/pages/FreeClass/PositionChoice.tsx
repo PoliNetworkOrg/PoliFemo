@@ -76,10 +76,10 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
    */
   async function getUserCoordinates() {
     const { status } = await Location.requestForegroundPermissionsAsync()
-    if (status !== "granted") {
-      setLocationStatus(status)
-      setCurrentLocation(undefined)
-    } else {
+    setLocationStatus(status)
+
+    if (status !== "granted") setCurrentLocation(undefined)
+    else {
       const lastPosition = await Location.getLastKnownPositionAsync()
       if (lastPosition) {
         setCurrentCoords([
@@ -87,7 +87,8 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
           lastPosition.coords.longitude,
         ])
       }
-      const { coords } = await Location.getCurrentPositionAsync({}) //in order to get more accurate information
+      //in order to get more accurate information
+      const { coords } = await Location.getCurrentPositionAsync({})
       setCurrentCoords([coords.latitude, coords.longitude])
     }
   }

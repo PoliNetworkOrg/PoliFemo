@@ -122,7 +122,6 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                   style={{
                     fontWeight: "700",
                     fontSize: 14,
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     color: hoursLeft <= 1 ? palette.accent : labelsHighContrast,
                   }}
                 >
@@ -195,7 +194,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                 borderRadius: 12,
               }}
               shadow={{
-                offset: { y: 7 },
+                offset: { y: 4 },
                 color: "#000",
                 opacity: 0.25,
                 blur: 4,

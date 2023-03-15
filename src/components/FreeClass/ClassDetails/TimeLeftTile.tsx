@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { FC } from "react"
 import { View } from "react-native"
 import { usePalette } from "utils/colors"
