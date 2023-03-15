@@ -41,7 +41,7 @@ crawler.dumpLicenses(
           console.error(e)
         }
       } else {
-        logger("skip")
+        console.log("skip")
       }
       final.push({
         package,

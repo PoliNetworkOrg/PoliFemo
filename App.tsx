@@ -23,6 +23,7 @@ import { HttpClient } from "api/HttpClient"
 import { usePalette } from "utils/colors"
 import { StatusBar } from "react-native"
 import { Host } from "react-native-portalize"
+import { logger } from "utils/logger"
 
 const client = HttpClient.getInstance()
 
