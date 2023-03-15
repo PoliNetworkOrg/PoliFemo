@@ -4,6 +4,7 @@ import { Text } from "components/Text"
 import { NavBar, NavbarProps } from "components/NavBar"
 import { usePalette } from "utils/colors"
 import { BoxShadowView } from "./BoxShadow"
+import { ButtonInterface } from "./Home"
 
 /**
  * General component useful for pages with a scrollable content.
@@ -23,6 +24,8 @@ export const ContentWrapperScroll: FC<{
    */
   navbarOptions?: NavbarProps
   marginTop?: number
+
+  buttonsNavbar?: ButtonInterface[]
 }> = props => {
   const { background, isLight, primary, palette } = usePalette()
 
@@ -79,7 +82,9 @@ export const ContentWrapperScroll: FC<{
           <View style={{ paddingBottom: 50 }}>{props.children}</View>
         </ScrollView>
       </BoxShadowView>
-      {navbar ? <NavBar {...props.navbarOptions} /> : null}
+      {navbar ? (
+        <NavBar {...props.navbarOptions} buttonsNavbar={props.buttonsNavbar} />
+      ) : null}
     </View>
   )
 }

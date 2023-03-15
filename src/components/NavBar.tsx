@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { FC } from "react"
 import { Pressable, View, StyleSheet } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
@@ -9,6 +10,7 @@ import { NavbarIcon, navbarIcons } from "assets/navbar"
 import { newsSheetEventEmitter } from "utils/events"
 import { BoxShadowView } from "./BoxShadow"
 import { Icon } from "./Icon"
+import { ButtonInterface } from "./Home"
 
 export interface NavbarProps {
   /**
@@ -24,6 +26,9 @@ export interface NavbarProps {
   /**
    * An array with custom buttons that will be rendered to the right of the navbar
    */
+
+  buttonsNavbar?: ButtonInterface[]
+
   customButtons?: {
     /**
      * the name of the icon from the {@link navbarIconList}
@@ -142,6 +147,24 @@ export const NavBar: FC<NavbarProps> = props => {
               onPress={onPress}
             >
               <Icon source={navbarIcons[icon]} />
+            </Pressable>
+          ))}
+
+        {!!props.buttonsNavbar &&
+          props.buttonsNavbar.map(({ title, onPress }, i) => (
+            <Pressable
+              key={"navbar-custom-button-" + i}
+              style={[
+                styles.button,
+                {
+                  backgroundColor: buttonFill,
+                  marginLeft: 19,
+                },
+              ]}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              onPress={onPress}
+            >
+              <Text> {title}</Text>
             </Pressable>
           ))}
       </View>

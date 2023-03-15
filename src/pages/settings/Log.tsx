@@ -3,14 +3,29 @@ import { logs, logToString } from "./../../utils/logger"
 
 import { View } from "react-native"
 import { Text } from "components/Text"
-import { ContentWrapperScroll } from "components/ContentWrapperScroll"
-import { Button } from "components/Button"
 import { exportAndShareFile } from "utils/file"
+import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 
 export const LogsScreen = () => {
   return (
-    <ContentWrapperScroll title="Logs">
-      <View style={{ paddingTop: 32, paddingBottom: 80 }}>
+    <ContentWrapperScroll
+      buttonsNavbar={[
+        {
+          title: "Export logs",
+          onPress: async () => {
+            const content = JSON.stringify(logs, null, 2)
+            const date = new Date()
+            const stringDate = date.toDateString()
+            await exportAndShareFile(
+              content,
+              "log_" + stringDate + ".json",
+              "Export Logs"
+            )
+          },
+        },
+      ]}
+    >
+      <View style={{ paddingTop: 20, paddingBottom: 80 }}>
         <ScrollView>
           <Text>
             {logs
@@ -21,14 +36,6 @@ export const LogsScreen = () => {
               .trim()}
           </Text>
         </ScrollView>
-        <Button
-          onPress={async () => {
-            const content = JSON.stringify(logs, null, 2)
-            const date = new Date()
-            const stringDate = date.toDateString()
-            await exportAndShareFile(content, "log_" + stringDate + ".json")
-          }}
-        />
       </View>
     </ContentWrapperScroll>
   )

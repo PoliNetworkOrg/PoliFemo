@@ -7,9 +7,10 @@ import deleteIcon from "assets/menu/delete.svg"
 import { Icon } from "components/Icon"
 
 export interface ButtonInterface {
-  id: number
+  id?: number
   title: string
-  icon: number
+  icon?: number
+  onPress: () => void
 }
 
 /**

@@ -14,7 +14,7 @@ export interface IconProps {
   /**
    * the source of the icon, usually a number resulting from an import
    */
-  source: number
+  source?: number
 
   /**
    * the color of the icon
@@ -41,6 +41,7 @@ export interface IconProps {
  * <Icon source={svg} />
  */
 export const Icon: FC<IconProps> = props => {
+  if (props.source == null) return null
   const [assets, error] = useAssets(props.source)
   if (error) throw error
 

@@ -102,7 +102,11 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
                   const data: Record<string, unknown> =
                     await api.user.exportPoliNetworkMe()
                   const content = JSON.stringify(data, null, 2)
-                  await exportAndShareFile(content, "polinetwork_data.json")
+                  await exportAndShareFile(
+                    content,
+                    "polinetwork_data.json",
+                    "Export data"
+                  )
                 } catch (e) {
                   Alert.alert("Errore durante l'esportazione dei dati", e + "")
                   console.error(e)
