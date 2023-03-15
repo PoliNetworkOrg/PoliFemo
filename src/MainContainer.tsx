@@ -6,6 +6,7 @@ import { useNavigation } from "navigation/NavigationTypes"
 import { MainStack } from "navigation/MainStackNavigator"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { logger } from "utils/logger"
 
 /**
  * The Main Container.

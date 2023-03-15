@@ -2,6 +2,7 @@ import { Group } from "api/groups"
 import whatsapp from "assets/groups/whatsapp.svg"
 import facebook from "assets/groups/facebook.svg"
 import telegram from "assets/groups/telegram.svg"
+import { logger } from "./logger"
 
 export interface Filters {
   year?: string

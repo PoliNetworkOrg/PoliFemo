@@ -18,6 +18,7 @@ import add from "assets/menu/add.svg"
 import { Modal } from "components/Modal"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useOutsideClick } from "utils/outsideClick"
+import { logger } from "utils/logger"
 
 /**
  * the buttons and their features

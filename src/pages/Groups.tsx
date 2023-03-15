@@ -19,6 +19,7 @@ import { GroupTile } from "components/Groups/GroupTile"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { ModalGroup } from "components/Groups/ModalGroup"
 import { PoliSearchBar } from "components/Home/PoliSearchBar"
+import { logger } from "utils/logger"
 
 const deltaTime = 100 //ms
 let searchTimeout: NodeJS.Timeout

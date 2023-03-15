@@ -12,6 +12,7 @@ import { HttpClient } from "api/HttpClient"
 import { LoginContext } from "contexts/login"
 import { ModalPicker } from "components/Settings/ModalPicker"
 import { Description } from "components/Settings/Description"
+import { logger } from "utils/logger"
 
 const client = HttpClient.getInstance()
 

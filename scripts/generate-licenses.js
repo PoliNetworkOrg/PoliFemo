@@ -19,7 +19,7 @@ crawler.dumpLicenses(
     const licenses = Object.entries(res)
     for (let i = 0; i < licenses.length; i++) {
       const [package, license] = licenses[i]
-      logger(
+      console.log(
         `Retrieving license for package ${i + 1} of ${
           licenses.length
         }: ${package}`

@@ -8,6 +8,7 @@ import { ScrollPageInfinite } from "components/ScrollPageInfinite"
 import { CardWithGradient } from "components/CardWithGradient"
 import { capitalize } from "utils/functions"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
+import { logger } from "utils/logger"
 
 const MAX_ARTICLES_PER_REQUEST = 8
 

@@ -9,6 +9,7 @@ import {
 } from "contexts/newsPreferences"
 import { NewsBottomSheet } from "./NewsBottomSheet"
 import { newsTagsPatterns, CardsPattern } from "utils/cardsPatterns"
+import { logger } from "utils/logger"
 
 /**
  * Bottom sheet in the home page to access the news.

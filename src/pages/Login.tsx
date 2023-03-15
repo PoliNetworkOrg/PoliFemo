@@ -8,6 +8,7 @@ import { api } from "api"
 import { HttpClient } from "api/HttpClient"
 import { PolimiToken, PoliNetworkToken } from "contexts/login"
 import { NavBar } from "components/NavBar"
+import { logger } from "utils/logger"
 
 // TODO: HANDLE ERRORS, this will break as soon as something goes wrong
 // the flow should be probably stopped when something goes wrong and the user should be prompted

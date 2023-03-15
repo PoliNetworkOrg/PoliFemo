@@ -10,6 +10,7 @@ import {
   WidgetType,
 } from "utils/carousel"
 import { api } from "api"
+import { logger } from "utils/logger"
 
 /**
  * Component that decides the content of the carousel.
