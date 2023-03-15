@@ -7,6 +7,7 @@ import { ScrollPage } from "components/ScrollPage"
 import { usePalette } from "utils/colors"
 import { Asset } from "expo-asset"
 import { Roboto_400Regular } from "@expo-google-fonts/roboto"
+import { logger } from "utils/logger"
 
 export const Article: MainStackScreen<"Article"> = props => {
   const { isLight } = usePalette()
