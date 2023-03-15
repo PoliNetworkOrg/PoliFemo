@@ -1,5 +1,5 @@
 import { useContext, useState } from "react"
-import { Platform, View } from "react-native"
+import { View } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ContentWrapperScroll } from "components/Settings"
 import { Divider } from "components/Divider"
@@ -89,7 +89,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
         console.log(result)
         Alert.alert(
           "Google",
-          Platform.OS == "ios" ? "ios" : result ? "true" : "false",
+          String(result),
           [
             {
               text: "Cancel",

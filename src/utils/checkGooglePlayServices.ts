@@ -1,5 +1,4 @@
 import { utils } from "@react-native-firebase/app"
-import { Platform } from "react-native"
 
 export function checkPlayServicesExample() {
   try {
@@ -7,9 +6,7 @@ export function checkPlayServicesExample() {
 
     console.log(result)
 
-    if (result.isAvailable && Platform.OS == "android") return true
-
-    return false
+    return result.isAvailable
   } catch (err) {
     console.error(err)
     return false
