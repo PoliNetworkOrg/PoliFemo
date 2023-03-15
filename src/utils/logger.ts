@@ -1,4 +1,9 @@
-export const logs: string[] = []
+export interface SingleLog {
+  content?: string
+  date?: Date
+}
+
+export const logs: SingleLog[] = []
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const logger = (...messages: any[]) => {
@@ -9,5 +14,7 @@ export const logger = (...messages: any[]) => {
   const log = formattedMessages.join(" ")
 
   console.log(log)
-  logs.push(log.toString())
+
+  const string: string = log.toString()
+  logs.push({ content: string, date: new Date() })
 }
