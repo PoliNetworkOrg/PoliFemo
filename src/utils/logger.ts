@@ -1,6 +1,16 @@
 export interface SingleLog {
   content?: string
   date?: Date
+  stacktrace?: string[]
+}
+
+function getStackTrace() {
+  const err = new Error()
+  return err.stack?.split("\n")
+}
+
+export function logToString(singleLog: SingleLog) {
+  return singleLog.date + "\n" + singleLog.content // + "\n" + singleLog.stacktrace
 }
 
 export const logs: SingleLog[] = []
@@ -16,5 +26,5 @@ export const logger = (...messages: any[]) => {
   console.log(log)
 
   const content: string = log.toString()
-  logs.push({ content: content, date: new Date() })
+  logs.push({ content: content, date: new Date(), stacktrace: getStackTrace() })
 }
