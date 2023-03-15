@@ -311,9 +311,7 @@ export class HttpClient extends EventEmitter {
   async refreshPoliNetworkToken() {
     logger("Refreshing polinetwork token")
     if (!this.polimiToken || !this.poliNetworkToken) {
-      logger(
-        "Tokens went missing while trying to refresh PoliNetwork token"
-      )
+      logger("Tokens went missing while trying to refresh PoliNetwork token")
       return false
     }
 
