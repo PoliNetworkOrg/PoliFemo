@@ -10,7 +10,7 @@ export interface ButtonInterface {
   id?: number
   title: string
   icon?: number
-  onPress: () => void
+  onPress?: () => void
 }
 
 /**
