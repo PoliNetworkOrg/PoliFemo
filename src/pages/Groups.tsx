@@ -18,7 +18,6 @@ import {
 import { GroupTile } from "components/Groups/GroupTile"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { ModalGroup } from "components/Groups/ModalGroup"
-import { ModalGroupItem } from "components/Groups/ModalGroupItem"
 import { PoliSearchBar } from "components/Home/PoliSearchBar"
 import { useTranslation } from "react-i18next"
 
@@ -126,27 +125,27 @@ export const Groups: MainStackScreen<"Groups"> = () => {
           />
         )}
       />
-      <ModalGroup
-        group={modalGroup}
-        isShowing={isModalShowing}
-        onClose={() => setIsModalShowing(false)}
-        onJoin={async (group?: Group) => {
-          if (!group?.id_link) {
-            return
-          }
+      {modalGroup && (
+        <ModalGroup
+          group={modalGroup}
+          isShowing={isModalShowing}
+          onClose={() => setIsModalShowing(false)}
+          onJoin={async (group?: Group) => {
+            if (!group?.id_link) {
+              return
+            }
 
-          const link = createGroupLink(group.id_link, group.platform)
-          // Checking if the link is supported for links with custom URL scheme.
-          const supported = await Linking.canOpenURL(link)
+            const link = createGroupLink(group.id_link, group.platform)
+            // Checking if the link is supported for links with custom URL scheme.
+            const supported = await Linking.canOpenURL(link)
 
-          if (supported) {
-            // Opening the link with some app
-            await Linking.openURL(link)
-          }
-        }}
-      >
-        <ModalGroupItem group={modalGroup} />
-      </ModalGroup>
+            if (supported) {
+              // Opening the link with some app
+              await Linking.openURL(link)
+            }
+          }}
+        />
+      )}
     </PageWrapper>
   )
 }

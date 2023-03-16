@@ -2,11 +2,11 @@ import { FC, useState } from "react"
 import { View } from "react-native"
 import { OutlinedButton } from "./OutlinedButton"
 import { StyleSheet } from "react-native"
-import { ModalWithButtons } from "components/ModalWithButtons"
 import { SelectTile } from "components/Settings"
 import { getNameFromMode, ValidModalType } from "utils/groups"
 import { Filters } from "utils/groups"
 import { useTranslation } from "react-i18next"
+import { Modal } from "components/Modal"
 export interface FiltersProps {
   filters: Filters
   onFilterChange: (filters: Filters) => void
@@ -128,34 +128,43 @@ export const FiltersList: FC<FiltersProps> = props => {
       </View>
       <ModalWithButtons
         title={"" + t(getNameFromMode(modalMode))}
+        centerText
         isShowing={isModalShowing}
-        onClose={() => {
-          setIsModalShowing(false)
-        }}
-        onOK={() => {
-          if (modalMode === "course") {
-            props.onFilterChange({
-              ...props.filters,
-              course: selectedItem,
-            })
-          } else if (modalMode === "platform") {
-            props.onFilterChange({
-              ...props.filters,
-              platform: selectedItem,
-            })
-          } else if (modalMode === "year") {
-            props.onFilterChange({
-              ...props.filters,
-              year: selectedItem,
-            })
-          } else if (modalMode === "type") {
-            props.onFilterChange({
-              ...props.filters,
-              type: selectedItem,
-            })
-          }
-          setIsModalShowing(false)
-        }}
+        buttons={[
+          {
+            text: "Annulla",
+            onPress: () => {
+              setIsModalShowing(false)
+            },
+          },
+          {
+            text: "Conferma",
+            onPress: () => {
+              if (modalMode === "course") {
+                props.onFilterChange({
+                  ...props.filters,
+                  course: selectedItem,
+                })
+              } else if (modalMode === "platform") {
+                props.onFilterChange({
+                  ...props.filters,
+                  platform: selectedItem,
+                })
+              } else if (modalMode === "year") {
+                props.onFilterChange({
+                  ...props.filters,
+                  year: selectedItem,
+                })
+              } else if (modalMode === "type") {
+                props.onFilterChange({
+                  ...props.filters,
+                  type: selectedItem,
+                })
+              }
+              setIsModalShowing(false)
+            },
+          },
+        ]}
       >
         <SelectTile
           value={"" + t("groups_all", { ns: "common" })}
@@ -176,7 +185,7 @@ export const FiltersList: FC<FiltersProps> = props => {
             />
           )
         })}
-      </ModalWithButtons>
+      </Modal>
     </View>
   )
 }
