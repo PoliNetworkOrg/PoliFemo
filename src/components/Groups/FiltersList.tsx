@@ -126,7 +126,7 @@ export const FiltersList: FC<FiltersProps> = props => {
           onPress={reset}
         />
       </View>
-      <ModalWithButtons
+      <Modal
         title={"" + t(getNameFromMode(modalMode))}
         centerText
         isShowing={isModalShowing}
