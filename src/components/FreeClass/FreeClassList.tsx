@@ -50,7 +50,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
       showsVerticalScrollIndicator={true}
       style={{
         flex: 1,
-        paddingTop: 27,
+        paddingTop: 18,
       }}
       contentContainerStyle={{
         alignItems: "center",

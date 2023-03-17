@@ -1,6 +1,6 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, View } from "react-native"
+import { ActivityIndicator, Platform, View } from "react-native"
 import { Title } from "components/Text"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
@@ -70,7 +70,13 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
         </View>
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
-      <View style={{ flex: 1, marginTop: 27, marginBottom: 93 }}>
+      <View
+        style={{
+          flex: 1,
+          marginTop: 35,
+          marginBottom: Platform.OS === "ios" ? 105 : 93,
+        }}
+      >
         {filteredRooms?.length === 0 && !isRoomsSearching ? (
           <ErrorMessage
             message="Non ci sono aule disponibili"

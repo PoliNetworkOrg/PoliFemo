@@ -1,5 +1,5 @@
 import { FC, useContext, useEffect, useState } from "react"
-import { View, Pressable, ActivityIndicator } from "react-native"
+import { View, Pressable, ActivityIndicator, Platform } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
 import { Map } from "./Map"
@@ -159,7 +159,8 @@ export const PositionModality: FC<PositionModalityProps> = props => {
         <View
           style={{
             flex: 1,
-            marginBottom: 93,
+            marginTop: 23,
+            marginBottom: Platform.OS === "ios" ? 105 : 93,
           }}
         >
           {allRooms ? (
@@ -172,8 +173,8 @@ export const PositionModality: FC<PositionModalityProps> = props => {
               <FreeClassList
                 data={allRooms.sort(function (roomA, roomB) {
                   const currentCoords = {
-                    latitude: 45.477501115168685,
-                    longitude: 9.234919419524664,
+                    latitude: props.currentCoords[0],
+                    longitude: props.currentCoords[1],
                   }
                   if (
                     roomA.latitude &&

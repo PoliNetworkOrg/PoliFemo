@@ -2,7 +2,7 @@ import { ConstructionType, Room } from "api/rooms"
 import { BodyText } from "components/Text"
 import { useNavigation } from "navigation/NavigationTypes"
 import { FC } from "react"
-import { FlatList, Pressable, View } from "react-native"
+import { FlatList, Platform, Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { hasAcronymProp, ValidAcronym } from "utils/rooms"
 
@@ -55,9 +55,9 @@ export const DefaultList: FC<
     <FlatList
       style={{
         flex: 1,
-        marginTop: 26,
-        paddingTop: 27,
-        marginBottom: 93,
+        marginTop: 35,
+        paddingTop: 18,
+        marginBottom: Platform.OS === "ios" ? 105 : 93,
       }}
       showsVerticalScrollIndicator={true}
       numColumns={2}
