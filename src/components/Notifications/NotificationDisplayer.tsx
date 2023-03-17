@@ -1,6 +1,7 @@
 import { BodyText } from "components/Text"
 import { FC } from "react"
 import { View } from "react-native"
+import { SharedElement } from "react-navigation-shared-element"
 import { usePalette } from "utils/colors"
 import { NotificationStorage } from "utils/notifications"
 import { NotificationTile } from "./NotificationTile"
@@ -16,11 +17,13 @@ export const NotificationDisplayer: FC<NotificationDisplayerProps> = props => {
   return (
     <View style={{ marginTop: 19, paddingBottom: 40 }}>
       <View>
-        <NotificationTile
-          notification={props.notification}
-          overrideDividerBehaviour={true}
-          showRipple={false}
-        />
+        <SharedElement id={props.notification.notification.identifier}>
+          <NotificationTile
+            notification={props.notification}
+            overrideDividerBehaviour={true}
+            showRipple={false}
+          />
+        </SharedElement>
         <BodyText
           style={{
             fontSize: 12,

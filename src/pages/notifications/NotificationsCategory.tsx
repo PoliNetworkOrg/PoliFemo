@@ -40,9 +40,9 @@ export const NotificationsCategory: MainStackScreen<
         <View style={{ marginTop: 19, flex: 1 }}>
           {notifications.map((notification, index) => (
             <NotificationTile
+              key={index}
               showRipple={false}
               notification={notification}
-              key={index}
               onPress={() => {
                 navigate("NotificationDetails", {
                   category: category,

@@ -4,7 +4,6 @@
  */
 
 import { FC } from "react"
-import { createStackNavigator } from "@react-navigation/stack"
 import { MainStackNavigatorParams } from "navigation/NavigationTypes"
 import { Home } from "pages/Home"
 import { Article } from "pages/news/ArticleDetails"
@@ -15,14 +14,30 @@ import { Groups } from "pages/Groups"
 import { Notifications } from "pages/notifications/Notifications"
 import { NotificationsCategory } from "pages/notifications/NotificationsCategory"
 import { NotificationDetails } from "pages/notifications/NotificationDetails"
+import { createSharedElementStackNavigator } from "react-navigation-shared-element"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const MainStackNavigator = createStackNavigator<MainStackNavigatorParams>()
+const MainStackNavigator =
+  createSharedElementStackNavigator<MainStackNavigatorParams>()
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+/* const MainStackNavigator = createStackNavigator<MainStackNavigatorParams>() */
 
 export const MainStack: FC = () => {
   return (
     <MainStackNavigator.Navigator
-      screenOptions={{ headerShown: false }}
+      screenOptions={{
+        headerShown: false,
+        gestureEnabled: false,
+        cardStyleInterpolator: ({ current: { progress } }) => {
+          return {
+            cardStyle: {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              opacity: progress,
+            },
+          }
+        },
+      }}
       initialRouteName="Home"
     >
       <MainStackNavigator.Screen name="Home" component={Home} />
@@ -45,6 +60,12 @@ export const MainStack: FC = () => {
       <MainStackNavigator.Screen
         name="NotificationDetails"
         component={NotificationDetails}
+        sharedElements={route => {
+          const { notification } = route.params
+
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+          return [notification.notification.identifier]
+        }}
       />
     </MainStackNavigator.Navigator>
   )
