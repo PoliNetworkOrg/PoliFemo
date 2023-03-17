@@ -3,7 +3,7 @@ import { View, ActivityIndicator, Platform, Pressable } from "react-native"
 import MapView, { Callout, Marker, Region } from "react-native-maps"
 import { PermissionStatus } from "expo-location"
 import { BodyText } from "components/Text"
-import { BuildingItem, CampusItem } from "./DefaultList"
+import { BuildingItem } from "./DefaultList"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Icon } from "components/Icon"
 import iconMaps from "assets/freeClassrooms/iconMaps.svg"
@@ -14,7 +14,6 @@ interface MapProps {
   userLongitude: number
   locationStatus: PermissionStatus
   buildingList: BuildingItem[] | undefined
-  campusSearched: CampusItem | undefined
   onPressMarker: (building: BuildingItem) => void
 }
 
@@ -37,18 +36,6 @@ export const Map: FC<MapProps> = props => {
       setTimeout(() => setTimer(true), 20000) //20 sec
     }
   }, [])
-
-  useEffect(() => {
-    const region: Region = {
-      latitude: props.campusSearched?.latitude ?? 45.464172826394595,
-      longitude: props.campusSearched?.longitude ?? 9.189523238744504,
-      latitudeDelta:
-        props.campusSearched?.latitude !== undefined ? 0.0035 : 2.5,
-      longitudeDelta:
-        props.campusSearched?.latitude !== undefined ? 0.0035 : 2.5,
-    }
-    setRegion(region)
-  }, [props.campusSearched])
 
   useEffect(() => {
     AsyncStorage.getItem("lastRegionVisited")

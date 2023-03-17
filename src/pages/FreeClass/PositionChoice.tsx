@@ -1,18 +1,12 @@
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { Platform, View } from "react-native"
 import { Title } from "components/Text"
 import * as Location from "expo-location"
 import { LocationGeocodedAddress, PermissionStatus } from "expo-location"
 import { AddressText } from "components/FreeClass/AddressText"
-import { getDistance } from "geolib"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { PositionModality } from "components/FreeClass/PositionModality"
-import { ConstructionType } from "api/rooms"
-import BuildingListJSON from "components/FreeClass/buildingCoords.json"
-import { HeadquarterItem, CampusItem } from "components/FreeClass/DefaultList"
-import { ValidAcronym } from "utils/rooms"
-import { RoomsSearchDataContext } from "contexts/rooms"
 
 /**
  * In this page the user can find a room according to his current position.
@@ -25,51 +19,6 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     useState<LocationGeocodedAddress>()
 
   const [currentCoords, setCurrentCoords] = useState<[number, number]>()
-  const [headquarter, setHeadquarter] = useState<HeadquarterItem>() //nearest headquarter according to user position
-
-  const { setDate, setAcronym } = useContext(RoomsSearchDataContext)
-
-  /**
-   * This function finds the nearest headquarter according the user current position.
-   */
-  const findNearestHeadquarter = (currentLat: number, currentLong: number) => {
-    for (const h of BuildingListJSON) {
-      if (
-        getDistance(
-          { latitude: currentLat, longitude: currentLong },
-          {
-            latitude: h.latitude,
-            longitude: h.longitude,
-          }
-        ) <= 2000 //2km
-      ) {
-        const tempCampusList: CampusItem[] = []
-        for (const c of h.campus) {
-          tempCampusList.push({
-            type: ConstructionType.CAMPUS,
-            name: c.name,
-            acronym: h.acronym as ValidAcronym,
-            latitude: c.latitude,
-            longitude: c.longitude,
-          })
-        }
-        setHeadquarter({
-          type: ConstructionType.HEADQUARTER,
-          name: h.name,
-          acronym: h.acronym as ValidAcronym,
-          campusList: tempCampusList,
-        })
-        break
-      }
-    }
-  }
-
-  useEffect(() => {
-    if (headquarter) {
-      setAcronym(headquarter.acronym)
-    }
-    setDate(new Date())
-  }, [headquarter])
 
   /**
    * This function finds the user current coordinates.
@@ -101,8 +50,6 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
       })
       setLocationStatus(PermissionStatus.GRANTED)
       setCurrentLocation(response[0])
-
-      void findNearestHeadquarter(currentCoords[0], currentCoords[1])
     }
   }
 
@@ -162,7 +109,6 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
       <PositionModality
         currentCoords={currentCoords ?? [0, 0]}
         locationStatus={locationStatus}
-        headquarter={headquarter}
       />
     </PageWrapper>
   )

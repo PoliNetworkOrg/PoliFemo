@@ -12,6 +12,8 @@ export interface Room {
   link: string
   occupancy_rate: number | null
   occupancies: Occupancies
+  latitude?: number
+  longitude?: number
 }
 
 export type Occupancies = Record<

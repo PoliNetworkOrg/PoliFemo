@@ -5,18 +5,17 @@ import { BodyText } from "components/Text"
 import { Map } from "./Map"
 import { FreeClassList } from "./FreeClassList"
 import { PermissionStatus } from "expo-location"
-import { HeadquarterItem, CampusItem, BuildingItem } from "./DefaultList"
-import { ConstructionType } from "api/rooms"
+import { BuildingItem, HeadquarterItem } from "./DefaultList"
+import { ConstructionType, Room } from "api/rooms"
 import { useNavigation } from "@react-navigation/native"
-import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
 import { getBuildingInfo, ValidAcronym } from "utils/rooms"
 import { ErrorMessage } from "../ErrorMessage"
 import { RoomsSearchDataContext } from "contexts/rooms"
+import { getDistance } from "geolib"
 
 interface PositionModalityProps {
   currentCoords: [number, number]
   locationStatus: PermissionStatus
-  headquarter: HeadquarterItem | undefined
 }
 
 enum ButtonType {
@@ -29,53 +28,42 @@ enum ButtonType {
  * In addition it calls the API to find which rooms and buildings are available
  */
 export const PositionModality: FC<PositionModalityProps> = props => {
-  const [campusSearched, setCampusSearched] = useState<CampusItem>()
-
   const { primary, isDark, palette } = usePalette()
 
   const [status, setStatus] = useState<ButtonType>(ButtonType.MAP)
+
+  const [allRooms, setAllRooms] = useState<Room[]>()
 
   const [buildingList, setBuildingList] = useState<BuildingItem[]>()
 
   const { navigate } = useNavigation()
 
-  const { rooms, acronym } = useContext(RoomsSearchDataContext)
+  const { rooms } = useContext(RoomsSearchDataContext)
 
-  const findCampusCoordinates = (campusName: string) => {
-    const newCampusName = campusName.split(/ (.*)/, 2) //split name by first space(" ") occurence, es: Bovisa La Masa -> ["Bovisa","La Masa"]
-    for (const h of buildingCoordsJSON) {
-      for (const c of h.campus) {
-        if (newCampusName.toString() === c.name.toString()) {
-          setCampusSearched({
-            type: ConstructionType.CAMPUS,
-            name: c.name,
-            acronym: h.acronym as ValidAcronym,
-            latitude: c.latitude,
-            longitude: c.longitude,
-          })
-          break
-        }
+  const extractAllRoomsAndBuildings = () => {
+    const acronyms: ValidAcronym[] = ["MIA", "MIB", "LCF", "CRG", "PCL", "MNI"]
+
+    const tempRooms: Room[] = []
+    const tempBuildingStrings: string[] = []
+    const tempBuildingList: BuildingItem[] = []
+
+    acronyms.map(a => {
+      const currentHeadquarter: HeadquarterItem = {
+        type: ConstructionType.HEADQUARTER,
+        acronym: a,
+        name: [a],
+        campusList: [],
       }
-    }
-  }
 
-  const findRoomsAvailable = () => {
-    if (rooms[acronym].rooms.length > 0) {
-      const tempBuildingStrings: string[] = []
-      const tempBuildingList: BuildingItem[] = []
+      rooms[a].rooms.map(room => {
+        const currentBuildingString: string = room.building + "-" + a //es Edificio 1-MIA
 
-      rooms[acronym].rooms.map(room => {
-        const roomBuilding: string[] = room.building.split(" ")
-        roomBuilding[0] += " "
-
-        const currentBuildingString = room.building.replace("Edificio ", "Ed. ")
-
-        if (props.headquarter?.campusList !== undefined) {
+        if (currentHeadquarter?.campusList !== undefined) {
+          const currentBuilding = getBuildingInfo(
+            currentHeadquarter,
+            room.building
+          )
           if (!tempBuildingStrings.includes(currentBuildingString)) {
-            const currentBuilding = getBuildingInfo(
-              props.headquarter,
-              room.building
-            )
             if (currentBuilding !== undefined) {
               currentBuilding.freeRoomList = [room]
               currentBuilding.fullName = room.building
@@ -89,15 +77,21 @@ export const PositionModality: FC<PositionModalityProps> = props => {
             )
             tempBuildingList[indexElement].freeRoomList.push(room)
           }
+          if (tempRooms.length < 50) {
+            tempRooms.push({
+              ...room,
+              latitude: currentBuilding?.latitude,
+              longitude: currentBuilding?.longitude,
+            }) //add room
+          }
         }
       })
-      setBuildingList(tempBuildingList)
-    }
+    })
+    setAllRooms(tempRooms)
+    setBuildingList(tempBuildingList)
   }
 
-  useEffect(() => {
-    void findRoomsAvailable()
-  }, [rooms[acronym].rooms])
+  useEffect(() => extractAllRoomsAndBuildings(), [])
 
   return (
     <>
@@ -168,14 +162,55 @@ export const PositionModality: FC<PositionModalityProps> = props => {
             marginBottom: 93,
           }}
         >
-          {props.headquarter !== undefined ? (
-            rooms[acronym].rooms === undefined ? (
+          {allRooms ? (
+            allRooms === undefined ? (
               <ActivityIndicator
                 style={{ marginTop: 50, marginLeft: 3 }}
                 size="large"
               />
             ) : (
-              <FreeClassList data={rooms[acronym].rooms} date={new Date()} />
+              <FreeClassList
+                data={allRooms.sort(function (roomA, roomB) {
+                  const currentCoords = {
+                    latitude: 45.477501115168685,
+                    longitude: 9.234919419524664,
+                  }
+                  if (
+                    roomA.latitude &&
+                    roomA.longitude &&
+                    roomB.latitude &&
+                    roomB.longitude
+                  ) {
+                    if (
+                      getDistance(currentCoords, {
+                        latitude: roomA.latitude,
+                        longitude: roomA.longitude,
+                      }) <
+                      getDistance(currentCoords, {
+                        latitude: roomB.latitude,
+                        longitude: roomB.longitude,
+                      })
+                    ) {
+                      return -1
+                    } else if (
+                      getDistance(currentCoords, {
+                        latitude: roomA.latitude,
+                        longitude: roomA.longitude,
+                      }) >
+                      getDistance(currentCoords, {
+                        latitude: roomB.latitude,
+                        longitude: roomB.longitude,
+                      })
+                    ) {
+                      return 1
+                    } else {
+                      return 0
+                    }
+                  }
+                  return 0
+                })}
+                date={new Date()}
+              />
             )
           ) : (
             <ErrorMessage
@@ -197,7 +232,6 @@ export const PositionModality: FC<PositionModalityProps> = props => {
           userLongitude={props.currentCoords[1]}
           locationStatus={props.locationStatus}
           buildingList={buildingList}
-          campusSearched={campusSearched}
           onPressMarker={(building: BuildingItem) => {
             navigate(
               "ClassChoice" as never,
