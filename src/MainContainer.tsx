@@ -98,6 +98,7 @@ export const MainContainer: FC = () => {
               body: "prova",
               data: {
                 sender: "polimi scacchi",
+                cacheOnSchedule: false,
                 categoryId: "associazioni",
                 content: "vieni a giocare a scacchi",
                 object: "come vincere a scacchi",

@@ -3,6 +3,7 @@ import { Subscription } from "expo-clipboard"
 import * as Notifications from "expo-notifications"
 import {
   AndroidImportance,
+  NotificationContent,
   NotificationContentInput,
   NotificationTriggerInput,
 } from "expo-notifications"
@@ -20,7 +21,7 @@ export interface ScheduledNotificationInfo {
 
 export interface NotificationInfo {
   identifier: string
-  content: MyNotificationContentInput
+  content: NotificationCustomContentInput
 }
 
 /**
@@ -44,8 +45,8 @@ export interface NotificationStorage {
   isRelevantAt?: string
 }
 
-// Extend Content Input to explicitly define interesting props in the data field.
-interface MyNotificationContentInput extends NotificationContentInput {
+// Extend NotificationContentInput to explicitly define interesting props in the data field.
+interface NotificationCustomContentInput extends NotificationContentInput {
   data: {
     sender?: string
     linkUrl?: string
@@ -53,22 +54,41 @@ interface MyNotificationContentInput extends NotificationContentInput {
     object?: string
     categoryId?: ValidCategoryId
     association?: string
+    cacheOnSchedule?: boolean
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any
   }
 }
 
-export interface MyNotificationOptions {
-  cacheOnSchedule?: boolean
-}
-
-export interface MyNotification extends Notifications.Notification {
-  content: {
-    data: MyNotificationContentInput
-  }
-}
+// Extend NotificationContent
+// through type because NotificationContent doesnt have statically known members
+type NotificationCustomContentInputResponse = NotificationContent &
+  NotificationCustomContentInput
 
 export type ValidCategoryId = "associazioni" | "upload" | "comunicazioni"
+
+interface NotificationCustomRequest extends Notifications.NotificationRequest {
+  content: NotificationCustomContentInputResponse
+}
+
+//Custom Notification Interface used in addNotificationReceivedListener
+interface NotificationCustom extends Notifications.Notification {
+  request: NotificationCustomRequest
+}
+
+interface NotificationCustomResponse
+  extends Notifications.NotificationResponse {
+  notification: NotificationCustom
+}
+
+declare module "expo-notifications" {
+  export function addNotificationReceivedListener(
+    listener: (event: NotificationCustom) => void
+  ): Subscription
+  export function addNotificationResponseReceivedListener(
+    listener: (event: NotificationCustomResponse) => void
+  ): Subscription
+}
 
 /**
  * If events starts at 14:00, send notification at 13:30
@@ -150,24 +170,27 @@ export const InitializeNotificationAppCentre = () => {
  *
  */
 export const sendScheduledNotification = async (
-  content: MyNotificationContentInput,
-  trigger: NotificationTriggerInput,
-  options?: MyNotificationOptions
+  content: NotificationCustomContentInput,
+  trigger: NotificationTriggerInput
 ) => {
   try {
     const grant = await checkPermission()
     if (grant) {
+      const cacheOnSchedule = content.data.cacheOnSchedule ?? true
+
+      content.data.cacheOnSchedule = cacheOnSchedule
+
       const identifier = await Notifications.scheduleNotificationAsync({
         content: content,
         trigger: trigger,
       })
 
       let relevantDate: Date | undefined
-      if (options?.cacheOnSchedule ?? true) {
+      if (cacheOnSchedule) {
         relevantDate = calculateDateFromTrigger(trigger)
-      }
 
-      await setNotificationInStorage({ content, identifier }, relevantDate)
+        await setNotificationInStorage({ content, identifier }, relevantDate)
+      }
 
       return identifier
     }
@@ -192,13 +215,14 @@ export const useNotificationsHandlers = () => {
         console.log(
           "received notification request " + notification.request.content.title
         )
+
         if (!notification.request.content.data.cacheOnSchedule) {
+          console.log("saving in storage from handler")
           const notificationList = await getAllNotificationsFromStorage()
           if (notificationList) {
             notificationList.push({
               notification: {
-                content: notification.request
-                  .content as MyNotificationContentInput,
+                content: notification.request.content,
                 identifier: notification.request.identifier,
               },
               isRead: false,
@@ -277,6 +301,18 @@ export const getAllNotificationsFromStorage = async () => {
   return []
 }
 
+export const setNotificationAsReadStorage = async (identifier: string) => {
+  const notifications = await getAllNotificationsFromStorage()
+  let found = false
+  for (let i = 0; i < notifications.length && !found; i++) {
+    if (notifications[i].notification.identifier === identifier) {
+      notifications[i].isRead = true
+      found = true
+    }
+  }
+  await setNotificationsListInStorage(notifications)
+}
+
 /**
  * Function to set notifications list in AsyncStorage
  * @return true if successful, false otherwise
@@ -294,14 +330,14 @@ export const setNotificationsListInStorage = async (
 }
 
 export const setNotificationInStorage = async (
-  notif: NotificationInfo,
+  notification: NotificationInfo,
   date: Date | undefined
 ) => {
   try {
     const notifications = await getAllNotificationsFromStorage()
 
     notifications?.push({
-      notification: notif,
+      notification: notification,
       isRead: false,
       hasBeenReceived: false,
       isRelevantAt: date?.toISOString() ?? new Date().toISOString(),
@@ -317,16 +353,13 @@ export const getAllNotificationsOfCategory = async (
   categoryId: ValidCategoryId
 ) => {
   const notificationList = await getAllNotificationsFromStorage()
-  if (!notificationList) {
-    return []
-  }
+
   const categoryList: NotificationStorage[] = []
-  for (let i = 0; i < notificationList?.length; i++) {
+  for (let i = 0; i < notificationList.length; i++) {
     const date = notificationList[i].isRelevantAt
     if (
       notificationList[i].notification.content.data.categoryId === categoryId &&
-      date &&
-      new Date(date).getTime() < new Date().getTime()
+      ((date && new Date(date).getTime() < new Date().getTime()) || !date)
     ) {
       categoryList.push(notificationList[i])
     }
@@ -406,7 +439,7 @@ export const checkNeedSchedulingNotifications = async (
               {
                 title: item.title,
                 body: `l'evento si svolgerà ${item.date} alle ${item.time}`,
-                data: { eventId: item.id },
+                data: { eventId: item.id, categoryId: "comunicazioni" },
               },
               {
                 date: new Date(

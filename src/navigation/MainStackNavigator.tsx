@@ -14,6 +14,7 @@ import { OtherCategories } from "pages/news/OtherCategories"
 import { Groups } from "pages/Groups"
 import { Notifications } from "pages/notifications/Notifications"
 import { NotificationsCategory } from "pages/notifications/NotificationsCategory"
+import { NotificationDetails } from "pages/notifications/NotificationDetails"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const MainStackNavigator = createStackNavigator<MainStackNavigatorParams>()
@@ -40,6 +41,10 @@ export const MainStack: FC = () => {
       <MainStackNavigator.Screen
         name="NotificationsCategory"
         component={NotificationsCategory}
+      />
+      <MainStackNavigator.Screen
+        name="NotificationDetails"
+        component={NotificationDetails}
       />
     </MainStackNavigator.Navigator>
   )

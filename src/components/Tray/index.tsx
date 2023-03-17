@@ -3,6 +3,7 @@ import { useNavigationState } from "@react-navigation/native"
 import React, { FC, useEffect } from "react"
 import { Dimensions, Pressable, View } from "react-native"
 import { newsSheetEventEmitter } from "utils/events"
+import { getAllNotificationsFromStorage } from "utils/notifications"
 import { LittleTitle } from "./LittleTitle"
 import { TrayButton } from "./TrayButton"
 
@@ -46,6 +47,17 @@ export const Tray: FC<{
       }}
     >
       <LittleTitle titleInCorner={notInHome || newsOpen} />
+      <Pressable
+        style={{
+          width: 20,
+          height: 20,
+          backgroundColor: "green",
+          marginRight: 15,
+        }}
+        onPress={async () => {
+          void console.log(await getAllNotificationsFromStorage())
+        }}
+      />
       <Pressable
         style={{
           width: 20,
