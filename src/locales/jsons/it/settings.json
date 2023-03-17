@@ -1,0 +1,14 @@
+{
+    "settings_title": "Impostazioni",
+    "settings_changeId": "Cambia matricola",
+    "settings_appearance": "Aspetto",
+    "settings_infoAppTitle": "Su quest'app",
+    "settings_infoAppSubTitle": "Informazioni sull'app, versione, contatti",
+    "settings_privacySubTitle": "Informativa sulla privacy, Impostazioni del tuo account relative alla privacy",
+    "settings_logout": "Disconnetti",
+
+    "settings_chooseTheme": "Scegli Tema",
+    "settings_default": "Predefinito",
+    "settings_dark": "Scuro",
+    "settings_light": "Chiaro"   
+}
