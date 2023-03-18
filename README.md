@@ -1,7 +1,7 @@
 # Polifemo
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ### Setup dell'ambiente
@@ -94,7 +94,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Tammura"><img src="https://avatars.githubusercontent.com/u/72708024?v=4?s=100" width="100px;" alt="Ahmed"/><br /><sub><b>Ahmed</b></sub></a><br /><a href="#projectManagement-Tammura" title="Project Management">📆</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/toto04"><img src="https://avatars.githubusercontent.com/u/34661230?v=4?s=100" width="100px;" alt="Tommaso Morganti"/><br /><sub><b>Tommaso Morganti</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=toto04" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/toto04"><img src="https://avatars.githubusercontent.com/u/34661230?v=4?s=100" width="100px;" alt="Tommaso Morganti"/><br /><sub><b>Tommaso Morganti</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=toto04" title="Code">💻</a> <a href="#maintenance-toto04" title="Maintenance">🚧</a> <a href="#mentoring-toto04" title="Mentoring">🧑‍🏫</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/SugoGangotti"><img src="https://avatars.githubusercontent.com/u/101225498?v=4?s=100" width="100px;" alt="SugoGangotti"/><br /><sub><b>SugoGangotti</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=SugoGangotti" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/DiegoZaff"><img src="https://avatars.githubusercontent.com/u/43524162?v=4?s=100" width="100px;" alt="Diego"/><br /><sub><b>Diego</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=DiegoZaff" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/bob27aggiustatutto"><img src="https://avatars.githubusercontent.com/u/120955097?v=4?s=100" width="100px;" alt="bob27aggiustatutto"/><br /><sub><b>bob27aggiustatutto</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=bob27aggiustatutto" title="Code">💻</a> <a href="#maintenance-bob27aggiustatutto" title="Maintenance">🚧</a> <a href="#mentoring-bob27aggiustatutto" title="Mentoring">🧑‍🏫</a></td>
@@ -105,6 +105,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/EndBug"><img src="https://avatars.githubusercontent.com/u/26386270?v=4?s=100" width="100px;" alt="Federico Grandi"/><br /><sub><b>Federico Grandi</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=EndBug" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/pontig"><img src="https://avatars.githubusercontent.com/u/59708804?v=4?s=100" width="100px;" alt="pontig"/><br /><sub><b>pontig</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=pontig" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/AndreaTorti-01"><img src="https://avatars.githubusercontent.com/u/74457299?v=4?s=100" width="100px;" alt="Andrea Torti"/><br /><sub><b>Andrea Torti</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=AndreaTorti-01" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/francescolf"><img src="https://avatars.githubusercontent.com/u/14892143?v=4?s=100" width="100px;" alt="Francesco Lo Faro"/><br /><sub><b>Francesco Lo Faro</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=francescolf" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

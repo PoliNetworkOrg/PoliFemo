@@ -25,7 +25,9 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/34661230?v=4",
       "profile": "https://github.com/toto04",
       "contributions": [
-        "code"
+        "code",
+        "maintenance",
+        "mentoring"
       ]
     },
     {
@@ -98,6 +100,15 @@
       "name": "Andrea Torti",
       "avatar_url": "https://avatars.githubusercontent.com/u/74457299?v=4",
       "profile": "https://github.com/AndreaTorti-01",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "francescolf",
+      "name": "Francesco Lo Faro",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14892143?v=4",
+      "profile": "https://github.com/francescolf",
       "contributions": [
         "code"
       ]
