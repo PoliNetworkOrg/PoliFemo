@@ -1,7 +1,7 @@
 # Polifemo
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-14-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-15-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ### Setup dell'ambiente
@@ -109,6 +109,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Elylo15"><img src="https://avatars.githubusercontent.com/u/58746092?v=4?s=100" width="100px;" alt="Elylo"/><br /><sub><b>Elylo</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=Elylo15" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Eliaxie"><img src="https://avatars.githubusercontent.com/u/27226791?v=4?s=100" width="100px;" alt="Eliaxie"/><br /><sub><b>Eliaxie</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=Eliaxie" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/stignarnia"><img src="https://avatars.githubusercontent.com/u/80171209?v=4?s=100" width="100px;" alt="stignarnia"/><br /><sub><b>stignarnia</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=stignarnia" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/frabazz"><img src="https://avatars.githubusercontent.com/u/35663791?v=4?s=100" width="100px;" alt="Francesco Bazzano"/><br /><sub><b>Francesco Bazzano</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=frabazz" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
