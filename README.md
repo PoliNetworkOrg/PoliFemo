@@ -1,7 +1,7 @@
 # Polifemo
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ### Setup dell'ambiente
@@ -103,6 +103,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/EndBug"><img src="https://avatars.githubusercontent.com/u/26386270?v=4?s=100" width="100px;" alt="Federico Grandi"/><br /><sub><b>Federico Grandi</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=EndBug" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/pontig"><img src="https://avatars.githubusercontent.com/u/59708804?v=4?s=100" width="100px;" alt="pontig"/><br /><sub><b>pontig</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=pontig" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
