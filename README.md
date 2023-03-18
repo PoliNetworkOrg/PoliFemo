@@ -1,7 +1,7 @@
 # Polifemo
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ### Setup dell'ambiente
@@ -99,6 +99,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/DiegoZaff"><img src="https://avatars.githubusercontent.com/u/43524162?v=4?s=100" width="100px;" alt="Diego"/><br /><sub><b>Diego</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=DiegoZaff" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/bob27aggiustatutto"><img src="https://avatars.githubusercontent.com/u/120955097?v=4?s=100" width="100px;" alt="bob27aggiustatutto"/><br /><sub><b>bob27aggiustatutto</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=bob27aggiustatutto" title="Code">💻</a> <a href="#maintenance-bob27aggiustatutto" title="Maintenance">🚧</a> <a href="#mentoring-bob27aggiustatutto" title="Mentoring">🧑‍🏫</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/lups2000"><img src="https://avatars.githubusercontent.com/u/100372313?v=4?s=100" width="100px;" alt="Matteo Luppi"/><br /><sub><b>Matteo Luppi</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=lups2000" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.linkedin.com/in/cosimogiovanninegri"><img src="https://avatars.githubusercontent.com/u/93294521?v=4?s=100" width="100px;" alt="Cosimo Giovanni Negri"/><br /><sub><b>Cosimo Giovanni Negri</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=cosimonegri" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
