@@ -1,6 +1,9 @@
 # Polifemo
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ### Setup dell'ambiente
@@ -30,6 +33,7 @@ la finestra perché non si rende conto che le dependencies sono state installate
 ### Esecuzione
 
 La prima volta bisogna fare il login
+
 ```sh
 expo login
 ```
@@ -45,22 +49,25 @@ scaricato nell'app Expo Go, che supporta hot-reload e da cui si può aprire un e
 avviare debugger scuotendo con molta rabbia e violenza il telefono
 
 ### Reporting Bugs/Feature Requests:
+
 #### To report bugs or feature requests, follow these guidelines:
+
 - Open Github.com in your web browser
 - Search for the PoliFemo repository
 - Go to the "Issues" section
 - Click "New Issue"
 
 #### To report a bug, use the following guidelines:
+
 - Title: [BUG] Brief description of the issue
 - Label: "type: bug"
 - Description: Describe the issue in detail, including steps to reproduce it and any error messages you encountered. Include a screenshot or video if possible.
 
 #### To request a new feature, use the following guidelines:
+
 - Title: [FEATURE] Brief description of the feature
 - Label: "type: suggestion"
 - Description: Describe the feature in detail, including how it would benefit users and any potential challenges or limitations.
-
 
 ### Risorse
 
@@ -77,9 +84,10 @@ In generale è sono scritte molto bene le documentazioni di
   specificatamente su come funziona su mobile e
 - [Expo](https://docs.expo.dev) per le molti moduli nativi
   (tipo fotocamera, gps, ecc.)
-  
-  
- ## Contributors
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
@@ -96,17 +104,3 @@ In generale è sono scritte molto bene le documentazioni di
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
-
-
-## Contributors ✨
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
