@@ -1,7 +1,7 @@
 # Polifemo
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ### Setup dell'ambiente
@@ -97,7 +97,8 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/toto04"><img src="https://avatars.githubusercontent.com/u/34661230?v=4?s=100" width="100px;" alt="Tommaso Morganti"/><br /><sub><b>Tommaso Morganti</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=toto04" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/SugoGangotti"><img src="https://avatars.githubusercontent.com/u/101225498?v=4?s=100" width="100px;" alt="SugoGangotti"/><br /><sub><b>SugoGangotti</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=SugoGangotti" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/DiegoZaff"><img src="https://avatars.githubusercontent.com/u/43524162?v=4?s=100" width="100px;" alt="Diego"/><br /><sub><b>Diego</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=DiegoZaff" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/bob27aggiustatutto"><img src="https://avatars.githubusercontent.com/u/120955097?v=4?s=100" width="100px;" alt="bob27aggiustatutto"/><br /><sub><b>bob27aggiustatutto</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=bob27aggiustatutto" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/bob27aggiustatutto"><img src="https://avatars.githubusercontent.com/u/120955097?v=4?s=100" width="100px;" alt="bob27aggiustatutto"/><br /><sub><b>bob27aggiustatutto</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=bob27aggiustatutto" title="Code">💻</a> <a href="#maintenance-bob27aggiustatutto" title="Maintenance">🚧</a> <a href="#mentoring-bob27aggiustatutto" title="Mentoring">🧑‍🏫</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/lups2000"><img src="https://avatars.githubusercontent.com/u/100372313?v=4?s=100" width="100px;" alt="Matteo Luppi"/><br /><sub><b>Matteo Luppi</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=lups2000" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

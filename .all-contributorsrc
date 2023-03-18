@@ -52,6 +52,17 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/120955097?v=4",
       "profile": "https://github.com/bob27aggiustatutto",
       "contributions": [
+        "code",
+        "maintenance",
+        "mentoring"
+      ]
+    },
+    {
+      "login": "lups2000",
+      "name": "Matteo Luppi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/100372313?v=4",
+      "profile": "https://github.com/lups2000",
+      "contributions": [
         "code"
       ]
     }
