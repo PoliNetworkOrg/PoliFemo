@@ -74,3 +74,16 @@ In generale è sono scritte molto bene le documentazioni di
   specificatamente su come funziona su mobile e
 - [Expo](https://docs.expo.dev) per le molti moduli nativi
   (tipo fotocamera, gps, ecc.)
+  
+  
+ ## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
