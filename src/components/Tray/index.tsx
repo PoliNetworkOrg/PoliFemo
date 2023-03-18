@@ -72,7 +72,7 @@ export const Tray: FC<{
           marginRight: 15,
         }}
         onPress={async () => {
-          void console.log(await getAllNotificationsFromStorage())
+          void console.log(await notificationsTestingUtils.askExpoPermissions())
         }}
       /> */}
       {/* <Pressable

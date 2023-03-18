@@ -542,31 +542,38 @@ export const linking: LinkingOptions<RootStackNavigatorParams> = {
 
 // ! this needs testing
 export const checkPermission = async () => {
-  const settings = await Notifications.getPermissionsAsync()
-  if (
-    settings.granted ||
-    settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL
-  ) {
-    return true
-  } else if (
-    settings.status === "undetermined" ||
-    settings.ios?.status === Notifications.IosAuthorizationStatus.NOT_DETERMINED
-  ) {
-    const permission = await Notifications.requestPermissionsAsync({
-      ios: {
-        allowAlert: true,
-        allowBadge: true,
-        allowSound: true,
-        allowAnnouncements: true,
-      },
-    })
-    return (
-      permission.granted ||
-      permission.ios?.status ===
-        Notifications.IosAuthorizationStatus.PROVISIONAL
-    )
+  try {
+    const settings = await Notifications.getPermissionsAsync()
+    if (
+      settings.granted ||
+      settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL
+    ) {
+      return true
+    } else if (
+      settings.status === "undetermined" ||
+      settings.ios?.status ===
+        Notifications.IosAuthorizationStatus.NOT_DETERMINED
+    ) {
+      const permission = await Notifications.requestPermissionsAsync({
+        ios: {
+          allowAlert: true,
+          allowBadge: true,
+          allowSound: true,
+          allowAnnouncements: true,
+        },
+      })
+      return (
+        permission.granted ||
+        permission.ios?.status ===
+          Notifications.IosAuthorizationStatus.PROVISIONAL
+      )
+    }
+    return false
+  } catch (err) {
+    console.log("problem in requesting permissions")
+    console.log(err)
+    return false
   }
-  return false
 }
 
 export const notificationsTestingUtils = {
@@ -591,19 +598,24 @@ export const notificationsTestingUtils = {
   },
 
   async askPermission() {
-    const permission = await Notifications.requestPermissionsAsync({
-      ios: {
-        allowAlert: true,
-        allowBadge: true,
-        allowSound: true,
-        allowAnnouncements: true,
-      },
-    })
-    return (
-      permission.granted ||
-      permission.ios?.status ===
-        Notifications.IosAuthorizationStatus.PROVISIONAL
-    )
+    try {
+      const permission = await Notifications.requestPermissionsAsync({
+        ios: {
+          allowAlert: true,
+          allowBadge: true,
+          allowSound: true,
+          allowAnnouncements: true,
+        },
+      })
+      return (
+        permission.granted ||
+        permission.ios?.status ===
+          Notifications.IosAuthorizationStatus.PROVISIONAL
+      )
+    } catch (err) {
+      console.log("problem in requesting permissions")
+      return false
+    }
   },
 
   async logAllScheduledNotifications() {
