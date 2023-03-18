@@ -1,7 +1,7 @@
 # Polifemo
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-12-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ### Setup dell'ambiente
@@ -106,6 +106,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/pontig"><img src="https://avatars.githubusercontent.com/u/59708804?v=4?s=100" width="100px;" alt="pontig"/><br /><sub><b>pontig</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=pontig" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/AndreaTorti-01"><img src="https://avatars.githubusercontent.com/u/74457299?v=4?s=100" width="100px;" alt="Andrea Torti"/><br /><sub><b>Andrea Torti</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=AndreaTorti-01" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/francescolf"><img src="https://avatars.githubusercontent.com/u/14892143?v=4?s=100" width="100px;" alt="Francesco Lo Faro"/><br /><sub><b>Francesco Lo Faro</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=francescolf" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Elylo15"><img src="https://avatars.githubusercontent.com/u/58746092?v=4?s=100" width="100px;" alt="Elylo"/><br /><sub><b>Elylo</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=Elylo15" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
