@@ -174,7 +174,9 @@ export const sendScheduledNotification = async (
   trigger: NotificationTriggerInput
 ) => {
   try {
+    console.log("scheduling starting...")
     const grant = await checkPermission()
+    console.log("grant: " + grant)
     if (grant) {
       const cacheOnSchedule = content.data.cacheOnSchedule ?? true
 
@@ -185,11 +187,14 @@ export const sendScheduledNotification = async (
         trigger: trigger,
       })
 
+      console.log("scheduled notification of identifier: " + identifier)
+
       let relevantDate: Date | undefined
       if (cacheOnSchedule) {
         relevantDate = calculateDateFromTrigger(trigger)
 
         await setNotificationInStorage({ content, identifier }, relevantDate)
+        console.log("notification set in storage: " + identifier)
       }
 
       return identifier
@@ -344,6 +349,7 @@ export const setNotificationInStorage = async (
     })
 
     await AsyncStorage.setItem("notifications", JSON.stringify(notifications))
+    console.log("notification set in storage completed.")
   } catch (err) {
     console.log(err)
   }
@@ -581,9 +587,23 @@ export const notificationsTestingUtils = {
 
   async logPermission() {
     const settings = await Notifications.getPermissionsAsync()
-    console.log(settings.android)
-    console.log(settings.ios)
-    console.log(settings.granted)
+    console.log("permission is granted: " + settings.granted)
+  },
+
+  async askPermission() {
+    const permission = await Notifications.requestPermissionsAsync({
+      ios: {
+        allowAlert: true,
+        allowBadge: true,
+        allowSound: true,
+        allowAnnouncements: true,
+      },
+    })
+    return (
+      permission.granted ||
+      permission.ios?.status ===
+        Notifications.IosAuthorizationStatus.PROVISIONAL
+    )
   },
 
   async logAllScheduledNotifications() {

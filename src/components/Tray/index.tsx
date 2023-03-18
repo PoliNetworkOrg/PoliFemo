@@ -1,9 +1,8 @@
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useNavigationState } from "@react-navigation/native"
 import React, { FC, useEffect } from "react"
 import { Dimensions, Pressable, View } from "react-native"
 import { newsSheetEventEmitter } from "utils/events"
-import { getAllNotificationsFromStorage } from "utils/notifications"
+import { notificationsTestingUtils } from "utils/notifications"
 import { LittleTitle } from "./LittleTitle"
 import { TrayButton } from "./TrayButton"
 
@@ -51,14 +50,32 @@ export const Tray: FC<{
         style={{
           width: 20,
           height: 20,
+          backgroundColor: "red",
+          marginRight: 15,
+        }}
+        onPress={async () => {
+          console.log("logging current permission: ")
+          await notificationsTestingUtils.logPermission()
+
+          const granted = await notificationsTestingUtils.askPermission()
+          console.log("granted: " + granted)
+
+          console.log("logging new permission: ")
+          await notificationsTestingUtils.logPermission()
+        }}
+      />
+      {/* <Pressable
+        style={{
+          width: 20,
+          height: 20,
           backgroundColor: "green",
           marginRight: 15,
         }}
         onPress={async () => {
           void console.log(await getAllNotificationsFromStorage())
         }}
-      />
-      <Pressable
+      /> */}
+      {/* <Pressable
         style={{
           width: 20,
           height: 20,
@@ -66,9 +83,9 @@ export const Tray: FC<{
           marginRight: 15,
         }}
         onPress={() => {
-          void AsyncStorage.clear()
+          void AsyncStorage.removeItem("notifications")
         }}
-      />
+      /> */}
       <TrayButton label="downloads" onClick={() => props.onDownloads()} />
       <TrayButton
         label="notifications"
