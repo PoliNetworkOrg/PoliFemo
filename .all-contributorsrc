@@ -1,0 +1,25 @@
+{
+  "projectName": "PoliFemo",
+  "projectOwner": "PoliNetwork APS",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "eslint",
+  "contributors": [
+    {
+      "login": "Tammura",
+      "name": "Ahmed",
+      "avatar_url": "https://avatars.githubusercontent.com/u/72708024?v=4",
+      "profile": "https://github.com/Tammura",
+      "contributions": [
+        "projectManagement"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "linkToUsage": false
+}
