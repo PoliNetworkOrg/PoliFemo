@@ -92,6 +92,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "AndreaTorti-01",
+      "name": "Andrea Torti",
+      "avatar_url": "https://avatars.githubusercontent.com/u/74457299?v=4",
+      "profile": "https://github.com/AndreaTorti-01",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
