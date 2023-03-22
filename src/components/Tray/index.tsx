@@ -1,8 +1,11 @@
 import { useNavigationState } from "@react-navigation/native"
-import React, { FC, useEffect } from "react"
-import { Dimensions, Pressable, View } from "react-native"
+import React, { FC, useEffect, useState } from "react"
+import { Dimensions, View } from "react-native"
 import { newsSheetEventEmitter } from "utils/events"
-import { notificationsTestingUtils } from "utils/notifications"
+import {
+  badgeEventEmitter,
+  getAllBadgeUnreadNotifications,
+} from "utils/notifications"
 import { LittleTitle } from "./LittleTitle"
 import { TrayButton } from "./TrayButton"
 
@@ -22,6 +25,8 @@ export const Tray: FC<{
       state.routes[0].state?.index !== 0
   )
 
+  const [badge, setBadge] = useState<number | undefined>(undefined)
+
   const [newsOpen, setNewsOpen] = React.useState(false)
   useEffect(() => {
     const listener = newsSheetEventEmitter.addListener(
@@ -30,6 +35,20 @@ export const Tray: FC<{
     )
     return () => {
       listener.remove?.()
+    }
+  }, [])
+
+  const loadBadge = async () => {
+    const badgeCount = await getAllBadgeUnreadNotifications()
+    setBadge(badgeCount)
+  }
+
+  useEffect(() => {
+    void loadBadge()
+    const listener = badgeEventEmitter.addListener("badge-change", loadBadge)
+
+    return () => {
+      listener.remove()
     }
   }, [])
 
@@ -46,6 +65,29 @@ export const Tray: FC<{
       }}
     >
       <LittleTitle titleInCorner={notInHome || newsOpen} />
+      {/* <Pressable
+        style={{
+          width: 20,
+          height: 20,
+          backgroundColor: "yellow",
+          marginRight: 15,
+        }}
+        onPress={async () => {
+          const notif = await getAllNotificationsFromStorage()
+          console.log(notif)
+        }}
+      />
+      <Pressable
+        style={{
+          width: 20,
+          height: 20,
+          backgroundColor: "green",
+          marginRight: 15,
+        }}
+        onPress={() => {
+          void AsyncStorage.setItem("notifications", JSON.stringify([]))
+        }}
+      />
       <Pressable
         style={{
           width: 20,
@@ -63,34 +105,13 @@ export const Tray: FC<{
           console.log("logging new permission: ")
           await notificationsTestingUtils.logPermission()
         }}
-      />
-      {/* <Pressable
-        style={{
-          width: 20,
-          height: 20,
-          backgroundColor: "green",
-          marginRight: 15,
-        }}
-        onPress={async () => {
-          void console.log(await notificationsTestingUtils.askExpoPermissions())
-        }}
-      /> */}
-      {/* <Pressable
-        style={{
-          width: 20,
-          height: 20,
-          backgroundColor: "yellow",
-          marginRight: 15,
-        }}
-        onPress={() => {
-          void AsyncStorage.removeItem("notifications")
-        }}
       /> */}
       <TrayButton label="downloads" onClick={() => props.onDownloads()} />
       <TrayButton
         label="notifications"
         onClick={() => props.onNotifications()}
         style={{ marginTop: 1 }}
+        badgeCount={badge}
       />
       <TrayButton label="settings" onClick={() => props.onSettings()} />
     </View>

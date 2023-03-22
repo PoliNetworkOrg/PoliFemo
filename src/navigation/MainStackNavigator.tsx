@@ -29,14 +29,6 @@ export const MainStack: FC = () => {
       screenOptions={{
         headerShown: false,
         gestureEnabled: false,
-        cardStyleInterpolator: ({ current: { progress } }) => {
-          return {
-            cardStyle: {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              opacity: progress,
-            },
-          }
-        },
       }}
       initialRouteName="Home"
     >
@@ -60,9 +52,22 @@ export const MainStack: FC = () => {
       <MainStackNavigator.Screen
         name="NotificationDetails"
         component={NotificationDetails}
-        sharedElements={route => {
+        options={{
+          cardStyleInterpolator: ({ current: { progress } }) => {
+            return {
+              cardStyle: {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                opacity: progress,
+              },
+            }
+          },
+        }}
+        sharedElements={(route, otherRoute) => {
           const { notification } = route.params
 
+          if (otherRoute.name === "Home") {
+            return []
+          }
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
           return [notification.notification.identifier]
         }}

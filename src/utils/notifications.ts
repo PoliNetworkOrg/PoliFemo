@@ -13,6 +13,7 @@ import { LinkingOptions } from "@react-navigation/native"
 import { RootStackNavigatorParams } from "navigation/NavigationTypes"
 import { Linking } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { EmitterSubscription, DeviceEventEmitter } from "react-native"
 
 export interface ScheduledNotificationInfo {
   eventId: number
@@ -236,6 +237,8 @@ export const useNotificationsHandlers = () => {
             await setNotificationsListInStorage(notificationList)
           }
         }
+
+        badgeEventEmitter.emit("badge-change")
       })
 
     //fired when user taps on notification, evreything is dismissed by default
@@ -315,7 +318,13 @@ export const setNotificationAsReadStorage = async (identifier: string) => {
       found = true
     }
   }
+
   await setNotificationsListInStorage(notifications)
+
+  //Badge event emitter
+  if (found === true) {
+    badgeEventEmitter.emit("badge-change")
+  }
 }
 
 /**
@@ -371,6 +380,39 @@ export const getAllNotificationsOfCategory = async (
     }
   }
   return categoryList
+}
+
+export const getAllBadgeUnreadNotifications = async () => {
+  try {
+    const notificationsJSON = await AsyncStorage.getItem("notifications")
+
+    if (notificationsJSON) {
+      const notifications = JSON.parse(
+        notificationsJSON
+      ) as NotificationStorage[]
+      let count = 0
+      for (let i = 0; i < notifications?.length; i++) {
+        const isRelevantAt = notifications[i].isRelevantAt
+        const isRead = notifications[i].isRead
+        //increment if not read and (relevantDate is before now or relevant date was not set)
+        if (
+          !isRead &&
+          (!isRelevantAt ||
+            new Date(isRelevantAt).getTime() < new Date().getTime())
+        ) {
+          count++
+        }
+      }
+      if (count === 0) {
+        return undefined
+      }
+      return count
+    }
+    return undefined
+  } catch (err) {
+    console.log(err)
+    return undefined
+  }
 }
 
 /**
@@ -770,3 +812,13 @@ const calculateDateFromTrigger = (trigger: NotificationTriggerInput) => {
   }
   return relevantDate
 }
+
+export declare interface BadgeEventEmitter {
+  addListener(
+    eventType: "badge-change",
+    listener: () => void
+  ): EmitterSubscription
+  removeAllListeners(eventType?: "badge-change"): void
+  emit(eventType: "badge-change"): void
+}
+export const badgeEventEmitter: BadgeEventEmitter = DeviceEventEmitter
