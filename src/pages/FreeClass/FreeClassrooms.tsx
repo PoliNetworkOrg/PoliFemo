@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { useContext, useEffect, useState } from "react"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { View, Alert, ActivityIndicator, StyleSheet } from "react-native"
@@ -11,15 +10,12 @@ import * as Location from "expo-location"
 import {
   formatDate,
   getExpirationDateRooms,
-  getRoomFromId,
   isSameDay,
-  isValidAcronym,
   ValidAcronym,
 } from "utils/rooms"
 import { api, RetryType } from "api"
 import { RoomsSearchDataContext } from "contexts/rooms"
 import { Icon } from "components/Icon"
-import roomsJSON from "components/FreeClass/rooms.json"
 import { Room } from "api/rooms"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { PageWrapper } from "components/Groups/PageWrapper"
@@ -40,21 +36,11 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
   const { navigate } = useNavigation()
   const { palette } = usePalette()
 
-  const { rooms, setRooms, date, setIsRoomsSearching } = useContext(
-    RoomsSearchDataContext
-  )
+  const { rooms, setRooms, date, setIsRoomsSearching, isRoomsSearching } =
+    useContext(RoomsSearchDataContext)
 
-  //rooms filtered locally
-  const [searchableRooms, setSearchableRooms] = useState<Partial<Room>[]>([])
-
-  //shown rooms
-  const [actualSearchableRooms, setActualSearchableRooms] = useState<Room[]>([])
-
-  //for searching in multiple campuses
-  const [acronymList, setAcronymList] = useState<ValidAcronym[]>([])
-
-  //keep track of when to show activity indicator
-  const [isSearchBarSearching, setIsSearchBarSearching] = useState(false)
+  //rooms filtered
+  const [searchableRooms, setSearchableRooms] = useState<Room[]>([])
 
   //main function that handles the call to the API in order to obtain the list of freeclassRooms
   const getAllRoomsFromApi = async (
@@ -78,7 +64,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
         }
       }
     }
-    //expired and not relevant
+    //expired and/or not relevant
 
     if (!overrideSearchBehaviour) {
       setIsRoomsSearching(true)
@@ -89,6 +75,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
     )
     if (data) {
       const newGlobalRooms = { ...data }
+
       const expirationDate = getExpirationDateRooms(expire)
       //update expiration date or reset
       newGlobalRooms.expireAt = expirationDate?.toISOString() ?? undefined
@@ -105,7 +92,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
     void getAllRoomsFromApi()
   }, [date])
 
-  const [geolocation, setGeoloaction] = useState<boolean>(false)
+  const [geolocation, setGeolocation] = useState<boolean>(false)
 
   const handlePositionPressed = async () => {
     if (geolocation) {
@@ -121,37 +108,27 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
           { cancelable: false }
         )
       } else {
-        setGeoloaction(true)
+        setGeolocation(true)
         navigate("PositionChoice")
       }
     }
   }
 
   //filter rooms locally
-  const filterRoomsJSON = () => {
-    const newAcronymList: ValidAcronym[] = []
-    const newSearchableRooms: Partial<Room>[] = []
-    const roomsAll: { [key: string]: { [key: string]: number } } = roomsJSON
-    const keys = Object.keys(roomsAll)
-    for (const currAcronym of keys) {
-      const roomsInCampus = roomsAll[currAcronym]
-      const roomsNames = Object.keys(roomsInCampus)
-      for (const roomName of roomsNames) {
-        if (roomName.toLowerCase().includes(search.toLowerCase().trimEnd())) {
-          newSearchableRooms.push({
-            room_id: roomsInCampus[roomName],
-            name: roomName,
-          })
-          if (
-            isValidAcronym(currAcronym) &&
-            !newAcronymList.includes(currAcronym)
-          ) {
-            newAcronymList.push(currAcronym)
-          }
+  const filterRooms = () => {
+    const newSearchableRooms: Room[] = []
+    const acronyms: ValidAcronym[] = ["MIA", "MIB", "CRG", "LCF", "PCL", "MNI"]
+
+    for (const currAcronym of acronyms) {
+      const roomsInCampus = rooms[currAcronym] ?? []
+
+      for (const room of roomsInCampus) {
+        if (room.name.toLowerCase().includes(search.toLowerCase().trimEnd())) {
+          newSearchableRooms.push(room)
         }
       }
     }
-    setAcronymList(newAcronymList)
+
     setSearchableRooms(newSearchableRooms)
   }
 
@@ -160,39 +137,15 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
     clearTimeout(searchTimeout)
     searchTimeout = setTimeout(() => {
       if (search.trimEnd().length > 1) {
-        void filterRoomsJSON()
+        void filterRooms()
+
+        //request rooms if old ones have expired
+        void getAllRoomsFromApi(new Date())
       } else {
         setSearchableRooms([])
-        setActualSearchableRooms([])
       }
     }, deltaTime)
-  }, [search])
-
-  // request rooms in the relevant acronyms (filtered locally in filterRoomsJSON)
-  const searchMultiple = async () => {
-    setIsSearchBarSearching(true)
-    await getAllRoomsFromApi(new Date(), true)
-    setIsSearchBarSearching(false)
-  }
-
-  useEffect(() => {
-    void searchMultiple()
-  }, [acronymList])
-
-  //update actually showable rooms by matching local and server-delivered room
-  useEffect(() => {
-    const newRooms: Room[] = []
-
-    for (const room of searchableRooms) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const matchingRoom = getRoomFromId(rooms, acronymList, room.room_id)
-      if (matchingRoom) {
-        newRooms.push(matchingRoom)
-      }
-    }
-
-    setActualSearchableRooms(newRooms)
-  }, [rooms, searchableRooms])
+  }, [search, rooms])
 
   return (
     <PageWrapper>
@@ -200,9 +153,9 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
         <Title style={{ paddingLeft: 28, marginBottom: 17 }}>Aule Libere</Title>
         <PoliSearchBar onChange={searchKey => setSearch(searchKey)} />
       </View>
-      {isSearchBarSearching ? (
+      {isRoomsSearching && search.length > 1 ? (
         <ActivityIndicator size={"large"} style={{ marginTop: 100 }} />
-      ) : actualSearchableRooms.length === 0 ? (
+      ) : search.length <= 1 ? (
         <ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={{
@@ -250,11 +203,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
         </ScrollView>
       ) : (
         <View style={{ flex: 1, marginTop: 12, marginBottom: 93 }}>
-          <FreeClassList
-            data={actualSearchableRooms}
-            date={new Date()}
-            acronymList={acronymList}
-          />
+          <FreeClassList data={searchableRooms} date={new Date()} />
         </View>
       )}
     </PageWrapper>

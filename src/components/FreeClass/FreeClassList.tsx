@@ -8,7 +8,7 @@ import fireIcon from "assets/freeClassrooms/fire.svg"
 import { useNavigation } from "navigation/NavigationTypes"
 import { FlatList } from "react-native-gesture-handler"
 import { Room } from "api/rooms"
-import { getStartEndDate, ValidAcronym } from "utils/rooms"
+import { getStartEndDate } from "utils/rooms"
 import { Icon } from "components/Icon"
 import { AdaptiveShadowView } from "components/BoxShadow"
 
@@ -19,7 +19,6 @@ interface FreeClassListProps {
   date: Date
   latitude?: number
   longitude?: number
-  acronymList?: ValidAcronym[]
 }
 
 /**
@@ -83,7 +82,6 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
               roomLongitude: props.longitude ?? item.longitude,
               occupancies: item.occupancies,
               occupancyRate: item.occupancy_rate,
-              acronymList: props.acronymList,
             })
           } catch (err) {
             console.log(err)
