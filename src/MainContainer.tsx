@@ -7,7 +7,7 @@ import { MainStack } from "navigation/MainStackNavigator"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { RoomsSearchDataContext } from "contexts/rooms"
-import { GlobalRoomListInterface, ValidAcronym } from "utils/rooms"
+import { GlobalRoomListInterface } from "utils/rooms"
 
 /**
  * The Main Container.
@@ -25,16 +25,14 @@ export const MainContainer: FC = () => {
   //rooms search date
   const [date, setDate] = useState(new Date())
 
-  const [acronym, setAcronym] = useState<ValidAcronym>("MIA")
-
   const [globalRoomList, setGlobalRoomList] = useState<GlobalRoomListInterface>(
     {
-      MIA: { rooms: [] },
-      MIB: { rooms: [] },
-      CRG: { rooms: [] },
-      LCF: { rooms: [] },
-      PCL: { rooms: [] },
-      MNI: { rooms: [] },
+      MIA: [],
+      MIB: [],
+      CRG: [],
+      LCF: [],
+      PCL: [],
+      MNI: [],
     }
   )
 
@@ -74,8 +72,6 @@ export const MainContainer: FC = () => {
         value={{
           isRoomsSearching: isRoomsSearching,
           setIsRoomsSearching: (val: boolean) => setIsRoomSearching(val),
-          acronym: acronym,
-          setAcronym: (acronym: ValidAcronym) => setAcronym(acronym),
           date: date,
           setDate: (date: Date) => setDate(date),
           rooms: globalRoomList,
