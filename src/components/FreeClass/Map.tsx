@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react"
+import { FC, useEffect, useRef, useState } from "react"
 import { View, ActivityIndicator, Platform, Pressable } from "react-native"
 import MapView, { Callout, Marker, Region } from "react-native-maps"
 import { PermissionStatus } from "expo-location"
@@ -30,6 +30,8 @@ export const Map: FC<MapProps> = props => {
     latitudeDelta: 0.002,
     longitudeDelta: 0.002,
   })
+
+  const map = useRef<MapView>(null)
 
   useEffect(() => {
     if (props.userLatitude === undefined && props.userLongitude === undefined) {
@@ -78,6 +80,7 @@ export const Map: FC<MapProps> = props => {
         )
       ) : (
         <MapView
+          ref={map}
           style={{ marginTop: 23, width: "100%", height: "100%" }}
           region={region}
           onRegionChangeComplete={region => {
@@ -133,10 +136,23 @@ export const Map: FC<MapProps> = props => {
                   latitude: building.latitude ?? 0,
                   longitude: building.longitude ?? 0,
                 }}
+                onSelect={() => {
+                  if (map.current !== null) {
+                    map.current.animateToRegion(
+                      {
+                        latitude: building.latitude ?? 0,
+                        longitude: building.longitude ?? 0,
+                        latitudeDelta: 0.002,
+                        longitudeDelta: 0.002,
+                      },
+                      1000
+                    )
+                  }
+                }}
               >
                 <Callout onPress={() => props.onPressMarker(building)}>
                   <BodyText style={{ fontWeight: "400", fontSize: 17 }}>
-                    {building.name}
+                    {building.fullName}
                   </BodyText>
                 </Callout>
               </Marker>
