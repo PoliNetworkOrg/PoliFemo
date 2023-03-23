@@ -45,6 +45,10 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
     }
   }
 
+  const formatRoomName = (roomName: string) => {
+    return roomName.replace(" - ", "\n").replace("�", "")
+  }
+
   return (
     <FlatList
       showsVerticalScrollIndicator={true}
@@ -85,6 +89,8 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
             console.log(err)
           }
         }
+
+        const roomName = formatRoomName(item.name)
 
         return (
           <Pressable
@@ -211,16 +217,17 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                   borderRadius: 12,
                   alignItems: "center",
                   justifyContent: "center",
+                  padding: 10,
                 }}
               >
                 <BodyText
                   style={{
                     fontWeight: "700",
                     color: "white",
-                    fontSize: item.name.length <= 10 ? 24 : 18,
+                    fontSize: roomName.length <= 15 ? 24 : 18,
                   }}
                 >
-                  {item.name}
+                  {roomName}
                 </BodyText>
               </View>
             </AdaptiveShadowView>
