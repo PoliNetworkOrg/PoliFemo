@@ -253,11 +253,11 @@ export function getBuildingCoordsWithoutCampus(
 }
 
 export function getBuildingInfo(
-  headquarter: HeadquarterItem,
+  acronym: ValidAcronym,
   buildingName: string
 ): BuildingItem | undefined {
   for (const h of BuildingListJSON) {
-    if (h.acronym === headquarter.acronym) {
+    if (h.acronym == acronym) {
       for (const c of h.campus) {
         for (const b of c.buildings) {
           if (b.name === buildingName) {

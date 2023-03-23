@@ -75,8 +75,8 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
             navigate("RoomDetails", {
               startDate: props.date.toISOString(),
               roomId: item.room_id,
-              roomLatitude: props.latitude,
-              roomLongitude: props.longitude,
+              roomLatitude: props.latitude ?? item.latitude,
+              roomLongitude: props.longitude ?? item.longitude,
               occupancies: item.occupancies,
               occupancyRate: item.occupancy_rate,
               acronymList: props.acronymList,

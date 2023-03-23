@@ -5,10 +5,10 @@ import { BodyText } from "components/Text"
 import { Map } from "./Map"
 import { FreeClassList } from "./FreeClassList"
 import { PermissionStatus } from "expo-location"
-import { BuildingItem, HeadquarterItem } from "./DefaultList"
-import { ConstructionType, Room } from "api/rooms"
+import { BuildingItem } from "./DefaultList"
+import { Room } from "api/rooms"
 import { useNavigation } from "@react-navigation/native"
-import { getBuildingInfo, ValidAcronym } from "utils/rooms"
+import { getBuildingInfo, isRoomFree, ValidAcronym } from "utils/rooms"
 import { ErrorMessage } from "../ErrorMessage"
 import { RoomsSearchDataContext } from "contexts/rooms"
 import { getDistance } from "geolib"
@@ -47,24 +47,17 @@ export const PositionModality: FC<PositionModalityProps> = props => {
     const tempBuildingStrings: string[] = []
     const tempBuildingList: BuildingItem[] = []
 
-    acronyms.map(a => {
-      const currentHeadquarter: HeadquarterItem = {
-        type: ConstructionType.HEADQUARTER,
-        acronym: a,
-        name: [a],
-        campusList: [],
-      }
-
+    acronyms.forEach(a => {
       if (rooms[a]) {
         //if the roomList is not empty and undefined
-        rooms[a].map(room => {
-          const currentBuildingString: string = room.building + "-" + a //es Edificio 1-MIA
-
-          if (currentHeadquarter?.campusList !== undefined) {
-            const currentBuilding = getBuildingInfo(
-              currentHeadquarter,
-              room.building
-            )
+        rooms[a]
+          .filter(r => {
+            //filter the free rooms available now
+            return isRoomFree(r, new Date(), true)
+          })
+          .map(room => {
+            const currentBuildingString: string = room.building + "-" + a //es Edificio 1-MIA
+            const currentBuilding = getBuildingInfo(a, room.building)
             if (!tempBuildingStrings.includes(currentBuildingString)) {
               if (currentBuilding !== undefined) {
                 currentBuilding.freeRoomList = [room]
@@ -84,8 +77,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
               latitude: currentBuilding?.latitude,
               longitude: currentBuilding?.longitude,
             })
-          }
-        })
+          })
       }
     })
     setAllRooms(tempRooms)
@@ -172,45 +164,47 @@ export const PositionModality: FC<PositionModalityProps> = props => {
               />
             ) : (
               <FreeClassList
-                data={allRooms.sort(function (roomA, roomB) {
-                  const currentCoords = {
-                    latitude: props.currentCoords[0],
-                    longitude: props.currentCoords[1],
-                  }
-                  if (
-                    roomA.latitude &&
-                    roomA.longitude &&
-                    roomB.latitude &&
-                    roomB.longitude
-                  ) {
-                    if (
-                      getDistance(currentCoords, {
-                        latitude: roomA.latitude,
-                        longitude: roomA.longitude,
-                      }) <
-                      getDistance(currentCoords, {
-                        latitude: roomB.latitude,
-                        longitude: roomB.longitude,
-                      })
-                    ) {
-                      return -1
-                    } else if (
-                      getDistance(currentCoords, {
-                        latitude: roomA.latitude,
-                        longitude: roomA.longitude,
-                      }) >
-                      getDistance(currentCoords, {
-                        latitude: roomB.latitude,
-                        longitude: roomB.longitude,
-                      })
-                    ) {
-                      return 1
-                    } else {
-                      return 0
+                data={allRooms
+                  .sort(function (roomA, roomB) {
+                    const currentCoords = {
+                      latitude: props.currentCoords[0],
+                      longitude: props.currentCoords[1],
                     }
-                  }
-                  return 0
-                })}
+                    if (
+                      roomA.latitude &&
+                      roomA.longitude &&
+                      roomB.latitude &&
+                      roomB.longitude
+                    ) {
+                      if (
+                        getDistance(currentCoords, {
+                          latitude: roomA.latitude,
+                          longitude: roomA.longitude,
+                        }) <
+                        getDistance(currentCoords, {
+                          latitude: roomB.latitude,
+                          longitude: roomB.longitude,
+                        })
+                      ) {
+                        return -1
+                      } else if (
+                        getDistance(currentCoords, {
+                          latitude: roomA.latitude,
+                          longitude: roomA.longitude,
+                        }) >
+                        getDistance(currentCoords, {
+                          latitude: roomB.latitude,
+                          longitude: roomB.longitude,
+                        })
+                      ) {
+                        return 1
+                      } else {
+                        return 0
+                      }
+                    }
+                    return 0
+                  })
+                  .slice(0, 30)}
                 date={new Date()}
               />
             )
