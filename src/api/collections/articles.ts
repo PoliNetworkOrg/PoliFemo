@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { HttpClient, RequestOptions } from "./HttpClient"
+import { HttpClient, RequestOptions } from "../HttpClient"
 
 export interface Tags {
   tags: Tag[]

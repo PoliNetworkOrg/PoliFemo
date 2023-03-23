@@ -1,10 +1,10 @@
-import { articles } from "./articles"
-import { auth } from "./auth"
-import { groups } from "./groups"
-import { tags } from "./tags"
-import { timetable } from "./timetable"
-import { user } from "./user"
-import { events } from "./event"
+import { articles } from "./collections/articles"
+import { auth } from "./collections/auth"
+import { groups } from "./collections/groups"
+import { tags } from "./collections/tags"
+import { timetable } from "./collections/timetable"
+import { user } from "./collections/user"
+import { events } from "./collections/event"
 export { RetryType, AuthType, RequestOptions } from "./HttpClient"
 /**
  * This object groups together all collections of endpoints.

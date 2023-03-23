@@ -2,6 +2,7 @@ import { EventEmitter } from "events"
 import axios, {
   AxiosError,
   AxiosInstance,
+  AxiosRequestConfig,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios"
@@ -17,6 +18,12 @@ https://levelup.gitconnected.com/use-case-of-singleton-with-axios-and-typescript
 Error retrying:
 https://stackblitz.com/edit/retry-api-call-axios-interceptor?file=index.ts
 */
+
+export interface CancellableApiRequest<T, D = AxiosResponse<T, unknown>>
+  extends Promise<D> {
+  cancel: (reason?: unknown) => void
+  cachedResponse: T | null
+}
 
 export enum AuthType {
   NONE,
@@ -265,6 +272,42 @@ export class HttpClient extends EventEmitter {
       throw error
     }
     throw error
+  }
+
+  callPolimi<T>(options: RequestOptions): CancellableApiRequest<T> {
+    const controller = new AbortController()
+    const request = this.polimiInstance.request<T>({
+      ...options,
+      signal: controller.signal,
+    }) as CancellableApiRequest<T>
+    request.cancel = r => controller.abort(r)
+    // TODO: handle cache ?
+    request.cachedResponse = null
+    return request
+  }
+
+  callPoliNetwork<T>(options: AxiosRequestConfig): CancellableApiRequest<T> {
+    const controller = new AbortController()
+    const request = this.poliNetworkInstance.request<T>({
+      ...options,
+      signal: controller.signal,
+    }) as CancellableApiRequest<T>
+    request.cancel = r => controller.abort(r)
+    // TODO: handle cache ?
+    request.cachedResponse = null
+    return request
+  }
+
+  callGeneral<T>(options: RequestOptions): CancellableApiRequest<T> {
+    const controller = new AbortController()
+    const request = this.generalInstance.request<T>({
+      ...options,
+      signal: controller.signal,
+    }) as CancellableApiRequest<T>
+    request.cancel = r => controller.abort(r)
+    // TODO: handle cache ?
+    request.cachedResponse = null
+    return request
   }
 
   /**

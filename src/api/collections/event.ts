@@ -1,4 +1,4 @@
-import { AuthType, HttpClient, RequestOptions } from "./HttpClient"
+import { AuthType, HttpClient, RequestOptions } from "../HttpClient"
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface Event {

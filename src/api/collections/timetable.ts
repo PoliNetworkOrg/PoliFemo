@@ -1,4 +1,4 @@
-import { HttpClient, RequestOptions } from "./HttpClient"
+import { HttpClient, RequestOptions } from "../HttpClient"
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface Lecture {

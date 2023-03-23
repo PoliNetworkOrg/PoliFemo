@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useContext } from "react"
 import { View } from "react-native"
 
 import { api, RetryType } from "api"
-import { Article } from "api/articles"
+import { Article } from "api/collections/articles"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ScrollPageInfinite } from "components/ScrollPageInfinite"
 import { CardWithGradient } from "components/CardWithGradient"

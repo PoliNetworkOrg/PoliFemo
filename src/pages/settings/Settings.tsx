@@ -12,7 +12,7 @@ import { UserAnonymousTile } from "components/Settings"
 import { SettingsContext, ValidColorSchemeName } from "contexts/settings"
 import { CareerColumn } from "components/Settings"
 import { LoginContext } from "contexts/login"
-import { Career } from "api/user"
+import { Career } from "api/collections/user"
 import { HttpClient } from "api/HttpClient"
 import { Modal } from "components/Modal"
 

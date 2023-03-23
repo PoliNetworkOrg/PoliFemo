@@ -1,4 +1,4 @@
-import { User } from "api/user"
+import { User } from "api/collections/user"
 import React from "react"
 
 /* eslint-disable @typescript-eslint/naming-convention */

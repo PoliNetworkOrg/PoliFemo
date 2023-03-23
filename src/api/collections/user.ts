@@ -1,4 +1,4 @@
-import { HttpClient, AuthType, RetryType } from "./HttpClient"
+import { HttpClient, AuthType, RetryType } from "../HttpClient"
 /**
  * Interface of UI User Object.
  */
