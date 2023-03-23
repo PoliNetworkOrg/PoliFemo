@@ -29,7 +29,7 @@ const headquarterList: HeadquarterItem[] = [
  * In this page the user can select the campus.
  */
 export const HeadquarterChoice: MainStackScreen<"HeadquarterChoice"> = () => {
-  const { date, setDate, setAcronym } = useContext(RoomsSearchDataContext)
+  const { date, setDate } = useContext(RoomsSearchDataContext)
 
   useEffect(() => {
     setDate(new Date())
@@ -41,7 +41,7 @@ export const HeadquarterChoice: MainStackScreen<"HeadquarterChoice"> = () => {
         <Title style={{ paddingLeft: 28 }}>Sede</Title>
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
-      <DefaultList dataToShow={headquarterList} setAcronym={setAcronym} />
+      <DefaultList dataToShow={headquarterList} />
     </PageWrapper>
   )
 }

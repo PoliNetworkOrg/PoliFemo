@@ -8,7 +8,6 @@ import { hasAcronymProp, ValidAcronym } from "utils/rooms"
 
 interface DefaultListProps<T> {
   dataToShow: T[]
-  setAcronym?: (acronym: ValidAcronym) => void
 }
 
 export interface HeadquarterItem {
@@ -84,9 +83,6 @@ export const DefaultList: FC<
               item.type === ConstructionType.HEADQUARTER &&
               hasAcronymProp(item)
             ) {
-              if (item.acronym && props.setAcronym) {
-                props.setAcronym(item.acronym)
-              }
               navigate("CampusChoice", {
                 headquarter: item,
               })
