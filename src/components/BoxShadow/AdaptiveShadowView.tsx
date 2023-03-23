@@ -7,7 +7,9 @@ import { BoxShadowViewProps } from "./BoxShadowView"
 export type AdaptiveShadowViewProps = Omit<
   BoxShadowViewProps,
   "overrideCanvasDimensions"
->
+> & {
+  onPress?: () => void
+}
 
 /**
  * A view that renders a box shadow underneath a view.
