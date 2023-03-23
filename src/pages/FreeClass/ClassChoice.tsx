@@ -16,7 +16,7 @@ import { ErrorMessage } from "components/ErrorMessage"
 export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
   const { building } = props.route.params
 
-  const { date, setDate, rooms, acronym, isRoomsSearching } = useContext(
+  const { date, setDate, rooms, isRoomsSearching } = useContext(
     RoomsSearchDataContext
   )
 
@@ -28,13 +28,11 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
 
   //update rooms from which to apply date filters
   useEffect(() => {
-    const newBuildingRooms = rooms[building.campus.acronym].rooms.filter(
-      room => {
-        return building.fullName === room.building
-      }
-    )
+    const newBuildingRooms = rooms[building.campus.acronym].filter(room => {
+      return building.fullName === room.building
+    })
     setBuildingRooms(newBuildingRooms)
-  }, [rooms[acronym].rooms])
+  }, [rooms])
 
   //apply date and toggle filters
   useEffect(() => {

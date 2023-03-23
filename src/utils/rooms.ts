@@ -501,7 +501,7 @@ export const getRoomFromId = (
 
   for (const acr of acrList) {
     const campusRooms = rooms[acr]
-    for (const room of campusRooms.rooms) {
+    for (const room of campusRooms) {
       if (room.room_id === roomId) {
         return room
       }
@@ -513,12 +513,14 @@ export const getRoomFromId = (
 export type ValidAcronym = "MIA" | "MIB" | "CRG" | "LCF" | "PCL" | "MNI"
 
 export interface GlobalRoomListInterface {
-  MIA: { rooms: Room[]; expireAt?: string; searchDate?: string }
-  MIB: { rooms: Room[]; expireAt?: string; searchDate?: string }
-  CRG: { rooms: Room[]; expireAt?: string; searchDate?: string }
-  LCF: { rooms: Room[]; expireAt?: string; searchDate?: string }
-  PCL: { rooms: Room[]; expireAt?: string; searchDate?: string }
-  MNI: { rooms: Room[]; expireAt?: string; searchDate?: string }
+  MIA: Room[]
+  MIB: Room[]
+  CRG: Room[]
+  LCF: Room[]
+  PCL: Room[]
+  MNI: Room[]
+  expireAt?: string
+  searchDate?: string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

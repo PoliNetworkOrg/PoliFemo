@@ -1,9 +1,11 @@
+import { GlobalRoomListInterface } from "utils/rooms"
 import { AuthType, HttpClient, RequestOptions } from "./HttpClient"
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface Rooms {
-  free_rooms: Room[]
+  free_rooms: GlobalRoomListInterface
 }
+
 export interface Room {
   room_id: number
   name: string
@@ -56,22 +58,16 @@ export const rooms = {
   /**
    * Retrieves available rooms from PoliNetwork server in a given time range.
    */
-  async getFreeRoomsDay(
-    campusAcronym: string,
-    date: string,
-    options?: RequestOptions
-  ) {
+  async getFreeRoomsDay(date: string, options?: RequestOptions) {
     const response = await client.poliNetworkInstance.get<Rooms>(
       "/v1/rooms/search_day",
       {
         ...options,
         params: {
-          sede: campusAcronym,
           date: date,
         },
       }
     )
-
     return {
       data: response.data.free_rooms,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

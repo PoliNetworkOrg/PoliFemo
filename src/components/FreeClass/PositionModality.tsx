@@ -55,37 +55,38 @@ export const PositionModality: FC<PositionModalityProps> = props => {
         campusList: [],
       }
 
-      rooms[a].rooms.map(room => {
-        const currentBuildingString: string = room.building + "-" + a //es Edificio 1-MIA
+      if (rooms[a]) {
+        //if the roomList is not empty and undefined
+        rooms[a].map(room => {
+          const currentBuildingString: string = room.building + "-" + a //es Edificio 1-MIA
 
-        if (currentHeadquarter?.campusList !== undefined) {
-          const currentBuilding = getBuildingInfo(
-            currentHeadquarter,
-            room.building
-          )
-          if (!tempBuildingStrings.includes(currentBuildingString)) {
-            if (currentBuilding !== undefined) {
-              currentBuilding.freeRoomList = [room]
-              currentBuilding.fullName = room.building
-              tempBuildingStrings.push(currentBuildingString)
-              tempBuildingList.push(currentBuilding)
-            }
-          } else {
-            //element already in the list
-            const indexElement = tempBuildingStrings.indexOf(
-              currentBuildingString
+          if (currentHeadquarter?.campusList !== undefined) {
+            const currentBuilding = getBuildingInfo(
+              currentHeadquarter,
+              room.building
             )
-            tempBuildingList[indexElement].freeRoomList.push(room)
-          }
-          if (tempRooms.length < 50) {
+            if (!tempBuildingStrings.includes(currentBuildingString)) {
+              if (currentBuilding !== undefined) {
+                currentBuilding.freeRoomList = [room]
+                currentBuilding.fullName = room.building
+                tempBuildingStrings.push(currentBuildingString)
+                tempBuildingList.push(currentBuilding)
+              }
+            } else {
+              //element already in the list
+              const indexElement = tempBuildingStrings.indexOf(
+                currentBuildingString
+              )
+              tempBuildingList[indexElement].freeRoomList.push(room)
+            }
             tempRooms.push({
               ...room,
               latitude: currentBuilding?.latitude,
               longitude: currentBuilding?.longitude,
-            }) //add room
+            })
           }
-        }
-      })
+        })
+      }
     })
     setAllRooms(tempRooms)
     setBuildingList(tempBuildingList)

@@ -40,7 +40,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
   const { navigate } = useNavigation()
   const { palette } = usePalette()
 
-  const { rooms, setRooms, date, acronym, setIsRoomsSearching } = useContext(
+  const { rooms, setRooms, date, setIsRoomsSearching } = useContext(
     RoomsSearchDataContext
   )
 
@@ -58,22 +58,17 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
 
   //main function that handles the call to the API in order to obtain the list of freeclassRooms
   const getAllRoomsFromApi = async (
-    overrideAcr?: ValidAcronym,
     overrideDate?: Date,
     overrideSearchBehaviour?: boolean
   ) => {
-    const searchAcronym = overrideAcr ?? acronym
     const searchDate = overrideDate ?? date
 
-    if (!acronym) {
-      return
-    }
     //Check if stored rooms are still relevant to the current search
-    const prevSearchDateISO = rooms[searchAcronym].searchDate
+    const prevSearchDateISO = rooms.searchDate
     if (prevSearchDateISO) {
       const prevSearchDate = new Date(prevSearchDateISO)
       if (isSameDay(prevSearchDate, searchDate)) {
-        const currentExpirationDateISO = rooms[searchAcronym].expireAt
+        const currentExpirationDateISO = rooms.expireAt
         if (currentExpirationDateISO) {
           const currentExpirationDate = new Date(currentExpirationDateISO)
           if (new Date() < currentExpirationDate) {
@@ -89,19 +84,16 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
       setIsRoomsSearching(true)
     }
     const { data, expire } = await api.rooms.getFreeRoomsDay(
-      searchAcronym,
       formatDate(searchDate),
       { maxRetries: 1, retryType: RetryType.RETRY_N_TIMES }
     )
-    if (data.length > 0) {
-      const newGlobalRooms = { ...rooms }
-      newGlobalRooms[searchAcronym].rooms = data
+    if (data) {
+      const newGlobalRooms = { ...data }
       const expirationDate = getExpirationDateRooms(expire)
       //update expiration date or reset
-      newGlobalRooms[searchAcronym].expireAt =
-        expirationDate?.toISOString() ?? undefined
+      newGlobalRooms.expireAt = expirationDate?.toISOString() ?? undefined
       //update searchDate
-      newGlobalRooms[searchAcronym].searchDate = searchDate.toISOString()
+      newGlobalRooms.searchDate = searchDate.toISOString()
       setRooms(newGlobalRooms)
     }
     if (!overrideSearchBehaviour) {
@@ -111,7 +103,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
 
   useEffect(() => {
     void getAllRoomsFromApi()
-  }, [date, acronym])
+  }, [date])
 
   const [geolocation, setGeoloaction] = useState<boolean>(false)
 
@@ -159,7 +151,6 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
         }
       }
     }
-
     setAcronymList(newAcronymList)
     setSearchableRooms(newSearchableRooms)
   }
@@ -180,9 +171,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
   // request rooms in the relevant acronyms (filtered locally in filterRoomsJSON)
   const searchMultiple = async () => {
     setIsSearchBarSearching(true)
-    for (const acr of acronymList) {
-      await getAllRoomsFromApi(acr, new Date(), true)
-    }
+    await getAllRoomsFromApi(new Date(), true)
     setIsSearchBarSearching(false)
   }
 
@@ -192,12 +181,10 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
 
   //update actually showable rooms by matching local and server-delivered room
   useEffect(() => {
-    if (isSearchBarSearching) {
-      return
-    }
     const newRooms: Room[] = []
 
     for (const room of searchableRooms) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const matchingRoom = getRoomFromId(rooms, acronymList, room.room_id)
       if (matchingRoom) {
         newRooms.push(matchingRoom)
@@ -205,7 +192,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
     }
 
     setActualSearchableRooms(newRooms)
-  }, [rooms, isSearchBarSearching, searchableRooms])
+  }, [rooms, searchableRooms])
 
   return (
     <PageWrapper>

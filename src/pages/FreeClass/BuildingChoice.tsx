@@ -27,7 +27,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
 
   const findAvailableBuildings = () => {
     try {
-      const currRooms = rooms[campus.acronym].rooms
+      const currRooms = rooms[campus.acronym]
       if (currRooms.length > 0) {
         const tempBuildingStrings: string[] = []
         const tempBuildings: BuildingItem[] = []
@@ -67,7 +67,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
 
   useEffect(() => {
     void findAvailableBuildings()
-  }, [rooms[campus.acronym].rooms, date])
+  }, [rooms, date])
 
   return (
     <PageWrapper>
