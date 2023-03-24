@@ -1,5 +1,5 @@
-import { FC, useEffect, useState } from "react"
-import { Pressable, View } from "react-native"
+import { FC, useContext, useEffect, useState } from "react"
+import { Alert, Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
 import { CrowdSliderStatic } from "./CrowdSlider/CrowdSliderStatic"
@@ -7,6 +7,8 @@ import { CrowdSliderDynamic } from "./CrowdSlider/CrowdSliderDynamic"
 import { CrowdSliderLabels } from "./CrowdSlider/CrowdSliderLabels"
 import { api, RetryType } from "api"
 import { Modal } from "components/Modal"
+import { LoginContext } from "contexts/login"
+import { useNavigation } from "@react-navigation/native"
 
 const contentPadding = 20
 
@@ -22,6 +24,10 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
   const [isModalVisible, setIsModalVisible] = useState(false)
 
   const [occupancyRate, setOccupancyRate] = useState<number>(1)
+
+  const { loggedIn } = useContext(LoginContext)
+
+  const { navigate } = useNavigation()
 
   let occupancyRateUser = 3
 
@@ -74,7 +80,24 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
         >
           Se il dato sull&apos;affollamento non è corretto
         </BodyText>
-        <Pressable hitSlop={8} onPress={() => setIsModalVisible(true)}>
+        <Pressable
+          hitSlop={8}
+          onPress={() => {
+            if (loggedIn) {
+              setIsModalVisible(true)
+            } else {
+              Alert.alert(
+                "Non hai fatto il login",
+                "Se vuoi esprimere un'opinione sull'affollamento dell'aula effettua il login",
+                [
+                  { text: "Indietro" },
+                  { text: "Login", onPress: () => navigate("Login" as never) },
+                ],
+                { cancelable: true }
+              )
+            }
+          }}
+        >
           <BodyText
             style={{
               fontSize: 13,
