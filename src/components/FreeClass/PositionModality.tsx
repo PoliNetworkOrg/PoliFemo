@@ -1,17 +1,17 @@
-import { FC, useContext, useEffect, useState } from "react"
-import { View, Pressable, ActivityIndicator, Platform } from "react-native"
-import { usePalette } from "utils/colors"
-import { BodyText } from "components/Text"
-import { Map } from "./Map"
-import { FreeClassList } from "./FreeClassList"
-import { PermissionStatus } from "expo-location"
-import { BuildingItem } from "./DefaultList"
-import { Room } from "api/rooms"
 import { useNavigation } from "@react-navigation/native"
+import { ConstructionType, Room } from "api/rooms"
+import { BodyText } from "components/Text"
+import { RoomsSearchDataContext } from "contexts/rooms"
+import { PermissionStatus } from "expo-location"
+import { getDistance } from "geolib"
+import { FC, useContext, useMemo, useState } from "react"
+import { ActivityIndicator, Platform, Pressable, View } from "react-native"
+import { usePalette } from "utils/colors"
 import { getBuildingInfo, isRoomFree, ValidAcronym } from "utils/rooms"
 import { ErrorMessage } from "../ErrorMessage"
-import { RoomsSearchDataContext } from "contexts/rooms"
-import { getDistance } from "geolib"
+import { BuildingItem } from "./DefaultList"
+import { FreeClassList } from "./FreeClassList"
+import { Map } from "./Map"
 
 interface PositionModalityProps {
   currentCoords: [number, number]
@@ -32,59 +32,82 @@ export const PositionModality: FC<PositionModalityProps> = props => {
 
   const [status, setStatus] = useState<ButtonType>(ButtonType.MAP)
 
-  const [allRooms, setAllRooms] = useState<Room[]>()
-
-  const [buildingList, setBuildingList] = useState<BuildingItem[]>()
-
   const { navigate } = useNavigation()
 
   const { rooms } = useContext(RoomsSearchDataContext)
 
-  const extractAllRoomsAndBuildings = () => {
-    const acronyms: ValidAcronym[] = ["MIA", "MIB", "LCF", "CRG", "PCL", "MNI"]
+  const acronyms: ValidAcronym[] = ["MIA", "MIB", "LCF", "CRG", "PCL", "MNI"]
 
-    const tempRooms: Room[] = []
-    const tempBuildingStrings: string[] = []
-    const tempBuildingList: BuildingItem[] = []
+  const allRooms = useMemo(
+    () =>
+      acronyms.reduce<Room[]>((allrooms, a) => {
+        if (rooms[a]) {
+          // this if-else is necessary now. backend must fix CRG acronym
+          return [
+            ...allrooms,
+            ...rooms[a]
+              .filter(r => {
+                //filter the free rooms available now
+                return isRoomFree(r, new Date(), true)
+              })
+              .map(room => {
+                const currentBuilding = getBuildingInfo(a, room.building)
+                return {
+                  ...room,
+                  latitude: currentBuilding?.latitude,
+                  longitude: currentBuilding?.longitude,
+                }
+              }),
+          ]
+        } else {
+          return [...allrooms]
+        }
+      }, []),
+    [rooms]
+  )
 
-    acronyms.forEach(a => {
+  const tempBuildingStrings: string[] = []
+  const allBuildings = useMemo(() => {
+    const buildings: BuildingItem[] = []
+
+    for (const a of acronyms) {
       if (rooms[a]) {
-        //if the roomList is not empty and undefined
-        rooms[a]
-          .filter(r => {
-            //filter the free rooms available now
-            return isRoomFree(r, new Date(), true)
-          })
-          .map(room => {
-            const currentBuildingString: string = room.building + "-" + a //es Edificio 1-MIA
-            const currentBuilding = getBuildingInfo(a, room.building)
-            if (!tempBuildingStrings.includes(currentBuildingString)) {
-              if (currentBuilding !== undefined) {
-                currentBuilding.freeRoomList = [room]
-                currentBuilding.fullName = room.building
-                tempBuildingStrings.push(currentBuildingString)
-                tempBuildingList.push(currentBuilding)
-              }
-            } else {
-              //element already in the list
-              const indexElement = tempBuildingStrings.indexOf(
-                currentBuildingString
-              )
-              tempBuildingList[indexElement].freeRoomList.push(room)
-            }
-            tempRooms.push({
-              ...room,
-              latitude: currentBuilding?.latitude,
-              longitude: currentBuilding?.longitude,
-            })
-          })
-      }
-    })
-    setAllRooms(tempRooms)
-    setBuildingList(tempBuildingList)
-  }
+        // this if is necessary now. backend must fix CRG acronym
+        for (const room of rooms[a].filter(r => {
+          //filter the free rooms available now
+          return isRoomFree(r, new Date(), true)
+        })) {
+          const currentBuildingString = room.building + "-" + a
+          const currentBuilding = getBuildingInfo(a, room.building)
 
-  useEffect(() => extractAllRoomsAndBuildings(), [])
+          if (currentBuilding !== undefined) {
+            const indexElement = tempBuildingStrings.indexOf(
+              currentBuildingString
+            )
+
+            if (indexElement === -1) {
+              // element not present
+              const newBuilding: BuildingItem = {
+                type: ConstructionType.BUILDING,
+                campus: currentBuilding.campus,
+                name: currentBuilding.name,
+                latitude: currentBuilding.latitude,
+                longitude: currentBuilding.longitude,
+                freeRoomList: [room],
+                allRoomList: [],
+                fullName: room.building,
+              }
+              buildings.push(newBuilding)
+              tempBuildingStrings.push(currentBuildingString)
+            } else {
+              buildings[indexElement].freeRoomList.push(room)
+            }
+          }
+        }
+      }
+    }
+    return buildings
+  }, [rooms])
 
   return (
     <>
@@ -227,7 +250,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
           userLatitude={props.currentCoords[0]}
           userLongitude={props.currentCoords[1]}
           locationStatus={props.locationStatus}
-          buildingList={buildingList}
+          buildingList={allBuildings}
           onPressMarker={(building: BuildingItem) => {
             navigate(
               "ClassChoice" as never,
