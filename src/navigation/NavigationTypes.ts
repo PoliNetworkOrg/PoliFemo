@@ -75,6 +75,7 @@ export type MainStackNavigatorParams = {
     building: BuildingItem
   }
   Groups: undefined
+  Notifications: undefined
 }
 
 export type SettingsStackNavigatorParams = {
