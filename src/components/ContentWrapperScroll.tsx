@@ -1,8 +1,9 @@
 import React, { FC } from "react"
-import { ScrollView, View } from "react-native"
+import { ScrollView, View, ViewStyle } from "react-native"
 import { Text } from "components/Text"
 import { NavBar, NavbarProps } from "components/NavBar"
 import { usePalette } from "utils/colors"
+import { BoxShadowView } from "./BoxShadow"
 
 /**
  * General component useful for pages with a scrollable content.
@@ -21,9 +22,12 @@ export const ContentWrapperScroll: FC<{
    * Props for the navbar, see {@link NavBar}
    */
   navbarOptions?: NavbarProps
-  marginTop?: number
+
+  style?: ViewStyle
+
+  scrollViewStyle?: ViewStyle
 }> = props => {
-  const { background, isLight, primary } = usePalette()
+  const { background, isLight, primary, palette } = usePalette()
 
   const navbar = !props.hideNavbar
 
@@ -38,7 +42,7 @@ export const ContentWrapperScroll: FC<{
         <View
           style={{
             position: "absolute",
-            top: 42,
+            top: 56,
             left: 26,
             zIndex: 6,
           }}
@@ -55,38 +59,38 @@ export const ContentWrapperScroll: FC<{
         </View>
       )}
 
-      <View
-        style={{
+      <BoxShadowView
+        shadow={{
+          color: isLight ? palette.primary : "#000",
+          offset: { y: -8 },
+          opacity: isLight ? 0.1 : 0.45,
+          blur: isLight ? 19 : 32,
+        }}
+        style={[
+          {
+            flex: 1,
+            marginTop: 100,
+          },
+          props.style,
+        ]}
+        contentContainerStyle={{
           flex: 1,
           backgroundColor: background,
-          marginTop: props.marginTop ?? 86,
-
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
-
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 0,
-          },
-          shadowOpacity: 0.2,
-          shadowRadius: 8.3,
-          elevation: 13,
+          overflow: "hidden",
         }}
       >
-        <View
-          style={{
-            flex: 1,
-            borderTopLeftRadius: 30,
-            borderTopRightRadius: 30,
-            overflow: "hidden",
-          }}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={[
+            { overflow: "visible" },
+            props.scrollViewStyle,
+          ]}
         >
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={{ paddingBottom: 50 }}>{props.children}</View>
-          </ScrollView>
-        </View>
-      </View>
+          <View style={{ paddingBottom: 50 }}>{props.children}</View>
+        </ScrollView>
+      </BoxShadowView>
       {navbar ? <NavBar {...props.navbarOptions} /> : null}
     </View>
   )
