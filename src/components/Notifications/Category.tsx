@@ -2,11 +2,12 @@ import { FC } from "react"
 import { Pressable, StyleSheet, View } from "react-native"
 import { Text } from "components/Text"
 import { Switch } from "react-native-switch"
-// import { IconProps } from "assets/settings"
 import { usePalette } from "utils/colors"
 
+import { Icon } from "components/Icon"
+
 export interface CategoryProps {
-  // icon?: IconProps
+  icon?: number
   title: string
   switchControl?: {
     /** State of the switch */
@@ -24,13 +25,15 @@ export const Category: FC<CategoryProps> = props => {
   const notifications = props.notifications ?? 0
 
   return (
-    <Pressable style={styles.container} onPress={props.onClick}>
+    <Pressable
+      style={[{ backgroundColor: palette.primary }, styles.container]}
+      onPress={props.onClick}
+    >
       {notifications ? (
-        <View style={styles.circle}>
+        <View style={[{ backgroundColor: palette.accent }, styles.circle]}>
           <Text>{props.notifications}</Text>
         </View>
       ) : undefined}
-      <Text>{props.title}</Text>
 
       <View style={styles.switch}>
         <Switch
@@ -65,17 +68,19 @@ export const Category: FC<CategoryProps> = props => {
           switchRightPx={1.3}
         />
       </View>
+      <View style={{ marginBottom: 12 }}>
+        {props.icon ? <Icon source={props.icon} /> : null}
+      </View>
+      <Text>{props.title}</Text>
     </Pressable>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: "90%",
-    top: "24%",
-    marginTop: "8%",
+    width: 354,
+    marginTop: 35,
     height: 132,
-    backgroundColor: "#424967",
     borderRadius: 12,
     display: "flex",
     justifyContent: "flex-end",
@@ -86,9 +91,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     height: 32,
     width: 32,
-    left: "-2%",
-    top: "-6%",
-    backgroundColor: "#FFB544",
+    left: -5,
+    top: -8,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -96,8 +100,8 @@ const styles = StyleSheet.create({
   },
   switch: {
     position: "absolute",
-    top: "12%",
+    top: 19,
     alignSelf: "center",
-    right: "3%",
+    right: 22,
   },
 })
