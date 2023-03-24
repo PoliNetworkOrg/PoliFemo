@@ -10,7 +10,7 @@ export const NotificationDetails: MainStackScreen<
   const { notification, category } = props.route.params
 
   return (
-    <ContentWrapperScroll marginTop={106}>
+    <ContentWrapperScroll>
       <View style={{ paddingTop: 28, flex: 1, marginBottom: 50 }}>
         <Title style={{ paddingLeft: 28 }}>{category}</Title>
         <NotificationDisplayer notification={notification} />

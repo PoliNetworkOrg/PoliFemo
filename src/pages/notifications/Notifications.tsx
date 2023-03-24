@@ -37,7 +37,7 @@ export const Notifications: MainStackScreen<"Notifications"> = () => {
   const { navigate } = useNavigation()
 
   return (
-    <ContentWrapperScroll marginTop={106}>
+    <ContentWrapperScroll>
       <View style={{ paddingHorizontal: 28, paddingTop: 28 }}>
         <Title>Notifiche</Title>
         <View style={{ marginTop: 62 }}>
