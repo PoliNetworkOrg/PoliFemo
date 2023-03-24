@@ -1,11 +1,8 @@
 import { useNavigationState } from "@react-navigation/native"
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useEffect } from "react"
 import { Dimensions, View } from "react-native"
 import { newsSheetEventEmitter } from "utils/events"
-import {
-  badgeEventEmitter,
-  getAllBadgeUnreadNotifications,
-} from "utils/notifications"
+import { useNotificationBadge } from "utils/notifications"
 import { LittleTitle } from "./LittleTitle"
 import { TrayButton } from "./TrayButton"
 
@@ -25,8 +22,6 @@ export const Tray: FC<{
       state.routes[0].state?.index !== 0
   )
 
-  const [badge, setBadge] = useState<number | undefined>(undefined)
-
   const [newsOpen, setNewsOpen] = React.useState(false)
   useEffect(() => {
     const listener = newsSheetEventEmitter.addListener(
@@ -38,19 +33,7 @@ export const Tray: FC<{
     }
   }, [])
 
-  const loadBadge = async () => {
-    const badgeCount = await getAllBadgeUnreadNotifications()
-    setBadge(badgeCount)
-  }
-
-  useEffect(() => {
-    void loadBadge()
-    const listener = badgeEventEmitter.addListener("badge-change", loadBadge)
-
-    return () => {
-      listener.remove()
-    }
-  }, [])
+  const badge = useNotificationBadge()
 
   return (
     <View
@@ -74,9 +57,11 @@ export const Tray: FC<{
         }}
         onPress={async () => {
           const notif = await getAllNotificationsFromStorage()
+          console.log(notif[0].notification.content.data.content)
           console.log(notif)
         }}
-      />
+      /> */}
+      {/* 
       <Pressable
         style={{
           width: 20,

@@ -22,6 +22,7 @@ export const NotificationDisplayer: FC<NotificationDisplayerProps> = props => {
             notification={props.notification}
             overrideDividerBehaviour={true}
             showRipple={false}
+            isRead={true}
           />
         </SharedElement>
         <BodyText

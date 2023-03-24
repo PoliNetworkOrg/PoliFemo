@@ -7,13 +7,20 @@ import {
   NotificationContentInput,
   NotificationTriggerInput,
 } from "expo-notifications"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { CarouselItem, WidgetType } from "./carousel"
-import { LinkingOptions } from "@react-navigation/native"
-import { RootStackNavigatorParams } from "navigation/NavigationTypes"
+import {
+  CompositeNavigationProp,
+  LinkingOptions,
+} from "@react-navigation/native"
+import {
+  MainStackNavigatorParams,
+  RootStackNavigatorParams,
+} from "navigation/NavigationTypes"
 import { Linking } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { EmitterSubscription, DeviceEventEmitter } from "react-native"
+import { StackNavigationProp } from "@react-navigation/stack"
 
 export interface ScheduledNotificationInfo {
   eventId: number
@@ -56,6 +63,8 @@ interface NotificationCustomContentInput extends NotificationContentInput {
     categoryId?: ValidCategoryId
     association?: string
     cacheOnSchedule?: boolean
+    //deeplinks
+    url?: string
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any
   }
@@ -238,7 +247,7 @@ export const useNotificationsHandlers = () => {
           }
         }
 
-        badgeEventEmitter.emit("badge-change")
+        notificationEventEmitter.emit("badge-change")
       })
 
     //fired when user taps on notification, evreything is dismissed by default
@@ -290,7 +299,9 @@ export const popNotificationFromStorage = async (identifier: string) => {
   }
 }
 
-export const getAllNotificationsFromStorage = async () => {
+export const getAllNotificationsFromStorage = async (
+  categoryId?: ValidCategoryId
+) => {
   try {
     const notificationsJSON = await AsyncStorage.getItem("notifications")
     if (notificationsJSON) {
@@ -298,7 +309,22 @@ export const getAllNotificationsFromStorage = async () => {
         notificationsJSON
       ) as NotificationStorage[]
 
-      return notificationsList
+      if (!categoryId) {
+        return notificationsList
+      }
+
+      const categoryList: NotificationStorage[] = []
+      for (let i = 0; i < notificationsList.length; i++) {
+        const date = notificationsList[i].isRelevantAt
+        if (
+          notificationsList[i].notification.content.data.categoryId ===
+            categoryId &&
+          ((date && new Date(date).getTime() < new Date().getTime()) || !date)
+        ) {
+          categoryList.push(notificationsList[i])
+        }
+      }
+      return categoryList
     } else {
       return []
     }
@@ -323,7 +349,7 @@ export const setNotificationAsReadStorage = async (identifier: string) => {
 
   //Badge event emitter
   if (found === true) {
-    badgeEventEmitter.emit("badge-change")
+    notificationEventEmitter.emit("badge-change")
   }
 }
 
@@ -364,25 +390,9 @@ export const setNotificationInStorage = async (
   }
 }
 
-export const getAllNotificationsOfCategory = async (
-  categoryId: ValidCategoryId
+export const getBadgeAllUnreadNotifications = async (
+  categoryId?: ValidCategoryId
 ) => {
-  const notificationList = await getAllNotificationsFromStorage()
-
-  const categoryList: NotificationStorage[] = []
-  for (let i = 0; i < notificationList.length; i++) {
-    const date = notificationList[i].isRelevantAt
-    if (
-      notificationList[i].notification.content.data.categoryId === categoryId &&
-      ((date && new Date(date).getTime() < new Date().getTime()) || !date)
-    ) {
-      categoryList.push(notificationList[i])
-    }
-  }
-  return categoryList
-}
-
-export const getAllBadgeUnreadNotifications = async () => {
   try {
     const notificationsJSON = await AsyncStorage.getItem("notifications")
 
@@ -394,11 +404,16 @@ export const getAllBadgeUnreadNotifications = async () => {
       for (let i = 0; i < notifications?.length; i++) {
         const isRelevantAt = notifications[i].isRelevantAt
         const isRead = notifications[i].isRead
-        //increment if not read and (relevantDate is before now or relevant date was not set)
+        //increment if not read and (relevantDate is before now or relevant date was not set) and
+        // categoryId was not specified or if it was, it's matching
         if (
           !isRead &&
           (!isRelevantAt ||
-            new Date(isRelevantAt).getTime() < new Date().getTime())
+            new Date(isRelevantAt).getTime() < new Date().getTime()) &&
+          (!categoryId ||
+            (categoryId &&
+              categoryId ===
+                notifications[i].notification.content.data.categoryId))
         ) {
           count++
         }
@@ -518,6 +533,8 @@ export const linking: LinkingOptions<RootStackNavigatorParams> = {
           ArticlesList: "/articleList",
           Error404: "/error",
           Groups: "/groups",
+          Notifications: "notifications",
+          NotificationDetails: "/notificationsDetails",
         },
       },
       SettingsNav: {
@@ -560,13 +577,12 @@ export const linking: LinkingOptions<RootStackNavigatorParams> = {
       Notifications.addNotificationResponseReceivedListener(response => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const url = response?.notification.request.content.data.url
-        const action = response.actionIdentifier
 
         // Any custom logic to see whether the URL needs to be handled
         //...
         // Let React Navigation handle the URL
 
-        if (url && action === "link" && typeof url === "string") {
+        if (url && typeof url === "string") {
           listener(url)
         }
       })
@@ -813,12 +829,92 @@ const calculateDateFromTrigger = (trigger: NotificationTriggerInput) => {
   return relevantDate
 }
 
-export declare interface BadgeEventEmitter {
+export declare interface NotificationEventEmitter {
   addListener(
     eventType: "badge-change",
     listener: () => void
   ): EmitterSubscription
+  addListener(
+    eventType: "notification-remove",
+    listener: () => void
+  ): EmitterSubscription
   removeAllListeners(eventType?: "badge-change"): void
+  removeAllListeners(eventType?: "notification-remove"): void
   emit(eventType: "badge-change"): void
+  emit(eventType: "notification-remove"): void
 }
-export const badgeEventEmitter: BadgeEventEmitter = DeviceEventEmitter
+export const notificationEventEmitter: NotificationEventEmitter =
+  DeviceEventEmitter
+
+export function useNotificationBadge(
+  categoryId?: ValidCategoryId
+): number | undefined {
+  const [badge, setBadge] = useState<number | undefined>(undefined)
+
+  useEffect(() => {
+    async function loadBadge() {
+      const badgeCount = await getBadgeAllUnreadNotifications(categoryId)
+      setBadge(badgeCount)
+    }
+
+    void loadBadge()
+    const listener = notificationEventEmitter.addListener(
+      "badge-change",
+      loadBadge
+    )
+
+    return () => {
+      listener.remove()
+    }
+  }, [])
+
+  return badge
+}
+
+export function useNotificationStorage(
+  categoryId?: ValidCategoryId,
+  navigation?: CompositeNavigationProp<
+    StackNavigationProp<
+      MainStackNavigatorParams,
+      "NotificationsCategory",
+      undefined
+    >,
+    StackNavigationProp<
+      RootStackNavigatorParams,
+      keyof RootStackNavigatorParams,
+      undefined
+    >
+  >
+): [NotificationStorage[], (notifications: NotificationStorage[]) => void] {
+  const [notifications, setNotifications] = useState<NotificationStorage[]>([])
+
+  useEffect(() => {
+    async function loadNotifications() {
+      console.log("loading notifications")
+      const notifications = await getAllNotificationsFromStorage(categoryId)
+
+      setNotifications(notifications)
+    }
+
+    //if navigation prop is not set load on first render
+    if (!navigation) {
+      void loadNotifications()
+    }
+
+    //load on every focus, also on navigation.goBack fired from next page.
+    navigation?.addListener("focus", loadNotifications)
+
+    //load when item is removed
+    const listener = notificationEventEmitter.addListener(
+      "notification-remove",
+      loadNotifications
+    )
+
+    return () => {
+      navigation?.removeListener("focus", loadNotifications)
+      listener.remove()
+    }
+  }, [])
+
+  return [notifications, notifications => setNotifications(notifications)]
+}

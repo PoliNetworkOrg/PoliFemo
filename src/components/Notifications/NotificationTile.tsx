@@ -1,16 +1,22 @@
 import { Divider } from "components/Divider"
+import { Icon } from "components/Icon"
 import { BodyText, HyperLink } from "components/Text"
 import { TouchableRipple } from "components/TouchableRipple"
 import { FC } from "react"
-import { View, Image } from "react-native"
+import { View, Image, Pressable } from "react-native"
 import { SharedElement } from "react-navigation-shared-element"
 import { usePalette } from "utils/colors"
-import { NotificationStorage } from "utils/notifications"
-
+import {
+  notificationEventEmitter,
+  NotificationStorage,
+  popNotificationFromStorage,
+} from "utils/notifications"
+import deleteSvg from "assets/menu/delete.svg"
 export interface NotificationTileProps {
   notification: NotificationStorage
   overrideDividerBehaviour?: boolean
   showRipple?: boolean
+  isRead?: boolean
   onPress?: () => void
 }
 
@@ -22,6 +28,10 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
   const object = props.notification.notification.content.data.object
 
   const linkUrl = props.notification.notification.content.data.linkUrl
+
+  const identifier = props.notification.notification.identifier
+
+  const isRead = props.isRead ?? props.notification.isRead
 
   return (
     <TouchableRipple onClick={props.onPress} showRipple={props.showRipple}>
@@ -71,6 +81,34 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
               >
                 {object}
               </BodyText>
+            </View>
+            <View
+              style={{
+                justifyContent: "space-between",
+              }}
+            >
+              <Pressable
+                onPress={async () => {
+                  await popNotificationFromStorage(identifier)
+                  notificationEventEmitter.emit("notification-remove")
+                  if (!isRead) {
+                    notificationEventEmitter.emit("badge-change")
+                  }
+                }}
+              >
+                <Icon source={deleteSvg} style={{ alignSelf: "flex-end" }} />
+              </Pressable>
+              {!isRead && (
+                <BodyText
+                  style={{
+                    fontSize: 12,
+                    fontWeight: "700",
+                    color: isLight ? palette.purpleVariant : "#fff",
+                  }}
+                >
+                  New!!
+                </BodyText>
+              )}
             </View>
           </View>
           {linkUrl && (

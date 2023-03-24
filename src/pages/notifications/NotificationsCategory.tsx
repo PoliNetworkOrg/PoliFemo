@@ -2,12 +2,10 @@ import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import { NotificationTile } from "components/Notifications/NotificationTile"
 import { Title } from "components/Text"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { useEffect, useState } from "react"
 import { View } from "react-native"
 import {
-  getAllNotificationsOfCategory,
-  NotificationStorage,
   setNotificationAsReadStorage,
+  useNotificationStorage,
 } from "utils/notifications"
 
 export const NotificationsCategory: MainStackScreen<
@@ -17,21 +15,21 @@ export const NotificationsCategory: MainStackScreen<
 
   const { navigate } = useNavigation()
 
-  const [notifications, setNotifications] = useState<NotificationStorage[]>([])
+  const [notifications] = useNotificationStorage(categoryId, props.navigation)
 
-  const loadNotifications = async () => {
+  /* const loadNotifications = async () => {
     console.log("loading notifications")
-    const notifications = await getAllNotificationsOfCategory(categoryId)
+    const notifications = await getAllNotificationsFromStorage(categoryId)
 
     setNotifications(notifications)
-  }
+  } */
 
   //reload on navigation.GoBack from NotificationDetails
-  useEffect(() => {
+  /* useEffect(() => {
     props.navigation.addListener("focus", loadNotifications)
 
     return () => props.navigation.removeListener("focus", loadNotifications)
-  }, [])
+  }, []) */
 
   return (
     <ContentWrapperScroll>
