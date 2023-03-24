@@ -23,7 +23,14 @@ import {
 } from "@react-navigation/native"
 import { Article } from "api/articles"
 import { NavigatorScreenParams } from "@react-navigation/native"
+import { Occupancies } from "api/rooms"
 import { TagWithData } from "contexts/newsPreferences"
+import { ValidAcronym } from "utils/rooms"
+import {
+  HeadquarterItem,
+  CampusItem,
+  BuildingItem,
+} from "components/FreeClass/DefaultList"
 
 /**
  * interface containing the info about the params for each page of the stack navigator
@@ -43,9 +50,30 @@ export type RootStackNavigatorParams = {
 export type MainStackNavigatorParams = {
   Home: undefined
   Article: { article: Article }
-  OtherCategories: { tags: TagWithData[] }
   ArticlesList: { tagName: string }
+  OtherCategories: { tags: TagWithData[] }
   Error404: undefined
+  FreeClassrooms: undefined
+  HeadquarterChoice: undefined
+  CampusChoice: {
+    headquarter: HeadquarterItem
+  }
+  PositionChoice: undefined
+  BuildingChoice: {
+    campus: CampusItem
+  }
+  RoomDetails: {
+    startDate: string
+    roomId: number
+    roomLatitude?: number
+    roomLongitude?: number
+    occupancies: Occupancies
+    occupancyRate?: number | null
+    acronymList?: ValidAcronym[]
+  }
+  ClassChoice: {
+    building: BuildingItem
+  }
   Groups: undefined
 }
 

@@ -7,10 +7,24 @@ import deleteIcon from "assets/menu/delete.svg"
 import { Icon } from "components/Icon"
 import { useTranslation } from "react-i18next"
 
+export enum ButtonType {
+  CALENDAR,
+  TIMETABLE,
+  ASSOCIATIONS,
+  FREECLASSROOMS,
+  MATERIALS,
+  GROUPS,
+  MARKS,
+  GRADING_BOOK,
+  TEST,
+  ADD,
+}
+
 export interface ButtonInterface {
-  id: number
+  type: ButtonType
   title: string
   icon: number
+  onClick: () => void
 }
 
 /**
@@ -99,7 +113,7 @@ export const MenuButton: FC<{
             </BodyText>
           </View>
         </Pressable>
-        {isDeleting && buttonIcon.id !== 9 && (
+        {isDeleting && buttonIcon.type !== ButtonType.ADD && (
           <Pressable
             style={{
               position: "absolute",
