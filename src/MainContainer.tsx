@@ -7,6 +7,8 @@ import { MainStack } from "navigation/MainStackNavigator"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { sendScheduledNotification } from "utils/notifications"
+import { RoomsSearchDataContext } from "contexts/rooms"
+import { GlobalRoomListInterface } from "utils/rooms"
 
 /**
  * The Main Container.
@@ -20,6 +22,22 @@ export const MainContainer: FC = () => {
   const { navigate } = useNavigation()
 
   const [preferences, setPreferences] = useState<Record<string, Preference>>({})
+
+  //rooms search date
+  const [date, setDate] = useState(new Date())
+
+  const [globalRoomList, setGlobalRoomList] = useState<GlobalRoomListInterface>(
+    {
+      MIA: [],
+      MIB: [],
+      CRG: [],
+      LCF: [],
+      PCL: [],
+      MNI: [],
+    }
+  )
+
+  const [isRoomsSearching, setIsRoomSearching] = useState(false)
 
   useEffect(() => {
     console.log("Loading tags preferences from storage")
@@ -51,16 +69,27 @@ export const MainContainer: FC = () => {
         backgroundColor: homeBackground,
       }}
     >
-      <NewsPreferencesContext.Provider
+      <RoomsSearchDataContext.Provider
         value={{
-          preferences,
-          setArticlesPreferences: pref => {
-            setPreferences(pref.preferences)
-          },
+          isRoomsSearching: isRoomsSearching,
+          setIsRoomsSearching: (val: boolean) => setIsRoomSearching(val),
+          date: date,
+          setDate: (date: Date) => setDate(date),
+          rooms: globalRoomList,
+          setRooms: rooms => setGlobalRoomList(rooms),
         }}
       >
-        <MainStack />
-      </NewsPreferencesContext.Provider>
+        <NewsPreferencesContext.Provider
+          value={{
+            preferences,
+            setArticlesPreferences: pref => {
+              setPreferences(pref.preferences)
+            },
+          }}
+        >
+          <MainStack />
+        </NewsPreferencesContext.Provider>
+      </RoomsSearchDataContext.Provider>
       <Tray
         onDownloads={() => {
           console.log("downloads")
