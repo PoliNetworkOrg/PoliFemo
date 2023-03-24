@@ -223,6 +223,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                     fontWeight: "700",
                     color: "white",
                     fontSize: roomName.length <= 15 ? 24 : 18,
+                    textAlign: "center",
                   }}
                 >
                   {roomName}
