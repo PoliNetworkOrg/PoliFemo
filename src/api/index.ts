@@ -4,6 +4,7 @@ import { groups } from "./groups"
 import { tags } from "./tags"
 import { timetable } from "./timetable"
 import { user } from "./user"
+import { rooms } from "./rooms"
 import { events } from "./event"
 export { RetryType, AuthType, RequestOptions } from "./HttpClient"
 /**
@@ -26,9 +27,10 @@ export { RetryType, AuthType, RequestOptions } from "./HttpClient"
 export const api = {
   articles,
   auth,
+  events,
+  groups,
+  rooms,
   tags,
   timetable,
   user,
-  events,
-  groups,
 }

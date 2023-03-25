@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { ScrollView, View } from "react-native"
+import { ScrollView, View, ViewStyle } from "react-native"
 import { Text } from "components/Text"
 import { NavBar, NavbarProps } from "components/NavBar"
 import { usePalette } from "utils/colors"
@@ -26,6 +26,10 @@ export const ContentWrapperScroll: FC<{
   marginTop?: number
 
   buttonsNavbar?: ButtonInterface[]
+
+  style?: ViewStyle
+
+  scrollViewStyle?: ViewStyle
 }> = props => {
   const { background, isLight, primary, palette } = usePalette()
 
@@ -42,7 +46,7 @@ export const ContentWrapperScroll: FC<{
         <View
           style={{
             position: "absolute",
-            top: 42,
+            top: 56,
             left: 26,
             zIndex: 6,
           }}
@@ -66,10 +70,13 @@ export const ContentWrapperScroll: FC<{
           opacity: isLight ? 0.1 : 0.45,
           blur: isLight ? 19 : 32,
         }}
-        style={{
-          flex: 1,
-          marginTop: props.marginTop ?? 86,
-        }}
+        style={[
+          {
+            flex: 1,
+            marginTop: 100,
+          },
+          props.style,
+        ]}
         contentContainerStyle={{
           flex: 1,
           backgroundColor: background,
@@ -78,7 +85,13 @@ export const ContentWrapperScroll: FC<{
           overflow: "hidden",
         }}
       >
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={[
+            { overflow: "visible" },
+            props.scrollViewStyle,
+          ]}
+        >
           <View style={{ paddingBottom: 50 }}>{props.children}</View>
         </ScrollView>
       </BoxShadowView>
