@@ -121,10 +121,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
       <Modal
         isShowing={isModalVisible}
         onClose={() => setIsModalVisible(false)}
-        title={t("freeClass_modalTitle", { ns: "freeClass" }).replace(
-          " ",
-          "\n"
-        )}
+        title={t("freeClass_modalTitle", { ns: "freeClass" })}
         subTitle={
           "" +
           t("freeClass_modalSubtitle", { ns: "freeClass" }).replace("-", "\n")
