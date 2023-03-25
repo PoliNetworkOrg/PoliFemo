@@ -85,7 +85,7 @@ export const DefaultWidget: FC = () => {
           marginTop: 14,
         }}
       >
-        {t("highlights_defualtSubtitle", { ns: "home" })}
+        {t("highlights_defaultSubtitle", { ns: "home" })}
       </BodyText>
     </View>
   )
