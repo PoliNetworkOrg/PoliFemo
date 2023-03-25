@@ -2,7 +2,7 @@ import { useContext } from "react"
 import { useColorScheme, ColorSchemeName } from "react-native"
 import { SettingsContext } from "contexts/settings"
 
-const palette = {
+export const palette = {
   primary: "#424967",
   lighter: "#8791BD",
   darker: "#232A3E",
