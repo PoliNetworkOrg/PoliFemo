@@ -4,7 +4,7 @@ import { FlatList, Linking, View } from "react-native"
 import { Title } from "components/Text"
 import { FiltersList } from "components/Groups/FiltersList"
 import { api } from "api"
-import { Group } from "api/groups"
+import { Group } from "api/collections/groups"
 import { useMounted } from "utils/useMounted"
 import {
   applyFilters,

@@ -2,7 +2,7 @@ import { FC, useContext, useEffect, useState } from "react"
 import { View } from "react-native"
 import { PoliCarousel } from "./PoliCarousel"
 import { LoginContext } from "contexts/login"
-import { Event } from "api/event"
+import { Event } from "api/collections/event"
 import {
   CarouselItem,
   checkEventType,

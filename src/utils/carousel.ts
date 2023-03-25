@@ -1,4 +1,4 @@
-import { Event } from "api/event"
+import { Event } from "api/collections/event"
 /**
  * enum to differentiate the different types of widget we could have
  * different widget types have different background images
