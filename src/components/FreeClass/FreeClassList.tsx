@@ -11,6 +11,7 @@ import { Room } from "api/rooms"
 import { getStartEndDate } from "utils/rooms"
 import { Icon } from "components/Icon"
 import { AdaptiveShadowView } from "components/BoxShadow"
+import { useTranslation } from "react-i18next"
 
 const { width } = Dimensions.get("window")
 
@@ -28,6 +29,8 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
   const { palette, labelsHighContrast } = usePalette()
   const { navigate } = useNavigation()
 
+  const { t } = useTranslation()
+
   const limInf = 0
   const limSup = 5
   const range = (limSup - limInf) / 3
@@ -36,11 +39,11 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
       occupancyRate === undefined ||
       (occupancyRate >= limInf && occupancyRate < range)
     ) {
-      return "Poco"
+      return t("freeClass_freeCrowding", { ns: "freeClass" })
     } else if (occupancyRate >= range && occupancyRate < 2 * range) {
-      return "Mediamente"
+      return t("freeClass_medCrowding", { ns: "freeClass" })
     } else {
-      return "Molto"
+      return t("freeClass_fullCrowding", { ns: "freeClass" })
     }
   }
 
@@ -118,10 +121,14 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                   fontSize: 12,
                   color: "white",
                   textAlign: "left",
-                  paddingLeft: 130,
+                  paddingLeft:
+                    t("freeClass_timeLeft", { ns: "freeClass" }).length > 10
+                      ? 130
+                      : 100,
                 }}
               >
-                Libera fino alle{"\n"}
+                {t("freeClass_timeLeft", { ns: "freeClass" })}
+                {"\n"}
                 <BodyText
                   style={{
                     fontWeight: "700",
@@ -162,7 +169,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                       color: palette.variant1,
                     }}
                   >
-                    affollato
+                    {t("freeClass_crowdingStatus", { ns: "freeClass" })}
                   </BodyText>
                 </BodyText>
               </View>

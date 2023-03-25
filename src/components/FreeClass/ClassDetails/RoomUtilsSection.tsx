@@ -3,6 +3,7 @@ import { View } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
 import { RoomUtilsTile } from "./RoomUtilsTile"
+import { useTranslation } from "react-i18next"
 
 interface RoomUtilsSectionProps {
   power?: boolean
@@ -13,6 +14,8 @@ interface RoomUtilsSectionProps {
 export const RoomUtilsSection: FC<RoomUtilsSectionProps> = props => {
   const { labelsHighContrast } = usePalette()
 
+  const { t } = useTranslation()
+
   return (
     <View>
       <BodyText
@@ -22,11 +25,20 @@ export const RoomUtilsSection: FC<RoomUtilsSectionProps> = props => {
           color: labelsHighContrast,
         }}
       >
-        Info Utili:
+        {t("freeClass_info", { ns: "freeClass" })}:
       </BodyText>
-      <RoomUtilsTile name="ribaltine/banco piccolo" status={props.ribaltine} />
-      <RoomUtilsTile name="prese per ogni postazione" status={props.power} />
-      <RoomUtilsTile name="aula informatizzata" status={props.computers} />
+      <RoomUtilsTile
+        name={t("freeClass_smallDesk", { ns: "freeClass" })}
+        status={props.ribaltine}
+      />
+      <RoomUtilsTile
+        name={t("freeClass_current", { ns: "freeClass" })}
+        status={props.power}
+      />
+      <RoomUtilsTile
+        name={t("freeClass_computer", { ns: "freeClass" })}
+        status={props.computers}
+      />
     </View>
   )
 }

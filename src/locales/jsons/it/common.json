@@ -1,6 +1,9 @@
 {
     "search": "Cerca",
 
+    "date": "Data",
+    "time": "Ora",
+
     "sunday": "Domenica",
     "monday": "Lunedì",
     "tuesday": "Martedì",

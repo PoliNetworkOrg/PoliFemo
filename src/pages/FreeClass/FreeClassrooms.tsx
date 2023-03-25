@@ -21,6 +21,7 @@ import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { ScrollView } from "react-native-gesture-handler"
 import { AdaptiveShadowView } from "components/BoxShadow"
+import { useTranslation } from "react-i18next"
 
 let searchTimeout: NodeJS.Timeout
 const deltaTime = 200 //ms
@@ -41,6 +42,16 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
 
   //rooms filtered
   const [searchableRooms, setSearchableRooms] = useState<Room[]>([])
+
+  const { t } = useTranslation()
+
+  const positionButtonMessage = t("freeClass_position", {
+    ns: "freeClass",
+  }).split("-")
+
+  const headquarterButtonMessage = t("freeClass_headquarter", {
+    ns: "freeClass",
+  }).split("-")
 
   //main function that handles the call to the API in order to obtain the list of freeclassRooms
   const getAllRoomsFromApi = async (
@@ -150,7 +161,9 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
   return (
     <PageWrapper>
       <View style={{ paddingTop: 28 }}>
-        <Title style={{ paddingLeft: 28, marginBottom: 17 }}>Aule Libere</Title>
+        <Title style={{ paddingLeft: 28, marginBottom: 17 }}>
+          {t("freeClass_title", { ns: "freeClass" })}
+        </Title>
         <PoliSearchBar onChange={searchKey => setSearch(searchKey)} />
       </View>
       {isRoomsSearching && search.length > 1 ? (
@@ -175,9 +188,9 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
             >
               <Icon style={{ marginTop: 5 }} source={positionIcon} />
               <BodyText style={{ fontWeight: "300", color: "white" }}>
-                In base alla tua{" "}
+                {positionButtonMessage[0]}{" "}
                 <BodyText style={{ fontWeight: "900", color: "white" }}>
-                  posizione
+                  {positionButtonMessage[1]}
                 </BodyText>
               </BodyText>
             </AdaptiveShadowView>
@@ -193,9 +206,9 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
             >
               <Icon style={{ marginTop: 5 }} source={campusIcon} />
               <BodyText style={{ fontWeight: "300", color: "white" }}>
-                Scegli la tua{" "}
+                {headquarterButtonMessage[0]}{" "}
                 <BodyText style={{ fontWeight: "900", color: "white" }}>
-                  sede
+                  {headquarterButtonMessage[1]}
                 </BodyText>
               </BodyText>
             </AdaptiveShadowView>
