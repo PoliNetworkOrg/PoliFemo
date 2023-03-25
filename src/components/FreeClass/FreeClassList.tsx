@@ -11,6 +11,7 @@ import { Room } from "api/rooms"
 import { getStartEndDate } from "utils/rooms"
 import { Icon } from "components/Icon"
 import { AdaptiveShadowView } from "components/BoxShadow"
+import { logger } from "utils/logger"
 
 const { width } = Dimensions.get("window")
 
@@ -84,7 +85,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
               occupancyRate: item.occupancy_rate,
             })
           } catch (err) {
-            console.log(err)
+            logger(err)
           }
         }
 

@@ -38,7 +38,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
         setOccupancyRate(res.occupancy_rate)
       }
     } catch (err) {
-      console.log(err)
+      logger(err)
     }
   }
 
@@ -53,7 +53,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
         maxRetries: 3,
       })
     } catch (err) {
-      console.log(err)
+      logger(err)
     }
   }
   return (

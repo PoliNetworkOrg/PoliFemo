@@ -10,6 +10,7 @@ import { formatBuildingName, isCampusCorrect, isRoomFree } from "utils/rooms"
 
 import { RoomsSearchDataContext } from "contexts/rooms"
 import { ErrorMessage } from "components/ErrorMessage"
+import { logger } from "utils/logger"
 
 /**
  * In this page the user can select the building.
@@ -61,7 +62,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
       }
     } catch (error) {
       setError(true)
-      console.log(error)
+      logger(error)
     }
   }
 

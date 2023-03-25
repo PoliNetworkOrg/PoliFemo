@@ -109,7 +109,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
                   )
                 } catch (e) {
                   Alert.alert("Errore durante l'esportazione dei dati", e + "")
-                  console.error(e)
+                  logger(e)
                 } finally {
                   setLoadingExport(false)
                 }
@@ -154,7 +154,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
                             "Errore durante la cancellazione dell'account",
                             e + ""
                           )
-                          console.error(e)
+                          logger(e)
                         }
                       },
                     },
@@ -226,7 +226,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
             )
           } catch (e) {
             Alert.alert("Errore durante l'aggiornamento", e + "")
-            console.error(e)
+            logger(e)
           }
         }}
       />
