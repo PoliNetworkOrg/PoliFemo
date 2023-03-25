@@ -9,6 +9,7 @@ import { api, RetryType } from "api"
 import { Modal } from "components/Modal"
 import { LoginContext } from "contexts/login"
 import { useNavigation } from "@react-navigation/native"
+import { logger } from "utils/logger"
 
 const contentPadding = 20
 

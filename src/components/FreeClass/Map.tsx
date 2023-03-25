@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Icon } from "components/Icon"
 import iconMaps from "assets/freeClassrooms/iconMaps.svg"
 import { ErrorMessage } from "components/ErrorMessage"
+import { logger } from "utils/logger"
 
 interface MapProps {
   userLatitude: number
@@ -48,7 +49,7 @@ export const Map: FC<MapProps> = props => {
           setRegion(tempRegion)
         }
       })
-      .catch(err => console.log(err))
+      .catch(err => logger(err))
   }, [])
 
   return (
@@ -88,7 +89,7 @@ export const Map: FC<MapProps> = props => {
             AsyncStorage.setItem(
               "lastRegionVisited",
               JSON.stringify(region)
-            ).catch(err => console.log(err))
+            ).catch(err => logger(err))
           }}
           showsUserLocation={true}
           mapPadding={{
@@ -121,7 +122,7 @@ export const Map: FC<MapProps> = props => {
                 AsyncStorage.setItem(
                   "lastRegionVisited",
                   JSON.stringify(region)
-                ).catch(err => console.log(err))
+                ).catch(err => logger(err))
               }}
             >
               <Icon source={iconMaps} scale={0.5} />
