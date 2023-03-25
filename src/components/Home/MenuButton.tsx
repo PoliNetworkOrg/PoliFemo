@@ -20,6 +20,7 @@ export enum ButtonType {
 }
 
 export interface ButtonInterface {
+  id?: any,
   type: ButtonType
   title: string
   icon?: number

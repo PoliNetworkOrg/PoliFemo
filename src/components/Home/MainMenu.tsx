@@ -33,61 +33,61 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
       type: ButtonType.CALENDAR,
       title: "Calendario",
       icon: calendar,
-      onClick: () => navigate("Error404"),
+      onPress: () => navigate("Error404"),
     },
     {
       type: ButtonType.TIMETABLE,
       title: "Orario Lezioni",
       icon: clock,
-      onClick: () => navigate("Error404"),
+      onPress: () => navigate("Error404"),
     },
     {
       type: ButtonType.ASSOCIATIONS,
       title: "PoliAssociazioni",
       icon: association,
-      onClick: () => navigate("Error404"),
+      onPress: () => navigate("Error404"),
     },
     {
       type: ButtonType.FREECLASSROOMS,
       title: "Aule Libere",
       icon: free_classrooms,
-      onClick: () => navigate("FreeClassrooms"),
+      onPress: () => navigate("FreeClassrooms"),
     },
     {
       type: ButtonType.MATERIALS,
       title: "Materiali",
       icon: materials,
-      onClick: () => navigate("Error404"),
+      onPress: () => navigate("Error404"),
     },
     {
       type: ButtonType.GROUPS,
       title: "Gruppi",
       icon: groups,
-      onClick: () => navigate("Groups"),
+      onPress: () => navigate("Groups"),
     },
     {
       type: ButtonType.MARKS,
       title: "Valutazioni",
       icon: marks,
-      onClick: () => navigate("Error404"),
+      onPress: () => navigate("Error404"),
     },
     {
       type: ButtonType.GRADING_BOOK,
       title: "Libretto",
       icon: grading_book,
-      onClick: () => navigate("Error404"),
+      onPress: () => navigate("Error404"),
     },
     {
       type: ButtonType.TEST,
       title: "Test e Prove",
       icon: tests,
-      onClick: () => navigate("Error404"),
+      onPress: () => navigate("Error404"),
     },
     {
       type: ButtonType.ADD,
       title: "Aggiungi",
       icon: add,
-      onClick: () => setModalVisible(true),
+      onPress: () => setModalVisible(true),
     },
   ]
 
@@ -216,7 +216,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
             onPress={() => {
               if (isDeleting) setIsDeleting(false)
               else {
-                buttonIcon.onClick?.()
+                buttonIcon.onPress?.()
               }
             }}
             onLongPress={() => {
