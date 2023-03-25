@@ -119,7 +119,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
           setIcons(
             icons.map(icon => ({
               ...icon,
-              shown: icon.id ? showns.includes(icon.id) : false,
+              shown: icon.type ? showns.includes(icon.type) : false,
             }))
           )
         }
