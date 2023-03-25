@@ -4,8 +4,8 @@
     "settings_appearance": "Appearance",
     "settings_infoAppTitle": "About this app",
     "settings_infoAppSubTitle": "Information about the app, version, contacts",
-    "settings_privacySubTitle": "Privacy policy, your account settings related to privacy",
-    "settings_logout": "Log out",
+    "settings_privacySubTitle": "Privacy policy\nYour account settings related to privacy",
+    "settings_logout": "Logout",
 
     "settings_chooseTheme": "Choose Theme",
     "settings_default": "Default",

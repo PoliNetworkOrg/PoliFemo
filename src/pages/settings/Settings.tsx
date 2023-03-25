@@ -15,6 +15,7 @@ import { LoginContext } from "contexts/login"
 import { Career } from "api/user"
 import { HttpClient } from "api/HttpClient"
 import { Modal } from "components/Modal"
+import { useTranslation } from "react-i18next"
 
 const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
 const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
@@ -52,18 +53,20 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
 
   const { navigate } = useNavigation()
 
+  const { t } = useTranslation()
+
   const settingsList: SettingOptions[] = [
     {
-      title: "Aspetto",
-      subtitle: "Dark, light mode",
+      title: t("settings_appearance", { ns: "settings" }),
+      subtitle: "Dark, Light mode",
       icon: settingsIcons.modify,
       callback: () => {
         setModalThemeVisible(true)
       },
     },
     {
-      title: "Su quest'app",
-      subtitle: "Informazioni sull'app, versione, contatti",
+      title: t("settings_infoAppTitle", { ns: "settings" }),
+      subtitle: "" + t("settings_infoAppSubTitle", { ns: "settings" }),
       icon: settingsIcons.help,
       callback: () => {
         navigate("About")
@@ -71,15 +74,14 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
     },
     {
       title: "Privacy",
-      subtitle:
-        "Informativa sulla privacy\nImpostazioni del tuo account relative alla privacy",
+      subtitle: "" + t("settings_privacySubTitle", { ns: "settings" }),
       icon: settingsIcons.privacy,
       callback: () => {
         navigate("Privacy")
       },
     },
     {
-      title: "Disconnetti",
+      title: t("settings_logout", { ns: "settings" }),
       icon: settingsIcons.disconnect,
       callback: async () => {
         await client.destroyTokens()
@@ -89,7 +91,9 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <ContentWrapperScroll title="Impostazioni">
+      <ContentWrapperScroll
+        title={"" + t("settings_title", { ns: "settings" })}
+      >
         {loggedIn ? (
           <UserDetailsTile user={userInfo} />
         ) : (
@@ -114,7 +118,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
       </ContentWrapperScroll>
 
       <Modal
-        title={"Scegli Tema"}
+        title={t("settings_chooseTheme", { ns: "settings" })}
         centerText
         isShowing={isModalThemeVisible}
         buttons={[
@@ -150,7 +154,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
         })}
       </Modal>
       <Modal
-        title={"Cambia Matricola"}
+        title={t("settings_changeId", { ns: "settings" })}
         centerText
         isShowing={isModalCareerVisible}
         buttons={[

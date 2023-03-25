@@ -7,6 +7,8 @@ import commonIT from "./jsons/it/common.json"
 import commonEN from "./jsons/en/common.json"
 import FreeClassIT from "./jsons/it/freeClass.json"
 import FreeClassEN from "./jsons/en/freeClass.json"
+import settingsIT from "./jsons/it/settings.json"
+import settingsEN from "./jsons/en/settings.json"
 import { getLocales } from "expo-localization"
 
 void i18n.use(initReactI18next).init({
@@ -16,18 +18,20 @@ void i18n.use(initReactI18next).init({
       common: commonIT,
       home: homeIT,
       freeClass: FreeClassIT,
+      settings: settingsIT,
     },
     en: {
       common: commonEN,
       home: homeEN,
       freeClass: FreeClassEN,
+      settings: settingsEN,
     },
   },
   lng: getLocales()[0].languageCode,
   compatibilityJSON: "v3",
   fallbackLng: "it",
   defaultNS: "common",
-  ns: ["common", "home", "freeClass"],
+  ns: ["common", "home", "freeClass", "settings"],
   interpolation: {
     escapeValue: false,
   },
