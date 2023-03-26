@@ -16,6 +16,7 @@ import { Career } from "api/user"
 import { HttpClient } from "api/HttpClient"
 import { Modal } from "components/Modal"
 import { useTranslation } from "react-i18next"
+import { Linking } from "react-native"
 
 const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
 const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
@@ -53,11 +54,11 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
 
   const { navigate } = useNavigation()
 
-  const { t } = useTranslation()
+  const { t } = useTranslation("settings")
 
   const settingsList: SettingOptions[] = [
     {
-      title: t("settings_appearance", { ns: "settings" }),
+      title: t("settings_appearance"),
       subtitle: "Dark, Light mode",
       icon: settingsIcons.modify,
       callback: () => {
@@ -65,8 +66,16 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
       },
     },
     {
-      title: t("settings_infoAppTitle", { ns: "settings" }),
-      subtitle: "" + t("settings_infoAppSubTitle", { ns: "settings" }),
+      title: t("settings_language"),
+      subtitle: "",
+      icon: settingsIcons.modify,
+      callback: () => {
+        void Linking.openSettings()
+      },
+    },
+    {
+      title: t("settings_infoAppTitle"),
+      subtitle: "" + t("settings_infoAppSubTitle"),
       icon: settingsIcons.help,
       callback: () => {
         navigate("About")
@@ -74,14 +83,14 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
     },
     {
       title: "Privacy",
-      subtitle: "" + t("settings_privacySubTitle", { ns: "settings" }),
+      subtitle: "" + t("settings_privacySubTitle"),
       icon: settingsIcons.privacy,
       callback: () => {
         navigate("Privacy")
       },
     },
     {
-      title: t("settings_logout", { ns: "settings" }),
+      title: t("settings_logout"),
       icon: settingsIcons.disconnect,
       callback: async () => {
         await client.destroyTokens()
@@ -91,9 +100,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <ContentWrapperScroll
-        title={"" + t("settings_title", { ns: "settings" })}
-      >
+      <ContentWrapperScroll title={"" + t("settings_title")}>
         {loggedIn ? (
           <UserDetailsTile user={userInfo} />
         ) : (
@@ -118,7 +125,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
       </ContentWrapperScroll>
 
       <Modal
-        title={t("settings_chooseTheme", { ns: "settings" })}
+        title={t("settings_chooseTheme")}
         centerText
         isShowing={isModalThemeVisible}
         buttons={[
@@ -154,7 +161,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
         })}
       </Modal>
       <Modal
-        title={t("settings_changeId", { ns: "settings" })}
+        title={t("settings_changeId")}
         centerText
         isShowing={isModalCareerVisible}
         buttons={[
