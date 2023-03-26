@@ -14,7 +14,6 @@ import { getLocales } from "expo-localization"
 void i18n.use(initReactI18next).init({
   resources: {
     it: {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       common: commonIT,
       home: homeIT,
       freeClass: FreeClassIT,
@@ -29,7 +28,7 @@ void i18n.use(initReactI18next).init({
   },
   lng: getLocales()[0].languageCode,
   compatibilityJSON: "v3",
-  fallbackLng: "it",
+  fallbackLng: "en",
   defaultNS: "common",
   ns: ["common", "home", "freeClass", "settings"],
   interpolation: {
