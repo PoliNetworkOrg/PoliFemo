@@ -11,5 +11,25 @@
     "settings_chooseTheme": "Choose Theme",
     "settings_default": "Default",
     "settings_dark": "Dark",
-    "settings_light": "Light"
+    "settings_light": "Light",
+
+    "settings_info": "Information about the app",
+    "settings_info_message": "An app designed to simplify the life of all Politecnico students, allowing them to concentrate fully on their studies and leave the rest to PoliFemo\nDeveloped with ❤️ by PoliNetwork\n\n",
+    "settings_sourceCode_message": "Polifemo is an open source project, you can contribute to its development on GitHub!\n",
+    "settings_report": "Report an issue",
+    "settings_reportSubTitle": "Report a issue or suggest a new feature",
+    "settings_contacts": "Contact us",
+    "settings_contactsSubTitile": "Link for any questions",
+    "settings_userId": "Copy user ID",
+    "settings_userIdSubTitle": "Copy your PoliNetwork user ID to clipboard",
+    "settings_copied": "Saved!",
+    "settings_alert_message": "Your user ID has been copied to your clipboard.",
+    "settings_licenses": "Licenses",
+    "settings_licensesSubTitle": "View used package licenses",
+
+    "settings_privacy_message": "PoliNetwork recognizes privacy as a fundamental value and supports users' right to have full control of their data. Although the app is designed to store the minimum possible amount of data, and that it is not possible for us to trace the identity of a natural person starting from the data in our possession, PoliNetwork still provides the tools for good privacy management, such as deletion and export of data.\n",
+    "settings_privacy_questions": "If you have any questions or concerns about privacy, please read the Privacy Policy or contact ",
+    "settings_privacyDisclaimer": "Privacy Disclaimer",
+    "settings_privacyDisclaimerSubTitle": "Read our privacy policy",
+    "settings_privacyDisclaimer_message": "In PoliNetwork, privacy is a fundamental value, which is why we have designed our app always keeping this aspect in mind. The Privacy Policy is very important for PoliNetwork and provides our users with complete information on our privacy and personal data protection policies. To ensure your privacy, many features of the app can be used even without logging in. For features that require login, we have chosen to use hashing, to protect your data in the best way. We don't know who you are, but we can only authenticate you. You can always check what we know about you using the \"Export\" in the privacy settings.\n\nIf you have any questions or concerns about privacy, please read the Privacy Policy for more information, or write to us at "
 }

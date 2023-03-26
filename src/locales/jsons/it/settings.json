@@ -11,5 +11,25 @@
     "settings_chooseTheme": "Scegli Tema",
     "settings_default": "Predefinito",
     "settings_dark": "Scuro",
-    "settings_light": "Chiaro"   
+    "settings_light": "Chiaro",   
+
+    "settings_info": "Informazioni sull'app",
+    "settings_info_message": "Un'app pensata per semplificare la vita di tutti gli studenti del Politecnico permettendo loro di potersi concentrare al massimo sullo studio e lasciare il resto a PoliFemo\nSvilluppata con ❤️ da PoliNetwork\n\n",
+    "settings_sourceCode_message": "Polifemo è un progetto open source, puoi contribuire al suo sviluppo su GitHub!\n",
+    "settings_report": "Riporta un problema",
+    "settings_reportSubTitle": "Segnala un bug o suggerisci una nuova funzionalità",
+    "settings_contacts": "Contattaci",
+    "settings_contactsSubTitile": "Link di contatto per qualsiasi domanda",
+    "settings_userId": "Copia ID utente",
+    "settings_userIdSubTitle": "Copia il tuo ID utente PoliNetwork negli appunti",
+    "settings_copied": "Copiato!",
+    "settings_alert_message": "Il tuo ID utente è stato copiato negli appunti.",
+    "settings_licenses": "Licenze",
+    "settings_licensesSubTitle": "Visualizza le licenze dei pacchetti utilizzati",
+
+    "settings_privacy_message": "PoliNetwork riconosce la privacy come un valore fondamentale e sostiene il diritto degli utenti di avere il pieno controllo dei propri dati. Nonostante l'app sia progettata per archiviare la minima quantità possibile di dati, e che non ci è possibile risalire all'identità di una persona fisica partendo dai dati in nostro possesso, PoliNetwork fornisce comunque gli strumenti per una buona gestione della privacy, come la cancellazione e l'esportazione dei dati.\n",
+    "settings_privacy_questions": "Per eventuali domande o dubbi sulla privacy, si prega di leggere la Privacy Policy o di contattare ",
+    "settings_privacyDisclaimer": "Informativa sulla privacy",
+    "settings_privacyDisclaimerSubTitle": "Leggi la nostra privacy policy",
+    "settings_privacyDisclaimer_message": "In PoliNetwork, la privacy è un valore fondamentale, per questo abbiamo progettato la nostra app tenendo sempre presente questo aspetto. La Privacy Policy è molto importante per PoliNetwork e fornisce ai nostri utenti informazioni complete sulle nostre politiche sulla privacy e sulla protezione dei dati personali. Per garantire la tua privacy, molte funzionalità dell'app possono essere utilizzate anche senza effettuare il login. Per le funzionalità che richiedono il login, abbiamo scelto di utilizzare hashing, per proteggere i tuoi dati nel modo migliore. Non conosciamo chi sei, ma possiamo solo autenticarti. Puoi sempre verificare cosa sappiamo su di te usando il tasto \"Esporta\" nelle impostazioni privacy.\n\nSe hai domande o dubbi sulla privacy, ti invitiamo a leggere la Privacy Policy per avere maggiori informazioni, o scriverci a "
 }

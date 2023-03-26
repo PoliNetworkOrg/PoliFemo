@@ -18,7 +18,7 @@ import { Modal } from "components/Modal"
 import { useTranslation } from "react-i18next"
 import { Linking } from "react-native"
 
-const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
+const themes: string[] = ["settings_default", "settings_dark", "settings_light"]
 const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
 
 const client = HttpClient.getInstance()
@@ -131,7 +131,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
         buttons={[
           {
             light: true,
-            text: "Annulla",
+            text: "" + t("cancel", { ns: "common" }),
             onPress: () => {
               //restore real theme value
               setSelectedTheme(theme)
@@ -151,7 +151,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
           return (
             <SelectTile
               key={index}
-              value={themeName}
+              value={"" + t(themeName)}
               selected={selectedTheme === themesToSave[index]}
               onPress={() => {
                 setSelectedTheme(themesToSave[index])
@@ -167,7 +167,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
         buttons={[
           {
             light: true,
-            text: "Annulla",
+            text: "" + t("cancel", { ns: "common" }),
             onPress: () => {
               //restore selectedCareer to career
               if (career) setSelectedCareer(career)

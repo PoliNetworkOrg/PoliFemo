@@ -12,6 +12,7 @@ import { HttpClient } from "api/HttpClient"
 import { LoginContext } from "contexts/login"
 import { ModalPicker } from "components/Settings/ModalPicker"
 import { Description } from "components/Settings/Description"
+import { useTranslation } from "react-i18next"
 
 const client = HttpClient.getInstance()
 
@@ -51,6 +52,8 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
   const [showingAutodeleteModal, setShowingAutodeleteModal] = useState(false)
   const [autodeleteTime, setAutodeleteTime] = useState(730)
 
+  const { t } = useTranslation("settings")
+
   useEffect(() => {
     if (loggedIn) {
       api.user
@@ -72,17 +75,10 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
           paddingHorizontal: 32,
         }}
       >
-        PoliNetwork riconosce la privacy come un valore fondamentale e sostiene
-        il diritto degli utenti di avere il pieno controllo dei propri dati.
-        Nonostante l&apos;app sia progettata per archiviare la minima quantità
-        possibile di dati, e che non ci è possibile risalire all&apos;identità
-        di una persona fisica partendo dai dati in nostro possesso, PoliNetwork
-        fornisce comunque gli strumenti per una buona gestione della privacy,
-        come la cancellazione e l&apos;esportazione dei dati.{"\n"}
+        {t("settings_privacy_message")}
       </BodyText>
       <Description>
-        Per eventuali domande o dubbi sulla privacy, si prega di leggere la
-        Privacy Policy o di contattare{" "}
+        {t("settings_privacy_questions")}{" "}
         <HyperLink href="mailto:privacy@polinetwork.org">
           privacy@polinetwork.org
         </HyperLink>
@@ -180,26 +176,14 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
       <Divider />
       <SettingTile
         setting={{
-          title: "Informativa Privacy",
-          subtitle: "Leggi la nostra privacy policy",
+          title: t("settings_privacyDisclaimer"),
+          subtitle: "" + t("settings_privacyDisclaimerSubTitle"),
           callback: () =>
             Linking.openURL("https://polinetwork.org/learnmore/privacy/"),
         }}
       />
       <Description last>
-        In PoliNetwork, la privacy è un valore fondamentale, per questo abbiamo
-        progettato la nostra app tenendo sempre presente questo aspetto. La
-        Privacy Policy è molto importante per PoliNetwork e fornisce ai nostri
-        utenti informazioni complete sulle nostre politiche sulla privacy e
-        sulla protezione dei dati personali. Per garantire la tua privacy, molte
-        funzionalità dell&apos;app possono essere utilizzate anche senza
-        effettuare il login. Per le funzionalità che richiedono il login,
-        abbiamo scelto di utilizzare hashing, per proteggere i tuoi dati nel
-        modo migliore. Non conosciamo chi sei, ma possiamo solo autenticarti.
-        Puoi sempre verificare cosa sappiamo su di te usando il tasto
-        &quot;Esporta&quot; nelle impostazioni privacy.{"\n\n"}Se hai domande o
-        dubbi sulla privacy, ti invitiamo a leggere la Privacy Policy per avere
-        maggiori informazioni, o scriverci a{" "}
+        {t("settings_privacyDisclaimer_message")}{" "}
         <HyperLink href="mailto:privacy@polinetwork.org">
           privacy@polinetwork.org
         </HyperLink>
