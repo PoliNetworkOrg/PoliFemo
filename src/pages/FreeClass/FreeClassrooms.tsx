@@ -43,15 +43,11 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
   //rooms filtered
   const [searchableRooms, setSearchableRooms] = useState<Room[]>([])
 
-  const { t } = useTranslation()
+  const { t } = useTranslation("freeClass")
 
-  const positionButtonMessage = t("freeClass_position", {
-    ns: "freeClass",
-  }).split("-")
+  const positionButtonMessage = t("freeClass_position").split("-")
 
-  const headquarterButtonMessage = t("freeClass_headquarter", {
-    ns: "freeClass",
-  }).split("-")
+  const headquarterButtonMessage = t("freeClass_headquarter").split("-")
 
   //main function that handles the call to the API in order to obtain the list of freeclassRooms
   const getAllRoomsFromApi = async (
@@ -162,7 +158,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
     <PageWrapper>
       <View style={{ paddingTop: 28 }}>
         <Title style={{ paddingLeft: 28, marginBottom: 17 }}>
-          {t("freeClass_title", { ns: "freeClass" })}
+          {t("freeClass_title")}
         </Title>
         <PoliSearchBar onChange={searchKey => setSearch(searchKey)} />
       </View>

@@ -30,11 +30,9 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
 
   const { navigate } = useNavigation()
 
-  const { t } = useTranslation()
+  const { t } = useTranslation("freeClass")
 
-  const crowdingOpinionMessage = t("freeClass_crowdingOpinion", {
-    ns: "freeClass",
-  }).split("-")
+  const crowdingOpinionMessage = t("freeClass_crowdingOpinion").split("-")
 
   let occupancyRateUser = 3
 
@@ -72,7 +70,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
           color: labelsHighContrast,
         }}
       >
-        {t("freeClass_crowding", { ns: "freeClass" })}:
+        {t("freeClass_crowding")}:
       </BodyText>
 
       <CrowdSliderStatic position={occupancyRate} />
@@ -121,11 +119,8 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
       <Modal
         isShowing={isModalVisible}
         onClose={() => setIsModalVisible(false)}
-        title={t("freeClass_modalTitle", { ns: "freeClass" })}
-        subTitle={
-          "" +
-          t("freeClass_modalSubtitle", { ns: "freeClass" }).replace("-", "\n")
-        }
+        title={t("freeClass_modalTitle")}
+        subTitle={"" + t("freeClass_modalSubtitle").replace("-", "\n")}
         subTitleStyle={{
           fontWeight: "900",
           color: iconHighContrast,

@@ -65,7 +65,7 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
               marginRight: 12,
             }}
           >
-            {t("date", { ns: "common" })}
+            {t("date")}
           </BodyText>
         </View>
         <Pressable onPress={showDatePicker} style={{ flexDirection: "row" }}>
@@ -88,7 +88,7 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
               marginRight: 12,
             }}
           >
-            {t("time", { ns: "common" })}
+            {t("time")}
           </BodyText>
         </View>
         <Pressable onPress={showTimePicker} style={{ flexDirection: "row" }}>

@@ -32,7 +32,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
 
   const { hoursLeft, minutesLeft } = extractTimeLeft(now, endDate)
 
-  const { t } = useTranslation()
+  const { t } = useTranslation("freeClass")
 
   return (
     <View style={{ marginTop: 14 }}>
@@ -43,7 +43,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
           color: labelsHighContrast,
         }}
       >
-        {t("freeClass_free", { ns: "freeClass" })}:
+        {t("freeClass_free")}:
       </BodyText>
       <View
         style={{
@@ -59,10 +59,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                 flexDirection: "row",
                 alignItems: "center",
                 marginBottom: 8,
-                width:
-                  t("freeClass_from", { ns: "freeClass" }).length <= 2
-                    ? 100
-                    : 110,
+                width: t("freeClass_from").length <= 2 ? 100 : 110,
               }}
             >
               <BodyText
@@ -71,13 +68,10 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                   fontWeight: "400",
                   color: labelsHighContrast,
                   flex: 1,
-                  paddingRight:
-                    t("freeClass_from", { ns: "freeClass" }).length <= 2
-                      ? 12
-                      : 0,
+                  paddingRight: t("freeClass_from").length <= 2 ? 12 : 0,
                 }}
               >
-                {t("freeClass_from", { ns: "freeClass" })}
+                {t("freeClass_from")}
               </BodyText>
               <View
                 style={{
@@ -118,7 +112,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                   textAlign: "right",
                 }}
               >
-                {t("freeClass_to", { ns: "freeClass" })}
+                {t("freeClass_to")}
               </BodyText>
               <View
                 style={{
@@ -175,7 +169,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                   color: labelsHighContrast,
                 }}
               >
-                {t("freeClass_timeRemaining", { ns: "freeClass" })}:
+                {t("freeClass_timeRemaining")}:
               </BodyText>
               <BodyText
                 style={{

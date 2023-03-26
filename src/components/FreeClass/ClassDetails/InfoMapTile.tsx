@@ -27,7 +27,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
   const latitude = props.latitude
   const longitude = props.longitude
 
-  const { t } = useTranslation()
+  const { t } = useTranslation("freeClass")
 
   /*from  https://stackoverflow.com/questions/73653813/how-to-open-google-map-with-latitude-and-longitude*/
   const openAddressOnMap = (label: string, lat: string, lng: string) => {
@@ -47,7 +47,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
     }
   }
 
-  const openMapMessage = t("freeClass_openMap", { ns: "freeClass" }).split("-")
+  const openMapMessage = t("freeClass_openMap").split("-")
 
   return (
     <View
@@ -94,7 +94,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
               color: labelsHighContrast,
             }}
           >
-            {t("freeClass_address", { ns: "freeClass" })}:
+            {t("freeClass_address")}:
           </BodyText>
           <BodyText
             style={{
@@ -115,7 +115,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
               flex: 1,
             }}
           >
-            {t("freeClass_capacity", { ns: "freeClass" })}:{" "}
+            {t("freeClass_capacity")}:{" "}
           </BodyText>
           <BodyText
             style={{

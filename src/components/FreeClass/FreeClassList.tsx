@@ -29,7 +29,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
   const { palette, labelsHighContrast } = usePalette()
   const { navigate } = useNavigation()
 
-  const { t } = useTranslation()
+  const { t } = useTranslation("freeClass")
 
   const limInf = 0
   const limSup = 5
@@ -39,11 +39,11 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
       occupancyRate === undefined ||
       (occupancyRate >= limInf && occupancyRate < range)
     ) {
-      return t("freeClass_freeCrowding", { ns: "freeClass" })
+      return t("freeClass_freeCrowding")
     } else if (occupancyRate >= range && occupancyRate < 2 * range) {
-      return t("freeClass_medCrowding", { ns: "freeClass" })
+      return t("freeClass_medCrowding")
     } else {
-      return t("freeClass_fullCrowding", { ns: "freeClass" })
+      return t("freeClass_fullCrowding")
     }
   }
 
@@ -121,13 +121,10 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                   fontSize: 12,
                   color: "white",
                   textAlign: "left",
-                  paddingLeft:
-                    t("freeClass_timeLeft", { ns: "freeClass" }).length > 10
-                      ? 130
-                      : 100,
+                  paddingLeft: t("freeClass_timeLeft").length > 10 ? 130 : 100,
                 }}
               >
-                {t("freeClass_timeLeft", { ns: "freeClass" })}
+                {t("freeClass_timeLeft")}
                 {"\n"}
                 <BodyText
                   style={{
@@ -169,7 +166,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                       color: palette.variant1,
                     }}
                   >
-                    {t("freeClass_crowdingStatus", { ns: "freeClass" })}
+                    {t("freeClass_crowdingStatus")}
                   </BodyText>
                 </BodyText>
               </View>

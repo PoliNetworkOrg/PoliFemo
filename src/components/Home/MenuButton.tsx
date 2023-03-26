@@ -43,7 +43,7 @@ export const MenuButton: FC<{
 
   const animatedValue = new Animated.Value(0)
 
-  const { t } = useTranslation() //i18m hook
+  const { t } = useTranslation("home") //i18m hook
 
   //function to call to perform the shake of the button
   const handleAnimation = () => {
@@ -109,7 +109,7 @@ export const MenuButton: FC<{
                 color: "white",
               }}
             >
-              {t(buttonIcon.title, { ns: "home" })}
+              {t(buttonIcon.title)}
             </BodyText>
           </View>
         </Pressable>

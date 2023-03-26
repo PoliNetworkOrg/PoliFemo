@@ -14,7 +14,7 @@ export const DefaultWidget: FC = () => {
 
   const polifemoSVG = useSVG(polifemoIcon)
 
-  const { t } = useTranslation()
+  const { t } = useTranslation("home")
 
   return (
     <View
@@ -71,7 +71,7 @@ export const DefaultWidget: FC = () => {
               textAlign: "center",
             }}
           >
-            {t("highlights_defaultTitle", { ns: "home" })}
+            {t("highlights_defaultTitle")}
           </BodyText>
         </View>
       </View>
@@ -85,7 +85,7 @@ export const DefaultWidget: FC = () => {
           marginTop: 14,
         }}
       >
-        {t("highlights_defaultSubtitle", { ns: "home" })}
+        {t("highlights_defaultSubtitle")}
       </BodyText>
     </View>
   )

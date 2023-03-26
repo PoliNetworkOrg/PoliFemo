@@ -14,7 +14,7 @@ interface RoomUtilsSectionProps {
 export const RoomUtilsSection: FC<RoomUtilsSectionProps> = props => {
   const { labelsHighContrast } = usePalette()
 
-  const { t } = useTranslation()
+  const { t } = useTranslation("freeClass")
 
   return (
     <View>
@@ -25,20 +25,11 @@ export const RoomUtilsSection: FC<RoomUtilsSectionProps> = props => {
           color: labelsHighContrast,
         }}
       >
-        {t("freeClass_info", { ns: "freeClass" })}:
+        {t("freeClass_info")}:
       </BodyText>
-      <RoomUtilsTile
-        name={t("freeClass_smallDesk", { ns: "freeClass" })}
-        status={props.ribaltine}
-      />
-      <RoomUtilsTile
-        name={t("freeClass_current", { ns: "freeClass" })}
-        status={props.power}
-      />
-      <RoomUtilsTile
-        name={t("freeClass_computer", { ns: "freeClass" })}
-        status={props.computers}
-      />
+      <RoomUtilsTile name={t("freeClass_smallDesk")} status={props.ribaltine} />
+      <RoomUtilsTile name={t("freeClass_current")} status={props.power} />
+      <RoomUtilsTile name={t("freeClass_computer")} status={props.computers} />
     </View>
   )
 }

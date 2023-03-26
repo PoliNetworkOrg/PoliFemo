@@ -32,7 +32,7 @@ const headquarterList: HeadquarterItem[] = [
 export const HeadquarterChoice: MainStackScreen<"HeadquarterChoice"> = () => {
   const { date, setDate } = useContext(RoomsSearchDataContext)
 
-  const { t } = useTranslation()
+  const { t } = useTranslation("freeClass")
 
   useEffect(() => {
     setDate(new Date())
@@ -41,9 +41,7 @@ export const HeadquarterChoice: MainStackScreen<"HeadquarterChoice"> = () => {
   return (
     <PageWrapper>
       <View style={{ paddingTop: 28 }}>
-        <Title style={{ paddingLeft: 28 }}>
-          {t("freeClass_HQ", { ns: "freeClass" })}
-        </Title>
+        <Title style={{ paddingLeft: 28 }}>{t("freeClass_HQ")}</Title>
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
       <DefaultList dataToShow={headquarterList} />

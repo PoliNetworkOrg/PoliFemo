@@ -39,7 +39,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
 
   const acronyms: ValidAcronym[] = ["MIA", "MIB", "LCF", "CRG", "PCL", "MNI"]
 
-  const { t } = useTranslation()
+  const { t } = useTranslation("freeClass")
 
   const allRooms = useMemo(
     () =>
@@ -144,7 +144,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
               color: "white",
             }}
           >
-            {t("freeClass_map", { ns: "freeClass" })}
+            {t("freeClass_map")}
           </BodyText>
         </Pressable>
         <Pressable
@@ -170,7 +170,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
               color: "white",
             }}
           >
-            {t("freeClass_list", { ns: "freeClass" })}
+            {t("freeClass_list")}
           </BodyText>
         </Pressable>
       </View>

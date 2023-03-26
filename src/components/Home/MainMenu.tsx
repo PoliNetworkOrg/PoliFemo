@@ -102,7 +102,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
   const [isModalVisible, setModalVisible] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
 
-  const { t } = useTranslation() //i18n hook
+  const { t } = useTranslation("home") //i18n hook
 
   const scrollView = useOutsideClick<ScrollView>(() => {
     setIsDeleting(false)
@@ -162,8 +162,8 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
     >
       <Modal
         centerText={false}
-        title={"" + t("modal_add", { ns: "home" })}
-        subTitle={"" + t("modal_message", { ns: "home" })}
+        title={"" + t("modal_add")}
+        subTitle={"" + t("modal_message")}
         isShowing={isModalVisible}
         onClose={() => setModalVisible(false)}
         contentContainerStyle={{
