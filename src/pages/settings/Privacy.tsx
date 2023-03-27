@@ -16,18 +16,6 @@ import { useTranslation } from "react-i18next"
 
 const client = HttpClient.getInstance()
 
-const autodeleteTimes: { value: number; label: string }[] = [
-  { value: 30, label: "30 giorni" },
-  { value: 60, label: "60 giorni" },
-  { value: 90, label: "90 giorni" },
-  { value: 180, label: "6 mesi" },
-  { value: 365, label: "1 anno" },
-  { value: 730, label: "2 anni" },
-  { value: 1095, label: "3 anni" },
-  { value: 1460, label: "4 anni" },
-  { value: 1825, label: "5 anni" },
-]
-
 /**
  * Privacy Page
  */
@@ -41,6 +29,18 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
   const [autodeleteTime, setAutodeleteTime] = useState(730)
 
   const { t } = useTranslation("settings")
+
+  const autodeleteTimes: { value: number; label: string }[] = [
+    { value: 30, label: t("dayCount_other", { ns: "common", count: 30 }) },
+    { value: 60, label: t("dayCount_other", { ns: "common", count: 60 }) },
+    { value: 90, label: t("dayCount_other", { ns: "common", count: 90 }) },
+    { value: 180, label: t("monthCount_other", { ns: "common", count: 6 }) },
+    { value: 365, label: t("yearCount_one", { ns: "common", count: 1 }) },
+    { value: 730, label: t("yearCount_other", { ns: "common", count: 2 }) },
+    { value: 1095, label: t("yearCount_other", { ns: "common", count: 3 }) },
+    { value: 1460, label: t("yearCount_other", { ns: "common", count: 4 }) },
+    { value: 1825, label: t("yearCount_other", { ns: "common", count: 5 }) },
+  ]
 
   useEffect(() => {
     if (loggedIn) {
