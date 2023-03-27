@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { useState } from "react"
+import { useState } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { Image, Linking } from "react-native"
 import { WebView } from "react-native-webview"
@@ -10,16 +10,16 @@ import { Roboto_400Regular } from "@expo-google-fonts/roboto"
 import { ImageSlider } from "components/Articles/ImageSlider"
 
 export const Article: MainStackScreen<"Article"> = props => {
-    const { isLight } = usePalette()
-    const article = props.route.params.article
-    const [webHeight, setWebHeight] = useState<number>(400)
-    let html: string[] = []
-    try {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        html = JSON.parse(article.content)
-    } catch (error) {
-        console.log(error)
-    }
+  const { isLight } = usePalette()
+  const article = props.route.params.article
+  const [webHeight, setWebHeight] = useState<number>(400)
+  let html: string[] = []
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    html = JSON.parse(article.content)
+  } catch (error) {
+    console.log(error)
+  }
 
     const [isModalVisible, setIsModalVisible] = useState(false)
 
@@ -82,14 +82,14 @@ export const Article: MainStackScreen<"Article"> = props => {
                 si presenta sul mio telefono). Da testare su iOS e altri
                 Android.  */
 
-                style={{
-                    backgroundColor: "transparent",
-                }}
-                onShouldStartLoadWithRequest={event => {
-                    if (event.url.slice(0, 4) === "http") {
-                        void Linking.openURL(event.url)
-                        return false
-                    }
+        style={{
+          backgroundColor: "transparent",
+        }}
+        onShouldStartLoadWithRequest={event => {
+          if (event.url.slice(0, 4) === "http") {
+            void Linking.openURL(event.url)
+            return false
+          }
 
                     return true
                 }}

@@ -1,143 +1,148 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { FlatList, Linking, View } from "react-native"
 import { Title } from "components/Text"
-import { Filters } from "components/Groups/Filters"
-import { api, RetryType } from "api"
+import { FiltersList } from "components/Groups/FiltersList"
+import { api } from "api"
 import { Group } from "api/groups"
 import { useMounted } from "utils/useMounted"
 import {
-    choosePlatformIcon,
-    createGroupLink,
-    orderByMostRecentYear,
+  applyFilters,
+  choosePlatformIcon,
+  createGroupLink,
+  Filters,
+  orderByMostRecentYear,
+  searchGroups,
 } from "utils/groups"
 
-import { AnimatedPoliSearchBar } from "components/Groups/AnimatedPoliSearchBar"
 import { GroupTile } from "components/Groups/GroupTile"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { ModalGroup } from "components/Groups/ModalGroup"
-import { ModalGroupItem } from "components/Groups/ModalGroupItem"
+import { PoliSearchBar } from "components/Home/PoliSearchBar"
 
 const deltaTime = 100 //ms
 let searchTimeout: NodeJS.Timeout
 
 export const Groups: MainStackScreen<"Groups"> = () => {
-    const [search, setSearch] = useState("")
+  const [search, setSearch] = useState("")
 
-    const [filters, setFilters] = useState<Filters>({})
+  const [filters, setFilters] = useState<Filters>({})
 
-    const [groups, setGroups] = useState<Group[]>([])
+  const [groups, setGroups] = useState<Group[]>([])
 
-    const [isModalShowing, setIsModalShowing] = useState(false)
+  const [filteredGroups, setFilteredGroups] = useState<Group[]>([])
 
-    const [modalGroup, setModalGroup] = useState<Group | undefined>(undefined)
+  const [searchableGroups, setSearchableGroups] = useState<Group[]>([])
 
-    //tracking first render
-    const isMounted = useMounted()
+  const [isModalShowing, setIsModalShowing] = useState(false)
 
-    /**
-     * Api search request.
-     */
-    const searchGroups = async () => {
-        if (isMounted) {
-            if (search.length < 3) {
-                setGroups([])
-                return
-            }
-            try {
-                //update last time search
-                const response = await api.groups.get(
-                    {
-                        name: search.trimEnd(),
-                        year: filters.year,
-                        platform: filters.platform,
-                        type: filters.type,
-                        degree: filters.course,
-                    },
-                    { maxRetries: 1, retryType: RetryType.RETRY_N_TIMES }
-                )
-                setGroups(response)
+  const [modalGroup, setModalGroup] = useState<Group | undefined>(undefined)
 
-                //reset need searching for next render
-            } catch (error) {
-                console.log(error)
-            }
-        }
+  //tracking first render
+  const isMounted = useMounted()
+
+  const getGroups = async () => {
+    try {
+      const res = await api.groups.getFromGithub()
+      setGroups(res)
+    } catch (err) {
+      console.log(err)
     }
+  }
 
-    useEffect(() => {
-        clearTimeout(searchTimeout)
-        searchTimeout = setTimeout(() => {
-            void searchGroups()
-        }, deltaTime)
-    }, [search])
+  //Request groups from Github
+  useEffect(() => {
+    void getGroups()
+  }, [])
 
-    //if filters are applied after search, search again
-    useEffect(() => {
-        if (isMounted && groups) void searchGroups()
-    }, [filters])
+  //Apply filters
+  useEffect(() => {
+    if (isMounted && groups) {
+      const newGroups = applyFilters(groups, filters)
+      setFilteredGroups(newGroups)
+    }
+  }, [filters, groups])
 
-    const orderedGroups =
-        filters.year === undefined ? orderByMostRecentYear(groups) : groups
+  //Search among filtered groups
+  useEffect(() => {
+    clearTimeout(searchTimeout)
+    searchTimeout = setTimeout(() => {
+      if (search.trimEnd().length > 2) {
+        const newGroups = searchGroups(filteredGroups, search)
+        setSearchableGroups(newGroups)
+      } else {
+        setSearchableGroups([])
+      }
+    }, deltaTime)
+  }, [search, filteredGroups])
 
-    return (
-        <PageWrapper>
-            <View style={{ paddingHorizontal: 28, paddingTop: 56 }}>
-                <Title>Gruppi Corsi</Title>
-                <AnimatedPoliSearchBar
-                    onSearch={val => setSearch(val)}
-                    style={{ marginTop: 36, marginBottom: 22 }}
-                />
-                <Filters
-                    onFilterChange={filters => setFilters(filters)}
-                    filters={filters}
-                />
-            </View>
-            <FlatList
-                style={{
-                    flex: 1,
-                    marginTop: 16,
-                    marginBottom: 93,
-                    paddingHorizontal: 8,
-                }}
-                contentContainerStyle={{
-                    paddingBottom: 20,
-                }}
-                data={orderedGroups}
-                renderItem={({ item }) => (
-                    <GroupTile
-                        key={"__search_group_tile_" + item.id}
-                        text={item.class}
-                        members={item.members}
-                        onClick={() => {
-                            setModalGroup(item)
-                            setIsModalShowing(true)
-                        }}
-                        icon={choosePlatformIcon(item.platform)}
-                    />
-                )}
-            />
-            <ModalGroup
-                group={modalGroup}
-                isShowing={isModalShowing}
-                onClose={() => setIsModalShowing(false)}
-                onJoin={async (group?: Group) => {
-                    if (!group?.link_id) {
-                        return
-                    }
+  const orderedGroups =
+    filters.year === undefined
+      ? orderByMostRecentYear(searchableGroups)
+      : searchableGroups
 
-                    const link = createGroupLink(group.link_id, group.platform)
-                    // Checking if the link is supported for links with custom URL scheme.
-                    const supported = await Linking.canOpenURL(link)
+  return (
+    <PageWrapper>
+      <View style={{ paddingHorizontal: 28, paddingTop: 56 }}>
+        <Title>Gruppi Corsi</Title>
+        <View style={{ marginTop: 36, marginBottom: 22 }}>
+          <PoliSearchBar
+            onChange={val => {
+              setSearch(val)
+            }}
+            style={{ marginTop: 0, marginBottom: 0 }}
+          />
+        </View>
+        <FiltersList
+          onFilterChange={filters => setFilters(filters)}
+          filters={filters}
+        />
+      </View>
+      <FlatList
+        style={{
+          flex: 1,
+          marginTop: 16,
+          marginBottom: 93,
+          paddingHorizontal: 8,
+        }}
+        contentContainerStyle={{
+          paddingBottom: 20,
+        }}
+        data={orderedGroups}
+        renderItem={({ item }) => (
+          <GroupTile
+            key={"__search_group_tile_" + item.id}
+            text={item.class ?? "No Name"}
+            members={item.members}
+            onClick={() => {
+              setModalGroup(item)
+              setIsModalShowing(true)
+            }}
+            icon={choosePlatformIcon(item.platform)}
+          />
+        )}
+      />
+      {modalGroup && (
+        <ModalGroup
+          group={modalGroup}
+          isShowing={isModalShowing}
+          onClose={() => setIsModalShowing(false)}
+          onJoin={async (group?: Group) => {
+            if (!group?.id_link) {
+              return
+            }
 
-                    if (supported) {
-                        // Opening the link with some app
-                        await Linking.openURL(link)
-                    }
-                }}
-            >
-                <ModalGroupItem group={modalGroup} />
-            </ModalGroup>
-        </PageWrapper>
-    )
+            const link = createGroupLink(group.id_link, group.platform)
+            // Checking if the link is supported for links with custom URL scheme.
+            const supported = await Linking.canOpenURL(link)
+
+            if (supported) {
+              // Opening the link with some app
+              await Linking.openURL(link)
+            }
+          }}
+        />
+      )}
+    </PageWrapper>
+  )
 }

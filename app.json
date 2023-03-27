@@ -20,7 +20,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "org.polinetwork.polifemo"
     },
     "android": {
       "adaptiveIcon": {
