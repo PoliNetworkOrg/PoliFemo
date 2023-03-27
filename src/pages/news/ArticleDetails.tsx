@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { useState } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { Image, Linking } from "react-native"
@@ -21,66 +20,63 @@ export const Article: MainStackScreen<"Article"> = props => {
     console.log(error)
   }
 
-    const [isModalVisible, setIsModalVisible] = useState(false)
+  const [isModalVisible, setIsModalVisible] = useState(false)
 
-    const [imageSources, setImageSources] = useState<string[]>([])
+  const [imageSources, setImageSources] = useState<string[]>([])
 
-    const [activeIndex, setActiveIndex] = useState(0)
+  const [activeIndex, setActiveIndex] = useState(0)
 
-    return (
-        <ScrollPage
-            navbarOptions={{ elevated: true }}
-            title={article.title}
-            subtitle={article.subtitle}
-            backdropElement={
-                article.image ? (
-                    <Image
-                        source={{
-                            uri: article.image,
-                        }}
-                        style={{
-                            width: "100%",
-                            height: "100%",
-                        }}
-                    />
-                ) : undefined
+  return (
+    <ScrollPage
+      navbarOptions={{ elevated: true }}
+      title={article.title}
+      subtitle={article.subtitle}
+      backdropElement={
+        article.image ? (
+          <Image
+            source={{
+              uri: article.image,
+            }}
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        ) : undefined
+      }
+    >
+      <WebView
+        onMessage={event => {
+          try {
+            const message = JSON.parse(event.nativeEvent.data) as {
+              type: string
+              data: any
             }
-        >
-            <WebView
-                onMessage={event => {
-                    try {
-                        const message = JSON.parse(event.nativeEvent.data) as {
-                            type: string
-                            data: any
-                        }
-                        if (
-                            message.type === "height" &&
-                            typeof message.data === "number"
-                        ) {
-                            setWebHeight(message.data)
-                        } else if (
-                            message.type === "imageSources" &&
-                            Array.isArray(message.data) &&
-                            message.data.every(item => typeof item === "string")
-                        ) {
-                            setImageSources(message.data)
-                        } else if (
-                            message.type === "imageClick" &&
-                            typeof message.data === "number"
-                        ) {
-                            setActiveIndex(message.data)
-                            setIsModalVisible(true)
-                        }
-                    } catch (err) {
-                        console.log(err)
-                    }
-                }}
-                /* Questo dovrebbe reindirizzare i link nel browser,
-                stoppando la webview. Apparentemente non funziona col mio
-                android, nel senso che non viene chiamata (comunque 
-                il problema dei reindirizzamenti dentro la webview non
-                si presenta sul mio telefono). Da testare su iOS e altri
-                Android.  */
+            if (message.type === "height" && typeof message.data === "number") {
+              setWebHeight(message.data)
+            } else if (
+              message.type === "imageSources" &&
+              Array.isArray(message.data) &&
+              message.data.every(item => typeof item === "string")
+            ) {
+              setImageSources(message.data)
+            } else if (
+              message.type === "imageClick" &&
+              typeof message.data === "number"
+            ) {
+              setActiveIndex(message.data)
+              setIsModalVisible(true)
+            }
+          } catch (err) {
+            console.log(err)
+          }
+        }}
+        /* Questo dovrebbe reindirizzare i link nel browser,
+           stoppando la webview. Apparentemente non funziona col mio
+           android, nel senso che non viene chiamata (comunque 
+           il problema dei reindirizzamenti dentro la webview non
+           si presenta sul mio telefono). Da testare su iOS e altri
+           Android.  */
 
         style={{
           backgroundColor: "transparent",
@@ -91,19 +87,19 @@ export const Article: MainStackScreen<"Article"> = props => {
             return false
           }
 
-                    return true
-                }}
-                javaScriptEnabled={true}
-                injectedJavaScript={webViewScript}
-                containerStyle={{ height: webHeight, marginBottom: 120 }}
-                showsVerticalScrollIndicator={false}
-                setBuiltInZoomControls={false}
-                nestedScrollEnabled={false}
-                scrollEnabled={false}
-                androidHardwareAccelerationDisabled={true}
-                originWhitelist={["*"]}
-                source={{
-                    html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+          return true
+        }}
+        javaScriptEnabled={true}
+        injectedJavaScript={webViewScript}
+        containerStyle={{ height: webHeight, marginBottom: 120 }}
+        showsVerticalScrollIndicator={false}
+        setBuiltInZoomControls={false}
+        nestedScrollEnabled={false}
+        scrollEnabled={false}
+        androidHardwareAccelerationDisabled={true}
+        originWhitelist={["*"]}
+        source={{
+          html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"> 
                     <style type="text/css">
                     @font-face {
                         font-family: "Roboto";
@@ -138,20 +134,20 @@ export const Article: MainStackScreen<"Article"> = props => {
                         display: block; max-width: 100%; height: auto;
                     }
                   </style></head><body><div>${html
-                      .map(el => `<p>${el}<p/>`)
-                      .join("")}
+                    .map(el => `<p>${el}<p/>`)
+                    .join("")}
                     <div/></body></html>`,
-                    baseUrl: "",
-                }}
-            />
-            <ImageSlider
-                activeIndex={activeIndex}
-                imageSources={imageSources}
-                isVisible={isModalVisible}
-                onClose={() => setIsModalVisible(false)}
-            />
-        </ScrollPage>
-    )
+          baseUrl: "",
+        }}
+      />
+      <ImageSlider
+        activeIndex={activeIndex}
+        imageSources={imageSources}
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+      />
+    </ScrollPage>
+  )
 }
 
 //used to set automatic heigth in webview

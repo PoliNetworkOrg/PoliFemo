@@ -1,23 +1,22 @@
-import React, { FC, useEffect, useState } from "react"
-import { View, Modal, Pressable, Dimensions } from "react-native"
+import { FC, useEffect, useState } from "react"
+import { View, Pressable, Dimensions, Image, StyleSheet } from "react-native"
 import { usePalette } from "utils/colors"
-import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
-import { deleteSvg as icon } from "assets/modal"
-import { NavBar } from "components/NavBar"
+import deleteSvg from "assets/modal/delete.svg"
 import { ZoomableImage } from "./ZoomableImage"
-import { useNavigation } from "navigation/NavigationTypes"
 import { Easing, useSharedValue, withTiming } from "react-native-reanimated"
 import arrow_right from "assets/articles/arrow_right.svg"
 import arrow_left from "assets/articles/arrow_left.svg"
-import { SliderFluid } from "./SliderFluid"
 import { BodyText } from "components/Text"
 import { useMounted } from "utils/useMounted"
-import { wait } from "utils/functions"
+import { Icon } from "components/Icon"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
+import { Portal } from "react-native-portalize"
+import _Modal from "react-native-modal"
 export interface ImageSliderProps {
-    imageSources: string[]
-    activeIndex: number
-    onClose: () => void
-    isVisible: boolean
+  imageSources: string[]
+  activeIndex: number
+  onClose: () => void
+  isVisible: boolean
 }
 
 /**
@@ -25,226 +24,198 @@ export interface ImageSliderProps {
  *
  */
 export const ImageSlider: FC<ImageSliderProps> = props => {
-    const { modalBarrier } = usePalette()
+  const { modalBarrier } = usePalette()
 
-    const isMounted = useMounted()
+  const isMounted = useMounted()
 
-    const screenWidth = Dimensions.get("screen").width
+  const fullWidth = Dimensions.get("window").width
 
-    const { navigate } = useNavigation()
+  const fullHeight = Dimensions.get("window").height
 
-    const deleteSvg = useSVG(icon.svg)
-    const arrowRightSvg = useSVG(arrow_right)
-    const arrowLeftSvg = useSVG(arrow_left)
+  const [imageIndex, setImageIndex] = useState(props.activeIndex)
 
-    const [imageIndex, setImageIndex] = useState(props.activeIndex)
+  useEffect(() => {
+    if (isMounted) {
+      setImageIndex(props.activeIndex)
 
-    useEffect(() => {
-        if (isMounted) {
-            setImageIndex(props.activeIndex)
-        }
-    }, [props.activeIndex])
-    const source = props.imageSources[imageIndex]
+      if (props.imageSources.length > 0) {
+        setSource(props.imageSources[props.activeIndex])
+      }
+    }
+  }, [props.activeIndex, props.imageSources])
 
-    const scale = useSharedValue(1)
-    const savedScale = useSharedValue(1)
-    const position = useSharedValue(0)
-    const lastPosition = useSharedValue(0)
+  const [height, setHeight] = useState(0)
 
-    const scaleFactorArrow = 1.5
-    const scaleFactorX = 1.2
+  const [source, setSource] = useState<string | undefined>(undefined)
 
-    return (
-        <Modal
-            onRequestClose={props.onClose}
-            statusBarTranslucent={true}
-            visible={props.isVisible}
-            animationType="fade"
-            transparent={true}
-        >
+  useEffect(() => {
+    if (props.imageSources.length > 0 && source) {
+      Image.getSize(source, (width, height) => {
+        setHeight((height * fullWidth) / width)
+      })
+    }
+  }, [source])
+
+  const scale = useSharedValue(1)
+  const savedScale = useSharedValue(1)
+  const position = useSharedValue(0)
+  const lastPosition = useSharedValue(0)
+
+  return (
+    <Portal>
+      <_Modal
+        needsOffscreenAlphaCompositing={true}
+        renderToHardwareTextureAndroid={true}
+        onBackButtonPress={props.onClose}
+        statusBarTranslucent={true}
+        isVisible={props.isVisible}
+        animationIn={"fadeIn"}
+        animationOut={"fadeOut"}
+        backdropColor={modalBarrier}
+        style={{ margin: 0 }}
+        deviceHeight={Dimensions.get("screen").height}
+        coverScreen={false}
+        animationInTiming={200}
+        animationOutTiming={200}
+        hasBackdrop={false}
+        useNativeDriverForBackdrop={true}
+        useNativeDriver={true}
+      >
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <Pressable
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={e => {
+              //close if tap is out of image
+              const imageHeight = height * scale.value
+              const y = e.nativeEvent.pageY
+              const borderLimitUp = (fullHeight - imageHeight) / 2
+              const borderLimitDown = borderLimitUp + imageHeight
+              if (y < borderLimitUp || y > borderLimitDown) {
+                props.onClose()
+              }
+            }}
+          >
             <Pressable
-                style={{
-                    alignSelf: "flex-end",
-                    position: "absolute",
-                    zIndex: 2,
-                    top: 48,
-                    left: 32,
-                }}
-                onPress={() => props.onClose()}
+              style={{
+                alignSelf: "flex-end",
+                position: "absolute",
+                zIndex: 2,
+                top: 100,
+                right: 22,
+              }}
+              onPress={() => props.onClose()}
             >
-                <View
-                    style={{
-                        width: 30 * scaleFactorX,
-                        height: 30 * scaleFactorX,
-                        backgroundColor: "#ffffff",
-                        borderRadius: 15 * scaleFactorX,
-                        marginBottom: 8,
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <Canvas
-                        style={{
-                            width: icon.width * scaleFactorX,
-                            height: icon.heigth * scaleFactorX,
-                        }}
-                    >
-                        {deleteSvg && (
-                            <ImageSVG
-                                svg={deleteSvg}
-                                x={0}
-                                y={0}
-                                width={icon.width * scaleFactorX}
-                                height={icon.heigth * scaleFactorX}
-                                transform={[{ scale: scaleFactorX }]}
-                            />
-                        )}
-                    </Canvas>
-                </View>
+              <View
+                style={{
+                  width: 28,
+                  height: 28,
+                  backgroundColor: "#ffffff",
+                  borderRadius: 14,
+                  marginBottom: 8,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Icon source={deleteSvg} />
+              </View>
             </Pressable>
             <View
-                style={{
-                    position: "absolute",
-                    width: screenWidth,
-                    bottom: 110,
-                    zIndex: 2,
-                    alignItems: "center",
-                }}
+              style={{
+                flex: 1,
+                position: "absolute",
+                width: fullWidth,
+                zIndex: 2,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                paddingHorizontal: 16,
+              }}
             >
-                <View
-                    style={{
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <Pressable
-                        onPress={() => {
-                            scale.value = withTiming(1, { easing: Easing.ease })
-                            savedScale.value = 1
-                            lastPosition.value = 0
-                            position.value = withTiming(0, {
-                                easing: Easing.ease,
-                            })
-                            setImageIndex(
-                                (imageIndex - 1 + props.imageSources.length) %
-                                    props.imageSources.length
-                            )
-                        }}
-                    >
-                        <View
-                            style={{
-                                width: 24 * scaleFactorArrow,
-                                height: 24 * scaleFactorArrow,
-                                backgroundColor: "#ffffff",
-                                borderRadius: 15 * scaleFactorArrow,
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                        >
-                            <Canvas
-                                style={{
-                                    width: 24 * scaleFactorArrow,
-                                    height: 24 * scaleFactorArrow,
-                                }}
-                            >
-                                {arrowLeftSvg && (
-                                    <ImageSVG
-                                        svg={arrowLeftSvg}
-                                        x={0}
-                                        y={0}
-                                        width={24 * scaleFactorArrow}
-                                        height={24 * scaleFactorArrow}
-                                        transform={[
-                                            { scale: scaleFactorArrow },
-                                        ]}
-                                    />
-                                )}
-                            </Canvas>
-                        </View>
-                    </Pressable>
-                    <SliderFluid
-                        currentPos={imageIndex}
-                        maxLen={props.imageSources.length}
-                    />
-                    <Pressable
-                        style={{}}
-                        onPress={() => {
-                            scale.value = withTiming(1, { easing: Easing.ease })
-                            savedScale.value = 1
-                            lastPosition.value = 0
-                            position.value = withTiming(0, {
-                                easing: Easing.ease,
-                            })
-                            setImageIndex(
-                                (imageIndex + 1) % props.imageSources.length
-                            )
-                        }}
-                    >
-                        <View
-                            style={{
-                                width: 24 * scaleFactorArrow,
-                                height: 24 * scaleFactorArrow,
-                                backgroundColor: "#ffffff",
-                                borderRadius: 15 * scaleFactorArrow,
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                        >
-                            <Canvas
-                                style={{
-                                    width: 24 * scaleFactorArrow,
-                                    height: 24 * scaleFactorArrow,
-                                }}
-                            >
-                                {arrowRightSvg && (
-                                    <ImageSVG
-                                        svg={arrowRightSvg}
-                                        x={0}
-                                        y={0}
-                                        width={24 * scaleFactorArrow}
-                                        height={24 * scaleFactorArrow}
-                                        transform={[
-                                            { scale: scaleFactorArrow },
-                                        ]}
-                                    />
-                                )}
-                            </Canvas>
-                        </View>
-                    </Pressable>
+              <Pressable
+                onPress={() => {
+                  scale.value = withTiming(1, { easing: Easing.ease })
+                  savedScale.value = 1
+                  lastPosition.value = 0
+                  position.value = withTiming(0, {
+                    easing: Easing.ease,
+                  })
+                  setImageIndex(
+                    (imageIndex - 1 + props.imageSources.length) %
+                      props.imageSources.length
+                  )
+                }}
+              >
+                <View style={styles.arrow}>
+                  <Icon source={arrow_left} />
                 </View>
-                <BodyText
-                    style={{
-                        color: "#fff",
-                        fontSize: 20,
-                        fontWeight: "200",
-                    }}
-                >
-                    {imageIndex + 1} / {props.imageSources.length}
-                </BodyText>
+              </Pressable>
+              <Pressable
+                style={{}}
+                onPress={() => {
+                  scale.value = withTiming(1, { easing: Easing.ease })
+                  savedScale.value = 1
+                  lastPosition.value = 0
+                  position.value = withTiming(0, {
+                    easing: Easing.ease,
+                  })
+                  setImageIndex((imageIndex + 1) % props.imageSources.length)
+                }}
+              >
+                <View style={styles.arrow}>
+                  <Icon source={arrow_right} />
+                </View>
+              </Pressable>
             </View>
-            <ZoomableImage
+            <View
+              style={{
+                position: "absolute",
+                width: fullWidth,
+                bottom: 110,
+                zIndex: 2,
+                alignItems: "center",
+              }}
+            >
+              <BodyText
+                style={{
+                  color: "#fff",
+                  fontSize: 16,
+                  fontWeight: "700",
+                }}
+              >
+                {imageIndex + 1} / {props.imageSources.length}
+              </BodyText>
+            </View>
+            {source && (
+              <ZoomableImage
                 uri={source}
+                height={height}
                 style={{ backgroundColor: modalBarrier }}
                 position={position}
                 lastPosition={lastPosition}
                 scale={scale}
                 savedScale={savedScale}
-            />
-            <NavBar
-                overrideBackBehavior={async () => {
-                    props.onClose()
-                    await wait(100)
-                    position.value = 0
-                    lastPosition.value = 0
-                    scale.value = 1
-                    savedScale.value = 1
-                }}
-                overrideHomeBehavior={() => {
-                    props.onClose()
-                    navigate("Home")
-                }}
-            />
-        </Modal>
-    )
+              />
+            )}
+          </Pressable>
+        </GestureHandlerRootView>
+      </_Modal>
+    </Portal>
+  )
 }
+
+const arrowDiameter = 24
+
+const styles = StyleSheet.create({
+  arrow: {
+    width: arrowDiameter,
+    height: arrowDiameter,
+    backgroundColor: "#ffffff",
+    borderRadius: arrowDiameter / 2,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+})
