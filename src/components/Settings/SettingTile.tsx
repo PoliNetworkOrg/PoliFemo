@@ -11,7 +11,7 @@ import { Icon } from "components/Icon"
  * interface representing a setting's UI fields
  */
 export interface SettingOptions {
-  title: string
+  title?: string
   subtitle?: string
   icon?: number
   callback?: () => void

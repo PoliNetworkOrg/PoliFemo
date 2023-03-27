@@ -78,13 +78,15 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
         navigate("Privacy")
       },
     },
-    {
-      title: "Disconnetti",
-      icon: settingsIcons.disconnect,
-      callback: async () => {
-        await client.destroyTokens()
-      },
-    },
+    loggedIn
+      ? {
+          title: "Disconnetti",
+          icon: settingsIcons.disconnect,
+          callback: async () => {
+            await client.destroyTokens()
+          },
+        }
+      : {},
   ]
 
   return (
