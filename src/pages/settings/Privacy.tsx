@@ -28,18 +28,6 @@ const autodeleteTimes: { value: number; label: string }[] = [
   { value: 1825, label: "5 anni" },
 ]
 
-const exportDesc =
-  "Scarica una copia in formato JSON di tutti i dati che PoliNetwork ha in suo possesso in modo semplice e sicuro."
-
-const autodeleteDesc =
-  "Dopo un periodo di inattività, i tuoi dati verranno cancellati automaticamente. Il periodo predefinito è 2 anni senza accesso, puoi modificarlo da un minimo di 30 giorni a un massimo di 5 anni."
-
-const deleteAlertMessage = `Questa azione è irreversibile
-
-Tutti i tuoi dati verranno eliminati e non potrai più accedere a PoliNetwork con questo account.
-
-Sei sicuro di voler procedere?`
-
 /**
  * Privacy Page
  */
@@ -90,8 +78,8 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
           <SettingTile
             setting={{
               loading: loadingExport,
-              title: "Esporta dati",
-              subtitle: exportDesc,
+              title: t("settings_export"),
+              subtitle: "" + t("settings_exportSubtitle"),
               callback: async () => {
                 setLoadingExport(true)
                 try {
@@ -104,7 +92,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
                   )
                   void Sharing.shareAsync(uri)
                 } catch (e) {
-                  Alert.alert("Errore durante l'esportazione dei dati", e + "")
+                  Alert.alert(t("settings_export_error"), e + "")
                   console.error(e)
                 } finally {
                   setLoadingExport(false)
@@ -114,42 +102,38 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
           />
           <SettingTile
             setting={{
-              title: "Autocancellazione dei dati per inattività",
-              subtitle: autodeleteDesc,
+              title: t("settings_autoDelete"),
+              subtitle: "" + t("settings_autoDeleteSubTitle"),
               callback: () => setShowingAutodeleteModal(true),
             }}
           />
           <SettingTile
             setting={{
-              title: "Cancella account",
-              subtitle:
-                "Cancella permanentemente i dati relativi a questo account ed effettua il logout",
+              title: t("settings_delete"),
+              subtitle: "" + t("settings_deleteSubTitle"),
               callback: () => {
                 Alert.alert(
-                  "Sicuro di voler cancellare l'account?",
-                  deleteAlertMessage,
+                  t("settings_delete_question"),
+                  "" + t("settings_delete_alert_message"),
                   [
                     {
-                      text: "Annulla",
+                      text: "" + t("cancel", { ns: "common" }),
                       style: "cancel",
                     },
                     {
-                      text: "Elimina Account",
+                      text: "" + t("settings_delete"),
                       style: "destructive",
                       onPress: async () => {
                         try {
                           await api.user.deletePoliNetworkMe()
                           Alert.alert(
-                            "Account cancellato",
-                            "Il tuo account è stato cancellato con successo"
+                            t("settings_deleted"),
+                            "" + t("settings_deleted_message")
                           )
                           void client.destroyTokens()
                           navigate("Home")
                         } catch (e) {
-                          Alert.alert(
-                            "Errore durante la cancellazione dell'account",
-                            e + ""
-                          )
+                          Alert.alert(t("settings_deleted_error"), e + "")
                           console.error(e)
                         }
                       },
@@ -159,18 +143,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
               },
             }}
           />
-          <Description>
-            La possibilità di cancellare i tuoi dati in modo semplice è un
-            aspetto cruciale per garantire la tua privacy e la tua sicurezza
-            nella nostra app. Questa opzione ti permette di rimuovere in modo
-            permanente tutte le informazioni che hai fornito a PoliNetwork.
-            {"\n"}È sempre possibile verificare i dati collegati al tuo account
-            salvati da noi tramite la sezione &quot;Esporta&quot; delle
-            impostazioni privacy.{"\n"}Una volta che i dati sono stati
-            cancellati, non saranno più disponibili o recuperabili. Questa
-            opzione fornisce agli utenti il pieno controllo sui propri dati. La
-            cancellazione dei dati può essere eseguita in qualsiasi momento.
-          </Description>
+          <Description>{t("settings_delete_message")}</Description>
         </>
       )}
       <Divider />
@@ -190,8 +163,8 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
         .
       </Description>
       <ModalPicker
-        title="Cancellazione dei dati per inattività"
-        subTitle="Scegli un periodo di inattività dopo il quale i tuoi dati verranno eliminati per la tua privacy."
+        title={t("settings_autoDelete_modalTitle")}
+        subTitle={"" + t("settings_autoDelete_modalSubTitle")}
         isShowing={showingAutodeleteModal}
         onClose={() => setShowingAutodeleteModal(false)}
         elements={autodeleteTimes}

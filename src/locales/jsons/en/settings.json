@@ -29,6 +29,27 @@
 
     "settings_privacy_message": "PoliNetwork recognizes privacy as a fundamental value and supports users' right to have full control of their data. Although the app is designed to store the minimum possible amount of data, and that it is not possible for us to trace the identity of a natural person starting from the data in our possession, PoliNetwork still provides the tools for good privacy management, such as deletion and export of data.\n",
     "settings_privacy_questions": "If you have any questions or concerns about privacy, please read the Privacy Policy or contact ",
+    
+    "settings_export": "Export data",
+    "settings_export_error": "Error exporting data",
+    "settings_exportSubtitle": "Download a copy in JSON format of all the data that PoliNetwork has in its possession in a simple and secure way.",
+
+    "settings_autoDelete": "Self-deletion of data due to inactivity",
+    "settings_autoDeleteSubTitle": "After a period of inactivity, your data will be automatically deleted. The default period is 2 years without access, you can change it from a minimum of 30 days to a maximum of 5 years.",
+    "settings_autoDelete_modalTitle": "Deletion of data due to inactivity",
+    "settings_autoDelete_modalSubTitle": "Choose a period of inactivity after which your data will be deleted for your privacy.",
+    
+    "settings_delete": "Delete account",
+    "settings_deleteSubTitle": "Permanently delete the data related to this account and log out.",
+    "settings_delete_question": "Are you sure you want to delete your account?",
+    "settings_delete_alert_message": "This action is irreversible\n\nAll your data will be deleted and you will no longer be able to access PoliNetwork with this account\n\nAre you sure you want to proceed?",
+    
+    "settings_deleted": "Account deleted",
+    "settings_deleted_message": "Your account has been deleted successfully",
+    "settings_deleted_error": "Error deleting your account",
+    
+    "settings_delete_message": "The ability to erase your data easily is a crucial aspect of ensuring your privacy and security in our app. This option allows you to permanently remove all the information you have provided to PoliNetwork.\nYou can always verify the data linked to your account saved by us through the \"Export\" section of the privacy settings.\nOnce the data have been deleted, they will no longer be available or recoverable. This option gives users full control over their data. The deletion of data can be done at any time.",
+
     "settings_privacyDisclaimer": "Privacy Disclaimer",
     "settings_privacyDisclaimerSubTitle": "Read our privacy policy",
     "settings_privacyDisclaimer_message": "In PoliNetwork, privacy is a fundamental value, which is why we have designed our app always keeping this aspect in mind. The Privacy Policy is very important for PoliNetwork and provides our users with complete information on our privacy and personal data protection policies. To ensure your privacy, many features of the app can be used even without logging in. For features that require login, we have chosen to use hashing, to protect your data in the best way. We don't know who you are, but we can only authenticate you. You can always check what we know about you using the \"Export\" in the privacy settings.\n\nIf you have any questions or concerns about privacy, please read the Privacy Policy for more information, or write to us at "

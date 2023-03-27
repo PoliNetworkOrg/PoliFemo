@@ -2,6 +2,7 @@ import React, { useEffect } from "react"
 import { Modal } from "components/Modal"
 import { Picker } from "@react-native-picker/picker"
 import { usePalette } from "utils/colors"
+import { useTranslation } from "react-i18next"
 
 interface ModalPickerProps<T> {
   /**
@@ -54,6 +55,8 @@ export function ModalPicker<T>(props: ModalPickerProps<T>) {
     setSelectedValue(props.selectedValue ?? props.elements[0].value)
   }, [props.selectedValue, props.elements])
 
+  const { t } = useTranslation()
+
   return (
     <Modal
       isShowing={props.isShowing}
@@ -63,7 +66,7 @@ export function ModalPicker<T>(props: ModalPickerProps<T>) {
       buttons={[
         {
           light: true,
-          text: "Annulla",
+          text: "" + t("cancel"),
           onPress: () => props.onClose(),
         },
         {
