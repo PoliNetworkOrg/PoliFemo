@@ -10,6 +10,7 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "type-check": "tsc --noEmit",
+    "deploy-config": "node scripts/deploy-config.js",
     "prune-branches": "node scripts/prune-branches.js",
     "generate-licenses": "node scripts/generate-licenses.js"
   },

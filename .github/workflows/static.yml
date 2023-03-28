@@ -48,8 +48,8 @@ jobs:
         run: yarn install --immutable
       - name: Export Expo static files
         run: yarn expo export
-      - name: Copy app.json to build
-        run: cp app.json ./dist
+      - name: Deploy config file
+        run: yarn run deploy-config
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
