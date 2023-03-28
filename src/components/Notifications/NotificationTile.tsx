@@ -12,30 +12,29 @@ import {
   popNotificationFromStorage,
 } from "utils/notifications"
 import deleteSvg from "assets/menu/delete.svg"
+
 export interface NotificationTileProps {
   notification: NotificationStorage
   overrideDividerBehaviour?: boolean
   showRipple?: boolean
   isRead?: boolean
   onPress?: () => void
+  onCancel?: () => void
 }
 
 export const NotificationTile: FC<NotificationTileProps> = props => {
   const { palette, isLight } = usePalette()
 
-  const sender = props.notification.notification.content.data.sender
-  const association = props.notification.notification.content.data.association
-  const object = props.notification.notification.content.data.object
-
-  const linkUrl = props.notification.notification.content.data.linkUrl
-
-  const identifier = props.notification.notification.identifier
-
+  const sender = props.notification.content.data.sender
+  const association = props.notification.content.data.association
+  const object = props.notification.content.data.object
+  const linkUrl = props.notification.content.data.linkUrl
+  const identifier = props.notification.identifier
   const isRead = props.isRead ?? props.notification.isRead
 
   return (
     <TouchableRipple onClick={props.onPress} showRipple={props.showRipple}>
-      <SharedElement id={props.notification.notification.identifier}>
+      <SharedElement id={props.notification.identifier}>
         <View style={{ paddingVertical: 10, paddingHorizontal: 28 }}>
           <View
             style={{
@@ -93,6 +92,9 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
                   notificationEventEmitter.emit("notification-remove")
                   if (!isRead) {
                     notificationEventEmitter.emit("badge-change")
+                  }
+                  if (props.onCancel) {
+                    props.onCancel()
                   }
                 }}
               >

@@ -35,8 +35,7 @@ export interface NotificationInfo {
 /**
  * interface for notifications stored in the AsyncStorage
  */
-export interface NotificationStorage {
-  notification: NotificationInfo
+export type NotificationStorage = {
   /**
    * true if User checked the notification as seen in the Notifications Page (?)
    */
@@ -51,7 +50,7 @@ export interface NotificationStorage {
    * appear. undefined if notification wasn't scheduled by the device.
    */
   isRelevantAt?: string
-}
+} & NotificationInfo
 
 // Extend NotificationContentInput to explicitly define interesting props in the data field.
 interface NotificationCustomContentInput extends NotificationContentInput {
@@ -236,10 +235,8 @@ export const useNotificationsHandlers = () => {
           const notificationList = await getAllNotificationsFromStorage()
           if (notificationList) {
             notificationList.push({
-              notification: {
-                content: notification.request.content,
-                identifier: notification.request.identifier,
-              },
+              content: notification.request.content,
+              identifier: notification.request.identifier,
               isRead: false,
               hasBeenReceived: true,
             })
@@ -287,7 +284,7 @@ export const popNotificationFromStorage = async (identifier: string) => {
 
     let found = false
     for (let i = 0; i < updatedList.length && !found; i++) {
-      if (updatedList[i].notification.identifier === identifier) {
+      if (updatedList[i].identifier === identifier) {
         updatedList.splice(i, 1)
         found = true
       }
@@ -317,8 +314,7 @@ export const getAllNotificationsFromStorage = async (
       for (let i = 0; i < notificationsList.length; i++) {
         const date = notificationsList[i].isRelevantAt
         if (
-          notificationsList[i].notification.content.data.categoryId ===
-            categoryId &&
+          notificationsList[i].content.data.categoryId === categoryId &&
           ((date && new Date(date).getTime() < new Date().getTime()) || !date)
         ) {
           categoryList.push(notificationsList[i])
@@ -339,7 +335,7 @@ export const setNotificationAsReadStorage = async (identifier: string) => {
   const notifications = await getAllNotificationsFromStorage()
   let found = false
   for (let i = 0; i < notifications.length && !found; i++) {
-    if (notifications[i].notification.identifier === identifier) {
+    if (notifications[i].identifier === identifier) {
       notifications[i].isRead = true
       found = true
     }
@@ -377,7 +373,8 @@ export const setNotificationInStorage = async (
     const notifications = await getAllNotificationsFromStorage()
 
     notifications?.push({
-      notification: notification,
+      content: notification.content,
+      identifier: notification.identifier,
       isRead: false,
       hasBeenReceived: false,
       isRelevantAt: date?.toISOString() ?? new Date().toISOString(),
@@ -412,8 +409,7 @@ export const getBadgeAllUnreadNotifications = async (
             new Date(isRelevantAt).getTime() < new Date().getTime()) &&
           (!categoryId ||
             (categoryId &&
-              categoryId ===
-                notifications[i].notification.content.data.categoryId))
+              categoryId === notifications[i].content.data.categoryId))
         ) {
           count++
         }

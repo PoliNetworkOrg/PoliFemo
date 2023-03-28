@@ -92,14 +92,19 @@ export const MainStack: FC = () => {
             }
           },
         }}
-        sharedElements={(route, otherRoute) => {
+        sharedElements={(route, otherRoute, showing) => {
           const { notification } = route.params
 
           if (otherRoute.name === "Home") {
-            return []
+            return undefined
           }
+
+          if (otherRoute.name === "NotificationsCategory" && !showing) {
+            return undefined
+          }
+
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
-          return [notification.notification.identifier]
+          return [notification.identifier]
         }}
       />
     </MainStackNavigator.Navigator>

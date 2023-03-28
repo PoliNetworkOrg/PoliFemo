@@ -1,6 +1,7 @@
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useNavigationState } from "@react-navigation/native"
 import React, { FC, useEffect } from "react"
-import { Dimensions, View } from "react-native"
+import { Dimensions, Pressable, View } from "react-native"
 import { newsSheetEventEmitter } from "utils/events"
 import { useNotificationBadge } from "utils/notifications"
 import { LittleTitle } from "./LittleTitle"
@@ -61,7 +62,6 @@ export const Tray: FC<{
           console.log(notif)
         }}
       /> */}
-      {/* 
       <Pressable
         style={{
           width: 20,
@@ -73,6 +73,8 @@ export const Tray: FC<{
           void AsyncStorage.setItem("notifications", JSON.stringify([]))
         }}
       />
+      {/* 
+      
       <Pressable
         style={{
           width: 20,

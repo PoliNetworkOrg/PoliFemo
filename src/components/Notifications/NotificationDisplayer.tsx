@@ -1,7 +1,7 @@
 import { BodyText } from "components/Text"
+import { useNavigation } from "navigation/NavigationTypes"
 import { FC } from "react"
 import { View } from "react-native"
-import { SharedElement } from "react-navigation-shared-element"
 import { usePalette } from "utils/colors"
 import { NotificationStorage } from "utils/notifications"
 import { NotificationTile } from "./NotificationTile"
@@ -13,18 +13,20 @@ export interface NotificationDisplayerProps {
 export const NotificationDisplayer: FC<NotificationDisplayerProps> = props => {
   const { palette, isLight } = usePalette()
 
-  const content = props.notification.notification.content.data.content
+  const content = props.notification.content.data.content
+
+  const navigation = useNavigation()
+
   return (
     <View style={{ marginTop: 19, paddingBottom: 40 }}>
       <View>
-        <SharedElement id={props.notification.notification.identifier}>
-          <NotificationTile
-            notification={props.notification}
-            overrideDividerBehaviour={true}
-            showRipple={false}
-            isRead={true}
-          />
-        </SharedElement>
+        <NotificationTile
+          notification={props.notification}
+          overrideDividerBehaviour={true}
+          showRipple={false}
+          isRead={true}
+          onCancel={() => navigation.goBack()}
+        />
         <BodyText
           style={{
             fontSize: 12,
