@@ -31,15 +31,31 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
   const { t } = useTranslation("settings")
 
   const autodeleteTimes: { value: number; label: string }[] = [
-    { value: 30, label: t("dayCount_other", { ns: "common", count: 30 }) },
-    { value: 60, label: t("dayCount_other", { ns: "common", count: 60 }) },
-    { value: 90, label: t("dayCount_other", { ns: "common", count: 90 }) },
-    { value: 180, label: t("monthCount_other", { ns: "common", count: 6 }) },
-    { value: 365, label: t("yearCount_one", { ns: "common", count: 1 }) },
-    { value: 730, label: t("yearCount_other", { ns: "common", count: 2 }) },
-    { value: 1095, label: t("yearCount_other", { ns: "common", count: 3 }) },
-    { value: 1460, label: t("yearCount_other", { ns: "common", count: 4 }) },
-    { value: 1825, label: t("yearCount_other", { ns: "common", count: 5 }) },
+    //non so per quale dannato motivo non mi funzionino i plurali, devo per forza mettere one e other!
+    { value: 30, label: t("day.dayCount_other", { ns: "common", count: 30 }) },
+    { value: 60, label: t("day.dayCount_other", { ns: "common", count: 60 }) },
+    { value: 90, label: t("day.dayCount_other", { ns: "common", count: 90 }) },
+    {
+      value: 180,
+      label: t("month.monthCount_other", { ns: "common", count: 6 }),
+    },
+    { value: 365, label: t("year.yearCount_one", { ns: "common", count: 1 }) },
+    {
+      value: 730,
+      label: t("year.yearCount_other", { ns: "common", count: 2 }),
+    },
+    {
+      value: 1095,
+      label: t("year.yearCount_other", { ns: "common", count: 3 }),
+    },
+    {
+      value: 1460,
+      label: t("year.yearCount_other", { ns: "common", count: 4 }),
+    },
+    {
+      value: 1825,
+      label: t("year.yearCount_other", { ns: "common", count: 5 }),
+    },
   ]
 
   useEffect(() => {

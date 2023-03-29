@@ -12,7 +12,6 @@ import settingsEN from "./jsons/en/settings.json"
 import { getLocales } from "expo-localization"
 
 void i18n.use(initReactI18next).init({
-  debug: true,
   resources: {
     it: {
       common: commonIT,

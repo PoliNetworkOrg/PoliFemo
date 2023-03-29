@@ -27,18 +27,24 @@
     "november": "November",
     "december": "December",
 
-    "year_one": "Year",
-    "month_one": "Month",
-    "day_one": "Day",
-    "year_other": "Years",
-    "month_other": "Months",
-    "day_other": "Days",
-    "yearCount_one": "{{count}} year",
-    "yearCount_other": "{{count}} years",
-    "monthCount_one": "{{count}} month",
-    "monthCount_other": "{{count}} months",
-    "dayCount_one": "{{count}} day",
-    "dayCount_other": "{{count}} days",
+    "year": {
+        "year_one": "Anno",
+        "year_other": "Anni",
+        "yearCount_one": "{{count}} anno",
+        "yearCount_other": "{{count}} anni"
+    },
+    "month": {
+        "month_one": "Mese",
+        "month_other": "Mesi",
+        "monthCount_one": "{{count}} mese",
+        "monthCount_other": "{{count}} mesi"
+    },
+    "day": {
+        "day_one": "Giorno",
+        "day_other": "Giorni",
+        "dayCount_one": "{{count}} giorno",
+        "dayCount_other": "{{count}} giorni"
+    },
 
     "groups_title": "Course Groups",
     "group_year": "Year",
