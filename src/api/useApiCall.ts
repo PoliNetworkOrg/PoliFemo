@@ -1,13 +1,15 @@
-import React, { useCallback } from "react"
+import React from "react"
 import { CancellableApiRequest, RequestOptions } from "./HttpClient"
 
 const controller = new AbortController()
 controller.signal
 
-export type ApiCall<T = Record<string, never>, D = unknown> = (
+export type ApiCall<T = never, D = unknown> = (
   callParams: T,
   options?: RequestOptions
 ) => CancellableApiRequest<D, D>
+
+export type ApiCollection = Record<string, ApiCall>
 
 /**
  * This hook makes an API call stateful, it will return the data, loading state
@@ -42,9 +44,6 @@ export type ApiCall<T = Record<string, never>, D = unknown> = (
  * @returns [data, loading, error, update]
  */
 export function useApiCall<T extends Record<string, unknown>, D>(
-  /**
-   * The API call to be made.
-   */
   apiCall: ApiCall<T, D>,
   params: T,
   deps: React.DependencyList,
@@ -52,7 +51,7 @@ export function useApiCall<T extends Record<string, unknown>, D>(
 ): [D | null, boolean, Error | null, () => void] {
   // This is a hack to force the useEffect to re-run when the update function is called
   const [updater, setUpdater] = React.useState(0)
-  const update = useCallback(() => {
+  const update = React.useCallback(() => {
     setUpdater(updater + 1)
   }, [])
 

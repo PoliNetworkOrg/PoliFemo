@@ -1,4 +1,6 @@
-import { HttpClient, AuthType, RetryType } from "../HttpClient"
+import { mapAxiosRequest } from "api/mapAxiosRequest"
+import { ApiCollection } from "api/useApiCall"
+import { HttpClient, AuthType, RetryType, RequestOptions } from "../HttpClient"
 /**
  * Interface of UI User Object.
  */
@@ -47,71 +49,96 @@ export const user = {
    * Get the user's settings from PoliNetwork
    * @returns Settings of the user
    */
-  async getPoliNetworkSettings() {
-    const response = await client.poliNetworkInstance.get<PoliNetworkSettings>(
-      "/v1/accounts/me/settings",
-      {
-        authType: AuthType.POLINETWORK,
-      }
-    )
-    return response.data
+  getPoliNetworkSettings(
+    _params?: Record<string, never>,
+    options?: RequestOptions
+  ) {
+    const request = client.callPoliNetwork<PoliNetworkSettings>({
+      url: "/v1/accounts/me/settings",
+      method: "GET",
+      authType: AuthType.POLINETWORK,
+      ...options,
+    })
+    return mapAxiosRequest(request, res => res)
   },
 
   /**
    * Update PoliNetwork user settings
    * @param settings new settings to be saved
    */
-  async updatePoliNetworkSettings(settings: Partial<PoliNetworkSettings>) {
-    await client.poliNetworkInstance.post(
-      "/v1/accounts/me/settings",
-      settings,
-      {
-        authType: AuthType.POLINETWORK,
-        retryType: RetryType.NO_RETRY,
-      }
-    )
+  updatePoliNetworkSettings(
+    params: {
+      settings: Partial<PoliNetworkSettings>
+    },
+    options?: RequestOptions
+  ) {
+    const request = client.callPoliNetwork({
+      url: "/v1/accounts/me/settings",
+      method: "POST",
+      data: params.settings,
+      authType: AuthType.POLINETWORK,
+      retryType: RetryType.NO_RETRY,
+      ...options,
+    })
+    return mapAxiosRequest(request, res => res)
   },
 
   /**
    * test PoliNetwork auth call
    */
-  async getPoliNetworkMe() {
-    const response = await client.poliNetworkInstance.get<{
+  getPoliNetworkMe(_params?: Record<string, never>, options?: RequestOptions) {
+    const request = client.callPoliNetwork<{
       id: string
-    }>("/v1/accounts/me", {
+    }>({
+      url: "/v1/accounts/me",
+      method: "GET",
       authType: AuthType.POLINETWORK,
+      ...options,
     })
-    return response.data
+    return mapAxiosRequest(request, res => res)
   },
+
   /**
    * test polimi auth call
    */
-  async getPolimiUserInfo() {
-    const response = await client.polimiInstance.get<PolimiUserData>(
-      "/rest/jaf/internal/user",
-      {
-        authType: AuthType.POLIMI,
-      }
-    )
-    return response.data
+  getPolimiUserInfo(_params?: Record<string, never>, options?: RequestOptions) {
+    const request = client.callPolimi<PolimiUserData>({
+      url: "/rest/jaf/internal/user",
+      method: "GET",
+      authType: AuthType.POLIMI,
+      ...options,
+    })
+    return mapAxiosRequest(request, res => res)
   },
+
   /**
    * Get a file with all of the user's data
    */
-  async exportPoliNetworkMe() {
-    const response = await client.poliNetworkInstance.get<
-      Record<string, unknown>
-    >("/v1/accounts/me/export", {
+  exportPoliNetworkMe(
+    _params?: Record<string, never>,
+    options?: RequestOptions
+  ) {
+    const request = client.callPoliNetwork<Record<string, unknown>>({
+      url: "/v1/accounts/me/export",
+      method: "GET",
       authType: AuthType.POLINETWORK,
+      ...options,
     })
-    return response.data
+    return mapAxiosRequest(request, res => res)
   },
   /**
    * Delete the user's account and data
    */
-  async deletePoliNetworkMe() {
-    await client.poliNetworkInstance.delete("/v1/accounts/me", {
+  deletePoliNetworkMe(
+    _params?: Record<string, never>,
+    options?: RequestOptions
+  ) {
+    const request = client.callPoliNetwork({
+      url: "/v1/accounts/me",
+      method: "DELETE",
       authType: AuthType.POLINETWORK,
+      ...options,
     })
+    return mapAxiosRequest(request, res => res)
   },
-}
+} satisfies ApiCollection

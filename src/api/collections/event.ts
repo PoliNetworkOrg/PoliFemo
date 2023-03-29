@@ -1,3 +1,5 @@
+import { mapAxiosRequest } from "api/mapAxiosRequest"
+import { ApiCollection } from "api/useApiCall"
 import { AuthType, HttpClient, RequestOptions } from "../HttpClient"
 
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -37,18 +39,18 @@ export interface Event {
 const client = HttpClient.getInstance()
 
 export const events = {
-  async getEvents(
-    matricola: string,
-    start_date: string,
-    n_events: number,
+  getEvents(
+    params: { matricola: string; startDate: string; nEvents: number },
     options?: RequestOptions
   ) {
-    const url = "/agenda/api/me/" + matricola + "/events"
-    const response = await client.polimiInstance.get<Event[]>(url, {
-      ...options,
-      params: { start_date, n_events },
+    const url = "/agenda/api/me/" + params.matricola + "/events"
+    const request = client.callPolimi<Event[]>({
+      url,
+      method: "GET",
       authType: AuthType.POLIMI,
+      params: { start_date: params.startDate, n_events: params.nEvents },
+      ...options,
     })
-    return response.data
+    return mapAxiosRequest(request, response => response)
   },
-}
+} satisfies ApiCollection

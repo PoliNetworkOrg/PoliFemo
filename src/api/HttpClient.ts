@@ -274,7 +274,7 @@ export class HttpClient extends EventEmitter {
     throw error
   }
 
-  callPolimi<T>(options: RequestOptions): CancellableApiRequest<T> {
+  callPolimi<T>(options: AxiosRequestConfig): CancellableApiRequest<T> {
     const controller = new AbortController()
     const request = this.polimiInstance.request<T>({
       ...options,
@@ -298,7 +298,7 @@ export class HttpClient extends EventEmitter {
     return request
   }
 
-  callGeneral<T>(options: RequestOptions): CancellableApiRequest<T> {
+  callGeneral<T>(options: AxiosRequestConfig): CancellableApiRequest<T> {
     const controller = new AbortController()
     const request = this.generalInstance.request<T>({
       ...options,

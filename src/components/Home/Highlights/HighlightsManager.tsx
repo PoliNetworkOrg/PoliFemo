@@ -49,11 +49,11 @@ export const HighlightsManager: FC = () => {
     try {
       const { matricola } = userInfo.careers[0]
       const startDate = new Date().toISOString().substring(0, 10)
-      const response = await api.events.getEvents(
+      const response = await api.events.getEvents({
         matricola,
         startDate,
-        10 //nEvents 10
-      )
+        nEvents: 10,
+      })
       if (response.length !== 0) {
         //we extract the events if there is something
         const newWidgets = extractNextEvents(response)

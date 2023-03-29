@@ -34,9 +34,11 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
   const fetchArticles = async (keepArticles: boolean) => {
     try {
       const response = await api.articles.getFromOffsetByTag(
-        tagName,
-        MAX_ARTICLES_PER_REQUEST,
-        offset.current,
+        {
+          tag: tagName,
+          limit: MAX_ARTICLES_PER_REQUEST,
+          offset: offset.current,
+        },
         { retryType: RetryType.NO_RETRY }
       )
       if (keepArticles) {

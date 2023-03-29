@@ -215,8 +215,10 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
         onSelect={async value => {
           try {
             await api.user.updatePoliNetworkSettings({
-              // eslint-disable-next-line @typescript-eslint/naming-convention
-              expire_in_days: value,
+              settings: {
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                expire_in_days: value,
+              },
             })
             setAutodeleteTime(value)
             setShowingAutodeleteModal(false)

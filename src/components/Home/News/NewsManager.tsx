@@ -34,7 +34,7 @@ export const NewsManager = () => {
     for (const tag of tags) {
       promises.push(
         api.articles
-          .getLastArticleByTag(tag.name)
+          .getLastArticleByTag({ tag: tag.name })
           .then(article => {
             tempArticles[tag.name] = article
           })

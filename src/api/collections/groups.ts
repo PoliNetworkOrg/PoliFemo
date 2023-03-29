@@ -1,3 +1,5 @@
+import { mapAxiosRequest } from "api/mapAxiosRequest"
+import { ApiCollection } from "api/useApiCall"
 import { HttpClient, RequestOptions } from "../HttpClient"
 
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -41,15 +43,14 @@ export const groups = {
    * Check {@link GroupOptions} for additional parameters.
    */
 
-  async getFromGithub(options?: RequestOptions) {
-    const response = await client.generalInstance.get<{
+  getFromGithub(_params?: Record<string, never>, options?: RequestOptions) {
+    const request = client.callGeneral<{
       index_data: Group[]
-    }>(
-      "https://raw.githubusercontent.com/PoliNetworkOrg/polinetworkWebsiteData/main/groupsGenerated.json",
-      {
-        ...options,
-      }
-    )
-    return response.data.index_data
+    }>({
+      url: "https://raw.githubusercontent.com/PoliNetworkOrg/polinetworkWebsiteData/main/groupsGenerated.json",
+      method: "GET",
+      ...options,
+    })
+    return mapAxiosRequest(request, response => response.index_data)
   },
-}
+} satisfies ApiCollection

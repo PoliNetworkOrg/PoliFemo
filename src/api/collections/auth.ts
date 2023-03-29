@@ -1,3 +1,5 @@
+import { mapAxiosRequest } from "api/mapAxiosRequest"
+import { ApiCollection } from "api/useApiCall"
 import { PolimiToken } from "contexts/login"
 import { HttpClient, RequestOptions } from "../HttpClient"
 
@@ -12,16 +14,15 @@ export const auth = {
    * @param code Polimi AuthCode
    * @returns polimi accessToken and refreshToken
    */
-  async getPolimiToken(code: string, options?: RequestOptions) {
-    const response = await client.polimiInstance.get<PolimiToken>(
-      `/rest/jaf/oauth/token/get/${code}`,
-      {
-        ...options,
-        headers: {
-          accept: "application/json",
-        },
-      }
-    )
-    return response.data
+  getPolimiToken(params: { authcode: string }, options?: RequestOptions) {
+    const request = client.callPolimi<PolimiToken>({
+      url: `/rest/jaf/oauth/token/get/${params.authcode}`,
+      method: "GET",
+      ...options,
+      headers: {
+        accept: "application/json",
+      },
+    })
+    return mapAxiosRequest(request, res => res)
   },
-}
+} satisfies ApiCollection

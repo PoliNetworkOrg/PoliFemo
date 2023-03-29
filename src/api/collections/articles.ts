@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { mapAxiosRequest } from "api/mapAxiosRequest"
+import { ApiCollection } from "api/useApiCall"
 import { HttpClient, RequestOptions } from "../HttpClient"
 
 export interface Tags {
@@ -63,25 +65,22 @@ export const articles = {
    * }
    * ```
    */
-  async getFromOffsetByTag(
-    tag: string,
-    limit: number,
-    offset: number,
+  getFromOffsetByTag(
+    params: { tag: string; limit: number; offset: number },
     options?: RequestOptions
   ) {
-    const response = await client.poliNetworkInstance.get<Articles>(
-      "/v1/articles",
-      {
-        ...options,
-        params: {
-          limit: limit,
-          pageOffset: offset,
-          tag: tag,
-          sort: "date",
-        },
-      }
-    )
-    return response.data.articles
+    const request = client.callPoliNetwork<Articles>({
+      url: "/v1/articles",
+      method: "GET",
+      params: {
+        limit: params.limit,
+        pageOffset: params.offset,
+        tag: params.tag,
+        sort: "date",
+      },
+      ...options,
+    })
+    return mapAxiosRequest(request, res => res.articles)
   },
 
   /**
@@ -91,14 +90,13 @@ export const articles = {
    *
    * @param options see {@link RequestOptions}
    */
-  async getLastArticleByTag(tag: string, options?: RequestOptions) {
-    const response = await client.poliNetworkInstance.get<Articles>(
-      "/v1/articles",
-      {
-        ...options,
-        params: { tag: tag, limit: 1, sort: "date" },
-      }
-    )
-    return response.data.articles[0]
+  getLastArticleByTag(params: { tag: string }, options?: RequestOptions) {
+    const request = client.callPoliNetwork<Articles>({
+      url: "/v1/articles",
+      method: "GET",
+      params: { tag: params.tag, limit: 1, sort: "date" },
+      ...options,
+    })
+    return mapAxiosRequest(request, res => res.articles[0])
   },
-}
+} satisfies ApiCollection
