@@ -7,7 +7,6 @@ import { Easing, useSharedValue, withTiming } from "react-native-reanimated"
 import arrow_right from "assets/articles/arrow_right.svg"
 import arrow_left from "assets/articles/arrow_left.svg"
 import { BodyText } from "components/Text"
-import { useMounted } from "utils/useMounted"
 import { Icon } from "components/Icon"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { Portal } from "react-native-portalize"
@@ -26,27 +25,25 @@ export interface ImageSliderProps {
 export const ImageSlider: FC<ImageSliderProps> = props => {
   const { modalBarrier } = usePalette()
 
-  const isMounted = useMounted()
-
   const fullWidth = Dimensions.get("window").width
 
   const fullHeight = Dimensions.get("window").height
 
   const [imageIndex, setImageIndex] = useState(props.activeIndex)
 
-  useEffect(() => {
-    if (isMounted) {
-      setImageIndex(props.activeIndex)
+  const [source, setSource] = useState<string | undefined>(undefined)
 
-      if (props.imageSources.length > 0) {
-        setSource(props.imageSources[props.activeIndex])
-      }
+  useEffect(() => {
+    setImageIndex(props.activeIndex)
+  }, [props.activeIndex])
+
+  useEffect(() => {
+    if (props.imageSources.length > 0) {
+      setSource(props.imageSources[imageIndex])
     }
-  }, [props.activeIndex, props.imageSources])
+  }, [imageIndex, props.imageSources])
 
   const [height, setHeight] = useState(0)
-
-  const [source, setSource] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     if (props.imageSources.length > 0 && source) {
