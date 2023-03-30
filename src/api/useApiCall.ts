@@ -41,13 +41,16 @@ export type ApiCollection = Record<string, ApiCall>
  * @param deps Dependencies array, the call will be called again when any of
  * these change
  * @param options Override the default options for the request
+ * @param preventActualCall If true, the call will not be made, only the
+ * stateful data will be returned
  * @returns [data, loading, error, update]
  */
 export function useApiCall<T extends Record<string, unknown>, D>(
   apiCall: ApiCall<T, D>,
   params: T,
   deps: React.DependencyList,
-  options?: RequestOptions
+  options?: RequestOptions,
+  preventActualCall = false
 ): [D | null, boolean, Error | null, () => void] {
   // This is a hack to force the useEffect to re-run when the update function is called
   const [updater, setUpdater] = React.useState(0)
@@ -60,6 +63,12 @@ export function useApiCall<T extends Record<string, unknown>, D>(
   const [error, setError] = React.useState<Error | null>(null)
 
   React.useEffect(() => {
+    if (preventActualCall) {
+      setLoading(false)
+      setData(null)
+      return
+    }
+
     setLoading(true)
     const request = apiCall(params, options)
     setData(request.cachedResponse)
@@ -68,6 +77,7 @@ export function useApiCall<T extends Record<string, unknown>, D>(
       .then(response => {
         setData(response)
         setLoading(false)
+        setError(null)
       })
       .catch((err: Error) => {
         if (err.name !== "AbortError") {

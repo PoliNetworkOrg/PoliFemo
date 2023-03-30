@@ -56,6 +56,26 @@ export function formatTitle(title: string) {
 }
 
 /**
+ * This function gets as parameters the list of events extracted and then it filters it.
+ * @param events
+ */
+export const extractNextEvents = (events: Event[]) => {
+  let firstLecture = true
+  return events
+    .filter(x => checkEventType(x.event_type.typeId))
+    .filter(x => {
+      if (x.event_type.typeId === WidgetType.LECTURES) {
+        if (firstLecture) {
+          firstLecture = false
+          return true
+        }
+        return false
+      } else return true
+    })
+    .map(e => createWidget(e))
+}
+
+/**
  * Function that allows to check the event_type of an event. So far, we filter the events that are lectures, exams or deadlines.
  * @param typeId of the event
  * @returns true/false
