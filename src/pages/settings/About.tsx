@@ -109,46 +109,38 @@ export const About: SettingsStackScreen<"About"> = () => {
         </BodyText>
         <Divider />
         <SettingTile
-          setting={{
-            title: "Riporta un problema",
-            subtitle: "Segnala un bug o suggerisci una nuova funzionalità",
-            callback: () =>
-              Linking.openURL(
-                "https://github.com/PoliNetworkOrg/PoliFemo/issues/new/choose"
-              ),
-          }}
+          title="Riporta un problema"
+          subtitle="Segnala un bug o suggerisci una nuova funzionalità"
+          callback={() =>
+            Linking.openURL(
+              "https://github.com/PoliNetworkOrg/PoliFemo/issues/new/choose"
+            )
+          }
         />
         <SettingTile
-          setting={{
-            title: "Contattaci",
-            subtitle: "Link di contatto per qualsiasi domanda",
-            callback: () =>
-              Linking.openURL("https://polinetwork.org/learnmore/contacts/"),
-          }}
+          title="Contattaci"
+          subtitle="Link di contatto per qualsiasi domanda"
+          callback={() =>
+            Linking.openURL("https://polinetwork.org/learnmore/contacts/")
+          }
         />
         {loggedIn ? (
           <SettingTile
-            setting={{
-              title: "Copia ID utente",
-              subtitle: "Copia il tuo ID utente PoliNetwork negli appunti",
-              callback: async () => {
-                await Clipboard.setStringAsync(userInfo.userID)
-                Alert.alert(
-                  "Copiato!",
-                  "Il tuo ID utente è stato copiato negli appunti."
-                )
-              },
+            title="Copia ID utente"
+            subtitle="Copia il tuo ID utente PoliNetwork negli appunti"
+            callback={async () => {
+              await Clipboard.setStringAsync(userInfo.userID)
+              Alert.alert(
+                "Copiato!",
+                "Il tuo ID utente è stato copiato negli appunti."
+              )
             }}
           />
         ) : null}
         <SettingTile
-          setting={{
-            title: "Licenze",
-            subtitle: "Visualizza le licenze dei pacchetti utilizzati",
-            callback: () => {
-              navigate("Licenses")
-            },
-          }}
+          title="Licenze"
+          subtitle="Visualizza le licenze dei pacchetti utilizzati"
+          callback={() => navigate("Licenses")}
         />
       </View>
     </ContentWrapperScroll>
