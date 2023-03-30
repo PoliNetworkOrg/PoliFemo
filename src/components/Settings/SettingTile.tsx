@@ -11,25 +11,21 @@ import { Icon } from "components/Icon"
  * interface representing a setting's UI fields
  */
 export interface SettingOptions {
-  title?: string
+  title: string
   subtitle?: string
   icon?: number
   callback?: () => void
   loading?: boolean
 }
 
-export interface SettingTileProps {
-  setting: SettingOptions
-}
-
-export const SettingTile: FC<SettingTileProps> = props => {
-  const icon = props.setting.icon ?? null
+export const SettingTile: FC<SettingOptions> = props => {
+  const icon = props.icon ?? null
   const { articleSubtitle } = usePalette()
 
   return (
     <View>
-      {props.setting.title === "Disconnetti" && <Divider />}
-      {props.setting.loading ? (
+      {props.title === "Disconnetti" && <Divider />}
+      {props.loading ? (
         <View
           style={{
             flex: 1,
@@ -45,7 +41,7 @@ export const SettingTile: FC<SettingTileProps> = props => {
       ) : null}
       <TouchableRipple
         onClick={() => {
-          if (!props.setting.loading) props.setting.callback?.()
+          if (!props.loading) props.callback?.()
         }}
         isRoundedTopCorners={false}
       >
@@ -65,8 +61,8 @@ export const SettingTile: FC<SettingTileProps> = props => {
           ) : null}
 
           <View style={{ marginLeft: icon ? 20 : 0 }}>
-            <BodyText>{props.setting.title}</BodyText>
-            {props.setting.subtitle && (
+            <BodyText>{props.title}</BodyText>
+            {props.subtitle && (
               <Text
                 style={{
                   fontSize: 12,
@@ -74,7 +70,7 @@ export const SettingTile: FC<SettingTileProps> = props => {
                   color: articleSubtitle,
                 }}
               >
-                {props.setting.subtitle}
+                {props.subtitle}
               </Text>
             )}
           </View>
