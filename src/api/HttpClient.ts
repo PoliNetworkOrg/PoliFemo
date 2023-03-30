@@ -120,14 +120,14 @@ export class HttpClient extends EventEmitter {
     console.log("HttpClient constructor called")
     this.poliNetworkInstance = axios.create({
       baseURL: baseUrlPoliNetwork,
-      timeout: 2000,
+      timeout: 30000,
     })
     this.polimiInstance = axios.create({
       baseURL: baseUrlPolimi,
-      timeout: 2000,
+      timeout: 30000,
     })
     this.generalInstance = axios.create({
-      timeout: 2000,
+      timeout: 30000,
     })
     this._initializeInterceptors()
   }
@@ -274,7 +274,7 @@ export class HttpClient extends EventEmitter {
     throw error
   }
 
-  callPolimi<T>(options: AxiosRequestConfig): CancellableApiRequest<T> {
+  callPolimi<T = void>(options: AxiosRequestConfig): CancellableApiRequest<T> {
     const controller = new AbortController()
     const request = this.polimiInstance.request<T>({
       ...options,
@@ -286,7 +286,9 @@ export class HttpClient extends EventEmitter {
     return request
   }
 
-  callPoliNetwork<T>(options: AxiosRequestConfig): CancellableApiRequest<T> {
+  callPoliNetwork<T = void>(
+    options: AxiosRequestConfig
+  ): CancellableApiRequest<T> {
     const controller = new AbortController()
     const request = this.poliNetworkInstance.request<T>({
       ...options,
@@ -298,7 +300,7 @@ export class HttpClient extends EventEmitter {
     return request
   }
 
-  callGeneral<T>(options: AxiosRequestConfig): CancellableApiRequest<T> {
+  callGeneral<T = void>(options: AxiosRequestConfig): CancellableApiRequest<T> {
     const controller = new AbortController()
     const request = this.generalInstance.request<T>({
       ...options,

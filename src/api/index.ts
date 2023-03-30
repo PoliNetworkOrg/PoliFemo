@@ -4,8 +4,10 @@ import { events } from "./collections/event"
 import { groups } from "./collections/groups"
 import { tags } from "./collections/tags"
 import { user } from "./collections/user"
+import { rooms } from "./rooms"
 import { ApiCollection } from "./useApiCall"
 export { RetryType, AuthType, RequestOptions } from "./HttpClient"
+
 /**
  * This object groups together all collections of endpoints.
  *
@@ -26,8 +28,9 @@ export { RetryType, AuthType, RequestOptions } from "./HttpClient"
 export const api = {
   articles,
   auth,
-  tags,
-  user,
   events,
   groups,
+  rooms,
+  tags,
+  user,
 } satisfies Record<string, ApiCollection>
