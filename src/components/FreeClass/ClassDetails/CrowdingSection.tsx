@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from "react"
+import { FC, useContext, useState } from "react"
 import { Alert, Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
@@ -9,6 +9,7 @@ import { api, RetryType } from "api"
 import { Modal } from "components/Modal"
 import { LoginContext } from "contexts/login"
 import { useNavigation } from "@react-navigation/native"
+import { useApiCall } from "api/useApiCall"
 
 const contentPadding = 20
 
@@ -23,28 +24,20 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
 
   const [isModalVisible, setIsModalVisible] = useState(false)
 
-  const [occupancyRate, setOccupancyRate] = useState<number>(1)
-
   const { loggedIn } = useContext(LoginContext)
 
   const { navigate } = useNavigation()
 
   let occupancyRateUser = 3
 
-  const getOccupancyRate = async () => {
-    try {
-      const res = await api.rooms.getOccupancyRate({ roomId: props.roomId })
-      if (res.occupancy_rate !== null) {
-        setOccupancyRate(res.occupancy_rate)
-      }
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  useEffect(() => {
-    void getOccupancyRate()
-  }, [])
+  const [occInfo] = useApiCall(
+    api.rooms.getOccupancyRate,
+    {
+      roomId: props.roomId,
+    },
+    [props.roomId]
+  )
+  const occupancyRate = occInfo?.occupancy_rate ?? 3
 
   const postOccupancyRate = async () => {
     try {

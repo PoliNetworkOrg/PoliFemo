@@ -52,8 +52,8 @@ export function useApiCall<T extends Record<string, unknown>, D>(
   // This is a hack to force the useEffect to re-run when the update function is called
   const [updater, setUpdater] = React.useState(0)
   const update = React.useCallback(() => {
-    setUpdater(updater + 1)
-  }, [])
+    setUpdater(prev => prev + 1)
+  }, [setUpdater])
 
   const [data, setData] = React.useState<D | null>(null)
   const [loading, setLoading] = React.useState(false)
