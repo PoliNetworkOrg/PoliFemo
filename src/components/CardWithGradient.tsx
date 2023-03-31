@@ -50,11 +50,12 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
 
   const closerToCorner = props.closerToCorner ?? false
 
+  // for some fucking reason having question marks in the blurhash string breaks
+  // expo images, on github it's marked as fixed but it's not fucking fixed
   const bh = (props.blurhash || "LEHLh[WB2yk8pyoJadR*.7kCMdnj").replace(
     /\?/g,
-    "#"
+    "="
   )
-  // TODO: HATE
 
   return (
     <Pressable
