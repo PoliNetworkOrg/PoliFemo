@@ -50,7 +50,7 @@ export const Article: MainStackScreen<"Article"> = props => {
           try {
             const message = JSON.parse(event.nativeEvent.data) as {
               type: string
-              data: any
+              data: unknown
             }
             if (message.type === "height" && typeof message.data === "number") {
               setWebHeight(message.data)
@@ -71,16 +71,15 @@ export const Article: MainStackScreen<"Article"> = props => {
             console.log(err)
           }
         }}
+        style={{
+          backgroundColor: "transparent",
+        }}
         /* Questo dovrebbe reindirizzare i link nel browser,
            stoppando la webview. Apparentemente non funziona col mio
            android, nel senso che non viene chiamata (comunque 
            il problema dei reindirizzamenti dentro la webview non
            si presenta sul mio telefono). Da testare su iOS e altri
            Android.  */
-
-        style={{
-          backgroundColor: "transparent",
-        }}
         onShouldStartLoadWithRequest={event => {
           if (event.url.slice(0, 4) === "http") {
             void Linking.openURL(event.url)

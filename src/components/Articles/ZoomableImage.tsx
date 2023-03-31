@@ -18,6 +18,8 @@ interface ZoomableImageProps {
 }
 
 /**
+ * Image which implements panning and zoooming.
+ *
  * Composite Gestures (pan and zoom) made with Reanimated.
  *
  * docs: https://docs.swmansion.com/react-native-gesture-handler/docs/2.3.0/gesture-composition
@@ -101,6 +103,7 @@ export const ZoomableImage: FC<ZoomableImageProps> = props => {
             }}
             style={[
               {
+                //width - horizontal padding
                 width: fullWidth - 12,
                 height: props.height,
                 borderRadius: 5,

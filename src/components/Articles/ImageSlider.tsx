@@ -19,8 +19,7 @@ export interface ImageSliderProps {
 }
 
 /**
- *Image Slider (still work in progress).
- *
+ * Image Slider Component.
  */
 export const ImageSlider: FC<ImageSliderProps> = props => {
   const { modalBarrier } = usePalette()
@@ -151,7 +150,6 @@ export const ImageSlider: FC<ImageSliderProps> = props => {
                 </View>
               </Pressable>
               <Pressable
-                style={{}}
                 onPress={() => {
                   scale.value = withTiming(1, { easing: Easing.ease })
                   savedScale.value = 1
