@@ -2,7 +2,11 @@ import { CancellableApiRequest } from "./HttpClient"
 
 /**
  * Maps the response data of an axios request to a new type.
- * @param request the request to be mapped
+ * The map function is used to modify both the data form the AxiosResponse and
+ * the cached response.
+ *
+ * @param request the request to be mapped as returned by one of the calls in the
+ * HttpClient
  * @param mapFunction the function that will be used to map the response data
  * @returns a new request with the mapped data
  */

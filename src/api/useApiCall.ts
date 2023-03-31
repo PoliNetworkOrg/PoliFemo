@@ -4,11 +4,24 @@ import { CancellableApiRequest, RequestOptions } from "./HttpClient"
 const controller = new AbortController()
 controller.signal
 
+/**
+ * Represents an API call, it takes the parameters for the call and returns a
+ * promise that resolves to the data.
+ * @template T The type of the parameters object
+ * @template D The type of the data that will be returned
+ * @param callParams The parameters for the call
+ * @param options Override the default options for the request
+ * @returns A CancelableApiRequest that resolves to the data
+ */
 export type ApiCall<T = never, D = unknown> = (
   callParams: T,
   options?: RequestOptions
 ) => CancellableApiRequest<D, D>
 
+/**
+ * Any single collection of API calls, the keys are the names of the calls and
+ * the values are the API calls themselves.
+ */
 export type ApiCollection = Record<string, ApiCall>
 
 /**

@@ -19,9 +19,22 @@ Error retrying:
 https://stackblitz.com/edit/retry-api-call-axios-interceptor?file=index.ts
 */
 
+/**
+ * Cancellable API request interface
+ * @template T type of the cached response
+ * @template D type of the awaited response, by default `AxiosResponse<T, unknown>`
+ * @extends Promise<D> the promise resolves to the response
+ */
 export interface CancellableApiRequest<T, D = AxiosResponse<T, unknown>>
   extends Promise<D> {
+  /**
+   * Aborts the request
+   * @param reason optional abort reason
+   */
   cancel: (reason?: unknown) => void
+  /**
+   * Cached response, if any
+   */
   cachedResponse: T | null
 }
 
