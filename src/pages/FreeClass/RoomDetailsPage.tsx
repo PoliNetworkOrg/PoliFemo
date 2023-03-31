@@ -6,10 +6,10 @@ import { RoomUtilsSection } from "components/FreeClass/ClassDetails/RoomUtilsSec
 import { CrowdingSection } from "components/FreeClass/ClassDetails/CrowdingSection"
 import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import { api } from "api"
-import { RoomDetails } from "api/rooms"
 import { ActivityIndicator } from "react-native"
 import { useMounted } from "utils/useMounted"
 import { getBuildingCoordsWithoutCampus } from "utils/rooms"
+import { useApiCall } from "api/useApiCall"
 
 export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
   const {
@@ -23,17 +23,11 @@ export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
 
   const isMounted = useMounted()
 
-  const [room, setRoom] = useState<RoomDetails>()
+  const [room] = useApiCall(api.rooms.getRoomInfo, { roomId }, [roomId])
 
   const [latitude, setLatituide] = useState<number | undefined>(roomLatitude)
 
   const [longitude, setLongitude] = useState<number | undefined>(roomLongitude)
-
-  const getRoomInfo = async () => {
-    const selectedRoom = await api.rooms.getRoomInfo({ roomId })
-    setRoom(selectedRoom)
-  }
-  useEffect(() => void getRoomInfo(), [])
 
   useEffect(() => {
     if ((!roomLatitude || !roomLongitude) && isMounted) {
@@ -47,7 +41,7 @@ export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
     <ContentWrapperScroll
       scrollViewStyle={{ paddingHorizontal: 28, paddingBottom: 60 }}
     >
-      {room !== undefined ? (
+      {room ? (
         <>
           <InfoMapTile
             address={room.address}

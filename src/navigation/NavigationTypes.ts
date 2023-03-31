@@ -23,7 +23,7 @@ import {
 } from "@react-navigation/native"
 import { Article } from "api/collections/articles"
 import { NavigatorScreenParams } from "@react-navigation/native"
-import { Occupancies } from "api/rooms"
+import { Occupancies } from "api/collections/rooms"
 import { TagWithData } from "contexts/newsPreferences"
 import { ValidAcronym } from "utils/rooms"
 import {

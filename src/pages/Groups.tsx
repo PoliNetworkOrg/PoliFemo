@@ -19,6 +19,7 @@ import { GroupTile } from "components/Groups/GroupTile"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { ModalGroup } from "components/Groups/ModalGroup"
 import { PoliSearchBar } from "components/Home/PoliSearchBar"
+import { useApiCall } from "api/useApiCall"
 
 const deltaTime = 100 //ms
 let searchTimeout: NodeJS.Timeout
@@ -28,7 +29,8 @@ export const Groups: MainStackScreen<"Groups"> = () => {
 
   const [filters, setFilters] = useState<Filters>({})
 
-  const [groups, setGroups] = useState<Group[]>([])
+  const [grps] = useApiCall(api.groups.getFromGithub, {}, [])
+  const groups = grps ?? []
 
   const [filteredGroups, setFilteredGroups] = useState<Group[]>([])
 
@@ -40,20 +42,6 @@ export const Groups: MainStackScreen<"Groups"> = () => {
 
   //tracking first render
   const isMounted = useMounted()
-
-  const getGroups = async () => {
-    try {
-      const res = await api.groups.getFromGithub()
-      setGroups(res)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  //Request groups from Github
-  useEffect(() => {
-    void getGroups()
-  }, [])
 
   //Apply filters
   useEffect(() => {

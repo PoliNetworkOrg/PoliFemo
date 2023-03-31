@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import BuildingListJSON from "components/FreeClass/buildingCoords.json"
-import { ConstructionType, Occupancies, Room, RoomSimplified } from "api/rooms"
+import {
+  ConstructionType,
+  Occupancies,
+  Room,
+  RoomSimplified,
+} from "api/collections/rooms"
 import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
 import {
   HeadquarterItem,
