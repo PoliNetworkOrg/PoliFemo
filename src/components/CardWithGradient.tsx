@@ -1,8 +1,9 @@
 import { FC } from "react"
-import { ImageBackground, Pressable, View, ViewStyle } from "react-native"
+import { Pressable, View, ViewStyle } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 
 import { CardTitle } from "components/Text"
+import { ImageBackground } from "./ImageBackground"
 
 export interface CardWithGradientProps {
   /**
@@ -13,6 +14,10 @@ export interface CardWithGradientProps {
    * URL of the image in the background of the card
    */
   imageURL?: string
+  /**
+   * Blurhash of the image in the background of the card
+   */
+  blurhash?: string
   /**
    * Function called when the card is clicked
    * @default null
@@ -45,6 +50,12 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
 
   const closerToCorner = props.closerToCorner ?? false
 
+  const bh = (props.blurhash || "LEHLh[WB2yk8pyoJadR*.7kCMdnj").replace(
+    /\?/g,
+    "#"
+  )
+  // TODO: HATE
+
   return (
     <Pressable
       style={[{ marginBottom: 17, borderRadius: borderRadius }, props.style]}
@@ -52,16 +63,13 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
     >
       <ImageBackground
         source={props.imageURL ? { uri: props.imageURL } : {}}
+        placeholder={bh}
         style={{ width: "100%", height: "100%" }}
-        imageStyle={{ borderRadius: borderRadius }}
+        imageStyle={{ borderRadius }}
       >
         <LinearGradient
-          colors={
-            props.imageURL
-              ? ["rgba(255, 181, 68, 0.88)", "rgba(255, 181, 68, 0)"]
-              : ["rgba(255, 181, 68, 0.88)", "rgba(255, 181, 68, 0.34)"]
-          }
-          locations={props.imageURL ? [0, 0.5656] : [0, 1]}
+          colors={["rgba(255, 181, 68, 0.88)", "rgba(255, 181, 68, 0)"]}
+          locations={[0, 0.5656]}
           style={{ flex: 1, borderRadius: borderRadius }}
         >
           <View
