@@ -20,7 +20,7 @@ export const tags = {
   /**
    * Retrieves Tags (news categories) from PoliNetwork server.
    */
-  getTags(_params?: Record<string, never>, options?: RequestOptions) {
+  getTags(_params?: Record<string, unknown>, options?: RequestOptions) {
     const request = client.callPoliNetwork<Tags>({
       url: "/v1/tags",
       method: "GET",

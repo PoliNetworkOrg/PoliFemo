@@ -50,7 +50,7 @@ export const user = {
    * @returns Settings of the user
    */
   getPoliNetworkSettings(
-    _params?: Record<string, never>,
+    _params?: Record<string, unknown>,
     options?: RequestOptions
   ) {
     const request = client.callPoliNetwork<PoliNetworkSettings>({
@@ -86,7 +86,10 @@ export const user = {
   /**
    * test PoliNetwork auth call
    */
-  getPoliNetworkMe(_params?: Record<string, never>, options?: RequestOptions) {
+  getPoliNetworkMe(
+    _params?: Record<string, unknown>,
+    options?: RequestOptions
+  ) {
     const request = client.callPoliNetwork<{
       id: string
     }>({
@@ -101,7 +104,10 @@ export const user = {
   /**
    * test polimi auth call
    */
-  getPolimiUserInfo(_params?: Record<string, never>, options?: RequestOptions) {
+  getPolimiUserInfo(
+    _params?: Record<string, unknown>,
+    options?: RequestOptions
+  ) {
     const request = client.callPolimi<PolimiUserData>({
       url: "/rest/jaf/internal/user",
       method: "GET",
@@ -115,7 +121,7 @@ export const user = {
    * Get a file with all of the user's data
    */
   exportPoliNetworkMe(
-    _params?: Record<string, never>,
+    _params?: Record<string, unknown>,
     options?: RequestOptions
   ) {
     const request = client.callPoliNetwork<Record<string, unknown>>({
@@ -130,7 +136,7 @@ export const user = {
    * Delete the user's account and data
    */
   deletePoliNetworkMe(
-    _params?: Record<string, never>,
+    _params?: Record<string, unknown>,
     options?: RequestOptions
   ) {
     const request = client.callPoliNetwork({

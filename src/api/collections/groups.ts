@@ -43,7 +43,7 @@ export const groups = {
    * Check {@link GroupOptions} for additional parameters.
    */
 
-  getFromGithub(_params?: Record<string, never>, options?: RequestOptions) {
+  getFromGithub(_params?: Record<string, unknown>, options?: RequestOptions) {
     const request = client.callGeneral<{
       index_data: Group[]
     }>({
