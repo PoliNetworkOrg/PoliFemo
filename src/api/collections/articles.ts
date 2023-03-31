@@ -99,4 +99,17 @@ export const articles = {
     })
     return mapAxiosRequest(request, res => res.articles[0])
   },
+
+  /**
+   * Retrieves Tags (news categories) from PoliNetwork server.
+   */
+  getTags(_params?: Record<string, unknown>, options?: RequestOptions) {
+    const request = client.callPoliNetwork<Tags>({
+      url: "/v1/tags",
+      method: "GET",
+      ...options,
+    })
+
+    return mapAxiosRequest(request, res => res.tags)
+  },
 } satisfies ApiCollection

@@ -2,7 +2,6 @@ import { articles } from "./collections/articles"
 import { auth } from "./collections/auth"
 import { events } from "./collections/event"
 import { groups } from "./collections/groups"
-import { tags } from "./collections/tags"
 import { user } from "./collections/user"
 import { rooms } from "./collections/rooms"
 import { ApiCollection } from "./useApiCall"
@@ -31,6 +30,5 @@ export const api = {
   events,
   groups,
   rooms,
-  tags,
   user,
 } satisfies Record<string, ApiCollection>

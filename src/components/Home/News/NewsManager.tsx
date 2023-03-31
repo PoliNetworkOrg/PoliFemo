@@ -50,7 +50,7 @@ export const NewsManager = () => {
   useEffect(() => {
     // Load tags (news categories) and their last article (one for each tag)
     const fetchData = async () => {
-      const responseTags = await api.tags.getTags()
+      const responseTags = await api.articles.getTags()
       const responseArticles = await getLastArticles(responseTags)
       setTags(responseTags)
       setLastArticles(responseArticles)
