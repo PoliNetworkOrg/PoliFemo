@@ -92,75 +92,67 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
         <>
           <Divider />
           <SettingTile
-            setting={{
-              loading: loadingExport,
-              title: "Esporta dati",
-              subtitle: exportDesc,
-              callback: async () => {
-                setLoadingExport(true)
-                try {
-                  const data = await api.user.exportPoliNetworkMe()
-                  const uri =
-                    FileSystem.cacheDirectory + "polinetwork_data.json"
-                  await FileSystem.writeAsStringAsync(
-                    uri,
-                    JSON.stringify(data, null, 2)
-                  )
-                  void Sharing.shareAsync(uri)
-                } catch (e) {
-                  Alert.alert("Errore durante l'esportazione dei dati", e + "")
-                  console.error(e)
-                } finally {
-                  setLoadingExport(false)
-                }
-              },
-            }}
-          />
-          <SettingTile
-            setting={{
-              title: "Autocancellazione dei dati per inattività",
-              subtitle: autodeleteDesc,
-              callback: () => setShowingAutodeleteModal(true),
-            }}
-          />
-          <SettingTile
-            setting={{
-              title: "Cancella account",
-              subtitle:
-                "Cancella permanentemente i dati relativi a questo account ed effettua il logout",
-              callback: () => {
-                Alert.alert(
-                  "Sicuro di voler cancellare l'account?",
-                  deleteAlertMessage,
-                  [
-                    {
-                      text: "Annulla",
-                      style: "cancel",
-                    },
-                    {
-                      text: "Elimina Account",
-                      style: "destructive",
-                      onPress: async () => {
-                        try {
-                          await api.user.deletePoliNetworkMe()
-                          Alert.alert(
-                            "Account cancellato",
-                            "Il tuo account è stato cancellato con successo"
-                          )
-                          void client.destroyTokens()
-                          navigate("Home")
-                        } catch (e) {
-                          Alert.alert(
-                            "Errore durante la cancellazione dell'account",
-                            e + ""
-                          )
-                          console.error(e)
-                        }
-                      },
-                    },
-                  ]
+            loading={loadingExport}
+            title="Esporta dati"
+            subtitle={exportDesc}
+            callback={async () => {
+              setLoadingExport(true)
+              try {
+                const data = await api.user.exportPoliNetworkMe()
+                const uri = FileSystem.cacheDirectory + "polinetwork_data.json"
+                await FileSystem.writeAsStringAsync(
+                  uri,
+                  JSON.stringify(data, null, 2)
                 )
-              },
+                void Sharing.shareAsync(uri)
+              } catch (e) {
+                Alert.alert("Errore durante l'esportazione dei dati", e + "")
+                console.error(e)
+              } finally {
+                setLoadingExport(false)
+              }
+            }}
+          />
+          <SettingTile
+            title="Autocancellazione dei dati per inattività"
+            subtitle={autodeleteDesc}
+            callback={() => setShowingAutodeleteModal(true)}
+          />
+          <SettingTile
+            title="Cancella account"
+            subtitle="Cancella permanentemente i dati relativi a questo account ed effettua il logout"
+            callback={() => {
+              Alert.alert(
+                "Sicuro di voler cancellare l'account?",
+                deleteAlertMessage,
+                [
+                  {
+                    text: "Annulla",
+                    style: "cancel",
+                  },
+                  {
+                    text: "Elimina Account",
+                    style: "destructive",
+                    onPress: async () => {
+                      try {
+                        await api.user.deletePoliNetworkMe()
+                        Alert.alert(
+                          "Account cancellato",
+                          "Il tuo account è stato cancellato con successo"
+                        )
+                        void client.destroyTokens()
+                        navigate("Home")
+                      } catch (e) {
+                        Alert.alert(
+                          "Errore durante la cancellazione dell'account",
+                          e + ""
+                        )
+                        console.error(e)
+                      }
+                    },
+                  },
+                ]
+              )
             }}
           />
           <Description>
@@ -179,12 +171,11 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
       )}
       <Divider />
       <SettingTile
-        setting={{
-          title: "Informativa Privacy",
-          subtitle: "Leggi la nostra privacy policy",
-          callback: () =>
-            Linking.openURL("https://polinetwork.org/learnmore/privacy/"),
-        }}
+        title="Informativa Privacy"
+        subtitle="Leggi la nostra privacy policy"
+        callback={() =>
+          Linking.openURL("https://polinetwork.org/learnmore/privacy/")
+        }
       />
       <Description last>
         In PoliNetwork, la privacy è un valore fondamentale, per questo abbiamo

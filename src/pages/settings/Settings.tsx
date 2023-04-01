@@ -3,7 +3,7 @@ import { View } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ContentWrapperScroll } from "components/Settings"
 import { Divider } from "components/Divider"
-import { SettingTile, SettingOptions } from "components/Settings"
+import { SettingTile } from "components/Settings"
 import { settingsIcons } from "assets/settings"
 import { UserDetailsTile } from "components/Settings"
 import { CareerTile } from "components/Settings"
@@ -52,41 +52,6 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
 
   const { navigate } = useNavigation()
 
-  const settingsList: SettingOptions[] = [
-    {
-      title: "Aspetto",
-      subtitle: "Dark, light mode",
-      icon: settingsIcons.modify,
-      callback: () => {
-        setModalThemeVisible(true)
-      },
-    },
-    {
-      title: "Su quest'app",
-      subtitle: "Informazioni sull'app, versione, contatti",
-      icon: settingsIcons.help,
-      callback: () => {
-        navigate("About")
-      },
-    },
-    {
-      title: "Privacy",
-      subtitle:
-        "Informativa sulla privacy\nImpostazioni del tuo account relative alla privacy",
-      icon: settingsIcons.privacy,
-      callback: () => {
-        navigate("Privacy")
-      },
-    },
-    {
-      title: "Disconnetti",
-      icon: settingsIcons.disconnect,
-      callback: async () => {
-        await client.destroyTokens()
-      },
-    },
-  ]
-
   return (
     <View style={{ flex: 1 }}>
       <ContentWrapperScroll title="Impostazioni">
@@ -107,10 +72,42 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
           </View>
         )}
         <Divider />
-
-        {settingsList.map((setting, index) => {
-          return <SettingTile setting={setting} key={index} />
-        })}
+        <SettingTile
+          title="Aspetto"
+          subtitle="Dark, light mode"
+          icon={settingsIcons.modify}
+          callback={() => {
+            setModalThemeVisible(true)
+          }}
+        />
+        <SettingTile
+          title="Su quest'app"
+          subtitle="Informazioni sull'app, versione, contatti"
+          icon={settingsIcons.help}
+          callback={() => {
+            navigate("About")
+          }}
+        />
+        <SettingTile
+          title="Privacy"
+          subtitle="Informativa sulla privacy\nImpostazioni del tuo account relative alla privacy"
+          icon={settingsIcons.privacy}
+          callback={() => {
+            navigate("Privacy")
+          }}
+        />
+        {loggedIn && (
+          <>
+            <Divider />
+            <SettingTile
+              title="Disconnetti"
+              icon={settingsIcons.disconnect}
+              callback={async () => {
+                await client.destroyTokens()
+              }}
+            />
+          </>
+        )}
       </ContentWrapperScroll>
 
       <Modal
