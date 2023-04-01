@@ -4,7 +4,7 @@ import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
 import clock from "assets/freeClassrooms/clock.svg"
 import { extractTimeLeft, getStartEndDate } from "utils/rooms"
-import { Occupancies } from "api/rooms"
+import { Occupancies } from "api/collections/rooms"
 import { Icon } from "components/Icon"
 
 interface TimeLeftTileProps {

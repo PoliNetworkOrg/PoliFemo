@@ -4,8 +4,7 @@ import { FlatList, Linking, View } from "react-native"
 import { Title } from "components/Text"
 import { FiltersList } from "components/Groups/FiltersList"
 import { api } from "api"
-import { Group } from "api/groups"
-import { useMounted } from "utils/useMounted"
+import { Group } from "api/collections/groups"
 import {
   applyFilters,
   choosePlatformIcon,
@@ -19,6 +18,7 @@ import { GroupTile } from "components/Groups/GroupTile"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { ModalGroup } from "components/Groups/ModalGroup"
 import { PoliSearchBar } from "components/Home/PoliSearchBar"
+import { useApiCall } from "api/useApiCall"
 
 const deltaTime = 100 //ms
 let searchTimeout: NodeJS.Timeout
@@ -28,40 +28,14 @@ export const Groups: MainStackScreen<"Groups"> = () => {
 
   const [filters, setFilters] = useState<Filters>({})
 
-  const [groups, setGroups] = useState<Group[]>([])
-
-  const [filteredGroups, setFilteredGroups] = useState<Group[]>([])
+  const [groups] = useApiCall(api.groups.getFromGithub, {}, [])
+  const filteredGroups = applyFilters(groups, filters)
 
   const [searchableGroups, setSearchableGroups] = useState<Group[]>([])
 
   const [isModalShowing, setIsModalShowing] = useState(false)
 
   const [modalGroup, setModalGroup] = useState<Group | undefined>(undefined)
-
-  //tracking first render
-  const isMounted = useMounted()
-
-  const getGroups = async () => {
-    try {
-      const res = await api.groups.getFromGithub()
-      setGroups(res)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  //Request groups from Github
-  useEffect(() => {
-    void getGroups()
-  }, [])
-
-  //Apply filters
-  useEffect(() => {
-    if (isMounted && groups) {
-      const newGroups = applyFilters(groups, filters)
-      setFilteredGroups(newGroups)
-    }
-  }, [filters, groups])
 
   //Search among filtered groups
   useEffect(() => {

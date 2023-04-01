@@ -1,4 +1,4 @@
-import { Event } from "api/event"
+import { Event } from "api/collections/event"
 /**
  * enum to differentiate the different types of widget we could have
  * different widget types have different background images
@@ -53,6 +53,26 @@ export function formatTitle(title: string) {
         : item.toLowerCase()
     )
     .join(" ")
+}
+
+/**
+ * This function gets as parameters the list of events extracted and then it filters it.
+ * @param events
+ */
+export const extractNextEvents = (events: Event[]) => {
+  let firstLecture = true
+  return events
+    .filter(x => checkEventType(x.event_type.typeId))
+    .filter(x => {
+      if (x.event_type.typeId === WidgetType.LECTURES) {
+        if (firstLecture) {
+          firstLecture = false
+          return true
+        }
+        return false
+      } else return true
+    })
+    .map(e => createWidget(e))
 }
 
 /**

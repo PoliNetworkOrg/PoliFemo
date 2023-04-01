@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import BuildingListJSON from "components/FreeClass/buildingCoords.json"
-import { ConstructionType, Occupancies, Room, RoomSimplified } from "api/rooms"
+import {
+  ConstructionType,
+  Occupancies,
+  Room,
+  RoomSimplified,
+} from "api/collections/rooms"
 import buildingCoordsJSON from "components/FreeClass/buildingCoords.json"
 import {
   HeadquarterItem,
@@ -354,21 +359,6 @@ export const findTimeLeft = (occupancies: Occupancies, date: Date) => {
   return { hoursLeft, minutesLeft }
 }
 
-export const getExpirationDateRooms = (cacheControl?: string) => {
-  if (!cacheControl) {
-    return undefined
-  }
-  const maxAgeString = cacheControl.split("max-age=")
-  let seconds
-  if (maxAgeString.length === 2) {
-    seconds = parseInt(maxAgeString[1], 10)
-    const now = new Date()
-    const newDate = new Date(now.getTime() + seconds * 1000)
-    return newDate
-  }
-  return undefined
-}
-
 export const isRoomFree = (
   room: Room | RoomSimplified,
   date: Date,
@@ -492,10 +482,7 @@ export const formatDate = (date: Date) => {
 
 export type ValidAcronym = "MIA" | "MIB" | "CRG" | "LCF" | "PCL" | "MNI"
 
-export type GlobalRoomListInterface = {
-  expireAt?: string
-  searchDate?: string
-} & Record<ValidAcronym, Room[]>
+export type GlobalRoomListInterface = Record<ValidAcronym, Room[]>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function hasAcronymProp(obj: any): obj is HeadquarterItem {

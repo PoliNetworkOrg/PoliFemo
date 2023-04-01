@@ -1,4 +1,4 @@
-import { ConstructionType, Room } from "api/rooms"
+import { ConstructionType, Room } from "api/collections/rooms"
 import { BodyText } from "components/Text"
 import { useNavigation } from "navigation/NavigationTypes"
 import { FC } from "react"

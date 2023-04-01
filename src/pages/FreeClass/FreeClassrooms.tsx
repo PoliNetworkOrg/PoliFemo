@@ -7,16 +7,10 @@ import { Title, BodyText } from "components/Text"
 import campusIcon from "assets/freeClassrooms/campus.svg"
 import positionIcon from "assets/freeClassrooms/position.svg"
 import * as Location from "expo-location"
-import {
-  formatDate,
-  getExpirationDateRooms,
-  isSameDay,
-  ValidAcronym,
-} from "utils/rooms"
-import { api, RetryType } from "api"
+import { isRoomFree, ValidAcronym } from "utils/rooms"
 import { RoomsSearchDataContext } from "contexts/rooms"
 import { Icon } from "components/Icon"
-import { Room } from "api/rooms"
+import { Room } from "api/collections/rooms"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { ScrollView } from "react-native-gesture-handler"
@@ -36,61 +30,12 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
   const { navigate } = useNavigation()
   const { palette } = usePalette()
 
-  const { rooms, setRooms, date, setIsRoomsSearching, isRoomsSearching } =
-    useContext(RoomsSearchDataContext)
+  const { rooms, date, isRoomsSearching, setDate } = useContext(
+    RoomsSearchDataContext
+  )
 
   //rooms filtered
   const [searchableRooms, setSearchableRooms] = useState<Room[]>([])
-
-  //main function that handles the call to the API in order to obtain the list of freeclassRooms
-  const getAllRoomsFromApi = async (
-    overrideDate?: Date,
-    overrideSearchBehaviour?: boolean
-  ) => {
-    const searchDate = overrideDate ?? date
-
-    //Check if stored rooms are still relevant to the current search
-    const prevSearchDateISO = rooms.searchDate
-    if (prevSearchDateISO) {
-      const prevSearchDate = new Date(prevSearchDateISO)
-      if (isSameDay(prevSearchDate, searchDate)) {
-        const currentExpirationDateISO = rooms.expireAt
-        if (currentExpirationDateISO) {
-          const currentExpirationDate = new Date(currentExpirationDateISO)
-          if (new Date() < currentExpirationDate) {
-            // not expired and relevant
-            return
-          }
-        }
-      }
-    }
-    //expired and/or not relevant
-
-    if (!overrideSearchBehaviour) {
-      setIsRoomsSearching(true)
-    }
-    const { data, expire } = await api.rooms.getFreeRoomsDay(
-      formatDate(searchDate),
-      { maxRetries: 1, retryType: RetryType.RETRY_N_TIMES }
-    )
-    if (data) {
-      const newGlobalRooms = { ...data }
-
-      const expirationDate = getExpirationDateRooms(expire)
-      //update expiration date or reset
-      newGlobalRooms.expireAt = expirationDate?.toISOString() ?? undefined
-      //update searchDate
-      newGlobalRooms.searchDate = searchDate.toISOString()
-      setRooms(newGlobalRooms)
-    }
-    if (!overrideSearchBehaviour) {
-      setIsRoomsSearching(false)
-    }
-  }
-
-  useEffect(() => {
-    void getAllRoomsFromApi()
-  }, [date])
 
   const [geolocation, setGeolocation] = useState<boolean>(false)
 
@@ -121,9 +66,11 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
 
     for (const currAcronym of acronyms) {
       const roomsInCampus = rooms[currAcronym] ?? []
-
       for (const room of roomsInCampus) {
-        if (room.name.toLowerCase().includes(search.toLowerCase().trimEnd())) {
+        if (
+          room.name.toLowerCase().includes(search.toLowerCase().trimEnd()) &&
+          isRoomFree(room, new Date(), true)
+        ) {
           newSearchableRooms.push(room)
         }
       }
@@ -137,10 +84,13 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
     clearTimeout(searchTimeout)
     searchTimeout = setTimeout(() => {
       if (search.trimEnd().length > 1) {
+        const today = new Date()
+        if (
+          date.toISOString().substring(0, 10) !==
+          today.toISOString().substring(0, 10)
+        )
+          setDate(today)
         void filterRooms()
-
-        //request rooms if old ones have expired
-        void getAllRoomsFromApi(new Date())
       } else {
         setSearchableRooms([])
       }
