@@ -97,13 +97,16 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
           }}
         />
         {loggedIn && (
-          <SettingTile
-            title="Disconnetti"
-            icon={settingsIcons.disconnect}
-            callback={async () => {
-              await client.destroyTokens()
-            }}
-          />
+          <>
+            <Divider />
+            <SettingTile
+              title="Disconnetti"
+              icon={settingsIcons.disconnect}
+              callback={async () => {
+                await client.destroyTokens()
+              }}
+            />
+          </>
         )}
       </ContentWrapperScroll>
 

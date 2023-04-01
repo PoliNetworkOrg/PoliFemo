@@ -3,7 +3,6 @@ import { ActivityIndicator, View } from "react-native"
 import { TouchableRipple } from "../TouchableRipple"
 
 import { BodyText, Text } from "components/Text"
-import { Divider } from "components/Divider"
 import { usePalette } from "utils/colors"
 import { Icon } from "components/Icon"
 
@@ -24,7 +23,6 @@ export const SettingTile: FC<SettingOptions> = props => {
 
   return (
     <View>
-      {props.title === "Disconnetti" && <Divider />}
       {props.loading ? (
         <View
           style={{
