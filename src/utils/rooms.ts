@@ -482,9 +482,7 @@ export const formatDate = (date: Date) => {
 
 export type ValidAcronym = "MIA" | "MIB" | "CRG" | "LCF" | "PCL" | "MNI"
 
-export type GlobalRoomListInterface = {
-  searchDate?: string
-} & Record<ValidAcronym, Room[]>
+export type GlobalRoomListInterface = Record<ValidAcronym, Room[]>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function hasAcronymProp(obj: any): obj is HeadquarterItem {

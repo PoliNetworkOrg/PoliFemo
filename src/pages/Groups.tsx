@@ -5,7 +5,6 @@ import { Title } from "components/Text"
 import { FiltersList } from "components/Groups/FiltersList"
 import { api } from "api"
 import { Group } from "api/collections/groups"
-import { useMounted } from "utils/useMounted"
 import {
   applyFilters,
   choosePlatformIcon,
@@ -29,27 +28,14 @@ export const Groups: MainStackScreen<"Groups"> = () => {
 
   const [filters, setFilters] = useState<Filters>({})
 
-  const [grps] = useApiCall(api.groups.getFromGithub, {}, [])
-  const groups = grps ?? []
-
-  const [filteredGroups, setFilteredGroups] = useState<Group[]>([])
+  const [groups] = useApiCall(api.groups.getFromGithub, {}, [])
+  const filteredGroups = applyFilters(groups, filters)
 
   const [searchableGroups, setSearchableGroups] = useState<Group[]>([])
 
   const [isModalShowing, setIsModalShowing] = useState(false)
 
   const [modalGroup, setModalGroup] = useState<Group | undefined>(undefined)
-
-  //tracking first render
-  const isMounted = useMounted()
-
-  //Apply filters
-  useEffect(() => {
-    if (isMounted && groups) {
-      const newGroups = applyFilters(groups, filters)
-      setFilteredGroups(newGroups)
-    }
-  }, [filters, groups])
 
   //Search among filtered groups
   useEffect(() => {
