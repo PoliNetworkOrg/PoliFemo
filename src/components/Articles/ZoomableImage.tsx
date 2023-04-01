@@ -33,8 +33,10 @@ export const ZoomableImage: FC<ZoomableImageProps> = props => {
     })
     .onEnd(() => {
       if (props.scale.value > 1) {
+        //update scale
         props.savedScale.value = props.scale.value
       } else {
+        //spring back
         props.savedScale.value = 1
         props.scale.value = withSpring(1)
         props.lastPosition.value = 0
@@ -45,6 +47,7 @@ export const ZoomableImage: FC<ZoomableImageProps> = props => {
   const panGesture = Gesture.Pan()
     .onUpdate(e => {
       if (props.scale.value >= 1) {
+        //update x translation
         props.position.value =
           e.translationX / props.scale.value + props.lastPosition.value
       }
@@ -55,6 +58,7 @@ export const ZoomableImage: FC<ZoomableImageProps> = props => {
         const delta =
           (fullWidth * (props.scale.value - 1)) / (2 * props.scale.value)
 
+        //if it translates too much on one side spring back in place
         if (props.position.value > 0 && props.position.value > delta) {
           props.position.value = withSpring(delta)
           props.lastPosition.value = delta

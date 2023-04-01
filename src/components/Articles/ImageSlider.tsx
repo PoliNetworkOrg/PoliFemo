@@ -20,6 +20,8 @@ export interface ImageSliderProps {
 
 /**
  * Image Slider Component.
+ *
+ * Implements a full screen Modal.
  */
 export const ImageSlider: FC<ImageSliderProps> = props => {
   const { modalBarrier } = usePalette()
