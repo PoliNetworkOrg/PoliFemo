@@ -1,5 +1,5 @@
 import { Event } from "api/event"
-import i18n from "../locales/i18n"
+import { i18n } from "../locales/i18n"
 /**
  * enum to differentiate the different types of widget we could have
  * different widget types have different background images
