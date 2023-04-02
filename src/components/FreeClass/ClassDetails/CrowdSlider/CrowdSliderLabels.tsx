@@ -2,9 +2,12 @@ import { FC } from "react"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
 import { View } from "react-native"
+import { useTranslation } from "react-i18next"
 
 export const CrowdSliderLabels: FC = () => {
   const { labelsHighContrast } = usePalette()
+
+  const { t } = useTranslation("freeClass")
 
   return (
     <View
@@ -20,7 +23,7 @@ export const CrowdSliderLabels: FC = () => {
           alignSelf: "flex-start",
         }}
       >
-        Basso
+        {t("freeClass_low")}
       </BodyText>
       <BodyText
         style={{
@@ -31,7 +34,7 @@ export const CrowdSliderLabels: FC = () => {
           alignSelf: "center",
         }}
       >
-        Medio
+        {t("freeClass_med")}
       </BodyText>
       <BodyText
         style={{
@@ -42,7 +45,7 @@ export const CrowdSliderLabels: FC = () => {
           alignSelf: "flex-end",
         }}
       >
-        Alto
+        {t("freeClass_high")}
       </BodyText>
     </View>
   )

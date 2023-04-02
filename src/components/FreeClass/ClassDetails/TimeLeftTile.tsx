@@ -6,6 +6,7 @@ import clock from "assets/freeClassrooms/clock.svg"
 import { extractTimeLeft, getStartEndDate } from "utils/rooms"
 import { Occupancies } from "api/collections/rooms"
 import { Icon } from "components/Icon"
+import { useTranslation } from "react-i18next"
 
 interface TimeLeftTileProps {
   startDate: string
@@ -31,6 +32,8 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
 
   const { hoursLeft, minutesLeft } = extractTimeLeft(now, endDate)
 
+  const { t } = useTranslation("freeClass")
+
   return (
     <View style={{ marginTop: 14 }}>
       <BodyText
@@ -40,7 +43,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
           color: labelsHighContrast,
         }}
       >
-        Libera:
+        {t("freeClass_free")}:
       </BodyText>
       <View
         style={{
@@ -56,7 +59,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                 flexDirection: "row",
                 alignItems: "center",
                 marginBottom: 8,
-                width: 100,
+                width: t("freeClass_from").length <= 2 ? 100 : 110,
               }}
             >
               <BodyText
@@ -65,10 +68,10 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                   fontWeight: "400",
                   color: labelsHighContrast,
                   flex: 1,
-                  paddingRight: 12,
+                  paddingRight: t("freeClass_from").length <= 2 ? 12 : 0,
                 }}
               >
-                Da
+                {t("freeClass_from")}
               </BodyText>
               <View
                 style={{
@@ -109,7 +112,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                   textAlign: "right",
                 }}
               >
-                A
+                {t("freeClass_to")}
               </BodyText>
               <View
                 style={{
@@ -166,7 +169,7 @@ export const TimeLeftTile: FC<TimeLeftTileProps> = props => {
                   color: labelsHighContrast,
                 }}
               >
-                Mancano:
+                {t("freeClass_timeRemaining")}:
               </BodyText>
               <BodyText
                 style={{

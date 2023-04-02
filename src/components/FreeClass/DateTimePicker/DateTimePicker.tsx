@@ -6,6 +6,7 @@ import { DateTimeBox } from "./DateTimeBox"
 import { destructureDate } from "utils/functions"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import { StyleSheet } from "react-native"
+import { useTranslation } from "react-i18next"
 
 export interface DateTimePickerProps {
   date: Date
@@ -23,6 +24,8 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
 
   //there would be also "date-time" but we don't use it
   const [dateMode, setDateMode] = useState<"date" | "time">("date")
+
+  const { t } = useTranslation()
 
   const showDatePicker = () => {
     setDateMode("date")
@@ -62,7 +65,7 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
               marginRight: 12,
             }}
           >
-            Data
+            {t("date")}
           </BodyText>
         </View>
         <Pressable onPress={showDatePicker} style={{ flexDirection: "row" }}>
@@ -85,7 +88,7 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
               marginRight: 12,
             }}
           >
-            Ora
+            {t("time")}
           </BodyText>
         </View>
         <Pressable onPress={showTimePicker} style={{ flexDirection: "row" }}>

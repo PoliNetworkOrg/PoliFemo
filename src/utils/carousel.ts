@@ -1,3 +1,4 @@
+import { i18n } from "../locales/i18n"
 import { Event } from "api/collections/event"
 /**
  * enum to differentiate the different types of widget we could have
@@ -89,36 +90,37 @@ export function checkEventType(typeId: number) {
 }
 
 export function createWidget(event: Event) {
+  const { t } = i18n
   const days = [
-    "Domenica",
-    "Lunedì",
-    "Martedì",
-    "Mercoledì",
-    "Giovedì",
-    "Venerdì",
-    "Sabato",
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
   ]
   const months = [
-    "Gennaio",
-    "Febbraio",
-    "Marzo",
-    "Aprile",
-    "Maggio",
-    "Giugno",
-    "Luglio",
-    "Agosto",
-    "Settembre",
-    "Ottobre",
-    "Novembre",
-    "Dicembre",
+    "january",
+    "february",
+    "march",
+    "april",
+    "may",
+    "june",
+    "july",
+    "august",
+    "september",
+    "october",
+    "november",
+    "december",
   ]
   const dateObj = new Date(event.date_start)
   const resultDate =
-    days[dateObj.getDay()] +
+    t(days[dateObj.getDay()]) +
     " " +
     dateObj.getDate().toString().padStart(2, "0") +
     " " +
-    months[dateObj.getMonth()] +
+    t(months[dateObj.getMonth()]) +
     " " +
     dateObj.getFullYear()
   const nextEvent: CarouselItem = {

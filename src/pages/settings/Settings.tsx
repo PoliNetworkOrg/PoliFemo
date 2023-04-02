@@ -15,8 +15,10 @@ import { LoginContext } from "contexts/login"
 import { Career } from "api/collections/user"
 import { HttpClient } from "api/HttpClient"
 import { Modal } from "components/Modal"
+import { useTranslation } from "react-i18next"
+import { Linking } from "react-native"
 
-const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
+const themes: string[] = ["settings_default", "settings_dark", "settings_light"]
 const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
 
 const client = HttpClient.getInstance()
@@ -24,6 +26,8 @@ const client = HttpClient.getInstance()
  * Settings Page
  */
 export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
+  const { t } = useTranslation("settings")
+
   //for testing logged in/out view
   const { loggedIn, userInfo } = useContext(LoginContext)
   const { settings, setSettings } = useContext(SettingsContext)
@@ -54,7 +58,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <ContentWrapperScroll title="Impostazioni">
+      <ContentWrapperScroll title={"" + t("settings_title")}>
         {loggedIn ? (
           <UserDetailsTile user={userInfo} />
         ) : (
@@ -73,7 +77,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
         )}
         <Divider />
         <SettingTile
-          title="Aspetto"
+          title={t("settings_appearance")}
           subtitle="Dark, light mode"
           icon={settingsIcons.modify}
           callback={() => {
@@ -81,8 +85,15 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
           }}
         />
         <SettingTile
-          title="Su quest'app"
-          subtitle="Informazioni sull'app, versione, contatti"
+          title={t("settings_language")}
+          icon={settingsIcons.modify}
+          callback={() => {
+            void Linking.openSettings()
+          }}
+        />
+        <SettingTile
+          title={t("settings_infoAppTitle")}
+          subtitle={"" + t("settings_infoAppSubTitle")}
           icon={settingsIcons.help}
           callback={() => {
             navigate("About")
@@ -90,7 +101,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
         />
         <SettingTile
           title="Privacy"
-          subtitle="Informativa sulla privacy\nImpostazioni del tuo account relative alla privacy"
+          subtitle={"" + t("settings_privacySubTitle")}
           icon={settingsIcons.privacy}
           callback={() => {
             navigate("Privacy")
@@ -100,7 +111,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
           <>
             <Divider />
             <SettingTile
-              title="Disconnetti"
+              title={t("settings_logout")}
               icon={settingsIcons.disconnect}
               callback={async () => {
                 await client.destroyTokens()
@@ -111,13 +122,13 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
       </ContentWrapperScroll>
 
       <Modal
-        title={"Scegli Tema"}
+        title={t("settings_chooseTheme")}
         centerText
         isShowing={isModalThemeVisible}
         buttons={[
           {
             light: true,
-            text: "Annulla",
+            text: "" + t("cancel", { ns: "common" }),
             onPress: () => {
               //restore real theme value
               setSelectedTheme(theme)
@@ -137,7 +148,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
           return (
             <SelectTile
               key={index}
-              value={themeName}
+              value={"" + t(themeName)}
               selected={selectedTheme === themesToSave[index]}
               onPress={() => {
                 setSelectedTheme(themesToSave[index])
@@ -147,13 +158,13 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
         })}
       </Modal>
       <Modal
-        title={"Cambia Matricola"}
+        title={t("settings_changeId")}
         centerText
         isShowing={isModalCareerVisible}
         buttons={[
           {
             light: true,
-            text: "Annulla",
+            text: "" + t("cancel", { ns: "common" }),
             onPress: () => {
               //restore selectedCareer to career
               if (career) setSelectedCareer(career)

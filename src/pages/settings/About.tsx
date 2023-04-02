@@ -14,6 +14,7 @@ import { LoginContext } from "contexts/login"
 import { Canvas, Group, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import polifemoIcon from "assets/highlights/polifemo.svg"
 import { Divider } from "components/Divider"
+import { useTranslation } from "react-i18next"
 
 /**
  * Notifications Settings Page
@@ -24,8 +25,10 @@ export const About: SettingsStackScreen<"About"> = () => {
   const { loggedIn, userInfo } = useContext(LoginContext)
   const polifemoSVG = useSVG(polifemoIcon)
 
+  const { t } = useTranslation("settings")
+
   return (
-    <ContentWrapperScroll title="Su quest'app">
+    <ContentWrapperScroll title={"" + t("settings_infoAppTitle")}>
       <View style={{ paddingTop: 32, paddingBottom: 80 }}>
         <MainTitle />
         <View
@@ -86,17 +89,10 @@ export const About: SettingsStackScreen<"About"> = () => {
           </View>
         </View>
         <BodyText style={{ paddingHorizontal: 32, paddingBottom: 16 }}>
-          <Title style={{ fontSize: 24 }}>
-            Informazioni sull&quot;app{"\n"}
-          </Title>
-          Un&apos;app pensata per semplificare la vita di tutti gli studenti del
-          Politecnico permettendo a loro di potersi concentrare al massimo sullo
-          studio e lasciare il resto a PoliFemo{"\n"}
-          Svilluppata con ❤️ da PoliNetwork{"\n"}
-          {"\n"}
+          <Title style={{ fontSize: 24 }}>{t("settings_info") + "\n"}</Title>
+          {t("settings_info_message")}
           <Title style={{ fontSize: 24 }}>Source code{"\n"}</Title>
-          Polifemo è un progetto open source, puoi contribuire al suo sviluppo
-          su GitHub!{"\n"}
+          {t("settings_sourceCode_message")}
           Client:{" "}
           <HyperLink href="https://github.com/polinetworkorg/polifemo">
             PoliNetworkOrg/PoliFemo
@@ -109,8 +105,8 @@ export const About: SettingsStackScreen<"About"> = () => {
         </BodyText>
         <Divider />
         <SettingTile
-          title="Riporta un problema"
-          subtitle="Segnala un bug o suggerisci una nuova funzionalità"
+          title={t("settings_report")}
+          subtitle={"" + t("settings_reportSubTitle")}
           callback={() =>
             Linking.openURL(
               "https://github.com/PoliNetworkOrg/PoliFemo/issues/new/choose"
@@ -118,28 +114,28 @@ export const About: SettingsStackScreen<"About"> = () => {
           }
         />
         <SettingTile
-          title="Contattaci"
-          subtitle="Link di contatto per qualsiasi domanda"
+          title={t("settings_contacts")}
+          subtitle={"" + t("settings_contactsSubTitile")}
           callback={() =>
             Linking.openURL("https://polinetwork.org/learnmore/contacts/")
           }
         />
         {loggedIn ? (
           <SettingTile
-            title="Copia ID utente"
-            subtitle="Copia il tuo ID utente PoliNetwork negli appunti"
+            title={t("settings_userId")}
+            subtitle={"" + t("settings_userIdSubTitle")}
             callback={async () => {
               await Clipboard.setStringAsync(userInfo.userID)
               Alert.alert(
-                "Copiato!",
-                "Il tuo ID utente è stato copiato negli appunti."
+                t("settings_copied"),
+                "" + t("settings_alert_message")
               )
             }}
           />
         ) : null}
         <SettingTile
-          title="Licenze"
-          subtitle="Visualizza le licenze dei pacchetti utilizzati"
+          title={t("settings_licenses")}
+          subtitle={"" + t("settings_licensesSubTitle")}
           callback={() => navigate("Licenses")}
         />
       </View>

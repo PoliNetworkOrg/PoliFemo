@@ -7,6 +7,7 @@ import { LocationGeocodedAddress, PermissionStatus } from "expo-location"
 import { AddressText } from "components/FreeClass/AddressText"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { PositionModality } from "components/FreeClass/PositionModality"
+import { useTranslation } from "react-i18next"
 
 /**
  * In this page the user can find a room according to his current position.
@@ -19,6 +20,8 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     useState<LocationGeocodedAddress>()
 
   const [currentCoords, setCurrentCoords] = useState<[number, number]>()
+
+  const { t } = useTranslation("freeClass")
 
   /**
    * This function finds the user current coordinates.
@@ -99,7 +102,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     <PageWrapper>
       <View style={{ paddingTop: 28 }}>
         <View style={{ paddingLeft: 28 }}>
-          <Title>Posizione attuale</Title>
+          <Title>{t("freeClass_exactPosition")}</Title>
           <AddressText
             currentLocation={currentLocation}
             locationStatus={locationStatus}

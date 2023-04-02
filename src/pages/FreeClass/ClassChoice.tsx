@@ -59,10 +59,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
               fontFamily: "Roboto_300Light",
             }}
           >
-            {building.name[0]
-              .replace("Ed.", "Edificio")
-              .replace("Pad.", "Padiglione")
-              .replace("Pal.", "Palazzina")}
+            {building.fullName?.split(" ")[0]}
             <Title>{" " + building.name[1]}</Title>
           </Title>
         </View>
