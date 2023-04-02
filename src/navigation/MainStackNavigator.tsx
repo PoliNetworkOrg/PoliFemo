@@ -19,6 +19,7 @@ import { RoomDetailsPage } from "pages/FreeClass/RoomDetailsPage"
 import { OtherCategories } from "pages/news/OtherCategories"
 import { Groups } from "pages/Groups"
 import { HeadquarterChoice } from "pages/FreeClass/HeadquarterChoice"
+import { TimeTable } from "pages/TimeTable"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const MainStackNavigator = createStackNavigator<MainStackNavigatorParams>()
@@ -58,6 +59,7 @@ export const MainStack: FC = () => {
       />
       <MainStackNavigator.Screen name="Error404" component={Error404} />
       <MainStackNavigator.Screen name="Groups" component={Groups} />
+      <MainStackNavigator.Screen name="TimeTable" component={TimeTable} />
     </MainStackNavigator.Navigator>
   )
 }

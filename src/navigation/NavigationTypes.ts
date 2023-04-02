@@ -76,6 +76,7 @@ export type MainStackNavigatorParams = {
   }
   Groups: undefined
   Notifications: undefined
+  TimeTable: undefined
 }
 
 export type SettingsStackNavigatorParams = {

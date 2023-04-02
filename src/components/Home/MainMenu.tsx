@@ -38,7 +38,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
       type: ButtonType.TIMETABLE,
       title: "Orario Lezioni",
       icon: clock,
-      onClick: () => navigate("Error404"),
+      onClick: () => navigate("TimeTable"),
     },
     {
       type: ButtonType.ASSOCIATIONS,
