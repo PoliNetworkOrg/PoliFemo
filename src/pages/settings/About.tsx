@@ -105,46 +105,38 @@ export const About: SettingsStackScreen<"About"> = () => {
         </BodyText>
         <Divider />
         <SettingTile
-          setting={{
-            title: t("settings_report"),
-            subtitle: "" + t("settings_reportSubTitle"),
-            callback: () =>
-              Linking.openURL(
-                "https://github.com/PoliNetworkOrg/PoliFemo/issues/new/choose"
-              ),
-          }}
+          title={t("settings_report")}
+          subtitle={"" + t("settings_reportSubTitle")}
+          callback={() =>
+            Linking.openURL(
+              "https://github.com/PoliNetworkOrg/PoliFemo/issues/new/choose"
+            )
+          }
         />
         <SettingTile
-          setting={{
-            title: t("settings_contacts"),
-            subtitle: "" + t("settings_contactsSubTitile"),
-            callback: () =>
-              Linking.openURL("https://polinetwork.org/learnmore/contacts/"),
-          }}
+          title={t("settings_contacts")}
+          subtitle={"" + t("settings_contactsSubTitile")}
+          callback={() =>
+            Linking.openURL("https://polinetwork.org/learnmore/contacts/")
+          }
         />
         {loggedIn ? (
           <SettingTile
-            setting={{
-              title: t("settings_userId"),
-              subtitle: "" + t("settings_userIdSubTitle"),
-              callback: async () => {
-                await Clipboard.setStringAsync(userInfo.userID)
-                Alert.alert(
-                  t("settings_copied"),
-                  "" + t("settings_alert_message")
-                )
-              },
+            title={t("settings_userId")}
+            subtitle={"" + t("settings_userIdSubTitle")}
+            callback={async () => {
+              await Clipboard.setStringAsync(userInfo.userID)
+              Alert.alert(
+                t("settings_copied"),
+                "" + t("settings_alert_message")
+              )
             }}
           />
         ) : null}
         <SettingTile
-          setting={{
-            title: t("settings_licenses"),
-            subtitle: "" + t("settings_licensesSubTitle"),
-            callback: () => {
-              navigate("Licenses")
-            },
-          }}
+          title={t("settings_licenses")}
+          subtitle={"" + t("settings_licensesSubTitle")}
+          callback={() => navigate("Licenses")}
         />
       </View>
     </ContentWrapperScroll>

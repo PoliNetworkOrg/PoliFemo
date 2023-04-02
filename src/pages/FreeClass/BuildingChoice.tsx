@@ -4,7 +4,7 @@ import { ActivityIndicator, View } from "react-native"
 import { Title } from "components/Text"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { PageWrapper } from "components/Groups/PageWrapper"
-import { ConstructionType } from "api/rooms"
+import { ConstructionType } from "api/collections/rooms"
 import { BuildingItem, DefaultList } from "components/FreeClass/DefaultList"
 import { formatBuildingName, isCampusCorrect, isRoomFree } from "utils/rooms"
 

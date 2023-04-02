@@ -5,7 +5,7 @@ import { Title } from "components/Text"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { DefaultList, HeadquarterItem } from "components/FreeClass/DefaultList"
-import { ConstructionType } from "api/rooms"
+import { ConstructionType } from "api/collections/rooms"
 import { RoomsSearchDataContext } from "contexts/rooms"
 import { useTranslation } from "react-i18next"
 

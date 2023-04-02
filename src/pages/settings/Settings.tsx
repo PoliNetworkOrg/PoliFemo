@@ -3,7 +3,7 @@ import { View } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ContentWrapperScroll } from "components/Settings"
 import { Divider } from "components/Divider"
-import { SettingTile, SettingOptions } from "components/Settings"
+import { SettingTile } from "components/Settings"
 import { settingsIcons } from "assets/settings"
 import { UserDetailsTile } from "components/Settings"
 import { CareerTile } from "components/Settings"
@@ -12,7 +12,7 @@ import { UserAnonymousTile } from "components/Settings"
 import { SettingsContext, ValidColorSchemeName } from "contexts/settings"
 import { CareerColumn } from "components/Settings"
 import { LoginContext } from "contexts/login"
-import { Career } from "api/user"
+import { Career } from "api/collections/user"
 import { HttpClient } from "api/HttpClient"
 import { Modal } from "components/Modal"
 import { useTranslation } from "react-i18next"
@@ -26,6 +26,8 @@ const client = HttpClient.getInstance()
  * Settings Page
  */
 export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
+  const { t } = useTranslation("settings")
+
   //for testing logged in/out view
   const { loggedIn, userInfo } = useContext(LoginContext)
   const { settings, setSettings } = useContext(SettingsContext)
@@ -54,50 +56,6 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
 
   const { navigate } = useNavigation()
 
-  const { t } = useTranslation("settings")
-
-  const settingsList: SettingOptions[] = [
-    {
-      title: t("settings_appearance"),
-      subtitle: "Dark, Light mode",
-      icon: settingsIcons.modify,
-      callback: () => {
-        setModalThemeVisible(true)
-      },
-    },
-    {
-      title: t("settings_language"),
-      subtitle: "",
-      icon: settingsIcons.modify,
-      callback: () => {
-        void Linking.openSettings()
-      },
-    },
-    {
-      title: t("settings_infoAppTitle"),
-      subtitle: "" + t("settings_infoAppSubTitle"),
-      icon: settingsIcons.help,
-      callback: () => {
-        navigate("About")
-      },
-    },
-    {
-      title: "Privacy",
-      subtitle: "" + t("settings_privacySubTitle"),
-      icon: settingsIcons.privacy,
-      callback: () => {
-        navigate("Privacy")
-      },
-    },
-    {
-      title: t("settings_logout"),
-      icon: settingsIcons.disconnect,
-      callback: async () => {
-        await client.destroyTokens()
-      },
-    },
-  ]
-
   return (
     <View style={{ flex: 1 }}>
       <ContentWrapperScroll title={"" + t("settings_title")}>
@@ -118,10 +76,49 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
           </View>
         )}
         <Divider />
-
-        {settingsList.map((setting, index) => {
-          return <SettingTile setting={setting} key={index} />
-        })}
+        <SettingTile
+          title={t("settings_appearance")}
+          subtitle="Dark, light mode"
+          icon={settingsIcons.modify}
+          callback={() => {
+            setModalThemeVisible(true)
+          }}
+        />
+        <SettingTile
+          title={t("settings_language")}
+          icon={settingsIcons.modify}
+          callback={() => {
+            void Linking.openSettings()
+          }}
+        />
+        <SettingTile
+          title={t("settings_infoAppTitle")}
+          subtitle={"" + t("settings_infoAppSubTitle")}
+          icon={settingsIcons.help}
+          callback={() => {
+            navigate("About")
+          }}
+        />
+        <SettingTile
+          title="Privacy"
+          subtitle={"" + t("settings_privacySubTitle")}
+          icon={settingsIcons.privacy}
+          callback={() => {
+            navigate("Privacy")
+          }}
+        />
+        {loggedIn && (
+          <>
+            <Divider />
+            <SettingTile
+              title={t("settings_logout")}
+              icon={settingsIcons.disconnect}
+              callback={async () => {
+                await client.destroyTokens()
+              }}
+            />
+          </>
+        )}
       </ContentWrapperScroll>
 
       <Modal

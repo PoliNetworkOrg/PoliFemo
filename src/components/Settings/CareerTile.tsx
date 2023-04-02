@@ -3,8 +3,8 @@ import { View } from "react-native"
 import { TouchableRipple } from "components/TouchableRipple"
 import { Button } from "components/Button"
 import { CareerColumn } from "./CareerColumn"
-import { Career } from "api/user"
 import { useTranslation } from "react-i18next"
+import { Career } from "api/collections/user"
 
 export interface CareerTileProps {
   career: Career

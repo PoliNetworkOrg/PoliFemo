@@ -7,7 +7,7 @@ import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePick
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { getBuildingCoords, isRoomFree } from "utils/rooms"
 import { RoomsSearchDataContext } from "contexts/rooms"
-import { Room } from "api/rooms"
+import { Room } from "api/collections/rooms"
 import { ErrorMessage } from "components/ErrorMessage"
 
 /**

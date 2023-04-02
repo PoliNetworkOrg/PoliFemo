@@ -92,71 +92,64 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
         <>
           <Divider />
           <SettingTile
-            setting={{
-              loading: loadingExport,
-              title: t("settings_export"),
-              subtitle: "" + t("settings_exportSubtitle"),
-              callback: async () => {
-                setLoadingExport(true)
-                try {
-                  const data = await api.user.exportPoliNetworkMe()
-                  const uri =
-                    FileSystem.cacheDirectory + "polinetwork_data.json"
-                  await FileSystem.writeAsStringAsync(
-                    uri,
-                    JSON.stringify(data, null, 2)
-                  )
-                  void Sharing.shareAsync(uri)
-                } catch (e) {
-                  Alert.alert(t("settings_export_error"), e + "")
-                  console.error(e)
-                } finally {
-                  setLoadingExport(false)
-                }
-              },
-            }}
-          />
-          <SettingTile
-            setting={{
-              title: t("settings_autoDelete"),
-              subtitle: "" + t("settings_autoDeleteSubTitle"),
-              callback: () => setShowingAutodeleteModal(true),
-            }}
-          />
-          <SettingTile
-            setting={{
-              title: t("settings_delete"),
-              subtitle: "" + t("settings_deleteSubTitle"),
-              callback: () => {
-                Alert.alert(
-                  t("settings_delete_question"),
-                  "" + t("settings_delete_alert_message"),
-                  [
-                    {
-                      text: "" + t("cancel", { ns: "common" }),
-                      style: "cancel",
-                    },
-                    {
-                      text: "" + t("settings_delete"),
-                      style: "destructive",
-                      onPress: async () => {
-                        try {
-                          await api.user.deletePoliNetworkMe()
-                          Alert.alert(
-                            t("settings_deleted"),
-                            "" + t("settings_deleted_message")
-                          )
-                          void client.destroyTokens()
-                          navigate("Home")
-                        } catch (e) {
-                          Alert.alert(t("settings_deleted_error"), e + "")
-                          console.error(e)
-                        }
-                      },
-                    },
-                  ]
+            loading={loadingExport}
+            title={t("settings_export")}
+            subtitle={"" + t("settings_exportSubtitle")}
+            callback={async () => {
+              setLoadingExport(true)
+              try {
+                const data = await api.user.exportPoliNetworkMe()
+                const uri = FileSystem.cacheDirectory + "polinetwork_data.json"
+                await FileSystem.writeAsStringAsync(
+                  uri,
+                  JSON.stringify(data, null, 2)
                 )
-              },
+                void Sharing.shareAsync(uri)
+              } catch (e) {
+                Alert.alert(t("settings_export_error"), e + "")
+                console.error(e)
+              } finally {
+                setLoadingExport(false)
+              }
+            }}
+          />
+          <SettingTile
+            title={t("settings_autoDelete")}
+            subtitle={"" + t("settings_autoDeleteSubTitle")}
+            callback={() => setShowingAutodeleteModal(true)}
+          />
+          <SettingTile
+            title={t("settings_delete")}
+            subtitle={"" + t("settings_deleteSubTitle")}
+            callback={() => {
+              Alert.alert(
+                t("settings_delete_question"),
+                "" + t("settings_delete_alert_message"),
+                [
+                  {
+                    text: "" + t("cancel", { ns: "common" }),
+                    style: "cancel",
+                  },
+                  {
+                    text: "" + t("settings_delete"),
+                    style: "destructive",
+                    onPress: async () => {
+                      try {
+                        await api.user.deletePoliNetworkMe()
+                        Alert.alert(
+                          t("settings_deleted"),
+                          "" + t("settings_deleted_message")
+                        )
+                        void client.destroyTokens()
+                        navigate("Home")
+                      } catch (e) {
+                        Alert.alert(t("settings_deleted_error"), e + "")
+                        console.error(e)
+                      }
+                    },
+                  },
+                ]
+              )
             }}
           />
           <Description>{t("settings_delete_message")}</Description>
@@ -164,12 +157,11 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
       )}
       <Divider />
       <SettingTile
-        setting={{
-          title: t("settings_privacyDisclaimer"),
-          subtitle: "" + t("settings_privacyDisclaimerSubTitle"),
-          callback: () =>
-            Linking.openURL("https://polinetwork.org/learnmore/privacy/"),
-        }}
+        title={t("settings_privacyDisclaimer")}
+        subtitle={"" + t("settings_privacyDisclaimerSubTitle")}
+        callback={() =>
+          Linking.openURL("https://polinetwork.org/learnmore/privacy/")
+        }
       />
       <Description last>
         {t("settings_privacyDisclaimer_message")}{" "}
@@ -188,8 +180,10 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
         onSelect={async value => {
           try {
             await api.user.updatePoliNetworkSettings({
-              // eslint-disable-next-line @typescript-eslint/naming-convention
-              expire_in_days: value,
+              settings: {
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                expire_in_days: value,
+              },
             })
             setAutodeleteTime(value)
             setShowingAutodeleteModal(false)

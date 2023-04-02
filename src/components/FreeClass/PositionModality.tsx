@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native"
-import { ConstructionType, Room } from "api/rooms"
+import { ConstructionType, Room } from "api/collections/rooms"
 import { BodyText } from "components/Text"
 import { RoomsSearchDataContext } from "contexts/rooms"
 import { PermissionStatus } from "expo-location"
