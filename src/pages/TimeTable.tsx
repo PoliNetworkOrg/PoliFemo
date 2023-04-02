@@ -1,4 +1,5 @@
 import { NavBar } from "components/NavBar"
+import { LectureCard } from "components/TimeTable/LectureCard"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { View } from "react-native"
 import { usePalette } from "utils/colors"
@@ -19,6 +20,12 @@ export const TimeTable: MainStackScreen<"TimeTable"> = () => {
         backgroundColor: !isLight ? background : homeBackground,
       }}
     >
+      <View>
+        <LectureCard
+          name="B2.2.2 - FUNDAMENTALS OF ELECTRONICS FOR DESIGN"
+          borderColor="#52E8F2"
+        />
+      </View>
       <NavBar />
     </View>
   )
