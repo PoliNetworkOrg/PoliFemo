@@ -21,7 +21,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
 
   const [currentCoords, setCurrentCoords] = useState<[number, number]>()
 
-  const { t } = useTranslation()
+  const { t } = useTranslation("freeClass")
 
   /**
    * This function finds the user current coordinates.
@@ -102,7 +102,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     <PageWrapper>
       <View style={{ paddingTop: 28 }}>
         <View style={{ paddingLeft: 28 }}>
-          <Title>{t("freeClass_exactPosition", { ns: "freeClass" })}</Title>
+          <Title>{t("freeClass_exactPosition")}</Title>
           <AddressText
             currentLocation={currentLocation}
             locationStatus={locationStatus}

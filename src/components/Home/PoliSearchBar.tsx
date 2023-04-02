@@ -92,7 +92,7 @@ export const PoliSearchBar: FC<{
         }}
         ref={inputText}
         autoCorrect={true}
-        placeholder={"" + t("search", { ns: "common" })}
+        placeholder={"" + t("search")}
         placeholderTextColor={fieldText}
         selectionColor={bodyText}
         onChangeText={onChange}

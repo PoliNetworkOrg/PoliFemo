@@ -76,7 +76,7 @@ export const FiltersList: FC<FiltersProps> = props => {
         }}
       >
         <OutlinedButton
-          text={"" + t("group_year", { ns: "common" })}
+          text={"" + t("group_year")}
           buttonStyle={styles.buttonCustomMargin}
           isSelected={props.filters.year ? true : false}
           onPress={() => {
@@ -87,7 +87,7 @@ export const FiltersList: FC<FiltersProps> = props => {
           }}
         />
         <OutlinedButton
-          text={"" + t("group_course", { ns: "common" })}
+          text={"" + t("group_course")}
           buttonStyle={styles.buttonCustomMargin}
           isSelected={props.filters.course ? true : false}
           onPress={() => {
@@ -98,7 +98,7 @@ export const FiltersList: FC<FiltersProps> = props => {
           }}
         />
         <OutlinedButton
-          text={"" + t("group_type", { ns: "common" })}
+          text={"" + t("group_type")}
           buttonStyle={styles.buttonCustomMargin}
           isSelected={props.filters.type ? true : false}
           onPress={() => {
@@ -109,7 +109,7 @@ export const FiltersList: FC<FiltersProps> = props => {
           }}
         />
         <OutlinedButton
-          text={"" + t("group_platform", { ns: "common" })}
+          text={"" + t("group_platform")}
           buttonStyle={styles.buttonCustomMargin}
           isSelected={props.filters.platform ? true : false}
           onPress={() => {
@@ -132,13 +132,13 @@ export const FiltersList: FC<FiltersProps> = props => {
         isShowing={isModalShowing}
         buttons={[
           {
-            text: "Annulla",
+            text: "" + t("cancel"),
             onPress: () => {
               setIsModalShowing(false)
             },
           },
           {
-            text: "Conferma",
+            text: "OK",
             onPress: () => {
               if (modalMode === "course") {
                 props.onFilterChange({
@@ -167,7 +167,7 @@ export const FiltersList: FC<FiltersProps> = props => {
         ]}
       >
         <SelectTile
-          value={"" + t("groups_all", { ns: "common" })}
+          value={"" + t("groups_all")}
           selected={selectedItem === undefined}
           onPress={() => {
             setSelectedItem(undefined)

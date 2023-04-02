@@ -87,7 +87,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
   return (
     <PageWrapper>
       <View style={{ paddingHorizontal: 28, paddingTop: 56 }}>
-        <Title>{t("groups_title", { ns: "common" })}</Title>
+        <Title>{t("groups_title")}</Title>
         <View style={{ marginTop: 36, marginBottom: 22 }}>
           <PoliSearchBar
             onChange={val => {

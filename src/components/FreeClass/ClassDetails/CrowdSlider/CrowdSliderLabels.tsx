@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next"
 export const CrowdSliderLabels: FC = () => {
   const { labelsHighContrast } = usePalette()
 
-  const { t } = useTranslation()
+  const { t } = useTranslation("freeClass")
 
   return (
     <View
@@ -23,7 +23,7 @@ export const CrowdSliderLabels: FC = () => {
           alignSelf: "flex-start",
         }}
       >
-        {t("freeClass_low", { ns: "freeClass" })}
+        {t("freeClass_low")}
       </BodyText>
       <BodyText
         style={{
@@ -34,7 +34,7 @@ export const CrowdSliderLabels: FC = () => {
           alignSelf: "center",
         }}
       >
-        {t("freeClass_med", { ns: "freeClass" })}
+        {t("freeClass_med")}
       </BodyText>
       <BodyText
         style={{
@@ -45,7 +45,7 @@ export const CrowdSliderLabels: FC = () => {
           alignSelf: "flex-end",
         }}
       >
-        {t("freeClass_high", { ns: "freeClass" })}
+        {t("freeClass_high")}
       </BodyText>
     </View>
   )
