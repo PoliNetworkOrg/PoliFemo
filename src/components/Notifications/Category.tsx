@@ -5,11 +5,12 @@ import { Switch } from "react-native-switch"
 import { usePalette } from "utils/colors"
 
 import { Icon } from "components/Icon"
-import { useNotificationBadge, ValidCategoryId } from "utils/notifications"
+import { ValidChannelId } from "notifications/index"
+import { useNotificationBadge } from "notifications/useNotificationBadge"
 
 export interface CategoryProps {
   title: string
-  categoryId: ValidCategoryId
+  channelId: ValidChannelId
   icon?: number
   switchControl?: {
     /** State of the switch */
@@ -24,7 +25,7 @@ export interface CategoryProps {
 export const Category: FC<CategoryProps> = props => {
   const { backgroundSecondary, palette, isLight } = usePalette()
 
-  const badgeCount = useNotificationBadge(props.categoryId)
+  const badgeCount = useNotificationBadge(props.channelId)
 
   return (
     <Pressable

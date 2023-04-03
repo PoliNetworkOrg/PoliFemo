@@ -11,10 +11,8 @@ import {
   Roboto_900Black,
 } from "@expo-google-fonts/roboto"
 import { AppContainer } from "./src/AppContainer"
-
 import { OutsideClickProvider } from "utils/outsideClick"
 import { api } from "api"
-
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { LoginContext, LoginState } from "contexts/login"
 import { SettingsContext, Settings } from "contexts/settings"
@@ -23,16 +21,13 @@ import { HttpClient } from "api/HttpClient"
 import { usePalette } from "utils/colors"
 import { StatusBar } from "react-native"
 import { Host } from "react-native-portalize"
-import {
-  checkPermission,
-  InitializeNotificationAppCentre,
-  linking,
-  useNotificationsHandlers,
-} from "utils/notifications"
+import { NotificationCentre } from "notifications/NotificationCentre"
+import { linking } from "notifications/deepLinking"
 
 const client = HttpClient.getInstance()
 
-InitializeNotificationAppCentre()
+// eslint-disable-next-line unused-imports/no-unused-vars
+const notificationCentre = NotificationCentre.getInstance()
 
 export default function App() {
   const { homeBackground } = usePalette()
@@ -40,16 +35,6 @@ export default function App() {
   const [settings, setSettings] = useState<Settings>({
     theme: "predefined",
   })
-
-  // get notification grant on first app start
-  const getNotificationPermission = async () => {
-    await checkPermission()
-  }
-  useEffect(() => {
-    void getNotificationPermission()
-  }, [])
-
-  useNotificationsHandlers()
 
   //tracking first render
   const firstRender = useRef(true)

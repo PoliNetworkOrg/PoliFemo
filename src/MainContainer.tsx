@@ -6,9 +6,11 @@ import { useNavigation } from "navigation/NavigationTypes"
 import { MainStack } from "navigation/MainStackNavigator"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { sendScheduledNotification } from "utils/notifications"
 import { RoomsSearchDataContext } from "contexts/rooms"
 import { GlobalRoomListInterface } from "utils/rooms"
+import { NotificationCentre } from "./notifications/NotificationCentre"
+
+const notificationCentre = NotificationCentre.getInstance()
 
 /**
  * The Main Container.
@@ -93,13 +95,13 @@ export const MainContainer: FC = () => {
       <Tray
         onDownloads={() => {
           console.log("downloads")
-          void sendScheduledNotification(
+          void notificationCentre.sendScheduledNotification(
             {
               title: "Notifica ISEE",
               body: "Attenzione sta per scadere l'isee",
               data: {
                 sender: "Polimi",
-                categoryId: "comunicazioni",
+                channelId: "comunicazioni",
                 content:
                   "Questa è il content della notifica, ricordati dell'ISEE",
 
@@ -108,34 +110,37 @@ export const MainContainer: FC = () => {
             },
             { seconds: 3 }
           )
-          void sendScheduledNotification(
+          void notificationCentre.sendScheduledNotification(
             {
               title: "Notifica UPLOAD",
               body: "Prova",
               data: {
                 sender: "Sconosciuto",
-                categoryId: "upload",
+                channelId: "upload",
                 content: "Guarda i tuoi upload",
                 object: "oggetto!",
               },
             },
             null
           )
-          void sendScheduledNotification(
+          void notificationCentre.sendScheduledNotification(
             {
               title: "Notifica SCACCHI",
               body: "prova",
               data: {
                 sender: "polimi scacchi",
                 cacheOnSchedule: false,
-                categoryId: "associazioni",
+                channelId: "associazioni",
                 content: "vieni a giocare a scacchi",
                 object: "come vincere a scacchi",
                 linkUrl:
                   "https://images.unsplash.com/photo-1560174038-da43ac74f01b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2057&q=80",
               },
             },
-            { date: new Date(new Date().getTime() + 2000) }
+            {
+              date: new Date(new Date().getTime() + 2000),
+              channelId: "associazioni",
+            }
           )
         }}
         onNotifications={() => {

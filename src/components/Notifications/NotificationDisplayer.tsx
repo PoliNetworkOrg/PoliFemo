@@ -3,8 +3,8 @@ import { useNavigation } from "navigation/NavigationTypes"
 import { FC } from "react"
 import { View } from "react-native"
 import { usePalette } from "utils/colors"
-import { NotificationStorage } from "utils/notifications"
 import { NotificationTile } from "./NotificationTile"
+import { NotificationStorage } from "notifications/index"
 
 export interface NotificationDisplayerProps {
   notification: NotificationStorage

@@ -19,34 +19,34 @@ export const Notifications: MainStackScreen<"Notifications"> = () => {
         <View style={{ paddingTop: 20 }}>
           <Category
             title="Comunicazioni Istituzionali"
-            categoryId="comunicazioni"
+            channelId="comunicazioni"
             icon={comunicazioni}
             onClick={() =>
               navigate("NotificationsCategory", {
                 category: "Comunicazioni Istituzionali",
-                categoryId: "comunicazioni",
+                channelId: "comunicazioni",
               })
             }
           />
           <Category
             title="Associazioni"
-            categoryId="associazioni"
+            channelId="associazioni"
             icon={associazioni}
             onClick={() =>
               navigate("NotificationsCategory", {
                 category: "Associazioni",
-                categoryId: "associazioni",
+                channelId: "associazioni",
               })
             }
           />
           <Category
             title="Nuovi Upload"
-            categoryId="upload"
+            channelId="upload"
             icon={upload}
             onClick={() =>
               navigate("NotificationsCategory", {
                 category: "Nuovi Upload",
-                categoryId: "upload",
+                channelId: "upload",
               })
             }
           />

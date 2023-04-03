@@ -6,12 +6,13 @@ import { FC } from "react"
 import { View, Image, Pressable } from "react-native"
 import { SharedElement } from "react-navigation-shared-element"
 import { usePalette } from "utils/colors"
-import {
-  notificationEventEmitter,
-  NotificationStorage,
-  popNotificationFromStorage,
-} from "utils/notifications"
+
 import deleteSvg from "assets/menu/delete.svg"
+import { NotificationStorage } from "notifications/index"
+import { notificationEventEmitter } from "notifications/NotificationEventEmitter"
+import { NotificationCentre } from "notifications/NotificationCentre"
+
+const notificationCentre = NotificationCentre.getInstance()
 
 export interface NotificationTileProps {
   notification: NotificationStorage
@@ -87,8 +88,8 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
               }}
             >
               <Pressable
-                onPress={async () => {
-                  await popNotificationFromStorage(identifier)
+                onPress={() => {
+                  notificationCentre.removeNotificationFromStorage(identifier)
                   notificationEventEmitter.emit("notification-remove")
                   if (!isRead) {
                     notificationEventEmitter.emit("badge-change")

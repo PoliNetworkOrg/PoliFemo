@@ -3,19 +3,19 @@ import { NotificationTile } from "components/Notifications/NotificationTile"
 import { Title } from "components/Text"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { View } from "react-native"
-import {
-  setNotificationAsReadStorage,
-  useNotificationStorage,
-} from "utils/notifications"
+import { NotificationCentre } from "notifications/NotificationCentre"
+import { useNotificationStorage } from "notifications/useNotificationStorage"
+
+const notificationCentre = NotificationCentre.getInstance()
 
 export const NotificationsCategory: MainStackScreen<
   "NotificationsCategory"
 > = props => {
-  const { category, categoryId } = props.route.params
+  const { category, channelId } = props.route.params
 
   const { navigate } = useNavigation()
 
-  const [notifications] = useNotificationStorage(categoryId, props.navigation)
+  const [notifications] = useNotificationStorage(channelId, props.navigation)
 
   return (
     <ContentWrapperScroll>
@@ -34,7 +34,7 @@ export const NotificationsCategory: MainStackScreen<
                 })
 
                 if (notification.isRead === false) {
-                  void setNotificationAsReadStorage(notification.identifier)
+                  void notificationCentre.markAsRead(notification.identifier)
                 }
               }}
             />

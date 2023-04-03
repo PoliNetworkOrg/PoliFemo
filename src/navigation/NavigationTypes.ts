@@ -25,13 +25,13 @@ import { Article } from "api/articles"
 import { NavigatorScreenParams } from "@react-navigation/native"
 import { Occupancies } from "api/rooms"
 import { TagWithData } from "contexts/newsPreferences"
-import { NotificationStorage, ValidCategoryId } from "utils/notifications"
 import { ValidAcronym } from "utils/rooms"
 import {
   HeadquarterItem,
   CampusItem,
   BuildingItem,
 } from "components/FreeClass/DefaultList"
+import { ValidChannelId, NotificationStorage } from "notifications/index"
 
 /**
  * interface containing the info about the params for each page of the stack navigator
@@ -79,7 +79,7 @@ export type MainStackNavigatorParams = {
   Notifications: undefined
   NotificationsCategory: {
     category: string
-    categoryId: ValidCategoryId
+    channelId: ValidChannelId
   }
   NotificationDetails: { notification: NotificationStorage; category: string }
 }

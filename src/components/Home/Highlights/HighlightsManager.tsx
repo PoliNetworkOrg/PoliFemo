@@ -10,7 +10,9 @@ import {
   WidgetType,
 } from "utils/carousel"
 import { api } from "api"
-import { checkNeedSchedulingNotifications } from "utils/notifications"
+import { NotificationCentre } from "notifications/NotificationCentre"
+
+const notificationCentre = NotificationCentre.getInstance()
 
 /**
  * Component that decides the content of the carousel.
@@ -59,7 +61,7 @@ export const HighlightsManager: FC = () => {
         //we extract the events if there is something
         const newWidgets = extractNextEvents(response)
         setWidgets(newWidgets)
-        await checkNeedSchedulingNotifications(newWidgets)
+        await notificationCentre.scheduleCarousel(newWidgets)
       }
     } catch (error) {
       console.log(error)
