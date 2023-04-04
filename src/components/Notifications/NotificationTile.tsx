@@ -90,7 +90,6 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
               <Pressable
                 onPress={() => {
                   notificationCentre.removeNotificationFromStorage(identifier)
-                  notificationEventEmitter.emit("notification-remove")
                   if (!isRead) {
                     notificationEventEmitter.emit("badge-change")
                   }

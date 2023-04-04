@@ -25,12 +25,12 @@ export function useNotificationStorage(
       undefined
     >
   >
-): [NotificationStorage[], (notifications: NotificationStorage[]) => void] {
+): [NotificationStorage[]] {
   const [notifications, setNotifications] = useState<NotificationStorage[]>([])
 
   useEffect(() => {
     function loadNotifications() {
-      console.log("loading notifications")
+      console.log("loading notifications " + channelId)
       const notifications =
         notificationCentre.getNotificationsOfCategory(channelId)
       setNotifications(notifications)
@@ -45,16 +45,23 @@ export function useNotificationStorage(
     navigation?.addListener("focus", loadNotifications)
 
     //load when item is removed
-    const listener = notificationEventEmitter.addListener(
+    const listenerRemove = notificationEventEmitter.addListener(
       "notification-remove",
+      loadNotifications
+    )
+
+    //load when item is added
+    const listenerAdd = notificationEventEmitter.addListener(
+      "notification-add",
       loadNotifications
     )
 
     return () => {
       navigation?.removeListener("focus", loadNotifications)
-      listener.remove()
+      listenerRemove.remove()
+      listenerAdd.remove()
     }
   }, [])
 
-  return [notifications, notifications => setNotifications(notifications)]
+  return [notifications]
 }

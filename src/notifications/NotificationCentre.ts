@@ -42,6 +42,7 @@ export class NotificationCentre {
     this._inizializeNotificationHandler()
     void this._setNotificationsChannels()
     this._initializeNotificationListeners()
+    //read from storage on app start
     void this._readFromStorage()
     //check permission on app start
     void this._checkPermission()
@@ -101,11 +102,12 @@ export class NotificationCentre {
   private _initializeNotificationListeners = () => {
     this.notificationReceivedListener =
       Notifications.addNotificationReceivedListener(notification => {
+        console.log(notification.request.content.title)
         //if cacheOnSchedule is set to false, cache now. (more intended for push notifications...)
         //by default cacheOnSchedule is true for every notification scheduled by the device
         // TODO : might need changing if push notifications will be implemented
         if (notification.request.content.data.cacheOnSchedule === false) {
-          console.log("saving in storage from listener, received -> true")
+          console.log("Notification received with cacheOnSchedule set to false")
           const newNotificationList = this.notifications
           if (newNotificationList) {
             newNotificationList.push({
@@ -120,6 +122,7 @@ export class NotificationCentre {
           this._markAsReceived(notification.request.identifier)
         }
         notificationEventEmitter.emit("badge-change")
+        notificationEventEmitter.emit("notification-add")
       })
     this.notificationTappedListener =
       Notifications.addNotificationResponseReceivedListener(response => {
@@ -232,8 +235,15 @@ export class NotificationCentre {
       const grant = await this._checkPermission()
       console.log("grant: " + grant)
       if (grant) {
+        //unify
         content.data.channelId = content.data.channelId ?? channelId
-
+        if (
+          trigger !== null &&
+          typeof trigger === "object" &&
+          !(trigger instanceof Date)
+        ) {
+          trigger.channelId = channelId
+        }
         // mark cacheOnSchedule as true by default
         const cacheOnSchedule = content.data.cacheOnSchedule ?? true
         content.data.cacheOnSchedule = cacheOnSchedule
@@ -243,10 +253,10 @@ export class NotificationCentre {
           content: content,
           trigger: trigger,
         })
+        console.log("scheduled notification of identifier: " + identifier)
 
         if (cacheOnSchedule) {
           //store notification in filesystem
-          console.log("scheduled notification of identifier: " + identifier)
           const relevantDate: Date | undefined =
             calculateDateFromTrigger(trigger)
 
@@ -348,40 +358,13 @@ export class NotificationCentre {
   public removeNotificationFromStorage = (identifier: string) => {
     for (let i = 0; i < this.notifications.length; i++) {
       if (this.notifications[i].identifier === identifier) {
-        // this should always evaluate to false.
-        // the user shouldn't be able to remove notifications that haven't been received.
-        if (!this.notifications[i].hasBeenReceived) {
-          void this._removeNotificationFromSchedule(identifier)
-        }
-
         //remove from storage
         this.notifications.splice(i, 1)
         void this._writeToStorage(this.notifications)
+        //emit events
         notificationEventEmitter.emit("notification-remove")
         notificationEventEmitter.emit("badge-change")
       }
-    }
-  }
-
-  /**
-   * this method removes a notification from the phone scheduler given its identifier.
-   * This is intended to be used only when a notification is removed using
-   * `removeNotificationFromStorage` and the notification has not yet been received,
-   * so in rare cases of errors.
-   * @param identifier
-   */
-  private _removeNotificationFromSchedule = async (identifier: string) => {
-    try {
-      const notifications = await Notifications.getPresentedNotificationsAsync()
-      let found = false
-      for (let i = 0; i < notifications.length && !found; i++) {
-        if (notifications[i].request.identifier === identifier) {
-          await Notifications.cancelScheduledNotificationAsync(identifier)
-          found = true
-        }
-      }
-    } catch (err) {
-      console.log(err)
     }
   }
 
@@ -488,14 +471,31 @@ export class NotificationCentre {
     return count
   }
 
+  /**
+   * This method returns the notifications which are relevant and of the given category,
+   * if the category is not set, it returns all the relevant notifications.
+   *
+   * @param channelId
+   *
+   */
   public getNotificationsOfCategory(channelId?: ValidChannelId) {
     const notifications = this.notifications
+    const now = new Date()
+
     if (!channelId) {
-      return notifications
+      return notifications.filter(notification => {
+        const isRelevantAt = notification.isRelevantAt
+        return !isRelevantAt || new Date(isRelevantAt).getTime() < now.getTime()
+      })
     }
     const notificationsOfCategory = []
+
     for (let i = 0; i < notifications?.length; i++) {
-      if (notifications[i].content.data.channelId === channelId) {
+      const isRelevantAt = notifications[i].isRelevantAt
+      if (
+        notifications[i].content.data.channelId === channelId &&
+        (!isRelevantAt || new Date(isRelevantAt).getTime() < now.getTime())
+      ) {
         notificationsOfCategory.push(notifications[i])
       }
     }

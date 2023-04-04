@@ -108,7 +108,8 @@ export const MainContainer: FC = () => {
                 object: "oggetto",
               },
             },
-            { seconds: 3 }
+            { seconds: 3 },
+            "comunicazioni"
           )
           void notificationCentre.sendScheduledNotification(
             {
@@ -139,7 +140,6 @@ export const MainContainer: FC = () => {
             },
             {
               date: new Date(new Date().getTime() + 2000),
-              channelId: "associazioni",
             }
           )
         }}
