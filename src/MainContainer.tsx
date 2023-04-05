@@ -97,50 +97,52 @@ export const MainContainer: FC = () => {
           console.log("downloads")
           void notificationCentre.sendScheduledNotification(
             {
-              title: "Notifica ISEE",
-              body: "Attenzione sta per scadere l'isee",
+              title: "Notifica Comunicazioni di prova",
+              body: "Questo è il body del messaggio di prova. Questa notifica arriva istantaneamente",
               data: {
-                sender: "Polimi",
-                channelId: "comunicazioni",
+                sender: "Sender",
                 content:
-                  "Questa è il content della notifica, ricordati dell'ISEE",
-
-                object: "oggetto",
+                  "Questo è il content del messaggio Comunicazioni di prova",
+                object: "Questo è l'oggetto del messaggio di prova",
+                deepLink: true,
               },
             },
-            { seconds: 3 },
+            null,
             "comunicazioni"
           )
           void notificationCentre.sendScheduledNotification(
             {
-              title: "Notifica UPLOAD",
-              body: "Prova",
+              title: "Notifica UPLOAD di prova",
+              body: "Questo è il body del messaggio di prova. Questa notifica arriva istantaneamente",
               data: {
-                sender: "Sconosciuto",
-                channelId: "upload",
-                content: "Guarda i tuoi upload",
-                object: "oggetto!",
+                sender: "Sender",
+                content: "Questo è il content del messaggio Upload di prova",
+                object: "Questo è l'oggetto del messaggio di prova",
+                deepLink: true,
               },
             },
-            null
+            null,
+            "upload"
           )
           void notificationCentre.sendScheduledNotification(
             {
-              title: "Notifica SCACCHI",
-              body: "prova",
+              title: "Notifica ASSOCIAZIONI di prova",
+              body: "Questo è il body del messaggio di prova. Questa notifica arriva dopo 2 secondi",
               data: {
-                sender: "polimi scacchi",
+                sender: "Associazione del Poli",
                 cacheOnSchedule: false,
-                channelId: "associazioni",
-                content: "vieni a giocare a scacchi",
-                object: "come vincere a scacchi",
+                content:
+                  "Questo è il content del messaggio Associazioni di prova",
+                object: "Questo è l'oggetto del messaggio di prova",
                 linkUrl:
                   "https://images.unsplash.com/photo-1560174038-da43ac74f01b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2057&q=80",
+                deepLink: true,
               },
             },
             {
               date: new Date(new Date().getTime() + 2000),
-            }
+            },
+            "associazioni"
           )
         }}
         onNotifications={() => {

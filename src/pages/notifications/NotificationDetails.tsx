@@ -12,7 +12,7 @@ export const NotificationDetails: MainStackScreen<
   return (
     <ContentWrapperScroll>
       <View style={{ paddingTop: 28, flex: 1, marginBottom: 50 }}>
-        <Title style={{ paddingLeft: 28 }}>{category}</Title>
+        {category && <Title style={{ paddingLeft: 28 }}>{category}</Title>}
         <NotificationDisplayer notification={notification} />
       </View>
     </ContentWrapperScroll>

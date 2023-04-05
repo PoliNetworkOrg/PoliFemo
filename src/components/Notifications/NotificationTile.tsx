@@ -8,7 +8,7 @@ import { SharedElement } from "react-navigation-shared-element"
 import { usePalette } from "utils/colors"
 
 import deleteSvg from "assets/menu/delete.svg"
-import { NotificationStorage } from "notifications/index"
+import { NotificationStorage } from "notifications/NotificationTypes"
 import { notificationEventEmitter } from "notifications/NotificationEventEmitter"
 import { NotificationCentre } from "notifications/NotificationCentre"
 

@@ -7,7 +7,7 @@ import {
 import { useState, useEffect } from "react"
 import { notificationEventEmitter } from "./NotificationEventEmitter"
 import { NotificationCentre } from "./NotificationCentre"
-import { NotificationStorage, ValidChannelId } from "."
+import { NotificationStorage, ValidChannelId } from "./NotificationTypes"
 
 const notificationCentre = NotificationCentre.getInstance()
 

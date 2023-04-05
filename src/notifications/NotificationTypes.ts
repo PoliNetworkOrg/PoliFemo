@@ -38,27 +38,38 @@ export type NotificationStorage = {
 // Extend NotificationContentInput to explicitly define interesting props in the data field.
 export interface NotificationCustomContentInput
   extends NotificationContentInput {
+  //TODO : define all useful fields
   data: {
     sender?: string
+    /**
+     * a link which can be tapped by the user and open the browser
+     */
     linkUrl?: string
     content?: string
     object?: string
     channelId?: ValidChannelId
     association?: string
+    /**
+     * if true or undefined, notification is stored in the storage on schedule
+     * (most common behaviour),
+     * if it is false, it is stored when it is received.
+     */
     cacheOnSchedule?: boolean
-    //deeplinks
-    url?: string
+    /**
+     * enable deeplinking to NotificationDetails
+     */
+    deepLink?: boolean
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any
   }
 }
 
+export type ValidChannelId = "associazioni" | "upload" | "comunicazioni"
+
 // Extend NotificationContent
 // through type because NotificationContent doesnt have statically known members
 type NotificationCustomContentInputResponse = NotificationContent &
   NotificationCustomContentInput
-
-export type ValidChannelId = "associazioni" | "upload" | "comunicazioni"
 
 export interface NotificationCustomRequest
   extends Notifications.NotificationRequest {

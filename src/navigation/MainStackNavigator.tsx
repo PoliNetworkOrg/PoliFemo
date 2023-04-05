@@ -27,9 +27,6 @@ import { HeadquarterChoice } from "pages/FreeClass/HeadquarterChoice"
 const MainStackNavigator =
   createSharedElementStackNavigator<MainStackNavigatorParams>()
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-/* const MainStackNavigator = createStackNavigator<MainStackNavigatorParams>() */
-
 export const MainStack: FC = () => {
   return (
     <MainStackNavigator.Navigator
@@ -103,8 +100,10 @@ export const MainStack: FC = () => {
             return undefined
           }
 
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
-          return [notification.identifier]
+          if (otherRoute.name === "NotificationsCategory" && showing) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+            return [notification.identifier]
+          }
         }}
       />
     </MainStackNavigator.Navigator>

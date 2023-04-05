@@ -2,6 +2,7 @@ import {
   MinutesBeforeOptions,
   calculateDateFromTrigger,
   getMinutesBeforeInMilliseconds,
+  mapNotificationChannelString,
 } from "utils/notifications"
 import * as FileSystem from "expo-file-system"
 import * as Notifications from "expo-notifications"
@@ -11,8 +12,9 @@ import {
   NotificationStorage,
   NotificationCustomContentInput,
   ValidChannelId,
-} from "."
+} from "./NotificationTypes"
 import { notificationEventEmitter } from "./NotificationEventEmitter"
+import { navigationRef } from "navigation/NavigationTypes"
 
 export class NotificationCentre {
   private static classInstance?: NotificationCentre
@@ -116,9 +118,11 @@ export class NotificationCentre {
               isRead: false,
               hasBeenReceived: true,
             })
+            //store now
             void this._writeToStorage(newNotificationList)
           }
         } else {
+          //already stored
           this._markAsReceived(notification.request.identifier)
         }
         notificationEventEmitter.emit("badge-change")
@@ -133,6 +137,28 @@ export class NotificationCentre {
           void Notifications.dismissNotificationAsync(
             response.notification.request.identifier
           )
+        }
+
+        //deepLinking
+        const isDeepLink = response.notification.request.content.data.deepLink
+
+        if (isDeepLink && response.notification) {
+          navigationRef.current?.navigate("MainNav", {
+            screen: "NotificationDetails",
+            params: {
+              notification: {
+                content: response.notification.request.content,
+                hasBeenReceived: true,
+                identifier: response.notification.request.identifier,
+                isRead: true,
+                isRelevantAt: undefined,
+              },
+              category: mapNotificationChannelString(
+                response.notification.request.content.data.channelId
+              ),
+            },
+          })
+          this.markAsRead(response.notification.request.identifier)
         }
       })
   }
@@ -208,22 +234,22 @@ export class NotificationCentre {
    *          data: {
    *            sender: "polimi scacchi",
    *            cacheOnSchedule: false,
-   *            channelId: "associazioni",
    *            content: "vieni a giocare a scacchi",
    *            object: "come vincere a scacchi",
    *            linkUrl:
-   *              "https://url",
+   *              "https://url_di_una_immagine_da_mostrare_ad_esempio",
+   *            deepLink: true
    *          },
    *        },
    *        {
    *          date: new Date(new Date().getTime() + 2000),
-   *          channelId: "associazioni",
-   *        }
+   *        },
+   *        "associazioni"
    *      )
    * ```
    * @param content content object
    * @param trigger trigger object, can be date or null (send immediately)
-   * @param channelId override content channelId, for practicality
+   * @param channelId override content channelId and trigger channelId, for practicality
    * @returns the identifier of the notification
    */
   public sendScheduledNotification = async (

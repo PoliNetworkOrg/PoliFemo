@@ -4,7 +4,7 @@ import { FC } from "react"
 import { View } from "react-native"
 import { usePalette } from "utils/colors"
 import { NotificationTile } from "./NotificationTile"
-import { NotificationStorage } from "notifications/index"
+import { NotificationStorage } from "notifications/NotificationTypes"
 
 export interface NotificationDisplayerProps {
   notification: NotificationStorage

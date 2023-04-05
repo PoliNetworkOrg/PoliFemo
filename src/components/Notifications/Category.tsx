@@ -5,7 +5,7 @@ import { Switch } from "react-native-switch"
 import { usePalette } from "utils/colors"
 
 import { Icon } from "components/Icon"
-import { ValidChannelId } from "notifications/index"
+import { ValidChannelId } from "notifications/NotificationTypes"
 import { useNotificationBadge } from "notifications/useNotificationBadge"
 
 export interface CategoryProps {

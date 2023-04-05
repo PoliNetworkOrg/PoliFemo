@@ -1,5 +1,6 @@
 import { NotificationTriggerInput } from "expo-notifications"
 import { WidgetType } from "./carousel"
+import { ValidChannelId } from "notifications/NotificationTypes"
 
 export interface MinutesBeforeOptions {
   deadline?: number
@@ -115,4 +116,14 @@ export const calculateDateFromTrigger = (trigger: NotificationTriggerInput) => {
     )
   }
   return relevantDate
+}
+
+export const mapNotificationChannelString = (channelId?: ValidChannelId) => {
+  if (channelId === "associazioni") {
+    return "Associazioni"
+  } else if (channelId === "comunicazioni") {
+    return "Comunicazioni Istituzionali"
+  } else if (channelId === "upload") {
+    return "Nuovi Upload"
+  }
 }

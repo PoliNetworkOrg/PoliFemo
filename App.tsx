@@ -22,7 +22,7 @@ import { usePalette } from "utils/colors"
 import { StatusBar } from "react-native"
 import { Host } from "react-native-portalize"
 import { NotificationCentre } from "notifications/NotificationCentre"
-import { linking } from "notifications/deepLinking"
+import { navigationRef } from "navigation/NavigationTypes"
 
 const client = HttpClient.getInstance()
 
@@ -153,7 +153,7 @@ export default function App() {
               background: homeBackground,
             },
           }}
-          linking={linking}
+          ref={navigationRef}
         >
           <StatusBar
             barStyle={"light-content"}
