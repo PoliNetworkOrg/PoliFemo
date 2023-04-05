@@ -7,7 +7,8 @@ try {
   const result = utils().playServicesAvailability
   GMS = result.isAvailable
 } catch (e) {
-  console.error(e)
+  console.warn("Error checking for GMS:")
+  console.warn(e)
 }
 
 /* eslint-enable  */
