@@ -1,0 +1,118 @@
+import { useState, useEffect } from "react"
+import { MainStackScreen } from "navigation/NavigationTypes"
+import { Platform, View } from "react-native"
+import { Title } from "components/Text"
+import * as Location from "expo-location"
+import { LocationGeocodedAddress, PermissionStatus } from "expo-location"
+import { AddressText } from "components/FreeClass/AddressText"
+import { PageWrapper } from "components/Groups/PageWrapper"
+import { PositionModality } from "components/FreeClass/PositionModality"
+import { useTranslation } from "react-i18next"
+
+/**
+ * In this page the user can find a room according to his current position.
+ */
+export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
+  const [locationStatus, setLocationStatus] = useState<PermissionStatus>(
+    PermissionStatus.GRANTED
+  )
+  const [currentLocation, setCurrentLocation] =
+    useState<LocationGeocodedAddress>()
+
+  const [currentCoords, setCurrentCoords] = useState<[number, number]>()
+
+  const { t } = useTranslation("freeClass")
+
+  /**
+   * This function finds the user current coordinates.
+   */
+  async function getUserCoordinates() {
+    const { status } = await Location.requestForegroundPermissionsAsync()
+    setLocationStatus(status)
+
+    if (status !== "granted") setCurrentLocation(undefined)
+    else {
+      const lastPosition = await Location.getLastKnownPositionAsync()
+      if (lastPosition) {
+        setCurrentCoords([
+          lastPosition.coords.latitude,
+          lastPosition.coords.longitude,
+        ])
+      }
+      //in order to get more accurate information
+      const { coords } = await Location.getCurrentPositionAsync({})
+      setCurrentCoords([coords.latitude, coords.longitude])
+    }
+  }
+
+  async function getUserLocation() {
+    if (currentCoords) {
+      const response = await Location.reverseGeocodeAsync({
+        latitude: currentCoords[0],
+        longitude: currentCoords[1],
+      })
+      setLocationStatus(PermissionStatus.GRANTED)
+      setCurrentLocation(response[0])
+    }
+  }
+
+  /**
+   * This function checks if the location permissions have been granted by the user.
+   */
+  async function checkPermission() {
+    if (Platform.OS === "ios") {
+      // idk but hasServicesEnabledAsync does not work on IOS
+      const { status } = await Location.requestForegroundPermissionsAsync()
+      if (status !== "granted") {
+        setLocationStatus(PermissionStatus.UNDETERMINED)
+        setCurrentLocation(undefined)
+      } else {
+        setLocationStatus(PermissionStatus.GRANTED)
+      }
+    } else {
+      const res = await Location.hasServicesEnabledAsync()
+      if (!res) {
+        setLocationStatus(PermissionStatus.UNDETERMINED)
+        setCurrentLocation(undefined)
+      } else {
+        setLocationStatus(PermissionStatus.GRANTED)
+      }
+    }
+    return
+  }
+
+  useEffect(() => {
+    const intervalId = setInterval(() => void checkPermission(), 2000) //call every 2 sec
+    return () => clearInterval(intervalId)
+  }, [])
+
+  useEffect(() => {
+    if (locationStatus !== PermissionStatus.GRANTED) {
+      return
+    } else {
+      void getUserCoordinates()
+    }
+  }, [locationStatus])
+
+  useEffect(() => {
+    void getUserLocation()
+  }, [currentCoords])
+
+  return (
+    <PageWrapper>
+      <View style={{ paddingTop: 28 }}>
+        <View style={{ paddingLeft: 28 }}>
+          <Title>{t("freeClass_exactPosition")}</Title>
+          <AddressText
+            currentLocation={currentLocation}
+            locationStatus={locationStatus}
+          />
+        </View>
+      </View>
+      <PositionModality
+        currentCoords={currentCoords ?? [0, 0]}
+        locationStatus={locationStatus}
+      />
+    </PageWrapper>
+  )
+}

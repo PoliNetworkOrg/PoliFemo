@@ -6,6 +6,10 @@ import { useNavigation } from "navigation/NavigationTypes"
 import { MainStack } from "navigation/MainStackNavigator"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { RoomsSearchDataContext } from "contexts/rooms"
+import { formatDate } from "utils/rooms"
+import { useApiCall } from "api/useApiCall"
+import { api } from "api"
 
 /**
  * The Main Container.
@@ -16,9 +20,33 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 export const MainContainer: FC = () => {
   const { homeBackground } = usePalette()
 
-  const { navigate } = useNavigation()
+  const { navigate, getState } = useNavigation()
+  const isInsideFreeClassrooms =
+    getState().routes[0].state?.routes[1]?.name === "FreeClassrooms"
 
   const [preferences, setPreferences] = useState<Record<string, Preference>>({})
+
+  //rooms search date
+  const [date, setDate] = useState(new Date())
+
+  const [globRooms, isRoomsSearching] = useApiCall(
+    api.rooms.getFreeRoomsDay,
+    {
+      date: formatDate(date),
+    },
+    [date, isInsideFreeClassrooms],
+    {},
+    !isInsideFreeClassrooms // prevent calls when outside FreeClassrooms
+  )
+
+  const globalRoomList = globRooms ?? {
+    MIA: [],
+    MIB: [],
+    CRG: [],
+    LCF: [],
+    PCL: [],
+    MNI: [],
+  }
 
   useEffect(() => {
     console.log("Loading tags preferences from storage")
@@ -50,22 +78,31 @@ export const MainContainer: FC = () => {
         backgroundColor: homeBackground,
       }}
     >
-      <NewsPreferencesContext.Provider
+      <RoomsSearchDataContext.Provider
         value={{
-          preferences,
-          setArticlesPreferences: pref => {
-            setPreferences(pref.preferences)
-          },
+          isRoomsSearching,
+          date: date,
+          setDate: (date: Date) => setDate(date),
+          rooms: globalRoomList,
         }}
       >
-        <MainStack />
-      </NewsPreferencesContext.Provider>
+        <NewsPreferencesContext.Provider
+          value={{
+            preferences,
+            setArticlesPreferences: pref => {
+              setPreferences(pref.preferences)
+            },
+          }}
+        >
+          <MainStack />
+        </NewsPreferencesContext.Provider>
+      </RoomsSearchDataContext.Provider>
       <Tray
         onDownloads={() => {
           console.log("downloads")
         }}
         onNotifications={() => {
-          console.log("notifications")
+          console.log("downloads")
         }}
         onSettings={() => {
           navigate("SettingsNav", {

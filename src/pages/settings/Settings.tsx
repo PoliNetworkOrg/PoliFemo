@@ -3,7 +3,7 @@ import { View } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ContentWrapperScroll } from "components/Settings"
 import { Divider } from "components/Divider"
-import { SettingTile, SettingOptions } from "components/Settings"
+import { SettingTile } from "components/Settings"
 import { settingsIcons } from "assets/settings"
 import { UserDetailsTile } from "components/Settings"
 import { CareerTile } from "components/Settings"
@@ -12,13 +12,13 @@ import { UserAnonymousTile } from "components/Settings"
 import { SettingsContext, ValidColorSchemeName } from "contexts/settings"
 import { CareerColumn } from "components/Settings"
 import { LoginContext } from "contexts/login"
-import { Career } from "api/user"
+import { Career } from "api/collections/user"
 import { HttpClient } from "api/HttpClient"
 import { Modal } from "components/Modal"
-import { checkPlayServicesExample } from "utils/checkGooglePlayServices"
-import { Alert } from "react-native"
+import { useTranslation } from "react-i18next"
+import { Linking } from "react-native"
 
-const themes: string[] = ["Predefinito", "Scuro", "Chiaro"]
+const themes: string[] = ["settings_default", "settings_dark", "settings_light"]
 const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
 
 const client = HttpClient.getInstance()
@@ -26,6 +26,8 @@ const client = HttpClient.getInstance()
  * Settings Page
  */
 export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
+  const { t } = useTranslation("settings")
+
   //for testing logged in/out view
   const { loggedIn, userInfo } = useContext(LoginContext)
   const { settings, setSettings } = useContext(SettingsContext)
@@ -54,66 +56,9 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
 
   const { navigate } = useNavigation()
 
-  const settingsList: SettingOptions[] = [
-    {
-      title: "Aspetto",
-      subtitle: "Dark, light mode",
-      icon: settingsIcons.modify,
-      callback: () => {
-        setModalThemeVisible(true)
-      },
-    },
-    {
-      title: "Su quest'app",
-      subtitle: "Informazioni sull'app, versione, contatti",
-      icon: settingsIcons.help,
-      callback: () => {
-        navigate("About")
-      },
-    },
-    {
-      title: "Privacy",
-      subtitle:
-        "Informativa sulla privacy\nImpostazioni del tuo account relative alla privacy",
-      icon: settingsIcons.privacy,
-      callback: () => {
-        navigate("Privacy")
-      },
-    },
-    {
-      title: "Check Google",
-      subtitle: "Check Google",
-      icon: settingsIcons.privacy,
-      callback: () => {
-        const result = checkPlayServicesExample()
-        console.log(result)
-        Alert.alert(
-          "Google",
-          String(result),
-          [
-            {
-              text: "Cancel",
-              style: "cancel",
-            },
-          ],
-          {
-            cancelable: true,
-          }
-        )
-      },
-    },
-    {
-      title: "Disconnetti",
-      icon: settingsIcons.disconnect,
-      callback: async () => {
-        await client.destroyTokens()
-      },
-    },
-  ]
-
   return (
     <View style={{ flex: 1 }}>
-      <ContentWrapperScroll title="Impostazioni">
+      <ContentWrapperScroll title={"" + t("settings_title")}>
         {loggedIn ? (
           <UserDetailsTile user={userInfo} />
         ) : (
@@ -131,20 +76,59 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
           </View>
         )}
         <Divider />
-
-        {settingsList.map((setting, index) => {
-          return <SettingTile setting={setting} key={index} />
-        })}
+        <SettingTile
+          title={t("settings_appearance")}
+          subtitle="Dark, light mode"
+          icon={settingsIcons.modify}
+          callback={() => {
+            setModalThemeVisible(true)
+          }}
+        />
+        <SettingTile
+          title={t("settings_language")}
+          icon={settingsIcons.modify}
+          callback={() => {
+            void Linking.openSettings()
+          }}
+        />
+        <SettingTile
+          title={t("settings_infoAppTitle")}
+          subtitle={"" + t("settings_infoAppSubTitle")}
+          icon={settingsIcons.help}
+          callback={() => {
+            navigate("About")
+          }}
+        />
+        <SettingTile
+          title="Privacy"
+          subtitle={"" + t("settings_privacySubTitle")}
+          icon={settingsIcons.privacy}
+          callback={() => {
+            navigate("Privacy")
+          }}
+        />
+        {loggedIn && (
+          <>
+            <Divider />
+            <SettingTile
+              title={t("settings_logout")}
+              icon={settingsIcons.disconnect}
+              callback={async () => {
+                await client.destroyTokens()
+              }}
+            />
+          </>
+        )}
       </ContentWrapperScroll>
 
       <Modal
-        title={"Scegli Tema"}
+        title={t("settings_chooseTheme")}
         centerText
         isShowing={isModalThemeVisible}
         buttons={[
           {
             light: true,
-            text: "Annulla",
+            text: "" + t("cancel", { ns: "common" }),
             onPress: () => {
               //restore real theme value
               setSelectedTheme(theme)
@@ -164,7 +148,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
           return (
             <SelectTile
               key={index}
-              value={themeName}
+              value={"" + t(themeName)}
               selected={selectedTheme === themesToSave[index]}
               onPress={() => {
                 setSelectedTheme(themesToSave[index])
@@ -174,13 +158,13 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
         })}
       </Modal>
       <Modal
-        title={"Cambia Matricola"}
+        title={t("settings_changeId")}
         centerText
         isShowing={isModalCareerVisible}
         buttons={[
           {
             light: true,
-            text: "Annulla",
+            text: "" + t("cancel", { ns: "common" }),
             onPress: () => {
               //restore selectedCareer to career
               if (career) setSelectedCareer(career)

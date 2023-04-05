@@ -1,7 +1,6 @@
 import React from "react"
 import {
   Dimensions,
-  Pressable,
   StyleProp,
   StyleSheet,
   View,
@@ -55,7 +54,7 @@ export const BoxShadowView: React.FC<BoxShadowViewProps> = ({
           canvasStyle,
         ]}
       />
-      <Pressable style={contentContainerStyle}>{children}</Pressable>
+      <View style={contentContainerStyle}>{children}</View>
     </View>
   )
 }

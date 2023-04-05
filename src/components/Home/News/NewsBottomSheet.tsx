@@ -5,7 +5,7 @@ import BottomSheet, {
   BottomSheetScrollViewMethods,
 } from "@gorhom/bottom-sheet"
 
-import { Article } from "api/articles"
+import { Article } from "api/collections/articles"
 import {
   NewsPreferencesContext,
   Preference,

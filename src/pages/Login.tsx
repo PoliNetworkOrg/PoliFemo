@@ -159,7 +159,7 @@ export const Login: RootStackScreen<"Login"> = () => {
             setLoginStage(LoginStage.GOT_POLIMI_CODE)
 
             // retrieve the access token from the authcode
-            const token = await api.auth.getPolimiToken(authcode)
+            const token = await api.auth.getPolimiToken({ authcode })
             setPolimiToken(token)
             setLoginStage(LoginStage.GOT_POLIMI_TOKEN)
           }

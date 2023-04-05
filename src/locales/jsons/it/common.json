@@ -1,0 +1,63 @@
+{
+    "search": "Cerca",
+
+    "date": "Data",
+    "time": "Ora",
+
+    "cancel": "Annulla",
+
+    "sunday": "Domenica",
+    "monday": "Lunedì",
+    "tuesday": "Martedì",
+    "wednesday": "Mercoledì",
+    "thursday": "Giovedì",
+    "friday": "Venerdì",
+    "saturday": "Sabato",
+
+    "january": "Gennaio",
+    "february": "Febbraio",
+    "march": "Marzo",
+    "april": "Aprile",
+    "may": "Maggio",
+    "june": "Giugno",
+    "july": "Luglio",
+    "august": "Agosto",
+    "september": "Settembre",
+    "october": "Ottobre",
+    "november": "Novembre",
+    "december": "Dicembre",
+
+    "year": {
+        "year_one": "Anno",
+        "year_other": "Anni",
+        "yearCount_one": "{{count}} anno",
+        "yearCount_other": "{{count}} anni"
+    },
+    "month": {
+        "month_one": "Mese",
+        "month_other": "Mesi",
+        "monthCount_one": "{{count}} mese",
+        "monthCount_other": "{{count}} mesi"
+    },
+    "day": {
+        "day_one": "Giorno",
+        "day_other": "Giorni",
+        "dayCount_one": "{{count}} giorno",
+        "dayCount_other": "{{count}} giorni"
+    },
+
+    "groups_title": "Gruppi Corsi",
+    "group_year": "Anno",
+    "groups_all": "Tutti",
+    "group_course": "Corso",
+    "bachelor": "Triennale",
+    "master": "Magistrale",
+    "single_cycle": "Ciclo unico",
+    "group_type": "Tipo",
+    "school": "Scuola",
+    "group_platform": "Piattaforma",
+
+    "initial_title": "Benvenuto in PoliFemo",
+    "initial_message": "L’app che ti permette di avere tutto il Politecnico di Milano a portata di tap",
+    "loading": "Attendi...il caricamento ci sta mettendo più del previsto"
+}
