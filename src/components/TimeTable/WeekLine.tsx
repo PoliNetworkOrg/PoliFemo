@@ -5,11 +5,10 @@ import { View } from "react-native"
 export const WeekLine: FC = () => {
   const days = ["L", "M", "M", "G", "V", "S"]
   return (
-    <View style={{ flexDirection: "row", marginTop: 10 }}>
+    <View style={{ flexDirection: "row" }}>
       <View
         style={{
           flexDirection: "column",
-          marginBottom: 8,
           borderRightWidth: 1,
           borderColor: "white",
           paddingRight: 10,
@@ -21,7 +20,7 @@ export const WeekLine: FC = () => {
               fontWeight: "900",
               fontSize: 12,
               color: "white",
-              marginVertical: 40,
+              marginBottom: 120,
             }}
             key={index}
           >

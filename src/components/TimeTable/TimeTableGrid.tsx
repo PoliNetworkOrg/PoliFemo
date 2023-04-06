@@ -11,42 +11,73 @@ const { width } = Dimensions.get("window")
 export const TimeTableGrid: FC = () => {
   return (
     <View style={{ flex: 1, width, marginTop: 163, marginLeft: 29 }}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <TimeLine />
-      </ScrollView>
-      <ScrollView style={{ marginTop: -50 }}>
+      <ScrollView>
         <ScrollView horizontal>
-          <WeekLine />
-          <View style={{ marginLeft: 35 }}>
-            <LectureCard
-              lecture={{
-                event_id: 127350,
-                date_start: "2022-12-22T08:15:00",
-                date_end: "2022-12-22T11:15:00",
-                show_agenda: true,
-                matricola: "100000",
-                title: {
-                  it: "ARCHITETTURA DEI CALCOLATORI E SISTEMI OPERATIVI",
-                  en: "COMPUTER ARCHITECTURES AND OPERATING SYSTEMS",
-                },
-                event_type: {
-                  typeId: 1,
-                  type_dn: { it: "Lezione", en: "Lecture" },
-                },
-                event_subtype: "L",
-                calendar: {
-                  calendar_id: 0,
-                  calendar_dn: { it: "Accademico", en: "Academic" },
-                },
-                room: {
-                  room_id: 3316,
-                  acronym_dn: "2.1.2",
-                  classroom_id: -2147483648,
-                  room_dn: "002",
-                },
-              }}
-              borderColor="red"
-            />
+          <View style={{ flexDirection: "column" }}>
+            <TimeLine />
+            <WeekLine />
+            <View
+              style={{ marginLeft: 40, marginTop: 35, position: "absolute" }}
+            >
+              <LectureCard
+                lecture={{
+                  event_id: 127350,
+                  date_start: "2022-12-22T08:00:00",
+                  date_end: "2022-12-22T11:00:00",
+                  show_agenda: true,
+                  matricola: "100000",
+                  title: {
+                    it: "ARCHITETTURA DEI CALCOLATORI E SISTEMI OPERATIVI",
+                    en: "COMPUTER ARCHITECTURES AND OPERATING SYSTEMS",
+                  },
+                  event_type: {
+                    typeId: 1,
+                    type_dn: { it: "Lezione", en: "Lecture" },
+                  },
+                  event_subtype: "L",
+                  calendar: {
+                    calendar_id: 0,
+                    calendar_dn: { it: "Accademico", en: "Academic" },
+                  },
+                  room: {
+                    room_id: 3316,
+                    acronym_dn: "2.1.2",
+                    classroom_id: -2147483648,
+                    room_dn: "002",
+                  },
+                }}
+                borderColor="red"
+              />
+              <LectureCard
+                lecture={{
+                  event_id: 127350,
+                  date_start: "2022-12-22T09:00:00",
+                  date_end: "2022-12-22T12:00:00",
+                  show_agenda: true,
+                  matricola: "100000",
+                  title: {
+                    it: "ARCHITETTURA DEI CALCOLATORI E SISTEMI OPERATIVI",
+                    en: "COMPUTER ARCHITECTURES AND OPERATING SYSTEMS",
+                  },
+                  event_type: {
+                    typeId: 1,
+                    type_dn: { it: "Lezione", en: "Lecture" },
+                  },
+                  event_subtype: "L",
+                  calendar: {
+                    calendar_id: 0,
+                    calendar_dn: { it: "Accademico", en: "Academic" },
+                  },
+                  room: {
+                    room_id: 3316,
+                    acronym_dn: "2.1.2",
+                    classroom_id: -2147483648,
+                    room_dn: "002",
+                  },
+                }}
+                borderColor="lightblue"
+              />
+            </View>
           </View>
         </ScrollView>
       </ScrollView>
