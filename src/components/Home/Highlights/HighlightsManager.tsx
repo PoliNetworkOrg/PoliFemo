@@ -11,6 +11,7 @@ import {
 } from "utils/carousel"
 import { api } from "api"
 import { NotificationCentre } from "notifications/NotificationCentre"
+import { extractAllEvents } from "utils/notifications"
 
 const notificationCentre = NotificationCentre.getInstance()
 
@@ -61,7 +62,9 @@ export const HighlightsManager: FC = () => {
         //we extract the events if there is something
         const newWidgets = extractNextEvents(response)
         setWidgets(newWidgets)
-        await notificationCentre.scheduleCarousel(newWidgets)
+
+        //schedule events
+        await notificationCentre.scheduleCarousel(extractAllEvents(response))
       }
     } catch (error) {
       console.log(error)

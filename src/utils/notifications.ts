@@ -1,7 +1,8 @@
 import { NotificationTriggerInput } from "expo-notifications"
-import { WidgetType } from "./carousel"
+import { WidgetType, checkEventType, createWidget } from "./carousel"
 import { ValidChannelId } from "notifications/NotificationTypes"
-
+import { Event } from "api/event"
+import * as Notifications from "expo-notifications"
 export interface MinutesBeforeOptions {
   deadline?: number
   exam?: number
@@ -126,4 +127,26 @@ export const mapNotificationChannelString = (channelId?: ValidChannelId) => {
   } else if (channelId === "upload") {
     return "Nuovi Upload"
   }
+}
+
+/**
+ * This is an helper function for scheduling notifications
+ *
+ * This function gets as parameters the list of events.
+ * @param events
+ */
+export const extractAllEvents = (events: Event[]) => {
+  return events
+    .filter(x => checkEventType(x.event_type.typeId))
+    .map(e => createWidget(e))
+}
+
+/**
+ * Debugging function to see all scheduled notifications
+ */
+export const debugSchedule = async () => {
+  const notifs = await Notifications.getAllScheduledNotificationsAsync()
+  notifs.forEach(notif => {
+    console.log(notif.content.title + " " + notif.identifier)
+  })
 }
