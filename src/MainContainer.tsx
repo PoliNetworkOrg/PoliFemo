@@ -10,6 +10,7 @@ import { RoomsSearchDataContext } from "contexts/rooms"
 import { formatDate } from "utils/rooms"
 import { useApiCall } from "api/useApiCall"
 import { api } from "api"
+import { TimeTableContext } from "contexts/timeTable"
 
 /**
  * The Main Container.
@@ -28,6 +29,9 @@ export const MainContainer: FC = () => {
 
   //rooms search date
   const [date, setDate] = useState(new Date())
+
+  //timetable
+  const [timeTableOpen, setTimeTableOpen] = useState(true)
 
   const [globRooms, isRoomsSearching] = useApiCall(
     api.rooms.getFreeRoomsDay,
@@ -94,7 +98,14 @@ export const MainContainer: FC = () => {
             },
           }}
         >
-          <MainStack />
+          <TimeTableContext.Provider
+            value={{
+              timeTableOpen: timeTableOpen,
+              setTimeTableOpen: status => setTimeTableOpen(status),
+            }}
+          >
+            <MainStack />
+          </TimeTableContext.Provider>
         </NewsPreferencesContext.Provider>
       </RoomsSearchDataContext.Provider>
       <Tray

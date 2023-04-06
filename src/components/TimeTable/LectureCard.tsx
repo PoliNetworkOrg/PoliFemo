@@ -1,11 +1,13 @@
 import { BodyText } from "components/Text"
-import { FC, useState } from "react"
+import { FC, useContext } from "react"
 import { Pressable } from "react-native"
 import { Event } from "api/collections/event"
+import { TimeTableContext } from "contexts/timeTable"
 
 export interface LectureCardProps {
   lecture: Event
   borderColor: string
+  onPress: () => void
 }
 
 const minHour = 8
@@ -16,7 +18,9 @@ const weekSlot = 135 // 120(space between) + 15(space occupied by digit)
  * Component that represents the card that contains the name and the room of the lecture.
  */
 export const LectureCard: FC<LectureCardProps> = props => {
-  const [open, setOpen] = useState<boolean>(true)
+  const { timeTableOpen } = useContext(TimeTableContext)
+
+  const open = timeTableOpen
 
   const timeRange =
     Math.abs(
@@ -39,7 +43,7 @@ export const LectureCard: FC<LectureCardProps> = props => {
         marginLeft: timeStart * timeSlot,
         marginTop: 0 * weekSlot,
       }}
-      onPress={() => (open ? setOpen(false) : setOpen(true))}
+      onPress={() => props.onPress()}
     >
       {open ? (
         <BodyText
