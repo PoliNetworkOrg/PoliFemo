@@ -23,8 +23,8 @@ export class NotificationCentre {
 
   private _notifications: NotificationStorage[] = []
 
-  private notificationReceivedListener: Notifications.Subscription | undefined
-  private notificationTappedListener: Notifications.Subscription | undefined
+  private _notificationReceivedListener: Notifications.Subscription | undefined
+  private _notificationTappedListener: Notifications.Subscription | undefined
 
   /**
    * Channels which accept scheduling. All true by default
@@ -119,7 +119,7 @@ export class NotificationCentre {
    *  is tapped by the user
    */
   private _initializeNotificationListeners = () => {
-    this.notificationReceivedListener =
+    this._notificationReceivedListener =
       Notifications.addNotificationReceivedListener(notification => {
         console.log(
           "received notification: " + notification.request.content.title
@@ -147,7 +147,7 @@ export class NotificationCentre {
         notificationEventEmitter.emit("badge-change")
         notificationEventEmitter.emit("notification-add")
       })
-    this.notificationTappedListener =
+    this._notificationTappedListener =
       Notifications.addNotificationResponseReceivedListener(response => {
         //by default this always evaluates to true, therefore always dismissed
         if (
@@ -283,7 +283,6 @@ export class NotificationCentre {
     void this._writeToStorage(newNotificationList)
   }
 
-  //TODO : unify data prop channelId with trigger channelId
   /**
    * Schedule a notification. Usage:
    *
@@ -789,14 +788,14 @@ export class NotificationCentre {
    * TODO : understand if this is actually useful, for now it's never called
    */
   public cleanup = () => {
-    if (this.notificationReceivedListener) {
+    if (this._notificationReceivedListener) {
       Notifications.removeNotificationSubscription(
-        this.notificationReceivedListener
+        this._notificationReceivedListener
       )
     }
-    if (this.notificationTappedListener) {
+    if (this._notificationTappedListener) {
       Notifications.removeNotificationSubscription(
-        this.notificationTappedListener
+        this._notificationTappedListener
       )
     }
   }
