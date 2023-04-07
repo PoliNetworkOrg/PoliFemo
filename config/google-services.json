@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "771411215965",
+    "project_id": "polifemo-89bb5",
+    "storage_bucket": "polifemo-89bb5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771411215965:android:8e97c2ace711c84561afb4",
+        "android_client_info": {
+          "package_name": "org.polinetwork.polifemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "771411215965-idrqjiimvifbpk4dm7f2ub9ucafskal0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWcYKJhaj6-S59nHvFh6YMZ0iMpAP7GX0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "771411215965-idrqjiimvifbpk4dm7f2ub9ucafskal0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "771411215965-co8avdq34spn3u72hhs3npgt642qgib8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.polinetwork.polifemo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

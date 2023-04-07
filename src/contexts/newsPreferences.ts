@@ -1,5 +1,5 @@
 import React from "react"
-import { Tag } from "api/articles"
+import { Tag } from "api/collections/articles"
 
 export type TagWithData = Tag & {
   /** The column in which the card has to be inserted */

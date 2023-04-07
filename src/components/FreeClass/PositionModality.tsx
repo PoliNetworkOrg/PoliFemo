@@ -1,10 +1,11 @@
 import { useNavigation } from "@react-navigation/native"
-import { ConstructionType, Room } from "api/rooms"
+import { ConstructionType, Room } from "api/collections/rooms"
 import { BodyText } from "components/Text"
 import { RoomsSearchDataContext } from "contexts/rooms"
 import { PermissionStatus } from "expo-location"
 import { getDistance } from "geolib"
 import { FC, useContext, useMemo, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { ActivityIndicator, Platform, Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { getBuildingInfo, isRoomFree, ValidAcronym } from "utils/rooms"
@@ -37,6 +38,8 @@ export const PositionModality: FC<PositionModalityProps> = props => {
   const { rooms } = useContext(RoomsSearchDataContext)
 
   const acronyms: ValidAcronym[] = ["MIA", "MIB", "LCF", "CRG", "PCL", "MNI"]
+
+  const { t } = useTranslation("freeClass")
 
   const allRooms = useMemo(
     () =>
@@ -141,7 +144,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
               color: "white",
             }}
           >
-            Mappa
+            {t("freeClass_map")}
           </BodyText>
         </Pressable>
         <Pressable
@@ -167,7 +170,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
               color: "white",
             }}
           >
-            Lista
+            {t("freeClass_list")}
           </BodyText>
         </Pressable>
       </View>

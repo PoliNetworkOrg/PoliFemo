@@ -1,0 +1,27 @@
+{
+  "cli": {
+    "version": ">= 3.8.0",
+    "promptToConfigurePushNotifications": false
+  },
+  "build": {
+    "development": {
+      "extends": "preview",
+      "developmentClient": true
+    },
+    "preview": {
+      "extends": "production",
+      "android": {
+        "buildType": "apk"
+      },
+      "distribution": "internal"
+    },
+    "production": {
+      "ios": {
+        "resourceClass": "m-medium"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
