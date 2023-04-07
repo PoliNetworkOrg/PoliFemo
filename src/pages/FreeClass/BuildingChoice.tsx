@@ -89,17 +89,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
       {error || (!isRoomsSearching && buildingList.length === 0) ? (
-        <ErrorMessage
-          message="Non ci sono edifici disponibili"
-          styleView={{ marginTop: 100, marginHorizontal: 20 }}
-          styleMessage={{
-            alignSelf: "center",
-            color: "red",
-            fontWeight: "400",
-            fontSize: 30,
-            textAlign: "center",
-          }}
-        />
+        <ErrorMessage message="Non ci sono edifici disponibili" />
       ) : !isRoomsSearching && buildingList ? (
         <DefaultList dataToShow={buildingList} />
       ) : (

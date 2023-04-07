@@ -73,10 +73,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
         }}
       >
         {filteredRooms?.length === 0 && !isRoomsSearching ? (
-          <ErrorMessage
-            message="Non ci sono aule disponibili"
-            styleView={{ marginTop: 100 }}
-          />
+          <ErrorMessage message="Non ci sono aule disponibili" />
         ) : !isRoomsSearching && filteredRooms.length > 0 ? (
           <FreeClassList
             data={filteredRooms}
