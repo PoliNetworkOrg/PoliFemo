@@ -4,7 +4,7 @@ import {
   NotificationsChannels,
   ValidChannelId,
 } from "notifications/NotificationTypes"
-import { Event } from "api/event"
+import { Event } from "api/collections/event"
 import * as Notifications from "expo-notifications"
 export interface MinutesBeforeOptions {
   deadline?: number
