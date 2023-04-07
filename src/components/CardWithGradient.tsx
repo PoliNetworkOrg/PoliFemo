@@ -1,9 +1,8 @@
 import { FC } from "react"
 import { Pressable, View, ViewStyle } from "react-native"
+import { Image } from "expo-image"
 import { LinearGradient } from "expo-linear-gradient"
-
 import { CardTitle } from "components/Text"
-import { ImageBackground } from "./ImageBackground"
 
 export interface CardWithGradientProps {
   /**
@@ -59,29 +58,43 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
 
   return (
     <Pressable
-      style={[{ marginBottom: 17, borderRadius: borderRadius }, props.style]}
+      style={[
+        {
+          marginBottom: 17,
+          borderRadius: borderRadius,
+          overflow: "hidden",
+          backgroundColor: "red",
+        },
+        props.style,
+      ]}
       onPress={props.onClick}
     >
-      <ImageBackground
+      <Image
         source={props.imageURL ? { uri: props.imageURL } : {}}
         placeholder={bh}
-        style={{ width: "100%", height: "100%" }}
-        imageStyle={{ borderRadius }}
+        style={{ flex: 1 }}
+      />
+      <LinearGradient
+        colors={["rgba(255, 181, 68, 0.88)", "rgba(255, 181, 68, 0)"]}
+        locations={[0, 0.5656]}
+        style={{
+          flex: 1,
+          borderRadius: borderRadius,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}
       >
-        <LinearGradient
-          colors={["rgba(255, 181, 68, 0.88)", "rgba(255, 181, 68, 0)"]}
-          locations={[0, 0.5656]}
-          style={{ flex: 1, borderRadius: borderRadius }}
+        <View
+          style={{
+            margin: closerToCorner ? 9 : 17,
+          }}
         >
-          <View
-            style={{
-              margin: closerToCorner ? 9 : 17,
-            }}
-          >
-            <CardTitle style={{ lineHeight: 19 }}>{props.title}</CardTitle>
-          </View>
-        </LinearGradient>
-      </ImageBackground>
+          <CardTitle style={{ lineHeight: 19 }}>{props.title}</CardTitle>
+        </View>
+      </LinearGradient>
     </Pressable>
   )
 }
