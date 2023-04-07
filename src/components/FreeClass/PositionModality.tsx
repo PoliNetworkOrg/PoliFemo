@@ -235,17 +235,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
               />
             )
           ) : (
-            <ErrorMessage
-              message="Non ci sono aule libere nelle vicinanze"
-              styleView={{ marginTop: 100, marginHorizontal: 20 }}
-              styleMessage={{
-                alignSelf: "center",
-                color: "red",
-                fontWeight: "400",
-                fontSize: 30,
-                textAlign: "center",
-              }}
-            />
+            <ErrorMessage message="Non ci sono aule libere nelle vicinanze" />
           )}
         </View>
       ) : (
