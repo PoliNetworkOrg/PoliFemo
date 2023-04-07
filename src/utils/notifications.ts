@@ -1,6 +1,9 @@
 import { NotificationTriggerInput } from "expo-notifications"
 import { WidgetType, checkEventType, createWidget } from "./carousel"
-import { ValidChannelId } from "notifications/NotificationTypes"
+import {
+  NotificationsChannels,
+  ValidChannelId,
+} from "notifications/NotificationTypes"
 import { Event } from "api/event"
 import * as Notifications from "expo-notifications"
 export interface MinutesBeforeOptions {
@@ -149,4 +152,27 @@ export const debugSchedule = async () => {
   notifs.forEach(notif => {
     console.log(notif.content.title + " " + notif.identifier)
   })
+}
+
+export const getNewChannelsStatuses = (
+  currentChannels: NotificationsChannels,
+  channel: ValidChannelId,
+  status: boolean
+) => {
+  let newChannels: NotificationsChannels
+  if (currentChannels) {
+    //update only channel
+    newChannels = currentChannels
+    newChannels[channel] = status
+  } else {
+    //first time user deactivate a channel
+    newChannels = {
+      associazioni: true,
+      comunicazioni: true,
+      upload: true,
+    }
+    //update
+    newChannels[channel] = status
+  }
+  return newChannels
 }

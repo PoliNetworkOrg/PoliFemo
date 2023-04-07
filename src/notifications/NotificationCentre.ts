@@ -12,17 +12,33 @@ import {
   NotificationStorage,
   NotificationCustomContentInput,
   ValidChannelId,
+  NotificationsChannels,
 } from "./NotificationTypes"
 import { notificationEventEmitter } from "./NotificationEventEmitter"
 import { navigationRef } from "navigation/NavigationTypes"
+import uuid from "react-native-uuid"
 
 export class NotificationCentre {
   private static classInstance?: NotificationCentre
 
-  public notifications: NotificationStorage[] = []
+  private _notifications: NotificationStorage[] = []
 
   private notificationReceivedListener: Notifications.Subscription | undefined
   private notificationTappedListener: Notifications.Subscription | undefined
+
+  /**
+   * Channels which accept scheduling, if it's undefined after initialization,
+   * it means that the user has never switched off a category.
+   */
+  private _activeChannels: NotificationsChannels = {
+    associazioni: true,
+    comunicazioni: true,
+    upload: true,
+  }
+
+  public activeChannels = () => {
+    return this._activeChannels
+  }
 
   /**
    * retrieves singleton instance.
@@ -48,6 +64,8 @@ export class NotificationCentre {
     void this._readFromStorage()
     //check permission on app start
     void this._checkPermission()
+    //initialize active notifications channels
+    void this._readChannelsFromStorage()
   }
 
   /**
@@ -104,13 +122,15 @@ export class NotificationCentre {
   private _initializeNotificationListeners = () => {
     this.notificationReceivedListener =
       Notifications.addNotificationReceivedListener(notification => {
-        console.log(notification.request.content.title)
-        //if cacheOnSchedule is set to false, cache now. (more intended for push notifications...)
-        //by default cacheOnSchedule is true for every notification scheduled by the device
+        console.log(
+          "received notification: " + notification.request.content.title
+        )
+        //if storeOnSchedule is set to false, store now. (more intended for push notifications...)
+        //by default storeOnSchedule is true for every notification scheduled by the device
         // TODO : might need changing if push notifications will be implemented
-        if (notification.request.content.data.cacheOnSchedule === false) {
-          console.log("Notification received with cacheOnSchedule set to false")
-          const newNotificationList = this.notifications
+        if (notification.request.content.data.storeOnSchedule === false) {
+          console.log("Notification received with storeOnSchedule set to false")
+          const newNotificationList = this._notifications
           if (newNotificationList) {
             newNotificationList.push({
               content: notification.request.content,
@@ -176,11 +196,11 @@ export class NotificationCentre {
       const notifications = JSON.parse(
         notificationsJSON
       ) as NotificationStorage[]
-      this.notifications = notifications
+      this._notifications = notifications
     } catch (err) {
       console.log(err)
       console.log("Error reading notifications")
-      this.notifications = []
+      this._notifications = []
     }
   }
 
@@ -195,7 +215,7 @@ export class NotificationCentre {
   ): Promise<boolean> => {
     const notificationsJSON = JSON.stringify(notifications)
     try {
-      this.notifications = notifications
+      this._notifications = notifications
       await FileSystem.writeAsStringAsync(
         FileSystem.documentDirectory + "notifications.json",
         notificationsJSON
@@ -210,15 +230,57 @@ export class NotificationCentre {
   }
 
   /**
+   * This is a private method which reads notifications channels from Storage and update
+   * the notifications member of the singleton.
+   */
+  private _readChannelsFromStorage = async () => {
+    try {
+      const notificationsChannelsJSON = await FileSystem.readAsStringAsync(
+        FileSystem.documentDirectory + "notifications-channels.json"
+      )
+      const notificationsChannels = JSON.parse(
+        notificationsChannelsJSON
+      ) as NotificationsChannels
+
+      this._activeChannels = notificationsChannels
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  /**
+   * This is a private method which updates channels inside the storage
+   * and updates the active channels member inside the singleton
+   *
+   */
+  private _writeChannelsToStorage = async (
+    channels: NotificationsChannels
+  ): Promise<boolean> => {
+    const notificationsChannelsJSON = JSON.stringify(channels)
+    try {
+      this._activeChannels = channels
+      await FileSystem.writeAsStringAsync(
+        FileSystem.documentDirectory + "notifications-channels.json",
+        notificationsChannelsJSON
+      )
+
+      return true
+    } catch (err) {
+      console.log(err)
+      return false
+    }
+  }
+
+  /**
    * This is a private method which adds one notification inside the
    * notifications member and writes to storage the newly updated list.
    *
    * @param notification notification to be added
    */
   private _addOneNotification = (notification: NotificationStorage) => {
-    const newNotificationList = this.notifications
+    const newNotificationList = this._notifications
     newNotificationList.push(notification)
-    this.notifications = newNotificationList
+    this._notifications = newNotificationList
     void this._writeToStorage(newNotificationList)
   }
 
@@ -233,7 +295,7 @@ export class NotificationCentre {
    *          body: "prova",
    *          data: {
    *            sender: "polimi scacchi",
-   *            cacheOnSchedule: false,
+   *            storeOnSchedule: false,
    *            content: "vieni a giocare a scacchi",
    *            object: "come vincere a scacchi",
    *            linkUrl:
@@ -250,18 +312,35 @@ export class NotificationCentre {
    * @param content content object
    * @param trigger trigger object, can be date or null (send immediately)
    * @param channelId override content channelId and trigger channelId, for practicality
+   * @param oldIdentifier force the notification identifier, intended for rescheduling dumped notifications
+   * @param alllowSchedulingInThePast don't schedule if trigger date is in the past, intended for improving
+   * dumped notifications reschedule behaviour
    * @returns the identifier of the notification
    */
   public sendScheduledNotification = async (
     content: NotificationCustomContentInput,
     trigger: NotificationTriggerInput,
-    channelId?: ValidChannelId
+    channelId?: ValidChannelId,
+    oldIdentifier?: string,
+    allowSchedulingInThePast = true
   ) => {
     try {
       const grant = await this._checkPermission()
-      console.log("grant: " + grant)
+
+      if (!allowSchedulingInThePast) {
+        const relevantDate: Date | undefined = calculateDateFromTrigger(trigger)
+        //don't allow scheduling in the past
+        if (
+          relevantDate &&
+          new Date(relevantDate).getTime() - new Date().getTime() < 0
+        ) {
+          return undefined
+        }
+      }
+
+      //permission granted
       if (grant) {
-        //unify
+        //unify content's channelId with trigger channelId
         content.data.channelId = content.data.channelId ?? channelId
         if (
           trigger !== null &&
@@ -270,18 +349,29 @@ export class NotificationCentre {
         ) {
           trigger.channelId = channelId
         }
-        // mark cacheOnSchedule as true by default
-        const cacheOnSchedule = content.data.cacheOnSchedule ?? true
-        content.data.cacheOnSchedule = cacheOnSchedule
+        // mark storeOnSchedule as true by default
+        const storeOnSchedule = content.data.storeOnSchedule ?? true
+        content.data.storeOnSchedule = storeOnSchedule
 
-        //schedule notification
-        const identifier = await Notifications.scheduleNotificationAsync({
-          content: content,
-          trigger: trigger,
-        })
-        console.log("scheduled notification of identifier: " + identifier)
+        let identifier: string | undefined
 
-        if (cacheOnSchedule) {
+        const isChannelActive = this._isChannelActive(content.data.channelId)
+
+        //schedule only if channel is active
+        if (isChannelActive) {
+          identifier = await Notifications.scheduleNotificationAsync({
+            content: content,
+            trigger: trigger,
+            identifier: oldIdentifier,
+          })
+          console.log("scheduled notification of identifier: " + identifier)
+        }
+        if (!identifier) {
+          identifier = uuid.v4().toString()
+        }
+        //store if: storeOnSchedule wasn't set to false,
+        //oldIdentifier is not set, meaning we're not rescheduling a dumped notif.
+        if (storeOnSchedule && !oldIdentifier) {
           //store notification in filesystem
           const relevantDate: Date | undefined =
             calculateDateFromTrigger(trigger)
@@ -297,7 +387,6 @@ export class NotificationCentre {
             isRelevantAt: isRelevantAt,
           })
         }
-
         notificationEventEmitter.emit("badge-change")
 
         return identifier
@@ -350,12 +439,12 @@ export class NotificationCentre {
    * @param identifier identifies a notification uniquely
    */
   private _markAsReceived = (identifier: string) => {
-    for (let i = 0; i < this.notifications.length; i++) {
-      if (this.notifications[i].identifier === identifier) {
-        this.notifications[i].hasBeenReceived = true
+    for (let i = 0; i < this._notifications.length; i++) {
+      if (this._notifications[i].identifier === identifier) {
+        this._notifications[i].hasBeenReceived = true
       }
     }
-    void this._writeToStorage(this.notifications)
+    void this._writeToStorage(this._notifications)
   }
 
   //TODO : implement markAsRead in deep linking, on user notification tap.
@@ -365,15 +454,15 @@ export class NotificationCentre {
    */
   public markAsRead = (identifier: string) => {
     let found = false
-    for (let i = 0; i < this.notifications.length && !found; i++) {
-      if (this.notifications[i].identifier === identifier) {
-        this.notifications[i].isRead = true
+    for (let i = 0; i < this._notifications.length && !found; i++) {
+      if (this._notifications[i].identifier === identifier) {
+        this._notifications[i].isRead = true
         found = true
       }
     }
     if (found) {
       notificationEventEmitter.emit("badge-change")
-      void this._writeToStorage(this.notifications)
+      void this._writeToStorage(this._notifications)
     }
   }
 
@@ -382,11 +471,11 @@ export class NotificationCentre {
    * @param identifier notification identifier
    */
   public removeNotificationFromStorage = (identifier: string) => {
-    for (let i = 0; i < this.notifications.length; i++) {
-      if (this.notifications[i].identifier === identifier) {
+    for (let i = 0; i < this._notifications.length; i++) {
+      if (this._notifications[i].identifier === identifier) {
         //remove from storage
-        this.notifications.splice(i, 1)
-        void this._writeToStorage(this.notifications)
+        this._notifications.splice(i, 1)
+        void this._writeToStorage(this._notifications)
         //emit events
         notificationEventEmitter.emit("notification-remove")
         notificationEventEmitter.emit("badge-change")
@@ -474,7 +563,7 @@ export class NotificationCentre {
    * @returns number of unread notifications, undefined if zero.
    */
   public getBadgeAllUnreadNotifications = (channelId?: ValidChannelId) => {
-    const notifications = this.notifications
+    const notifications = this._notifications
     let count = 0
     for (let i = 0; i < notifications?.length; i++) {
       const isRelevantAt = notifications[i].isRelevantAt
@@ -505,7 +594,7 @@ export class NotificationCentre {
    *
    */
   public getNotificationsOfCategory(channelId?: ValidChannelId) {
-    const notifications = this.notifications
+    const notifications = this._notifications
     const now = new Date()
 
     if (!channelId) {
@@ -530,9 +619,175 @@ export class NotificationCentre {
   }
 
   /**
+   * Update notification channels when user switch notification categories on and off
+   * @param channels new activeChannels
+   *
+   * This method only dumps and undumps notifications whose channelId is set
+   */
+
+  public updateNotificationsChannels = (
+    channels: NotificationsChannels,
+    switchVal: boolean
+  ) => {
+    this._activeChannels = channels
+    void this._writeChannelsToStorage(this._activeChannels)
+
+    if (!switchVal) {
+      void this._dumpScheduledNotifications()
+    } else {
+      void this._unDumpScheduledNotifications()
+    }
+  }
+
+  /**
+   * This method is for checking if a channel is active
+   *
+   * @param channel
+   */
+  private _isChannelActive = (channel?: ValidChannelId) => {
+    if (!channel) {
+      //channel wasn't set, or all channels are active
+      return true
+    }
+    if (this._activeChannels[channel]) {
+      return true
+    }
+    return false
+  }
+
+  /**
+   * When user switches off a notification category this method is responsible
+   * for cancelling all scheduled notifications of that category from the phone scheduler.
+   *
+   * When dumped notifications will be become relevant they will still appear in their
+   * respective category.
+   *
+   */
+  private _dumpScheduledNotifications = async () => {
+    try {
+      const scheduledNotifications =
+        await Notifications.getAllScheduledNotificationsAsync()
+
+      const dumpedNotificationsIdentifiers: string[] = []
+
+      scheduledNotifications.forEach(async notification => {
+        if (!this._isChannelActive(notification.content.data.channelId)) {
+          //remove from schedule
+          await Notifications.cancelScheduledNotificationAsync(
+            notification.identifier
+          )
+
+          dumpedNotificationsIdentifiers.push(notification.identifier)
+
+          this._markNotificationsStorageAsDumped(dumpedNotificationsIdentifiers)
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  /**
+   * Mark storage notifications as dumped if they were removed from schedule.
+   *
+   * @param identifiers
+   */
+  private _markNotificationsStorageAsDumped = (identifiers: string[]) => {
+    let hasArrayChanged = false
+    this._notifications.forEach((notification, index, array) => {
+      if (identifiers.includes(notification.identifier)) {
+        array[index].isDumped = true
+        hasArrayChanged = true
+      }
+    })
+    if (hasArrayChanged) {
+      void this._writeToStorage(this._notifications)
+    }
+  }
+
+  /**
+   * This method checks if dumped notifications belong to a newly activated channel and
+   * tries to reschedule them.
+   *
+   * This method will reschedule only if the trigger date is in the future
+   */
+  private _unDumpScheduledNotifications = async () => {
+    try {
+      const restoredNotificationIdentifiers: string[] = []
+
+      for (let i = 0; i < this._notifications.length; i++) {
+        if (
+          this._notifications[i].isDumped &&
+          this._isChannelActive(this._notifications[i].content.data.channelId)
+        ) {
+          const isDeviceScheduled =
+            this._notifications[i].content.data.storeOnSchedule
+          const scheduleDateISO = this._notifications[i].isRelevantAt
+          const channelId = this._notifications[i].content.data.channelId
+
+          //notification was scheduled by the device and has a relevant date
+          if (isDeviceScheduled && scheduleDateISO && channelId) {
+            //don't allow for scheduling in the past
+            const identifier = await this.sendScheduledNotification(
+              this._notifications[i].content,
+              {
+                date: new Date(scheduleDateISO),
+              },
+              channelId,
+              this._notifications[i].identifier,
+              false
+            )
+            if (identifier) {
+              //scheduling was successful
+              restoredNotificationIdentifiers.push(identifier)
+            }
+          }
+        }
+      }
+
+      this._restoreDumpedNotificationsStorage(restoredNotificationIdentifiers)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  /**
+   * This method updates notification member by changing isDumped value to false
+   * to restored notifications
+   *
+   * @param identifiers list of identifiers of rescheduled notifications
+   */
+  private _restoreDumpedNotificationsStorage = (identifiers: string[]) => {
+    let hasArrayChanged = false
+    this._notifications.forEach((notification, index, array) => {
+      if (identifiers.includes(notification.identifier)) {
+        array[index].isDumped = false
+        hasArrayChanged = true
+      }
+    })
+    if (hasArrayChanged) {
+      void this._writeToStorage(this._notifications)
+    }
+  }
+
+  // ! TODO : Remove before merge
+  /**
+   * Utility method to clear storage completely
+   *
+   * To be removed before merge
+   */
+  public clearStorage = () => {
+    this._notifications = []
+    void this._writeToStorage([])
+    void Notifications.cancelAllScheduledNotificationsAsync()
+    notificationEventEmitter.emit("notification-remove")
+    notificationEventEmitter.emit("badge-change")
+  }
+
+  /**
    * this is a cleanup function to remove the listeners. Probably should never be called.
    * So is it really useful for something? lol
-   * TODO : understand if this is actually useful
+   * TODO : understand if this is actually useful, for now it's never called
    */
   public cleanup = () => {
     if (this.notificationReceivedListener) {

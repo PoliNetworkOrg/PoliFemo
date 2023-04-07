@@ -33,6 +33,12 @@ export type NotificationStorage = {
    * appear. undefined if notification wasn't scheduled by the device.
    */
   isRelevantAt?: string
+
+  /**
+   * keep track of notifications that were scheduled and then removed from schedule
+   * before they received
+   */
+  isDumped?: boolean
 } & NotificationInfo
 
 // Extend NotificationContentInput to explicitly define interesting props in the data field.
@@ -54,7 +60,7 @@ export interface NotificationCustomContentInput
      * (most common behaviour),
      * if it is false, it is stored when it is received.
      */
-    cacheOnSchedule?: boolean
+    storeOnSchedule?: boolean
     /**
      * enable deeplinking to NotificationDetails
      */
@@ -97,4 +103,9 @@ declare module "expo-notifications" {
     channelId: ValidChannelId,
     channel: Notifications.NotificationChannelInput
   ): Promise<Notifications.NotificationChannel | null>
+  export function getAllScheduledNotificationsAsync(): Promise<
+    NotificationCustomRequest[]
+  >
 }
+
+export type NotificationsChannels = Record<ValidChannelId, boolean>

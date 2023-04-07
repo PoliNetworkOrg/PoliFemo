@@ -140,7 +140,7 @@ export const MainContainer: FC = () => {
               },
             },
             {
-              date: new Date(new Date().getTime() + 2000),
+              date: new Date(new Date().getTime() + 1000 * 2),
             },
             "associazioni"
           )
