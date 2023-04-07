@@ -16,6 +16,8 @@ import polifemoIcon from "assets/highlights/polifemo.svg"
 import { Divider } from "components/Divider"
 import { useTranslation } from "react-i18next"
 
+import { getGMSStatus } from "utils/hasGMS"
+
 /**
  * Notifications Settings Page
  */
@@ -85,6 +87,8 @@ export const About: SettingsStackScreen<"About"> = () => {
               {Device.modelName} {Device.isDevice ? "" : "(emulator)"}
               {"\n"}
               env: {Constants.appOwnership} - {Constants.executionEnvironment}
+              {"\n"}
+              GMS: {getGMSStatus()}
             </BodyText>
           </View>
         </View>
