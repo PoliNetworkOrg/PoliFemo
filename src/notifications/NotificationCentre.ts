@@ -27,8 +27,7 @@ export class NotificationCentre {
   private notificationTappedListener: Notifications.Subscription | undefined
 
   /**
-   * Channels which accept scheduling, if it's undefined after initialization,
-   * it means that the user has never switched off a category.
+   * Channels which accept scheduling. All true by default
    */
   private _activeChannels: NotificationsChannels = {
     associazioni: true,
