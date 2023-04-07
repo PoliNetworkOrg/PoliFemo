@@ -137,7 +137,6 @@ export const MainContainer: FC = () => {
               body: "Questo è il body del messaggio di prova. Questa notifica arriva dopo 2 secondi",
               data: {
                 sender: "Associazione del Poli",
-                cacheOnSchedule: false,
                 content:
                   "Questo è il content del messaggio Associazioni di prova",
                 object: "Questo è l'oggetto del messaggio di prova",
