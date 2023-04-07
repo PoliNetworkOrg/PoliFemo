@@ -23,6 +23,9 @@ import { StatusBar } from "react-native"
 import { Host } from "react-native-portalize"
 import { NotificationCentre } from "notifications/NotificationCentre"
 import { navigationRef } from "navigation/NavigationTypes"
+// eslint-disable-next-line unused-imports/no-unused-imports
+import "./src/locales/i18n"
+import { useLoadI18n } from "./src/locales/i18n"
 
 const client = HttpClient.getInstance()
 
@@ -38,6 +41,8 @@ export default function App() {
 
   //tracking first render
   const firstRender = useRef(true)
+
+  const i18nInilitalized = useLoadI18n()
 
   // docs: https://docs.expo.dev/versions/latest/sdk/splash-screen/
   useEffect(() => {
@@ -128,7 +133,7 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    if (settingsReady && fontsLoaded && tokensLoaded) {
+    if (settingsReady && fontsLoaded && tokensLoaded && i18nInilitalized) {
       void hideAsync().then(async () => {
         if (loginState.loggedIn) {
           console.log(await api.user.getPoliNetworkMe())
@@ -136,9 +141,10 @@ export default function App() {
         }
       })
     }
-  }, [settingsReady, fontsLoaded, tokensLoaded])
+  }, [settingsReady, fontsLoaded, tokensLoaded, i18nInilitalized])
 
-  if (!settingsReady || !fontsLoaded || !tokensLoaded) return null
+  if (!settingsReady || !fontsLoaded || !tokensLoaded || !i18nInilitalized)
+    return null
 
   return (
     <SettingsContext.Provider

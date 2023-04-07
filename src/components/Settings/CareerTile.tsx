@@ -3,7 +3,8 @@ import { View } from "react-native"
 import { TouchableRipple } from "components/TouchableRipple"
 import { Button } from "components/Button"
 import { CareerColumn } from "./CareerColumn"
-import { Career } from "api/user"
+import { useTranslation } from "react-i18next"
+import { Career } from "api/collections/user"
 
 export interface CareerTileProps {
   career: Career
@@ -15,6 +16,8 @@ export interface CareerTileProps {
  * and a button to open a modal.
  */
 export const CareerTile: FC<CareerTileProps> = props => {
+  const { t } = useTranslation("settings")
+
   return (
     <TouchableRipple>
       <View
@@ -30,7 +33,7 @@ export const CareerTile: FC<CareerTileProps> = props => {
       >
         <Button
           onPress={props.onPress}
-          text={"Cambia matricola"}
+          text={"" + t("settings_changeId")}
           style={{ paddingHorizontal: 8 }}
         />
         <CareerColumn career={props.career} />

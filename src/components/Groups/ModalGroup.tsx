@@ -1,7 +1,7 @@
 import { FC } from "react"
 import { ViewStyle } from "react-native"
 import { usePalette } from "utils/colors"
-import { Group } from "api/groups"
+import { Group } from "api/collections/groups"
 import { BodyText } from "components/Text"
 import { Modal } from "components/Modal"
 import { choosePlatformIcon } from "utils/groups"

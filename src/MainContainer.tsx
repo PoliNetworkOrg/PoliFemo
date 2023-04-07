@@ -7,11 +7,12 @@ import { MainStack } from "navigation/MainStackNavigator"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { RoomsSearchDataContext } from "contexts/rooms"
-import { GlobalRoomListInterface } from "utils/rooms"
 import { NotificationCentre } from "./notifications/NotificationCentre"
+import { formatDate } from "utils/rooms"
+import { useApiCall } from "api/useApiCall"
+import { api } from "api"
 
 const notificationCentre = NotificationCentre.getInstance()
-
 /**
  * The Main Container.
  *
@@ -21,25 +22,33 @@ const notificationCentre = NotificationCentre.getInstance()
 export const MainContainer: FC = () => {
   const { homeBackground } = usePalette()
 
-  const { navigate } = useNavigation()
+  const { navigate, getState } = useNavigation()
+  const isInsideFreeClassrooms =
+    getState().routes[0].state?.routes[1]?.name === "FreeClassrooms"
 
   const [preferences, setPreferences] = useState<Record<string, Preference>>({})
 
   //rooms search date
   const [date, setDate] = useState(new Date())
 
-  const [globalRoomList, setGlobalRoomList] = useState<GlobalRoomListInterface>(
+  const [globRooms, isRoomsSearching] = useApiCall(
+    api.rooms.getFreeRoomsDay,
     {
-      MIA: [],
-      MIB: [],
-      CRG: [],
-      LCF: [],
-      PCL: [],
-      MNI: [],
-    }
+      date: formatDate(date),
+    },
+    [date, isInsideFreeClassrooms],
+    {},
+    !isInsideFreeClassrooms // prevent calls when outside FreeClassrooms
   )
 
-  const [isRoomsSearching, setIsRoomSearching] = useState(false)
+  const globalRoomList = globRooms ?? {
+    MIA: [],
+    MIB: [],
+    CRG: [],
+    LCF: [],
+    PCL: [],
+    MNI: [],
+  }
 
   useEffect(() => {
     console.log("Loading tags preferences from storage")
@@ -73,12 +82,10 @@ export const MainContainer: FC = () => {
     >
       <RoomsSearchDataContext.Provider
         value={{
-          isRoomsSearching: isRoomsSearching,
-          setIsRoomsSearching: (val: boolean) => setIsRoomSearching(val),
+          isRoomsSearching,
           date: date,
           setDate: (date: Date) => setDate(date),
           rooms: globalRoomList,
-          setRooms: rooms => setGlobalRoomList(rooms),
         }}
       >
         <NewsPreferencesContext.Provider

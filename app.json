@@ -18,6 +18,7 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "googleServicesFile": "./config/GoogleService-Info.plist",
       "supportsTablet": true,
       "bundleIdentifier": "org.polinetwork.polifemo"
     },
@@ -26,6 +27,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "googleServicesFile": "./config/google-services.json",
       "package": "org.polinetwork.polifemo",
       "softwareKeyboardLayoutMode": "pan",
       "useNextNotificationsApi": true
@@ -40,7 +42,19 @@
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
-    }
+    },
+    "plugins": [
+      "@react-native-firebase/app",
+      "./config/withSkia.js",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ]
   },
   "name": "polifemo"
 }

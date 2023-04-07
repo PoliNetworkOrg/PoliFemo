@@ -7,10 +7,11 @@ import overcrowdingIcon from "assets/freeClassrooms/overcrowding.svg"
 import fireIcon from "assets/freeClassrooms/fire.svg"
 import { useNavigation } from "navigation/NavigationTypes"
 import { FlatList } from "react-native-gesture-handler"
-import { Room } from "api/rooms"
+import { Room } from "api/collections/rooms"
 import { getStartEndDate } from "utils/rooms"
 import { Icon } from "components/Icon"
 import { AdaptiveShadowView } from "components/BoxShadow"
+import { useTranslation } from "react-i18next"
 
 const { width } = Dimensions.get("window")
 
@@ -28,6 +29,8 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
   const { palette, labelsHighContrast } = usePalette()
   const { navigate } = useNavigation()
 
+  const { t } = useTranslation("freeClass")
+
   const limInf = 0
   const limSup = 5
   const range = (limSup - limInf) / 3
@@ -36,11 +39,11 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
       occupancyRate === undefined ||
       (occupancyRate >= limInf && occupancyRate < range)
     ) {
-      return "Poco"
+      return t("freeClass_freeCrowding")
     } else if (occupancyRate >= range && occupancyRate < 2 * range) {
-      return "Mediamente"
+      return t("freeClass_medCrowding")
     } else {
-      return "Molto"
+      return t("freeClass_fullCrowding")
     }
   }
 
@@ -118,10 +121,11 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                   fontSize: 12,
                   color: "white",
                   textAlign: "left",
-                  paddingLeft: 130,
+                  paddingLeft: t("freeClass_timeLeft").length > 10 ? 130 : 100,
                 }}
               >
-                Libera fino alle{"\n"}
+                {t("freeClass_timeLeft")}
+                {"\n"}
                 <BodyText
                   style={{
                     fontWeight: "700",
@@ -162,7 +166,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
                       color: palette.variant1,
                     }}
                   >
-                    affollato
+                    {t("freeClass_crowdingStatus")}
                   </BodyText>
                 </BodyText>
               </View>

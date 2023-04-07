@@ -1,17 +1,12 @@
-import { FC, useContext, useEffect, useState } from "react"
+import { FC, useContext, useEffect } from "react"
 import { View } from "react-native"
 import { PoliCarousel } from "./PoliCarousel"
 import { LoginContext } from "contexts/login"
-import { Event } from "api/event"
-import {
-  CarouselItem,
-  checkEventType,
-  createWidget,
-  WidgetType,
-} from "utils/carousel"
+import { extractNextEvents } from "utils/carousel"
 import { api } from "api"
 import { NotificationCentre } from "notifications/NotificationCentre"
 import { extractAllEvents } from "utils/notifications"
+import { useApiCall } from "api/useApiCall"
 
 const notificationCentre = NotificationCentre.getInstance()
 
@@ -23,61 +18,26 @@ const notificationCentre = NotificationCentre.getInstance()
 export const HighlightsManager: FC = () => {
   const { loggedIn, userInfo } = useContext(LoginContext)
 
-  const [widgets, setWidgets] = useState<CarouselItem[]>([])
-
-  /**
-   * This function gets as parameters the list of events extracted and then it filters it.
-   * @param events
-   */
-  const extractNextEvents = (events: Event[]) => {
-    let firstLecture = true
-    return events
-      .filter(x => checkEventType(x.event_type.typeId))
-      .filter(x => {
-        if (x.event_type.typeId === WidgetType.LECTURES) {
-          if (firstLecture) {
-            firstLecture = false
-            return true
-          }
-          return false
-        } else return true
-      })
-      .map(e => createWidget(e))
-  }
-
-  /**
-   * This function calls the events API.
-   */
-  const setNextEvents = async () => {
-    if (!loggedIn) return
-    try {
-      const { matricola } = userInfo.careers[0]
-      const startDate = new Date().toISOString().substring(0, 10)
-      const response = await api.events.getEvents(
-        matricola,
-        startDate,
-        10 //nEvents 10
-      )
-      if (response.length !== 0) {
-        //we extract the events if there is something
-        const newWidgets = extractNextEvents(response)
-        setWidgets(newWidgets)
-
-        //schedule events
-        await notificationCentre.scheduleCarousel(extractAllEvents(response))
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  const { matricola } = userInfo?.careers?.[0] ?? {}
+  const startDate = new Date().toISOString().substring(0, 10)
+  const [events] = useApiCall(
+    api.events.getEvents,
+    {
+      matricola: matricola ?? "",
+      startDate,
+      nEvents: 10,
+    },
+    [loggedIn],
+    {},
+    !loggedIn // only call if logged in
+  )
+  const widgets = extractNextEvents(events ?? [])
 
   useEffect(() => {
-    if (loggedIn) {
-      void setNextEvents()
-    } else {
-      setWidgets([])
+    if (events) {
+      void notificationCentre.scheduleCarousel(extractAllEvents(events))
     }
-  }, [loggedIn])
+  }, [events])
 
   return (
     <View>
