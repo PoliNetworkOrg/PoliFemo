@@ -5,8 +5,11 @@ import { NotificationsChannels } from "./NotificationTypes"
 const notificationCentre = NotificationCentre.getInstance()
 
 export function useNotificationsChannels() {
-  const [activeChannels, setActiveChannels] =
-    useState<NotificationsChannels>(undefined)
+  const [activeChannels, setActiveChannels] = useState<NotificationsChannels>({
+    associazioni: true,
+    comunicazioni: true,
+    upload: true,
+  })
 
   useEffect(() => {
     function loadActiveChannels() {
