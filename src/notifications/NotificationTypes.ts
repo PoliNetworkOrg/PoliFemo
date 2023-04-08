@@ -45,7 +45,7 @@ export type NotificationStorage = {
 export interface NotificationCustomContentInput
   extends NotificationContentInput {
   //TODO : define all useful fields
-  data: {
+  data?: {
     sender?: string
     /**
      * a link which can be tapped by the user and open the browser

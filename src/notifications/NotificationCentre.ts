@@ -338,8 +338,11 @@ export class NotificationCentre {
 
       //permission granted
       if (grant) {
+        if (!content.data) {
+          content.data = {}
+        }
         //unify content's channelId with trigger channelId
-        content.data.channelId = content.data.channelId ?? channelId
+        content.data.channelId = content.data?.channelId ?? channelId
         if (
           trigger !== null &&
           typeof trigger === "object" &&
@@ -573,7 +576,7 @@ export class NotificationCentre {
         (!isRelevantAt ||
           new Date(isRelevantAt).getTime() < new Date().getTime()) &&
         (!channelId ||
-          (channelId && channelId === notifications[i].content.data.channelId))
+          (channelId && channelId === notifications[i].content.data?.channelId))
       ) {
         count++
       }
@@ -606,7 +609,7 @@ export class NotificationCentre {
     for (let i = 0; i < notifications?.length; i++) {
       const isRelevantAt = notifications[i].isRelevantAt
       if (
-        notifications[i].content.data.channelId === channelId &&
+        notifications[i].content.data?.channelId === channelId &&
         (!isRelevantAt || new Date(isRelevantAt).getTime() < now.getTime())
       ) {
         notificationsOfCategory.push(notifications[i])
@@ -716,12 +719,12 @@ export class NotificationCentre {
       for (let i = 0; i < this._notifications.length; i++) {
         if (
           this._notifications[i].isDumped &&
-          this._isChannelActive(this._notifications[i].content.data.channelId)
+          this._isChannelActive(this._notifications[i].content.data?.channelId)
         ) {
           const isDeviceScheduled =
-            this._notifications[i].content.data.storeOnSchedule
+            this._notifications[i].content.data?.storeOnSchedule
           const scheduleDateISO = this._notifications[i].isRelevantAt
-          const channelId = this._notifications[i].content.data.channelId
+          const channelId = this._notifications[i].content.data?.channelId
 
           //notification was scheduled by the device and has a relevant date
           if (isDeviceScheduled && scheduleDateISO && channelId) {

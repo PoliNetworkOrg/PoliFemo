@@ -7,6 +7,7 @@ import { TrayButton } from "./TrayButton"
 import { useNotificationBadge } from "notifications/useNotificationBadge"
 import { NotificationCentre } from "notifications/NotificationCentre"
 import { BodyText } from "components/Text"
+import * as Notifications from "expo-notifications"
 
 const notificationCentre = NotificationCentre.getInstance()
 
@@ -55,6 +56,21 @@ export const Tray: FC<{
       <Pressable
         style={{
           height: 20,
+          backgroundColor: "blue",
+          marginRight: 10,
+        }}
+        onPress={async () => {
+          await Notifications.scheduleNotificationAsync({
+            content: { title: "prova", body: "Prova", data: {} },
+            trigger: null,
+          })
+        }}
+      >
+        <BodyText>Notif</BodyText>
+      </Pressable>
+      <Pressable
+        style={{
+          height: 20,
           backgroundColor: "red",
           marginRight: 10,
         }}
@@ -62,7 +78,7 @@ export const Tray: FC<{
           notificationCentre.clearStorage()
         }}
       >
-        <BodyText>Clear Storage</BodyText>
+        <BodyText>Clear</BodyText>
       </Pressable>
       <TrayButton label="downloads" onClick={() => props.onDownloads()} />
       <TrayButton
