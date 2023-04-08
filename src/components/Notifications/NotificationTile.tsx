@@ -26,10 +26,10 @@ export interface NotificationTileProps {
 export const NotificationTile: FC<NotificationTileProps> = props => {
   const { palette, isLight } = usePalette()
 
-  const sender = props.notification.content.data.sender
-  const association = props.notification.content.data.association
-  const object = props.notification.content.data.object
-  const linkUrl = props.notification.content.data.linkUrl
+  const sender = props.notification.content.data?.sender
+  const association = props.notification.content.data?.association
+  const object = props.notification.content.data?.object
+  const linkUrl = props.notification.content.data?.linkUrl
   const identifier = props.notification.identifier
   const isRead = props.isRead ?? props.notification.isRead
 

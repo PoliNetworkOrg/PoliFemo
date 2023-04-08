@@ -13,7 +13,7 @@ export interface NotificationDisplayerProps {
 export const NotificationDisplayer: FC<NotificationDisplayerProps> = props => {
   const { palette, isLight } = usePalette()
 
-  const content = props.notification.content.data.content
+  const content = props.notification.content.data?.content
 
   const navigation = useNavigation()
 
