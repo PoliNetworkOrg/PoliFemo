@@ -60,7 +60,7 @@ export const rooms = {
     const request = client.callPoliNetwork<{
       free_rooms: Record<ValidAcronym, Room[]>
     }>({
-      url: "/v1/rooms/search_day",
+      url: "/v1/rooms/search",
       method: "GET",
       params: {
         date: params.date,
