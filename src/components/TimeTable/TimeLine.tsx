@@ -19,30 +19,28 @@ export const TimeLine: FC = () => {
   ]
 
   return (
-    <View style={{ marginLeft: 40 }}>
-      <View
-        style={{
-          flexDirection: "row",
-          marginBottom: 8,
-          borderBottomWidth: 1,
-          borderColor: "white",
-          paddingBottom: 8,
-        }}
-      >
-        {times.map((item, index) => (
-          <BodyText
-            style={{
-              fontWeight: "900",
-              fontSize: 12,
-              color: "white",
-              marginRight: 30,
-            }}
-            key={index}
-          >
-            {item}
-          </BodyText>
-        ))}
-      </View>
+    <View
+      style={{
+        flexDirection: "row",
+        marginBottom: 8,
+        borderBottomWidth: 1,
+        borderColor: "white",
+        paddingBottom: 8,
+      }}
+    >
+      {times.map((item, index) => (
+        <BodyText
+          style={{
+            fontWeight: "900",
+            fontSize: 12,
+            color: "white",
+            marginRight: 30,
+          }}
+          key={index}
+        >
+          {item}
+        </BodyText>
+      ))}
     </View>
   )
 }

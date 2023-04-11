@@ -17,7 +17,7 @@ const lectures: Event[] = [
   {
     event_id: 127350,
     date_start: "2022-12-22T08:00:00",
-    date_end: "2022-12-22T11:00:00",
+    date_end: "2022-12-22T10:00:00",
     show_agenda: true,
     matricola: "100000",
     title: {
@@ -43,7 +43,33 @@ const lectures: Event[] = [
   {
     event_id: 127351,
     date_start: "2022-12-22T09:00:00",
-    date_end: "2022-12-22T12:00:00",
+    date_end: "2022-12-22T11:00:00",
+    show_agenda: true,
+    matricola: "100000",
+    title: {
+      it: "INGEGNERIA DEL SOFTWARE",
+      en: "SOFTWARE ENGINEERING",
+    },
+    event_type: {
+      typeId: 1,
+      type_dn: { it: "Lezione", en: "Lecture" },
+    },
+    event_subtype: "L",
+    calendar: {
+      calendar_id: 0,
+      calendar_dn: { it: "Accademico", en: "Academic" },
+    },
+    room: {
+      room_id: 3316,
+      acronym_dn: "2.1.2",
+      classroom_id: -2147483648,
+      room_dn: "002",
+    },
+  },
+  {
+    event_id: 127352,
+    date_start: "2022-12-22T10:00:00",
+    date_end: "2022-12-22T17:00:00",
     show_agenda: true,
     matricola: "100000",
     title: {
@@ -68,7 +94,7 @@ const lectures: Event[] = [
   },
 ]
 
-const colors: string[] = ["red", "lightblue"]
+const colors: string[] = ["red", "lightblue", "white"]
 
 // distance of the bottom sheet from the top of the screen, when opened or closed
 const distanceFromTop = {
@@ -96,14 +122,26 @@ export const TimeTableGrid: FC = () => {
   return (
     <>
       <View style={{ flex: 1, width, marginTop: 163, marginLeft: 29 }}>
-        <ScrollView>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ marginLeft: 40 }}
+        >
+          <TimeLine />
+        </ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <WeekLine />
+        </ScrollView>
+        <ScrollView
+          style={{
+            position: "absolute",
+            marginTop: 30,
+            marginLeft: 40,
+          }}
+        >
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View style={{ flexDirection: "column" }}>
-              <TimeLine />
-              <WeekLine />
-              <View
-                style={{ marginLeft: 40, marginTop: 35, position: "absolute" }}
-              >
+            <View>
+              <View>
                 {lectures.map((lecture, index) => (
                   <LectureCard
                     lecture={lecture}
@@ -123,10 +161,7 @@ export const TimeTableGrid: FC = () => {
       <BottomSheet
         ref={bottomSheetRef}
         index={-1}
-        snapPoints={[
-          // 0 is at the bottom of the screen
-          getUsableScreenHeight() - distanceFromTop.closed,
-        ]}
+        snapPoints={[getUsableScreenHeight() - distanceFromTop.closed]}
       >
         <BottomSheetScrollView>
           <BodyText>{currentLecture?.title.it}</BodyText>
