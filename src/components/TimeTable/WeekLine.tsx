@@ -5,7 +5,7 @@ import { View } from "react-native"
 export const WeekLine: FC = () => {
   const days = ["L", "M", "M", "G", "V", "S"]
   return (
-    <View style={{ flexDirection: "row" }}>
+    <View style={{ flexDirection: "row", marginTop: 30 }}>
       <View
         style={{
           flexDirection: "column",

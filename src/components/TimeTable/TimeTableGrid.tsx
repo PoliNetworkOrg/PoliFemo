@@ -4,20 +4,21 @@ import { Dimensions, View } from "react-native"
 import { TimeLine } from "./TimeLine"
 import { WeekLine } from "./WeekLine"
 import { ScrollView } from "react-native-gesture-handler"
-import { LectureCard } from "./LectureCard"
 import { Event } from "api/collections/event"
 import { BodyText } from "components/Text"
 import { getUsableScreenHeight } from "utils/layout"
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet"
 import { TimeTableContext } from "contexts/timeTable"
+import { FormattedTableKeys, getFormattedTable } from "utils/timetable"
+import { TimetableRow } from "./TimetableRow"
 
 const { width } = Dimensions.get("window")
 
 const lectures: Event[] = [
   {
     event_id: 127350,
-    date_start: "2022-12-22T08:00:00",
-    date_end: "2022-12-22T10:00:00",
+    date_start: "2023-04-10T08:00:00",
+    date_end: "2023-04-10T10:00:00",
     show_agenda: true,
     matricola: "100000",
     title: {
@@ -42,8 +43,8 @@ const lectures: Event[] = [
   },
   {
     event_id: 127351,
-    date_start: "2022-12-22T09:00:00",
-    date_end: "2022-12-22T11:00:00",
+    date_start: "2023-04-10T09:00:00",
+    date_end: "2023-04-10T11:00:00",
     show_agenda: true,
     matricola: "100000",
     title: {
@@ -68,8 +69,8 @@ const lectures: Event[] = [
   },
   {
     event_id: 127352,
-    date_start: "2022-12-22T10:00:00",
-    date_end: "2022-12-22T17:00:00",
+    date_start: "2023-04-10T10:00:00",
+    date_end: "2023-04-10T17:00:00",
     show_agenda: true,
     matricola: "100000",
     title: {
@@ -92,9 +93,137 @@ const lectures: Event[] = [
       room_dn: "002",
     },
   },
+  {
+    event_id: 127350,
+    date_start: "2023-04-11T10:00:00",
+    date_end: "2023-04-11T16:00:00",
+    show_agenda: true,
+    matricola: "100000",
+    title: {
+      it: "ARCHITETTURA DEI CALCOLATORI E SISTEMI OPERATIVI",
+      en: "COMPUTER ARCHITECTURES AND OPERATING SYSTEMS",
+    },
+    event_type: {
+      typeId: 1,
+      type_dn: { it: "Lezione", en: "Lecture" },
+    },
+    event_subtype: "L",
+    calendar: {
+      calendar_id: 0,
+      calendar_dn: { it: "Accademico", en: "Academic" },
+    },
+    room: {
+      room_id: 3316,
+      acronym_dn: "2.1.2",
+      classroom_id: -2147483648,
+      room_dn: "002",
+    },
+  },
+  {
+    event_id: 127351,
+    date_start: "2023-04-11T12:00:00",
+    date_end: "2023-04-11T18:00:00",
+    show_agenda: true,
+    matricola: "100000",
+    title: {
+      it: "INGEGNERIA DEL SOFTWARE",
+      en: "SOFTWARE ENGINEERING",
+    },
+    event_type: {
+      typeId: 1,
+      type_dn: { it: "Lezione", en: "Lecture" },
+    },
+    event_subtype: "L",
+    calendar: {
+      calendar_id: 0,
+      calendar_dn: { it: "Accademico", en: "Academic" },
+    },
+    room: {
+      room_id: 3316,
+      acronym_dn: "2.1.2",
+      classroom_id: -2147483648,
+      room_dn: "002",
+    },
+  },
+  {
+    event_id: 127352,
+    date_start: "2023-04-11T08:00:00",
+    date_end: "2023-04-11T10:00:00",
+    show_agenda: true,
+    matricola: "100000",
+    title: {
+      it: "INGEGNERIA DEL SOFTWARE",
+      en: "SOFTWARE ENGINEERING",
+    },
+    event_type: {
+      typeId: 1,
+      type_dn: { it: "Lezione", en: "Lecture" },
+    },
+    event_subtype: "L",
+    calendar: {
+      calendar_id: 0,
+      calendar_dn: { it: "Accademico", en: "Academic" },
+    },
+    room: {
+      room_id: 3316,
+      acronym_dn: "2.1.2",
+      classroom_id: -2147483648,
+      room_dn: "002",
+    },
+  },
+  {
+    event_id: 127352,
+    date_start: "2023-04-11T09:00:00",
+    date_end: "2023-04-11T11:00:00",
+    show_agenda: true,
+    matricola: "100000",
+    title: {
+      it: "INGEGNERIA DEL SOFTWARE 2",
+      en: "SOFTWARE ENGINEERING",
+    },
+    event_type: {
+      typeId: 1,
+      type_dn: { it: "Lezione", en: "Lecture" },
+    },
+    event_subtype: "L",
+    calendar: {
+      calendar_id: 0,
+      calendar_dn: { it: "Accademico", en: "Academic" },
+    },
+    room: {
+      room_id: 3316,
+      acronym_dn: "2.1.2",
+      classroom_id: -2147483648,
+      room_dn: "002",
+    },
+  },
+  {
+    event_id: 127352,
+    date_start: "2023-04-11T08:00:00",
+    date_end: "2023-04-11T19:00:00",
+    show_agenda: true,
+    matricola: "100000",
+    title: {
+      it: "INGEGNERIA DEL SOFTWARE 2",
+      en: "SOFTWARE ENGINEERING",
+    },
+    event_type: {
+      typeId: 1,
+      type_dn: { it: "Lezione", en: "Lecture" },
+    },
+    event_subtype: "L",
+    calendar: {
+      calendar_id: 0,
+      calendar_dn: { it: "Accademico", en: "Academic" },
+    },
+    room: {
+      room_id: 3316,
+      acronym_dn: "2.1.2",
+      classroom_id: -2147483648,
+      room_dn: "002",
+    },
+  },
 ]
-
-const colors: string[] = ["red", "lightblue", "white"]
 
 // distance of the bottom sheet from the top of the screen, when opened or closed
 const distanceFromTop = {
@@ -119,43 +248,38 @@ export const TimeTableGrid: FC = () => {
     }
   }, [timeTableOpen])
 
+  const formattedTable = getFormattedTable(lectures)
+
   return (
     <>
       <View style={{ flex: 1, width, marginTop: 163, marginLeft: 29 }}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{ marginLeft: 40 }}
-        >
-          <TimeLine />
-        </ScrollView>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <WeekLine />
-        </ScrollView>
-        <ScrollView
-          style={{
-            position: "absolute",
-            marginTop: 30,
-            marginLeft: 40,
-          }}
-        >
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View>
+          <View style={{ flexDirection: "row" }}>
+            <WeekLine />
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={{
+                marginLeft: 10,
+              }}
+            >
               <View>
-                {lectures.map((lecture, index) => (
-                  <LectureCard
-                    lecture={lecture}
-                    borderColor={colors[index]}
-                    onPress={() => {
-                      setTimeTableOpen(!timeTableOpen)
-                      setCurrentLecture(lecture)
-                    }}
-                    key={lecture.event_id}
-                  />
-                ))}
+                <TimeLine />
+                <View>
+                  {FormattedTableKeys.map(day => (
+                    <TimetableRow
+                      onEventPress={(event: Event) => {
+                        setTimeTableOpen(!timeTableOpen)
+                        setCurrentLecture(event)
+                      }}
+                      row={formattedTable[day]}
+                      key={day}
+                    />
+                  ))}
+                </View>
               </View>
-            </View>
-          </ScrollView>
+            </ScrollView>
+          </View>
         </ScrollView>
       </View>
       <BottomSheet

@@ -7,11 +7,12 @@ import { TimeTableContext } from "contexts/timeTable"
 export interface LectureCardProps {
   lecture: Event
   borderColor: string
+  overlapNumber: number
   onPress: () => void
 }
 
 const minHour = 8
-const timeSlot = 62 // 30(space between) + 32(space occupied by digits)
+const timeSlot = 62 / 2 // 30(space between) + 32(space occupied by digits)
 const weekSlot = 135 // 120(space between) + 15(space occupied by digit)
 
 /**
@@ -33,15 +34,16 @@ export const LectureCard: FC<LectureCardProps> = props => {
   return (
     <Pressable
       style={{
+        position: "absolute",
         borderRadius: 18,
         borderWidth: 2,
         padding: open ? 10 : 0,
         borderColor: props.borderColor,
         backgroundColor: open ? undefined : props.borderColor,
         height: open ? 60 : 17,
-        width: 30 + timeRange * timeSlot,
-        marginLeft: timeStart * timeSlot,
-        marginTop: 0 * weekSlot,
+        width: timeRange * timeSlot,
+        left: timeStart * timeSlot,
+        top: props.overlapNumber * (open ? 60 : 17),
       }}
       onPress={() => props.onPress()}
     >
