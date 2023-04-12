@@ -1,8 +1,9 @@
-import { FC } from "react"
+import { FC, useContext } from "react"
 import { View } from "react-native"
 import { Event } from "api/collections/event"
 import { LectureRow } from "./LectureRow"
 import { ValidTableRow } from "utils/timetable"
+import { TimeTableContext } from "contexts/timeTable"
 
 export interface TimetableRowProps {
   row: ValidTableRow
@@ -10,10 +11,12 @@ export interface TimetableRowProps {
 }
 
 export const TimetableRow: FC<TimetableRowProps> = props => {
+  const { timeTableOpen } = useContext(TimeTableContext)
   return (
     <View
       style={{
-        top: props.row.marginTop,
+        position: "absolute",
+        top: timeTableOpen ? props.row.marginTop : props.row.collapsedMarginTop,
       }}
     >
       {props.row.singleRows.map((lectures, index) => {

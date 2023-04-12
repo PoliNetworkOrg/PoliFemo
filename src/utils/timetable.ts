@@ -20,7 +20,7 @@ export type ValidDayTimeTable =
   | "sab"
   | "dom"
 
-export const FormattedTableKeys: ValidDayTimeTable[] = [
+export const formattedTableKeys: ValidDayTimeTable[] = [
   "lun",
   "mar",
   "mer",
@@ -36,6 +36,7 @@ export type ValidTableRow = {
   singleRows: TableRowEvents[]
   maxOverlapNumber: number
   marginTop: number
+  collapsedMarginTop: number
 }
 
 export type FormattedTable = Record<ValidDayTimeTable, ValidTableRow>
@@ -46,20 +47,53 @@ export const getFormattedTable = (events: Event[]): FormattedTable => {
     return new Date(a.date_start).getHours() - new Date(b.date_start).getHours()
   })
 
-  const weekSlot = 135 // 120(space between) + 15(space occupied by digit)
-
   const newTable: FormattedTable = {
-    lun: { singleRows: [], maxOverlapNumber: 0, marginTop: 0 * weekSlot },
-    mar: { singleRows: [], maxOverlapNumber: 0, marginTop: 1 * weekSlot },
-    mer: { singleRows: [], maxOverlapNumber: 0, marginTop: 2 * weekSlot },
-    gio: { singleRows: [], maxOverlapNumber: 0, marginTop: 3 * weekSlot },
-    ven: { singleRows: [], maxOverlapNumber: 0, marginTop: 4 * weekSlot },
-    sab: { singleRows: [], maxOverlapNumber: 0, marginTop: 5 * weekSlot },
-    dom: { singleRows: [], maxOverlapNumber: 0, marginTop: 6 * weekSlot },
+    lun: {
+      singleRows: [],
+      maxOverlapNumber: 0,
+      marginTop: 0,
+      collapsedMarginTop: 0,
+    },
+    mar: {
+      singleRows: [],
+      maxOverlapNumber: 0,
+      marginTop: 0,
+      collapsedMarginTop: 0,
+    },
+    mer: {
+      singleRows: [],
+      maxOverlapNumber: 0,
+      marginTop: 0,
+      collapsedMarginTop: 0,
+    },
+    gio: {
+      singleRows: [],
+      maxOverlapNumber: 0,
+      marginTop: 0,
+      collapsedMarginTop: 0,
+    },
+    ven: {
+      singleRows: [],
+      maxOverlapNumber: 0,
+      marginTop: 0,
+      collapsedMarginTop: 0,
+    },
+    sab: {
+      singleRows: [],
+      maxOverlapNumber: 0,
+      marginTop: 0,
+      collapsedMarginTop: 0,
+    },
+    dom: {
+      singleRows: [],
+      maxOverlapNumber: 0,
+      marginTop: 0,
+      collapsedMarginTop: 0,
+    },
   }
 
   for (let i = 0; i < orderedEvents.length; i++) {
-    const dayOfTheWeek: ValidDayTimeTable = getDay(orderedEvents[i])
+    const dayOfTheWeek: ValidDayTimeTable = getDayFromEvent(orderedEvents[i])
 
     // get overlap number
     let overlapNumber = 0
@@ -125,10 +159,27 @@ export const getFormattedTable = (events: Event[]): FormattedTable => {
       }
     }
   }
+
+  //TODO: forse è meglio estrarre questa logica in una funzione a parte e togliere marginTop e collapsedMarginTop
+  //TODO : dal formattedTable
+  //calculate proper margin
+  let accumulatedMargin = 0
+  let accumulatedMarginCollapsed = 0
+  for (let i = 1; i < formattedTableKeys.length; i++) {
+    const maxOverlapIth = newTable[formattedTableKeys[i - 1]].maxOverlapNumber
+    //TODO : capire i valori giusti da mettere per i margini
+    accumulatedMargin += (maxOverlapIth + 1) * 60
+    accumulatedMarginCollapsed +=
+      (maxOverlapIth + 1) * 17 + (maxOverlapIth === 0 ? 25 : 14)
+    newTable[formattedTableKeys[i]].marginTop = accumulatedMargin
+    newTable[formattedTableKeys[i]].collapsedMarginTop =
+      accumulatedMarginCollapsed
+  }
+
   return newTable
 }
 
-export const getDay = (event: Event): ValidDayTimeTable => {
+export const getDayFromEvent = (event: Event): ValidDayTimeTable => {
   const dateNumber = new Date(event.date_start).getDay()
 
   return dayMappingObject[dateNumber]
@@ -148,4 +199,21 @@ export const isOverlap = (first: Event, second: Event) => {
   const startB = new Date(second.date_start).getHours()
 
   return startB === startA || (startB > startA && startB < endA)
+}
+
+/**
+ *
+ * helper function used in WeekLine.tsx for getting list of maxOverlapNumbers, one for every day of the week
+ *
+ * @param table
+ * @returns list of maxOverlapsNumbers
+ */
+export const getMaxOverlapNumbers = (table: FormattedTable): number[] => {
+  const list: number[] = []
+
+  for (let i = 0; i < formattedTableKeys.length; i++) {
+    list.push(table[formattedTableKeys[i]].maxOverlapNumber)
+  }
+
+  return list
 }

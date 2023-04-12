@@ -1,8 +1,15 @@
 import { BodyText } from "components/Text"
-import { FC } from "react"
+import { TimeTableContext } from "contexts/timeTable"
+import { FC, useContext } from "react"
 import { View } from "react-native"
 
-export const WeekLine: FC = () => {
+interface WeekLineProps {
+  overlapsNumberList: number[]
+}
+
+export const WeekLine: FC<WeekLineProps> = props => {
+  const { timeTableOpen } = useContext(TimeTableContext)
+
   const days = ["L", "M", "M", "G", "V", "S"]
   return (
     <View style={{ flexDirection: "row", marginTop: 30 }}>
@@ -20,7 +27,10 @@ export const WeekLine: FC = () => {
               fontWeight: "900",
               fontSize: 12,
               color: "white",
-              marginBottom: 120,
+              //TODO: capire la quantità corretta da mettere per il margine
+              marginBottom: timeTableOpen
+                ? (props.overlapsNumberList[index] + 1) * 60 - 18
+                : 30,
             }}
             key={index}
           >

@@ -9,7 +9,11 @@ import { BodyText } from "components/Text"
 import { getUsableScreenHeight } from "utils/layout"
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet"
 import { TimeTableContext } from "contexts/timeTable"
-import { FormattedTableKeys, getFormattedTable } from "utils/timetable"
+import {
+  formattedTableKeys,
+  getFormattedTable,
+  getMaxOverlapNumbers,
+} from "utils/timetable"
 import { TimetableRow } from "./TimetableRow"
 
 const { width } = Dimensions.get("window")
@@ -278,10 +282,20 @@ export const TimeTableGrid: FC = () => {
 
   return (
     <>
-      <View style={{ flex: 1, width, marginTop: 163, marginLeft: 29 }}>
+      <View
+        style={{
+          flex: 1,
+          width,
+          marginTop: 163,
+          marginLeft: 29,
+          marginBottom: 100,
+        }}
+      >
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ flexDirection: "row" }}>
-            <WeekLine />
+            <WeekLine
+              overlapsNumberList={getMaxOverlapNumbers(formattedTable)}
+            />
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -292,7 +306,7 @@ export const TimeTableGrid: FC = () => {
               <View>
                 <TimeLine />
                 <View>
-                  {FormattedTableKeys.map(day => (
+                  {formattedTableKeys.map(day => (
                     <TimetableRow
                       onEventPress={(event: Event) => {
                         setTimeTableOpen(!timeTableOpen)

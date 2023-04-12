@@ -13,7 +13,6 @@ export interface LectureCardProps {
 
 const minHour = 8
 const timeSlot = 62 / 2 // 30(space between) + 32(space occupied by digits)
-const weekSlot = 135 // 120(space between) + 15(space occupied by digit)
 
 /**
  * Component that represents the card that contains the name and the room of the lecture.
@@ -43,6 +42,7 @@ export const LectureCard: FC<LectureCardProps> = props => {
         height: open ? 60 : 17,
         width: timeRange * timeSlot,
         left: timeStart * timeSlot,
+        //TODO: capire se inserire spazio tra lezioni overlappate
         top: props.overlapNumber * (open ? 60 : 17),
       }}
       onPress={() => props.onPress()}

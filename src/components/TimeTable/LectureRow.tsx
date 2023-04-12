@@ -3,6 +3,7 @@ import { View } from "react-native"
 import { Event } from "api/collections/event"
 import { LectureCard } from "./LectureCard"
 
+//TODO : migliorare l'assegnazione del border color
 const colors: string[] = ["red", "lightblue", "white"]
 
 export interface LectureRowProps {
