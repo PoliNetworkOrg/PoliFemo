@@ -35,6 +35,7 @@ export type TableRowEvents = { events: Event[]; overlapNumber: number }
 export type ValidTableRow = {
   singleRows: TableRowEvents[]
   maxOverlapNumber: number
+  marginTop: number
 }
 
 export type FormattedTable = Record<ValidDayTimeTable, ValidTableRow>
@@ -45,14 +46,16 @@ export const getFormattedTable = (events: Event[]): FormattedTable => {
     return new Date(a.date_start).getHours() - new Date(b.date_start).getHours()
   })
 
+  const weekSlot = 135 // 120(space between) + 15(space occupied by digit)
+
   const newTable: FormattedTable = {
-    lun: { singleRows: [], maxOverlapNumber: 0 },
-    mar: { singleRows: [], maxOverlapNumber: 0 },
-    mer: { singleRows: [], maxOverlapNumber: 0 },
-    gio: { singleRows: [], maxOverlapNumber: 0 },
-    ven: { singleRows: [], maxOverlapNumber: 0 },
-    sab: { singleRows: [], maxOverlapNumber: 0 },
-    dom: { singleRows: [], maxOverlapNumber: 0 },
+    lun: { singleRows: [], maxOverlapNumber: 0, marginTop: 0 * weekSlot },
+    mar: { singleRows: [], maxOverlapNumber: 0, marginTop: 1 * weekSlot },
+    mer: { singleRows: [], maxOverlapNumber: 0, marginTop: 2 * weekSlot },
+    gio: { singleRows: [], maxOverlapNumber: 0, marginTop: 3 * weekSlot },
+    ven: { singleRows: [], maxOverlapNumber: 0, marginTop: 4 * weekSlot },
+    sab: { singleRows: [], maxOverlapNumber: 0, marginTop: 5 * weekSlot },
+    dom: { singleRows: [], maxOverlapNumber: 0, marginTop: 6 * weekSlot },
   }
 
   for (let i = 0; i < orderedEvents.length; i++) {

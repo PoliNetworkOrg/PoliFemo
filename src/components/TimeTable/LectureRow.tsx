@@ -16,8 +16,7 @@ export const LectureRow: FC<LectureRowProps> = props => {
     <View
       style={{
         flexDirection: "row",
-        marginLeft: 16,
-        marginTop: 4,
+        marginLeft: 15,
       }}
     >
       {props.lectures.map((lecture, index) => {

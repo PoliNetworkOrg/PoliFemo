@@ -13,7 +13,7 @@ export const TimetableRow: FC<TimetableRowProps> = props => {
   return (
     <View
       style={{
-        height: (props.row.maxOverlapNumber + 1) * 64,
+        top: props.row.marginTop,
       }}
     >
       {props.row.singleRows.map((lectures, index) => {

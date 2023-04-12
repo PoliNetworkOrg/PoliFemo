@@ -147,8 +147,8 @@ const lectures: Event[] = [
   },
   {
     event_id: 127352,
-    date_start: "2023-04-11T08:00:00",
-    date_end: "2023-04-11T10:00:00",
+    date_start: "2023-04-12T08:00:00",
+    date_end: "2023-04-12T10:00:00",
     show_agenda: true,
     matricola: "100000",
     title: {
@@ -173,8 +173,8 @@ const lectures: Event[] = [
   },
   {
     event_id: 127352,
-    date_start: "2023-04-11T09:00:00",
-    date_end: "2023-04-11T11:00:00",
+    date_start: "2023-04-12T09:00:00",
+    date_end: "2023-04-12T20:00:00",
     show_agenda: true,
     matricola: "100000",
     title: {
@@ -199,8 +199,34 @@ const lectures: Event[] = [
   },
   {
     event_id: 127352,
-    date_start: "2023-04-11T08:00:00",
-    date_end: "2023-04-11T19:00:00",
+    date_start: "2023-04-13T08:00:00",
+    date_end: "2023-04-13T19:00:00",
+    show_agenda: true,
+    matricola: "100000",
+    title: {
+      it: "INGEGNERIA DEL SOFTWARE 2",
+      en: "SOFTWARE ENGINEERING",
+    },
+    event_type: {
+      typeId: 1,
+      type_dn: { it: "Lezione", en: "Lecture" },
+    },
+    event_subtype: "L",
+    calendar: {
+      calendar_id: 0,
+      calendar_dn: { it: "Accademico", en: "Academic" },
+    },
+    room: {
+      room_id: 3316,
+      acronym_dn: "2.1.2",
+      classroom_id: -2147483648,
+      room_dn: "002",
+    },
+  },
+  {
+    event_id: 127352,
+    date_start: "2023-04-14T08:00:00",
+    date_end: "2023-04-14T11:00:00",
     show_agenda: true,
     matricola: "100000",
     title: {
