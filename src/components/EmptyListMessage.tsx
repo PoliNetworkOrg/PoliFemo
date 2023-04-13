@@ -5,7 +5,7 @@ import { Canvas, Group, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import polifemoIcon from "assets/highlights/polifemo.svg" // <-- NON è quella giusta!!
 import { usePalette } from "utils/colors"
 
-interface ErrorMessageProps {
+interface EmptyMessageProps {
   message: string
   styleMessage?: StyleProp<TextStyle>
 }
@@ -13,7 +13,7 @@ interface ErrorMessageProps {
 /**
  * This component displays a message if an error occurs.
  */
-export const ErrorMessage: FC<ErrorMessageProps> = props => {
+export const EmptyListMessage: FC<EmptyMessageProps> = props => {
   const polifemoSVG = useSVG(polifemoIcon)
 
   const { primary } = usePalette()
@@ -25,12 +25,7 @@ export const ErrorMessage: FC<ErrorMessageProps> = props => {
         flex: 0.8,
       }}
     >
-      <View
-        style={{
-          justifyContent: "space-evenly",
-          flex: 0.9,
-        }}
-      >
+      <View style={{ justifyContent: "space-evenly", flex: 0.9 }}>
         <Canvas
           style={{
             height: 192,
@@ -61,8 +56,8 @@ export const ErrorMessage: FC<ErrorMessageProps> = props => {
             props.styleMessage,
           ]}
         >
-          Ops! Errore
-          {"\n" + props.message}
+          {props.message + ",\n"}
+          Polifemo è dispiaciuto
         </BodyText>
       </View>
     </View>
