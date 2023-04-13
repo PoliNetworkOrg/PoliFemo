@@ -15,9 +15,15 @@ import {
   getMaxOverlapNumbers,
 } from "utils/timetable"
 import { TimetableRow } from "./TimetableRow"
+import { LoginContext } from "contexts/login"
+import { useApiCall } from "api/useApiCall"
+import { api } from "api"
+import { EventType } from "utils/events"
+import moment from "moment"
 
 const { width } = Dimensions.get("window")
 
+/*
 const lectures: Event[] = [
   {
     event_id: 127350,
@@ -253,7 +259,7 @@ const lectures: Event[] = [
       room_dn: "002",
     },
   },
-]
+]*/
 
 // distance of the bottom sheet from the top of the screen, when opened or closed
 const distanceFromTop = {
@@ -268,6 +274,41 @@ export const TimeTableGrid: FC = () => {
 
   const [currentLecture, setCurrentLecture] = useState<Event>()
 
+  const { loggedIn, userInfo } = useContext(LoginContext)
+
+  const { matricola } = userInfo?.careers?.[0] ?? {}
+
+  const startDate = new Date().toISOString().substring(0, 10)
+
+  const [lectures, setLectures] = useState<Event[]>([])
+
+  const [events] = useApiCall(
+    api.events.getEvents,
+    {
+      matricola: matricola ?? "",
+      startDate,
+      nEvents: 100,
+    },
+    [loggedIn],
+    {},
+    !loggedIn // only call if logged in
+  )
+
+  useEffect(() => {
+    if (events && events?.length > 1) {
+      setLectures(
+        events
+          .filter(
+            event =>
+              //one week range
+              new Date(event.date_start) >= moment().toDate() &&
+              new Date(event.date_start) <= moment().add(6, "days").toDate()
+          )
+          .filter(e => e.event_type.typeId === EventType.LECTURES) //filter only the lectures)
+      )
+    }
+  }, [events])
+
   useEffect(() => {
     if (timeTableOpen) {
       bottomSheetRef.current?.close?.()
@@ -278,7 +319,7 @@ export const TimeTableGrid: FC = () => {
     }
   }, [timeTableOpen])
 
-  const formattedTable = getFormattedTable(lectures)
+  const formattedTable = getFormattedTable(lectures ?? [])
 
   return (
     <>
