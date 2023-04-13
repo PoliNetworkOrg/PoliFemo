@@ -301,8 +301,9 @@ export const TimeTableGrid: FC = () => {
           .filter(
             event =>
               //one week range
-              new Date(event.date_start) >= moment().toDate() &&
-              new Date(event.date_start) <= moment().add(6, "days").toDate()
+              new Date(event.date_start) >= moment().startOf("day").toDate() &&
+              new Date(event.date_start) <=
+                moment().startOf("day").add(6, "days").toDate()
           )
           .filter(e => e.event_type.typeId === EventType.LECTURES) //filter only the lectures)
       )
