@@ -64,7 +64,7 @@ export const ErrorMessage: FC<ErrorMessageProps> = props => {
             props.styleMessage,
           ]}
         >
-          {t("freeClass_error") /* + props.message */}
+          {t("freeClass_error") + props.message}
         </BodyText>
       </View>
     </View>

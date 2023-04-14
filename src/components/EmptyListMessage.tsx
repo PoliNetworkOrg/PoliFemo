@@ -59,7 +59,7 @@ export const EmptyListMessage: FC<EmptyMessageProps> = props => {
             props.styleMessage,
           ]}
         >
-          {t(/* props.message + */ "freeClass_emptyList")}
+          {props.message + t("freeClass_emptyList")}
         </BodyText>
       </View>
     </View>
