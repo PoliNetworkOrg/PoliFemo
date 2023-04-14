@@ -4,6 +4,7 @@ import { StyleProp, View, TextStyle } from "react-native"
 import { Canvas, Group, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import polifemoIcon from "assets/highlights/polifemo.svg" // <-- NON è quella giusta!!
 import { usePalette } from "utils/colors"
+import { useTranslation } from "react-i18next"
 
 interface ErrorMessageProps {
   message: string
@@ -17,6 +18,8 @@ export const ErrorMessage: FC<ErrorMessageProps> = props => {
   const polifemoSVG = useSVG(polifemoIcon)
 
   const { primary } = usePalette()
+
+  const { t } = useTranslation("freeClass")
 
   return (
     <View
@@ -61,8 +64,7 @@ export const ErrorMessage: FC<ErrorMessageProps> = props => {
             props.styleMessage,
           ]}
         >
-          Ops! Errore
-          {"\n" + props.message}
+          {t("freeClass_error") /* + props.message */}
         </BodyText>
       </View>
     </View>

@@ -4,6 +4,7 @@ import { StyleProp, View, TextStyle } from "react-native"
 import { Canvas, Group, ImageSVG, useSVG } from "@shopify/react-native-skia"
 import polifemoIcon from "assets/highlights/polifemo.svg" // <-- NON è quella giusta!!
 import { usePalette } from "utils/colors"
+import { useTranslation } from "react-i18next"
 
 interface EmptyMessageProps {
   message: string
@@ -17,6 +18,8 @@ export const EmptyListMessage: FC<EmptyMessageProps> = props => {
   const polifemoSVG = useSVG(polifemoIcon)
 
   const { primary } = usePalette()
+
+  const { t } = useTranslation("freeClass")
 
   return (
     <View
@@ -56,8 +59,7 @@ export const EmptyListMessage: FC<EmptyMessageProps> = props => {
             props.styleMessage,
           ]}
         >
-          {props.message + ",\n"}
-          Polifemo è dispiaciuto
+          {t(/* props.message + */ "freeClass_emptyList")}
         </BodyText>
       </View>
     </View>
