@@ -12,7 +12,8 @@ import { TimeTableContext } from "contexts/timeTable"
 import {
   formattedTableKeys,
   getFormattedTable,
-  getMaxOverlapNumbers,
+  getMarginDays,
+  getMarginDaysCollapsed,
 } from "utils/timetable"
 import { TimetableRow } from "./TimetableRow"
 import { LoginContext } from "contexts/login"
@@ -20,11 +21,11 @@ import { useApiCall } from "api/useApiCall"
 import { api } from "api"
 import { EventType } from "utils/events"
 import moment from "moment"
+import { Grid } from "./OverlayGrid"
 
 const { width } = Dimensions.get("window")
 
-/*
-const lectures: Event[] = [
+const fakeLectures: Event[] = [
   {
     event_id: 127350,
     date_start: "2023-04-10T08:00:00",
@@ -259,7 +260,7 @@ const lectures: Event[] = [
       room_dn: "002",
     },
   },
-]*/
+]
 
 // distance of the bottom sheet from the top of the screen, when opened or closed
 const distanceFromTop = {
@@ -320,7 +321,7 @@ export const TimeTableGrid: FC = () => {
     }
   }, [timeTableOpen])
 
-  const formattedTable = getFormattedTable(lectures ?? [])
+  const formattedTable = getFormattedTable(/* lectures ?? [] */ fakeLectures)
 
   return (
     <>
@@ -336,18 +337,21 @@ export const TimeTableGrid: FC = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ flexDirection: "row" }}>
             <WeekLine
-              overlapsNumberList={getMaxOverlapNumbers(formattedTable)}
+              overlapsNumberList={getMarginDays(formattedTable)}
+              overlapsNumberListCollapsed={getMarginDaysCollapsed(
+                formattedTable
+              )}
             />
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
               style={{
-                marginLeft: 10,
+                paddingLeft: 10,
               }}
             >
               <View>
                 <TimeLine />
-                <View>
+                <View style={{ height: "100%" }}>
                   {formattedTableKeys.map(day => (
                     <TimetableRow
                       onEventPress={(event: Event) => {
@@ -358,6 +362,8 @@ export const TimeTableGrid: FC = () => {
                       key={day}
                     />
                   ))}
+
+                  <Grid />
                 </View>
               </View>
             </ScrollView>

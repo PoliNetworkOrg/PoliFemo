@@ -16,6 +16,7 @@ export const TimetableRow: FC<TimetableRowProps> = props => {
     <View
       style={{
         position: "absolute",
+        zIndex: 1,
         top: timeTableOpen ? props.row.marginTop : props.row.collapsedMarginTop,
       }}
     >

@@ -1,6 +1,29 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Event } from "api/collections/event"
 
+/**
+ * A more systematic approach for managing margins, change here, change everywhere.
+ *
+ */
+
+export const LECTURE_WIDTH = 64
+
+export const LECTURE_HEIGHT_OPEN = 60
+
+export const LECTURE_HEIGHT_COLLAPSED = 17
+
+//space between a one-hour slot
+export const TIME_SLOT = LECTURE_WIDTH / 2
+
+//nudging times slightly to the right
+export const CORRECTION_TIMELINE_FACTOR = 0.9
+
+//padding around lectures
+export const LECTURE_CONTAINER_PADDING = 4
+
+//space between multi-rows
+export const LECTURE_ROW_DISTANCE = 16
+
 const dayMappingObject: Record<number, ValidDayTimeTable> = {
   1: "lun",
   2: "mar",
@@ -168,9 +191,14 @@ export const getFormattedTable = (events: Event[]): FormattedTable => {
   for (let i = 1; i < formattedTableKeys.length; i++) {
     const maxOverlapIth = newTable[formattedTableKeys[i - 1]].maxOverlapNumber
     //TODO : capire i valori giusti da mettere per i margini
-    accumulatedMargin += (maxOverlapIth + 1) * 60
+    accumulatedMargin +=
+      (maxOverlapIth + 1) *
+        (LECTURE_HEIGHT_OPEN + 2 * LECTURE_CONTAINER_PADDING) +
+      LECTURE_ROW_DISTANCE
     accumulatedMarginCollapsed +=
-      (maxOverlapIth + 1) * 17 + (maxOverlapIth === 0 ? 25 : 14)
+      (maxOverlapIth + 1) *
+        (LECTURE_HEIGHT_COLLAPSED + 2 * LECTURE_CONTAINER_PADDING) +
+      LECTURE_ROW_DISTANCE
     newTable[formattedTableKeys[i]].marginTop = accumulatedMargin
     newTable[formattedTableKeys[i]].collapsedMarginTop =
       accumulatedMarginCollapsed
@@ -203,16 +231,33 @@ export const isOverlap = (first: Event, second: Event) => {
 
 /**
  *
- * helper function used in WeekLine.tsx for getting list of maxOverlapNumbers, one for every day of the week
+ * helper function used in WeekLine.tsx for getting list of margins for lectures in opened state
  *
  * @param table
  * @returns list of maxOverlapsNumbers
  */
-export const getMaxOverlapNumbers = (table: FormattedTable): number[] => {
+export const getMarginDays = (table: FormattedTable): number[] => {
   const list: number[] = []
 
   for (let i = 0; i < formattedTableKeys.length; i++) {
-    list.push(table[formattedTableKeys[i]].maxOverlapNumber)
+    list.push(table[formattedTableKeys[i]].marginTop)
+  }
+
+  return list
+}
+
+/**
+ *
+ * helper function used in WeekLine.tsx for getting list of margins for lectures in closed state
+ *
+ * @param table
+ * @returns list of maxOverlapsNumbers
+ */
+export const getMarginDaysCollapsed = (table: FormattedTable): number[] => {
+  const list: number[] = []
+
+  for (let i = 0; i < formattedTableKeys.length; i++) {
+    list.push(table[formattedTableKeys[i]].collapsedMarginTop)
   }
 
   return list

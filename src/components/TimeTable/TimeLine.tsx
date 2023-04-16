@@ -1,6 +1,7 @@
 import { BodyText } from "components/Text"
 import { FC } from "react"
 import { View } from "react-native"
+import { CORRECTION_TIMELINE_FACTOR, TIME_SLOT } from "utils/timetable"
 
 export const TimeLine: FC = () => {
   const times: string[] = [
@@ -16,7 +17,7 @@ export const TimeLine: FC = () => {
     /* "17:00", */
     "18:00",
     /* "19:00", */
-    "20: 00",
+    "20:00",
   ]
 
   return (
@@ -27,6 +28,7 @@ export const TimeLine: FC = () => {
         borderBottomWidth: 1,
         borderColor: "white",
         paddingBottom: 8,
+        marginRight: 32,
       }}
     >
       {times.map((item, index) => (
@@ -35,7 +37,8 @@ export const TimeLine: FC = () => {
             fontWeight: "900",
             fontSize: 12,
             color: "white",
-            marginRight: 30,
+            //-0.7 for correction
+            marginRight: TIME_SLOT + CORRECTION_TIMELINE_FACTOR,
           }}
           key={index}
         >
