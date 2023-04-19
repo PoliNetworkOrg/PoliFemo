@@ -12,8 +12,10 @@ import { TimeTableContext } from "contexts/timeTable"
 import {
   formattedTableKeys,
   getFormattedTable,
+  getLectureRoomFormattedString,
   getMarginDays,
   getMarginDaysCollapsed,
+  getTimeIntervalFormattedString,
 } from "utils/timetable"
 import { TimetableRow } from "./TimetableRow"
 import { LoginContext } from "contexts/login"
@@ -22,6 +24,8 @@ import { api } from "api"
 import { EventType } from "utils/events"
 import moment from "moment"
 import { Grid } from "./OverlayGrid"
+import { usePalette } from "utils/colors"
+import { ColorPickerLecture } from "./ColorPickerLecture"
 
 const { width } = Dimensions.get("window")
 
@@ -53,7 +57,7 @@ const fakeLectures: Event[] = [
     },
   },
   {
-    event_id: 127351,
+    event_id: 1251,
     date_start: "2023-04-10T09:00:00",
     date_end: "2023-04-10T11:00:00",
     show_agenda: true,
@@ -79,7 +83,7 @@ const fakeLectures: Event[] = [
     },
   },
   {
-    event_id: 127352,
+    event_id: 1231234,
     date_start: "2023-04-10T10:00:00",
     date_end: "2023-04-10T17:00:00",
     show_agenda: true,
@@ -105,7 +109,7 @@ const fakeLectures: Event[] = [
     },
   },
   {
-    event_id: 127350,
+    event_id: 12314,
     date_start: "2023-04-11T10:00:00",
     date_end: "2023-04-11T16:00:00",
     show_agenda: true,
@@ -131,7 +135,7 @@ const fakeLectures: Event[] = [
     },
   },
   {
-    event_id: 127351,
+    event_id: 5868,
     date_start: "2023-04-11T12:00:00",
     date_end: "2023-04-11T18:00:00",
     show_agenda: true,
@@ -157,7 +161,7 @@ const fakeLectures: Event[] = [
     },
   },
   {
-    event_id: 127352,
+    event_id: 125115,
     date_start: "2023-04-12T08:00:00",
     date_end: "2023-04-12T10:00:00",
     show_agenda: true,
@@ -183,7 +187,7 @@ const fakeLectures: Event[] = [
     },
   },
   {
-    event_id: 127352,
+    event_id: 1353452,
     date_start: "2023-04-12T09:00:00",
     date_end: "2023-04-12T20:00:00",
     show_agenda: true,
@@ -209,7 +213,7 @@ const fakeLectures: Event[] = [
     },
   },
   {
-    event_id: 127352,
+    event_id: 1241551,
     date_start: "2023-04-13T08:00:00",
     date_end: "2023-04-13T19:00:00",
     show_agenda: true,
@@ -235,7 +239,7 @@ const fakeLectures: Event[] = [
     },
   },
   {
-    event_id: 127352,
+    event_id: 125151,
     date_start: "2023-04-14T08:00:00",
     date_end: "2023-04-14T11:00:00",
     show_agenda: true,
@@ -283,6 +287,12 @@ export const TimeTableGrid: FC = () => {
 
   const [lectures, setLectures] = useState<Event[]>([])
 
+  const [selectedLectureId, setSelectedLectureId] = useState<
+    number | undefined
+  >(undefined)
+
+  const { isLight, palette } = usePalette()
+
   const [events] = useApiCall(
     api.events.getEvents,
     {
@@ -314,6 +324,7 @@ export const TimeTableGrid: FC = () => {
   useEffect(() => {
     if (timeTableOpen) {
       bottomSheetRef.current?.close?.()
+      setSelectedLectureId(undefined)
     } else {
       bottomSheetRef.current?.snapToPosition(
         getUsableScreenHeight() - distanceFromTop.closed
@@ -357,8 +368,10 @@ export const TimeTableGrid: FC = () => {
                       onEventPress={(event: Event) => {
                         setTimeTableOpen(!timeTableOpen)
                         setCurrentLecture(event)
+                        setSelectedLectureId(event.event_id)
                       }}
                       row={formattedTable[day]}
+                      selectedLectureId={selectedLectureId}
                       key={day}
                     />
                   ))}
@@ -374,9 +387,54 @@ export const TimeTableGrid: FC = () => {
         ref={bottomSheetRef}
         index={-1}
         snapPoints={[getUsableScreenHeight() - distanceFromTop.closed]}
+        enablePanDownToClose={true}
+        onClose={() => setTimeTableOpen(true)}
       >
-        <BottomSheetScrollView>
-          <BodyText>{currentLecture?.title.it}</BodyText>
+        <BottomSheetScrollView
+          contentContainerStyle={{ marginHorizontal: 36, marginTop: 4 }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              <BodyText
+                style={{
+                  fontSize: 20,
+                  fontWeight: "900",
+                  color: isLight ? palette.variant3 : "#fff",
+                }}
+              >
+                {currentLecture?.title.it}
+              </BodyText>
+            </View>
+            <ColorPickerLecture />
+          </View>
+          <View style={{ marginTop: 32 }}>
+            <BodyText
+              style={{
+                fontSize: 16,
+                fontWeight: "700",
+                color: isLight ? palette.variant3 : "#fff",
+              }}
+            >
+              {getTimeIntervalFormattedString(
+                currentLecture?.date_start,
+                currentLecture?.date_end
+              )}
+            </BodyText>
+            <BodyText
+              style={{
+                fontSize: 16,
+                fontWeight: "700",
+                color: isLight ? palette.variant3 : "#fff",
+              }}
+            >
+              {getLectureRoomFormattedString(currentLecture?.room?.acronym_dn)}
+            </BodyText>
+          </View>
         </BottomSheetScrollView>
       </BottomSheet>
     </>

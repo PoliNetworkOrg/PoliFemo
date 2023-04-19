@@ -10,6 +10,7 @@ export interface LectureRowProps {
   lectures: Event[]
   overlapNumber: number
   onEventPress: (event: Event) => void
+  selectedLectureId?: number
 }
 
 export const LectureRow: FC<LectureRowProps> = props => {
@@ -28,6 +29,7 @@ export const LectureRow: FC<LectureRowProps> = props => {
             onPress={() => props.onEventPress(lecture)}
             key={lecture.event_id}
             overlapNumber={props.overlapNumber}
+            isSelected={lecture.event_id === props.selectedLectureId}
           />
         )
       })}

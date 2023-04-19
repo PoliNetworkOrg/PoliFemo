@@ -16,6 +16,7 @@ export interface LectureCardProps {
   borderColor: string
   overlapNumber: number
   onPress: () => void
+  isSelected?: boolean
 }
 
 const minHour = 8
@@ -65,7 +66,7 @@ export const LectureCard: FC<LectureCardProps> = props => {
           borderWidth: 2,
           padding: open ? 10 : 0,
           borderColor: props.borderColor,
-          backgroundColor: open ? undefined : props.borderColor,
+          backgroundColor: props.isSelected ? props.borderColor : undefined,
           justifyContent: "center",
         }}
         onPress={() => props.onPress()}

@@ -8,6 +8,7 @@ import { TimeTableContext } from "contexts/timeTable"
 export interface TimetableRowProps {
   row: ValidTableRow
   onEventPress: (event: Event) => void
+  selectedLectureId?: number
 }
 
 export const TimetableRow: FC<TimetableRowProps> = props => {
@@ -27,6 +28,7 @@ export const TimetableRow: FC<TimetableRowProps> = props => {
             lectures={lectures.events}
             onEventPress={props.onEventPress}
             key={index}
+            selectedLectureId={props.selectedLectureId}
           />
         )
       })}

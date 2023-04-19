@@ -37,7 +37,6 @@ export const TimeLine: FC = () => {
             fontWeight: "900",
             fontSize: 12,
             color: "white",
-            //-0.7 for correction
             marginRight: TIME_SLOT + CORRECTION_TIMELINE_FACTOR,
           }}
           key={index}

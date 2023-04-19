@@ -34,6 +34,16 @@ const dayMappingObject: Record<number, ValidDayTimeTable> = {
   0: "dom",
 }
 
+const dayStringMappingObject: Record<number, string> = {
+  1: "Lunedì",
+  2: "Martedì",
+  3: "Mercoledì",
+  4: "Giovedì",
+  5: "Venerdì",
+  6: "Sabato",
+  0: "Domenica",
+}
+
 export type ValidDayTimeTable =
   | "lun"
   | "mar"
@@ -261,4 +271,38 @@ export const getMarginDaysCollapsed = (table: FormattedTable): number[] => {
   }
 
   return list
+}
+
+/**
+ *
+ * @param dateStartISO
+ * @param dateEndISO
+ * @returns the formatted string to show in the bottom sheet
+ */
+export const getTimeIntervalFormattedString = (
+  dateStartISO?: string,
+  dateEndISO?: string
+) => {
+  if (!dateStartISO || !dateEndISO) {
+    return undefined
+  }
+  const dateStart = new Date(dateStartISO)
+  const dateEnd = new Date(dateEndISO)
+
+  const dayName = dayStringMappingObject[dateStart.getDay()]
+
+  const timeStartHours = dateStart.getHours().toString().padStart(2, "0")
+  const timeStartMinutes = dateStart.getMinutes().toString().padStart(2, "0")
+  const timeEndHours = dateEnd.getHours().toString().padStart(2, "0")
+  const timeEndMinutes = dateEnd.getMinutes().toString().padStart(2, "0")
+
+  return `${dayName} dalle ${timeStartHours}:${timeStartMinutes} alle ${timeEndHours}:${timeEndMinutes}`
+}
+
+export const getLectureRoomFormattedString = (room?: string) => {
+  if (!room) {
+    return undefined
+  }
+
+  return `lezione in aula: ${room}`
 }
