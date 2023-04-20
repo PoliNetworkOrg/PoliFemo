@@ -19,7 +19,7 @@ export const ErrorMessage: FC<ErrorMessageProps> = props => {
 
   const { primary } = usePalette()
 
-  const { t } = useTranslation("freeClass")
+  const { t } = useTranslation("common")
 
   return (
     <View
@@ -56,15 +56,16 @@ export const ErrorMessage: FC<ErrorMessageProps> = props => {
         <BodyText
           style={[
             {
-              color: primary,
-              fontWeight: "400",
-              fontSize: 16,
               textAlign: "center",
             },
             props.styleMessage,
           ]}
         >
-          {t("freeClass_error") + props.message}
+          <BodyText style={{ fontSize: 24, color: primary }}>Ops! </BodyText>
+          <BodyText style={{ fontWeight: "900", fontSize: 24, color: primary }}>
+            {t("error") + "\n"}
+          </BodyText>
+          <BodyText style={{ color: primary }}>{props.message}</BodyText>
         </BodyText>
       </View>
     </View>
