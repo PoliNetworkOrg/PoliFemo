@@ -2,7 +2,7 @@ import { BodyText } from "components/Text"
 import { FC } from "react"
 import { StyleProp, View, TextStyle } from "react-native"
 import { Canvas, Group, ImageSVG, useSVG } from "@shopify/react-native-skia"
-import polifemoIcon from "assets/highlights/polifemo.svg" // <-- NON è quella giusta!!
+import polifemoIcon from "assets/polifemo/happy.svg" // <-- NON è quella giusta!!
 import { usePalette } from "utils/colors"
 import { useTranslation } from "react-i18next"
 

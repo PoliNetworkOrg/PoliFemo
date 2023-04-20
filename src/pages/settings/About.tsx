@@ -12,7 +12,7 @@ import * as Clipboard from "expo-clipboard"
 import { usePalette } from "utils/colors"
 import { LoginContext } from "contexts/login"
 import { Canvas, Group, ImageSVG, useSVG } from "@shopify/react-native-skia"
-import polifemoIcon from "assets/highlights/polifemo.svg"
+import polifemoIcon from "assets/polifemo/happy.svg"
 import { Divider } from "components/Divider"
 import { useTranslation } from "react-i18next"
 
