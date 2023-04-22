@@ -21,16 +21,12 @@ import { HttpClient } from "api/HttpClient"
 import { usePalette } from "utils/colors"
 import { StatusBar } from "react-native"
 import { Host } from "react-native-portalize"
-import { NotificationCentre } from "notifications/NotificationCentre"
 import { navigationRef } from "navigation/NavigationTypes"
 // eslint-disable-next-line unused-imports/no-unused-imports
 import "./src/locales/i18n"
 import { useLoadI18n } from "./src/locales/i18n"
 
 const client = HttpClient.getInstance()
-
-// eslint-disable-next-line unused-imports/no-unused-vars
-const notificationCentre = NotificationCentre.getInstance()
 
 export default function App() {
   const { homeBackground } = usePalette()

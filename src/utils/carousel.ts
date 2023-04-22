@@ -34,7 +34,7 @@ export interface CarouselItem {
    */
   title: string
 
-  isoDate: string
+  dateStart: Date
   /**
    * string to identify eventually the room when the event takes place
    */
@@ -116,15 +116,15 @@ export function createWidget(event: Event) {
     "november",
     "december",
   ]
-  const dateObj = new Date(event.date_start)
+  const dateStart = new Date(event.date_start)
   const resultDate =
-    t(days[dateObj.getDay()]) +
+    t(days[dateStart.getDay()]) +
     " " +
-    dateObj.getDate().toString().padStart(2, "0") +
+    dateStart.getDate().toString().padStart(2, "0") +
     " " +
-    t(months[dateObj.getMonth()]) +
+    t(months[dateStart.getMonth()]) +
     " " +
-    dateObj.getFullYear()
+    dateStart.getFullYear()
   const nextEvent: CarouselItem = {
     id: event.event_id,
     type: event.event_type.typeId,
@@ -132,7 +132,7 @@ export function createWidget(event: Event) {
     time: event.date_start.toString().slice(11, 16),
     title: event.title.it,
     room: event.room?.acronym_dn,
-    isoDate: event.date_start,
+    dateStart: dateStart,
   }
   return nextEvent
 }

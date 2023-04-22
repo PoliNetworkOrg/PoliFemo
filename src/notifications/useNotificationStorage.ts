@@ -6,10 +6,10 @@ import {
 } from "navigation/NavigationTypes"
 import { useState, useEffect } from "react"
 import { notificationEventEmitter } from "./NotificationEventEmitter"
-import { NotificationCentre } from "./NotificationCentre"
+import { NotificationCenter } from "./NotificationCenter"
 import { NotificationStorage, ValidChannelId } from "./NotificationTypes"
 
-const notificationCentre = NotificationCentre.getInstance()
+const notificationCenter = NotificationCenter.getInstance()
 
 export function useNotificationStorage(
   channelId?: ValidChannelId,
@@ -32,7 +32,7 @@ export function useNotificationStorage(
     function loadNotifications() {
       console.log("loading notifications " + channelId)
       const notifications =
-        notificationCentre.getNotificationsOfCategory(channelId)
+        notificationCenter.getNotificationsOfCategory(channelId)
       setNotifications(notifications)
     }
 

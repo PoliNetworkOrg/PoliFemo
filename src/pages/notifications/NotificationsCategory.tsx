@@ -3,10 +3,12 @@ import { NotificationTile } from "components/Notifications/NotificationTile"
 import { Title } from "components/Text"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { View } from "react-native"
-import { NotificationCentre } from "notifications/NotificationCentre"
+import { NotificationCenter } from "notifications/NotificationCenter"
 import { useNotificationStorage } from "notifications/useNotificationStorage"
 
-const notificationCentre = NotificationCentre.getInstance()
+/* import { GestureHandlerRootView } from "react-native-gesture-handler" */
+
+const notificationCenter = NotificationCenter.getInstance()
 
 export const NotificationsCategory: MainStackScreen<
   "NotificationsCategory"
@@ -18,6 +20,7 @@ export const NotificationsCategory: MainStackScreen<
   const [notifications] = useNotificationStorage(channelId, props.navigation)
 
   return (
+    /* <GestureHandlerRootView style={{ flex: 1 }}> */
     <ContentWrapperScroll>
       <View style={{ paddingTop: 28, flex: 1, marginBottom: 50 }}>
         <Title style={{ paddingLeft: 28 }}>{category}</Title>
@@ -34,7 +37,7 @@ export const NotificationsCategory: MainStackScreen<
                 })
 
                 if (notification.isRead === false) {
-                  void notificationCentre.markAsRead(notification.identifier)
+                  void notificationCenter.markAsRead(notification.identifier)
                 }
               }}
             />
@@ -42,5 +45,6 @@ export const NotificationsCategory: MainStackScreen<
         </View>
       </View>
     </ContentWrapperScroll>
+    /* </GestureHandlerRootView> */
   )
 }

@@ -4,11 +4,11 @@ import { PoliCarousel } from "./PoliCarousel"
 import { LoginContext } from "contexts/login"
 import { extractNextEvents } from "utils/carousel"
 import { api } from "api"
-import { NotificationCentre } from "notifications/NotificationCentre"
+import { NotificationCenter } from "notifications/NotificationCenter"
 import { extractAllEvents } from "utils/notifications"
 import { useApiCall } from "api/useApiCall"
 
-const notificationCentre = NotificationCentre.getInstance()
+const notificationCenter = NotificationCenter.getInstance()
 
 /**
  * Component that decides the content of the carousel.
@@ -35,7 +35,7 @@ export const HighlightsManager: FC = () => {
 
   useEffect(() => {
     if (events) {
-      void notificationCentre.scheduleCarousel(extractAllEvents(events))
+      void notificationCenter.scheduleCarousel(extractAllEvents(events))
     }
   }, [events])
 

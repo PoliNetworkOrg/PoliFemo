@@ -1,15 +1,10 @@
 import { useNavigationState } from "@react-navigation/native"
 import React, { FC, useEffect } from "react"
-import { Dimensions, Pressable, View } from "react-native"
+import { Dimensions, View } from "react-native"
 import { newsSheetEventEmitter } from "utils/events"
 import { LittleTitle } from "./LittleTitle"
 import { TrayButton } from "./TrayButton"
 import { useNotificationBadge } from "notifications/useNotificationBadge"
-import { NotificationCentre } from "notifications/NotificationCentre"
-import { BodyText } from "components/Text"
-import * as Notifications from "expo-notifications"
-
-const notificationCentre = NotificationCentre.getInstance()
 
 /**
  * Top bar menu present in every page of the application, containing the
@@ -53,33 +48,6 @@ export const Tray: FC<{
       }}
     >
       <LittleTitle titleInCorner={notInHome || newsOpen} />
-      <Pressable
-        style={{
-          height: 20,
-          backgroundColor: "blue",
-          marginRight: 10,
-        }}
-        onPress={async () => {
-          await Notifications.scheduleNotificationAsync({
-            content: { title: "prova", body: "Prova", data: {} },
-            trigger: null,
-          })
-        }}
-      >
-        <BodyText>Notif</BodyText>
-      </Pressable>
-      <Pressable
-        style={{
-          height: 20,
-          backgroundColor: "red",
-          marginRight: 10,
-        }}
-        onPress={() => {
-          notificationCentre.clearStorage()
-        }}
-      >
-        <BodyText>Clear</BodyText>
-      </Pressable>
       <TrayButton label="downloads" onClick={() => props.onDownloads()} />
       <TrayButton
         label="notifications"

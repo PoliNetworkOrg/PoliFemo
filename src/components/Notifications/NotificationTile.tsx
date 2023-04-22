@@ -10,9 +10,11 @@ import { usePalette } from "utils/colors"
 import deleteSvg from "assets/menu/delete.svg"
 import { NotificationStorage } from "notifications/NotificationTypes"
 import { notificationEventEmitter } from "notifications/NotificationEventEmitter"
-import { NotificationCentre } from "notifications/NotificationCentre"
+import { NotificationCenter } from "notifications/NotificationCenter"
 
-const notificationCentre = NotificationCentre.getInstance()
+/* import Swipeable from "react-native-gesture-handler/Swipeable" */
+
+const notificationCenter = NotificationCenter.getInstance()
 
 export interface NotificationTileProps {
   notification: NotificationStorage
@@ -34,9 +36,29 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
   const isRead = props.isRead ?? props.notification.isRead
 
   return (
+    /* <Swipeable
+      enabled={true}
+      renderRightActions={() => {
+        return (
+          <View
+            style={{
+              backgroundColor: "red",
+              width: "100%",
+              marginVertical: 1,
+            }}
+          />
+        )
+      }}
+    > */
     <TouchableRipple onClick={props.onPress} showRipple={props.showRipple}>
       <SharedElement id={props.notification.identifier}>
-        <View style={{ paddingVertical: 10, paddingHorizontal: 28 }}>
+        <View
+          style={{
+            paddingVertical: 10,
+            paddingHorizontal: 28,
+            backgroundColor: "#fff",
+          }}
+        >
           <View
             style={{
               flexDirection: "row",
@@ -66,7 +88,7 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
                 style={{
                   fontSize: 16,
                   fontWeight: "700",
-                  color: isLight ? palette.purpleVariant : "#fff",
+                  color: isLight ? palette.variant3 : "#fff",
                 }}
               >
                 {sender}
@@ -76,7 +98,7 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
                 style={{
                   fontSize: 12,
                   fontWeight: "700",
-                  color: isLight ? palette.purpleVariant : "#fff",
+                  color: isLight ? palette.variant3 : "#fff",
                 }}
               >
                 {object}
@@ -89,7 +111,7 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
             >
               <Pressable
                 onPress={() => {
-                  notificationCentre.removeNotificationFromStorage(identifier)
+                  notificationCenter.removeNotificationFromStorage(identifier)
                   if (!isRead) {
                     notificationEventEmitter.emit("badge-change")
                   }
@@ -105,7 +127,7 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
                   style={{
                     fontSize: 12,
                     fontWeight: "700",
-                    color: isLight ? palette.purpleVariant : "#fff",
+                    color: isLight ? palette.variant3 : "#fff",
                   }}
                 >
                   New!!
@@ -120,7 +142,7 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
                 style={{
                   fontSize: 12,
                   fontWeight: "400",
-                  color: isLight ? palette.purpleVariant : "#fff",
+                  color: isLight ? palette.variant3 : "#fff",
                 }}
               >
                 collegamento a dove è stato caricato
@@ -135,5 +157,6 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
         </View>
       ) : undefined}
     </TouchableRipple>
+    /* </Swipeable> */
   )
 }

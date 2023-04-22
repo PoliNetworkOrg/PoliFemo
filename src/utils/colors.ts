@@ -13,7 +13,6 @@ export const palette = {
   accent: "#FFB544",
   widgetBgLighter: "#F6F7FC",
   widgetBgDarker: "#343E5A",
-  purpleVariant: "#454773",
 } as const
 
 export type Palette = typeof palette

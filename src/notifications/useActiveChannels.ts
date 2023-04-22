@@ -1,8 +1,8 @@
-import { NotificationCentre } from "./NotificationCentre"
+import { NotificationCenter } from "./NotificationCenter"
 import { useState, useEffect } from "react"
 import { NotificationsChannels } from "./NotificationTypes"
 
-const notificationCentre = NotificationCentre.getInstance()
+const notificationCenter = NotificationCenter.getInstance()
 
 export function useNotificationsChannels() {
   const [activeChannels, setActiveChannels] = useState<NotificationsChannels>({
@@ -13,7 +13,7 @@ export function useNotificationsChannels() {
 
   useEffect(() => {
     function loadActiveChannels() {
-      const activeChannels = notificationCentre.activeChannels
+      const activeChannels = notificationCenter.activeChannels
       setActiveChannels(activeChannels)
     }
 

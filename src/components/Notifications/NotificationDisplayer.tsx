@@ -31,7 +31,7 @@ export const NotificationDisplayer: FC<NotificationDisplayerProps> = props => {
           style={{
             fontSize: 12,
             fontWeight: "400",
-            color: isLight ? palette.purpleVariant : "#fff",
+            color: isLight ? palette.variant3 : "#fff",
             textAlign: "justify",
             paddingHorizontal: 56,
           }}

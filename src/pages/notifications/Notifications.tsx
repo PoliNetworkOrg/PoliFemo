@@ -7,30 +7,37 @@ import associazioni from "assets/notifications/associazioni.svg"
 import comunicazioni from "assets/notifications/comunicazioni.svg"
 import upload from "assets/notifications/upload.svg"
 import { useNotificationsChannels } from "notifications/useActiveChannels"
-import { NotificationCentre } from "notifications/NotificationCentre"
+import { NotificationCenter } from "notifications/NotificationCenter"
 import { getNewChannelsStatuses } from "utils/notifications"
+import { useTranslation } from "react-i18next"
 
-const notificationCentre = NotificationCentre.getInstance()
+const notificationCenter = NotificationCenter.getInstance()
 
 export const Notifications: MainStackScreen<"Notifications"> = () => {
   const { navigate } = useNavigation()
 
   const { activeChannels, setActiveChannels } = useNotificationsChannels()
 
+  const { t } = useTranslation("notifications")
+
+  const categoryComunications = t("notifications_category_comunications")
+  const categoryAssociations = t("notifications_category_associations")
+  const categoryUploads = t("notifications_category_uploads")
+
   return (
     <ContentWrapperScroll>
       <View>
         <Title style={{ paddingHorizontal: 28, paddingTop: 28 }}>
-          Notifiche
+          {t("notifications_title")}
         </Title>
         <View style={{ paddingTop: 20 }}>
           <Category
-            title="Comunicazioni Istituzionali"
+            title={categoryComunications}
             channelId="comunicazioni"
             icon={comunicazioni}
             onClick={() =>
               navigate("NotificationsCategory", {
-                category: "Comunicazioni Istituzionali",
+                category: categoryComunications,
                 channelId: "comunicazioni",
               })
             }
@@ -45,17 +52,17 @@ export const Notifications: MainStackScreen<"Notifications"> = () => {
                 )
 
                 setActiveChannels({ ...newChannels })
-                notificationCentre.updateNotificationsChannels(newChannels, val)
+                notificationCenter.updateNotificationsChannels(newChannels, val)
               },
             }}
           />
           <Category
-            title="Associazioni"
+            title={categoryAssociations}
             channelId="associazioni"
             icon={associazioni}
             onClick={() =>
               navigate("NotificationsCategory", {
-                category: "Associazioni",
+                category: categoryAssociations,
                 channelId: "associazioni",
               })
             }
@@ -68,17 +75,17 @@ export const Notifications: MainStackScreen<"Notifications"> = () => {
                   val
                 )
                 setActiveChannels({ ...newChannels })
-                notificationCentre.updateNotificationsChannels(newChannels, val)
+                notificationCenter.updateNotificationsChannels(newChannels, val)
               },
             }}
           />
           <Category
-            title="Nuovi Upload"
+            title={categoryUploads}
             channelId="upload"
             icon={upload}
             onClick={() =>
               navigate("NotificationsCategory", {
-                category: "Nuovi Upload",
+                category: categoryUploads,
                 channelId: "upload",
               })
             }
@@ -91,7 +98,7 @@ export const Notifications: MainStackScreen<"Notifications"> = () => {
                   val
                 )
                 setActiveChannels({ ...newChannels })
-                notificationCentre.updateNotificationsChannels(newChannels, val)
+                notificationCenter.updateNotificationsChannels(newChannels, val)
               },
             }}
           />

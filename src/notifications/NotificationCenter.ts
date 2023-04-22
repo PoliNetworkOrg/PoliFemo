@@ -18,13 +18,10 @@ import { notificationEventEmitter } from "./NotificationEventEmitter"
 import { navigationRef } from "navigation/NavigationTypes"
 import uuid from "react-native-uuid"
 
-export class NotificationCentre {
-  private static classInstance?: NotificationCentre
+export class NotificationCenter {
+  private static classInstance?: NotificationCenter
 
   private _notifications: NotificationStorage[] = []
-
-  private _notificationReceivedListener: Notifications.Subscription | undefined
-  private _notificationTappedListener: Notifications.Subscription | undefined
 
   /**
    * Channels which accept scheduling. All true by default
@@ -44,18 +41,18 @@ export class NotificationCentre {
    * */
   public static getInstance() {
     if (!this.classInstance) {
-      this.classInstance = new NotificationCentre()
+      this.classInstance = new NotificationCenter()
     }
 
     return this.classInstance
   }
 
   private constructor() {
-    this._initializeNotificationCentre()
+    this._initializeNotificationCenter()
   }
 
   //a not-so-useful function which groups all initializers
-  private _initializeNotificationCentre = () => {
+  private _initializeNotificationCenter = () => {
     this._inizializeNotificationHandler()
     void this._setNotificationsChannels()
     this._initializeNotificationListeners()
@@ -119,67 +116,65 @@ export class NotificationCentre {
    *  is tapped by the user
    */
   private _initializeNotificationListeners = () => {
-    this._notificationReceivedListener =
-      Notifications.addNotificationReceivedListener(notification => {
-        console.log(
-          "received notification: " + notification.request.content.title
-        )
-        //if storeOnSchedule is set to false, store now. (more intended for push notifications...)
-        //by default storeOnSchedule is true for every notification scheduled by the device
-        // TODO : might need changing if push notifications will be implemented
-        if (notification.request.content.data.storeOnSchedule === false) {
-          console.log("Notification received with storeOnSchedule set to false")
-          const newNotificationList = this._notifications
-          if (newNotificationList) {
-            newNotificationList.push({
-              content: notification.request.content,
-              identifier: notification.request.identifier,
-              isRead: false,
-              hasBeenReceived: true,
-            })
-            //store now
-            void this._writeToStorage(newNotificationList)
-          }
-        } else {
-          //already stored
-          this._markAsReceived(notification.request.identifier)
-        }
-        notificationEventEmitter.emit("badge-change")
-        notificationEventEmitter.emit("notification-add")
-      })
-    this._notificationTappedListener =
-      Notifications.addNotificationResponseReceivedListener(response => {
-        //by default this always evaluates to true, therefore always dismissed
-        if (
-          !response.notification.request.content.data.overrideDismissBehaviour
-        ) {
-          void Notifications.dismissNotificationAsync(
-            response.notification.request.identifier
-          )
-        }
-
-        //deepLinking
-        const isDeepLink = response.notification.request.content.data.deepLink
-
-        if (isDeepLink && response.notification) {
-          navigationRef.current?.navigate("MainNav", {
-            screen: "NotificationDetails",
-            params: {
-              notification: {
-                content: response.notification.request.content,
-                hasBeenReceived: true,
-                identifier: response.notification.request.identifier,
-                isRead: true,
-                isRelevantAt: undefined,
-              },
-              category: mapNotificationChannelString(
-                response.notification.request.content.data.channelId
-              ),
-            },
+    Notifications.addNotificationReceivedListener(notification => {
+      console.log(
+        "received notification: " + notification.request.content.title
+      )
+      //if storeOnSchedule is set to false, store now. (more intended for push notifications...)
+      //by default storeOnSchedule is true for every notification scheduled by the device
+      // TODO : might need changing if push notifications will be implemented
+      if (notification.request.content.data.storeOnSchedule === false) {
+        console.log("Notification received with storeOnSchedule set to false")
+        const newNotificationList = this._notifications
+        if (newNotificationList) {
+          newNotificationList.push({
+            content: notification.request.content,
+            identifier: notification.request.identifier,
+            isRead: false,
+            hasBeenReceived: true,
           })
-          this.markAsRead(response.notification.request.identifier)
+          //store now
+          void this._writeToStorage(newNotificationList)
         }
-      })
+      } else {
+        //already stored
+        this._markAsReceived(notification.request.identifier)
+      }
+      notificationEventEmitter.emit("badge-change")
+      notificationEventEmitter.emit("notification-add")
+    })
+    Notifications.addNotificationResponseReceivedListener(response => {
+      //by default this always evaluates to true, therefore always dismissed
+      if (
+        !response.notification.request.content.data.overrideDismissBehaviour
+      ) {
+        void Notifications.dismissNotificationAsync(
+          response.notification.request.identifier
+        )
+      }
+
+      //deepLinking
+      const isDeepLink = response.notification.request.content.data.deepLink
+
+      if (isDeepLink && response.notification) {
+        navigationRef.current?.navigate("MainNav", {
+          screen: "NotificationDetails",
+          params: {
+            notification: {
+              content: response.notification.request.content,
+              hasBeenReceived: true,
+              identifier: response.notification.request.identifier,
+              isRead: true,
+              isRelevantAt: undefined,
+            },
+            category: mapNotificationChannelString(
+              response.notification.request.content.data.channelId
+            ),
+          },
+        })
+        this.markAsRead(response.notification.request.identifier)
+      }
+    })
   }
   /**
    * This is a private method which reads notifications from Storage and update
@@ -287,7 +282,7 @@ export class NotificationCentre {
    * Schedule a notification. Usage:
    *
    * ```ts
-   * void notificationCentre.sendScheduledNotification(
+   * void NotificationCenter.sendScheduledNotification(
    *        {
    *          title: "Notifica SCACCHI",
    *          body: "prova",
@@ -527,7 +522,7 @@ export class NotificationCentre {
               (item.type === WidgetType.DEADLINE ||
                 item.type === WidgetType.EXAMS ||
                 item.type === WidgetType.LECTURES) &&
-              new Date(item.isoDate).getTime() - deltaMilliseconds > Date.now()
+              item.dateStart.getTime() - deltaMilliseconds > Date.now()
             ) {
               await this.sendScheduledNotification(
                 {
@@ -539,12 +534,11 @@ export class NotificationCentre {
                     channelId: "comunicazioni",
                     content: `l'evento si svolgerà ${item.date} alle ${item.time}`,
                     object: "Hai una nuova lezione! Divertiti!",
+                    sender: "Sender",
                   },
                 },
                 {
-                  date: new Date(
-                    new Date(item.isoDate).getTime() - deltaMilliseconds
-                  ),
+                  date: new Date(item.dateStart.getTime() - deltaMilliseconds),
                   channelId: "comunicazioni",
                 }
               )
@@ -671,18 +665,24 @@ export class NotificationCentre {
 
       const dumpedNotificationsIdentifiers: string[] = []
 
-      scheduledNotifications.forEach(async notification => {
-        if (!this._isChannelActive(notification.content.data.channelId)) {
+      for (let i = 0; i < scheduledNotifications.length; i++) {
+        if (
+          !this._isChannelActive(
+            scheduledNotifications[i].content.data.channelId
+          )
+        ) {
           //remove from schedule
           await Notifications.cancelScheduledNotificationAsync(
-            notification.identifier
+            scheduledNotifications[i].identifier
           )
 
-          dumpedNotificationsIdentifiers.push(notification.identifier)
-
-          this._markNotificationsStorageAsDumped(dumpedNotificationsIdentifiers)
+          dumpedNotificationsIdentifiers.push(
+            scheduledNotifications[i].identifier
+          )
         }
-      })
+      }
+
+      this._markNotificationsStorageAsDumped(dumpedNotificationsIdentifiers)
     } catch (error) {
       console.log(error)
     }
@@ -768,38 +768,6 @@ export class NotificationCentre {
     })
     if (hasArrayChanged) {
       void this._writeToStorage(this._notifications)
-    }
-  }
-
-  // ! TODO : Remove before merge
-  /**
-   * Utility method to clear storage completely
-   *
-   * To be removed before merge
-   */
-  public clearStorage = () => {
-    this._notifications = []
-    void this._writeToStorage([])
-    void Notifications.cancelAllScheduledNotificationsAsync()
-    notificationEventEmitter.emit("notification-remove")
-    notificationEventEmitter.emit("badge-change")
-  }
-
-  /**
-   * this is a cleanup function to remove the listeners. Probably should never be called.
-   * So is it really useful for something? lol
-   * TODO : understand if this is actually useful, for now it's never called
-   */
-  public cleanup = () => {
-    if (this._notificationReceivedListener) {
-      Notifications.removeNotificationSubscription(
-        this._notificationReceivedListener
-      )
-    }
-    if (this._notificationTappedListener) {
-      Notifications.removeNotificationSubscription(
-        this._notificationTappedListener
-      )
     }
   }
 }

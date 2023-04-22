@@ -1,9 +1,9 @@
-import { NotificationCentre } from "./NotificationCentre"
+import { NotificationCenter } from "./NotificationCenter"
 import { useState, useEffect } from "react"
 import { notificationEventEmitter } from "./NotificationEventEmitter"
 import { ValidChannelId } from "./NotificationTypes"
 
-const notificationCentre = NotificationCentre.getInstance()
+const notificationCenter = NotificationCenter.getInstance()
 
 export function useNotificationBadge(
   channelId?: ValidChannelId
@@ -13,7 +13,7 @@ export function useNotificationBadge(
   useEffect(() => {
     function loadBadge() {
       const badgeCount =
-        notificationCentre.getBadgeAllUnreadNotifications(channelId)
+        notificationCenter.getBadgeAllUnreadNotifications(channelId)
       setBadge(badgeCount)
     }
 
