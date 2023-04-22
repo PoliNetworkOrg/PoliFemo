@@ -17,21 +17,15 @@ interface ModalItemList {
   itemsToSave: string[]
 }
 
+const year = new Date().getFullYear()
+const years = Array.from(
+  new Array(5),
+  (_, index) => year - index - 1 + "/" + (year - index)
+)
+
 const yearsList: ModalItemList = {
-  itemsToShow: [
-    "2022/2023",
-    "2021/2022",
-    "2020/2021",
-    "2019/2020",
-    "2018/2019",
-  ],
-  itemsToSave: [
-    "2022/2023",
-    "2021/2022",
-    "2020/2021",
-    "2019/2020",
-    "2018/2019",
-  ],
+  itemsToShow: years,
+  itemsToSave: years,
 }
 const coursesList: ModalItemList = {
   itemsToShow: ["bachelor", "master", "single_cycle"],
