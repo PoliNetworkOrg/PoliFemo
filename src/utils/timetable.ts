@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { api } from "api"
 import { Event } from "api/collections/event"
+import * as FileSystem from "expo-file-system"
+import moment from "moment"
+import { EventType } from "./events"
 
 /**
  * A more systematic approach for managing margins, change here, change everywhere.
@@ -305,4 +309,225 @@ export const getLectureRoomFormattedString = (room?: string) => {
   }
 
   return `lezione in aula: ${room}`
+}
+
+interface Timetable {
+  table: FormattedTable
+  //the date it was calculated
+  date: Date
+  matricola: string
+}
+
+//hardcoding day and month of semester start date
+
+//12th September start of first semester
+const FIRST_SEMESTER_START_DAY = 12
+
+//month start from 0
+const FIRST_SEMESTER_START_MONTH = 8
+
+const SECOND_SEMESTER_START_DAY = 20
+
+const SECOND_SEMESTER_START_MONTH = 1
+
+export class TimetableDeducer {
+  /* private static classInstance?: TimetableDeducer */
+
+  private _timetable: Timetable | undefined
+
+  private _matricola: string
+
+  private _isNowFirstSemester: boolean | undefined
+
+  private _firstSemesterStartDate: Date | undefined
+
+  private _secondSemesterStartDate: Date | undefined
+
+  private constructor(matricola: string) {
+    this._matricola = matricola
+    void this._readFromStorage()
+    this._initializeSemesterDates()
+  }
+
+  private _initializeSemesterDates = () => {
+    const today = new Date()
+    const todayYear = today.getFullYear()
+    const todayMonth = today.getMonth()
+    if (todayMonth <= 6) {
+      this._isNowFirstSemester = false
+      //January to July
+      this._firstSemesterStartDate = new Date(
+        todayYear - 1,
+        FIRST_SEMESTER_START_MONTH,
+        FIRST_SEMESTER_START_DAY
+      )
+      this._secondSemesterStartDate = new Date(
+        todayYear,
+        SECOND_SEMESTER_START_MONTH,
+        SECOND_SEMESTER_START_DAY
+      )
+    } else {
+      this._isNowFirstSemester = true
+      //August to December
+      this._firstSemesterStartDate = new Date(
+        todayYear,
+        FIRST_SEMESTER_START_MONTH,
+        FIRST_SEMESTER_START_DAY
+      )
+      this._secondSemesterStartDate = new Date(
+        todayYear + 1,
+        SECOND_SEMESTER_START_MONTH,
+        SECOND_SEMESTER_START_DAY
+      )
+    }
+  }
+
+  private _readFromStorage = async () => {
+    try {
+      const timetableJSON = await FileSystem.readAsStringAsync(
+        FileSystem.documentDirectory + "timetable.json"
+      )
+      const timetable = JSON.parse(timetableJSON) as Timetable
+
+      if (!this._checkNeedCalculating(timetable.date)) {
+        this._timetable = timetable
+      } else {
+        void this._deduceTimetableFromEvents()
+      }
+    } catch (err) {
+      console.log(err)
+      console.log("Error reading timetable")
+    }
+  }
+
+  private _writeToStorage = async (timetable: Timetable): Promise<boolean> => {
+    const timetableJSON = JSON.stringify(timetable)
+    try {
+      this._timetable = timetable
+      await FileSystem.writeAsStringAsync(
+        FileSystem.documentDirectory + "timetable.json",
+        timetableJSON
+      )
+
+      return true
+    } catch (err) {
+      console.log(err)
+      console.log("Error storing timetable")
+      return false
+    }
+  }
+
+  private _checkNeedCalculating = (date: Date): boolean => {
+    //should not be necessary, initialized in constructor
+    if (!this._firstSemesterStartDate || !this._secondSemesterStartDate) {
+      return false
+    }
+
+    let referenceDate: Date
+    if (this._isNowFirstSemester) {
+      referenceDate = this._firstSemesterStartDate
+    } else {
+      referenceDate = this._secondSemesterStartDate
+    }
+    const lastDateOfCalculation = date
+    const now = new Date()
+
+    if (
+      //reference is in the past with respect to now
+      now.getTime() > referenceDate.getTime() &&
+      //reference is in the future with respect to last date of caculation
+      lastDateOfCalculation.getTime() < referenceDate.getTime()
+    ) {
+      return true
+    }
+    return false
+  }
+
+  private _deduceTimetableFromEvents = async () => {
+    if (!this._firstSemesterStartDate || !this._secondSemesterStartDate) {
+      return
+    }
+
+    let startDate: Date
+    if (this._isNowFirstSemester) {
+      startDate = this._firstSemesterStartDate
+    } else {
+      startDate = this._secondSemesterStartDate
+    }
+
+    const events = await api.events.getEvents({
+      matricola: this._matricola ?? "",
+      startDate: startDate.toISOString(),
+      nEvents: 200,
+    })
+
+    const filteredEvents = events
+      .filter(
+        event =>
+          //11 week range
+          new Date(event.date_start) >= moment().startOf("day").toDate() &&
+          new Date(event.date_start) <=
+            moment().startOf("day").add(77, "days").toDate()
+      )
+      .filter(e => e.event_type.typeId === EventType.LECTURES) //filter only the lectures)
+
+    const busiestWeek: Event[] = this._calculateBusiestWeek(filteredEvents)
+
+    const formattedTable = getFormattedTable(busiestWeek)
+
+    //update instance member
+    this._timetable = {
+      table: formattedTable,
+      date: new Date(),
+      matricola: this._matricola,
+    }
+
+    //update storage
+    void this._writeToStorage(this._timetable)
+  }
+
+  private _calculateBusiestWeek = (events: Event[]): Event[] => {
+    const obj: Record<ValidDayTimeTable, Event[]> = {
+      lun: [],
+      mar: [],
+      mer: [],
+      gio: [],
+      ven: [],
+      sab: [],
+      dom: [],
+    }
+    for (let i = 0; i < events.length; i++) {
+      const startDate = events[i].date_start
+      const dayOfTheWeek: ValidDayTimeTable =
+        dayMappingObject[new Date(startDate).getDate()]
+
+      //count how many lectures in given day
+      const lectures: Event[] = []
+      for (
+        let j = 0;
+        j < events.length && events[j].date_start === startDate;
+        j++
+      ) {
+        //iterate until date start is different
+        lectures.push(events[j])
+      }
+
+      if (obj[dayOfTheWeek].length < lectures.length) {
+        //update if found that in a specific "Monday", for example, there are more lectures. (i.e: no missing lectures)
+        obj[dayOfTheWeek] = lectures
+      }
+
+      const counter = lectures.length
+
+      //skip events until next day
+      i += counter
+    }
+
+    //puts all togheter
+    const newArray: Event[] = []
+    for (let i = 0; i < formattedTableKeys.length; i++) {
+      newArray.push(...obj[formattedTableKeys[i]])
+    }
+    return newArray
+  }
 }
