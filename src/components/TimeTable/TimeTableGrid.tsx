@@ -10,6 +10,8 @@ import { getUsableScreenHeight } from "utils/layout"
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet"
 import { TimeTableContext } from "contexts/timeTable"
 import {
+  FormattedTable,
+  TimetableDeducer,
   formattedTableKeys,
   getFormattedTable,
   getLectureRoomFormattedString,
@@ -19,10 +21,6 @@ import {
 } from "utils/timetable"
 import { TimetableRow } from "./TimetableRow"
 import { LoginContext } from "contexts/login"
-import { useApiCall } from "api/useApiCall"
-import { api } from "api"
-import { EventType } from "utils/events"
-import moment from "moment"
 import { Grid } from "./OverlayGrid"
 import { usePalette } from "utils/colors"
 import { ColorPickerLecture } from "./ColorPickerLecture"
@@ -283,9 +281,9 @@ export const TimeTableGrid: FC = () => {
 
   const { matricola } = userInfo?.careers?.[0] ?? {}
 
-  const startDate = new Date().toISOString().substring(0, 10)
-
-  const [lectures, setLectures] = useState<Event[]>([])
+  const [formattedTable, setFormattedTimetable] = useState<FormattedTable>(
+    getFormattedTable([])
+  )
 
   const [selectedLectureId, setSelectedLectureId] = useState<
     number | undefined
@@ -293,33 +291,30 @@ export const TimeTableGrid: FC = () => {
 
   const { isLight, palette } = usePalette()
 
-  const [events] = useApiCall(
-    api.events.getEvents,
-    {
-      matricola: matricola ?? "",
-      startDate,
-      nEvents: 100,
-    },
-    [loggedIn],
-    {},
-    !loggedIn // only call if logged in
-  )
+  const deducer = useRef<TimetableDeducer | undefined>()
 
+  // ? Maybe this can be improved and made without using event emitters?
   useEffect(() => {
-    if (events && events?.length > 1) {
-      setLectures(
-        events
-          .filter(
-            event =>
-              //one week range
-              new Date(event.date_start) >= moment().startOf("day").toDate() &&
-              new Date(event.date_start) <=
-                moment().startOf("day").add(6, "days").toDate()
-          )
-          .filter(e => e.event_type.typeId === EventType.LECTURES) //filter only the lectures)
+    const handleTimeTableEvent = () => {
+      if (matricola && loggedIn && !deducer.current) {
+        deducer.current = new TimetableDeducer(matricola)
+        deducer.current.addListener("timetable_retrieved", () => {
+          if (deducer?.current?.timetable?.table) {
+            setFormattedTimetable(deducer?.current?.timetable?.table)
+          }
+        })
+      }
+    }
+
+    handleTimeTableEvent()
+
+    return () => {
+      deducer?.current?.removeListener(
+        "timetable_retrieved",
+        handleTimeTableEvent
       )
     }
-  }, [events])
+  }, [matricola, loggedIn])
 
   useEffect(() => {
     if (timeTableOpen) {
@@ -331,8 +326,6 @@ export const TimeTableGrid: FC = () => {
       )
     }
   }, [timeTableOpen])
-
-  const formattedTable = getFormattedTable(/* lectures ?? [] */ fakeLectures)
 
   return (
     <>

@@ -2,8 +2,8 @@
 import { api } from "api"
 import { Event } from "api/collections/event"
 import * as FileSystem from "expo-file-system"
-import moment from "moment"
 import { EventType } from "./events"
+import { EventEmitter } from "events"
 
 /**
  * A more systematic approach for managing margins, change here, change everywhere.
@@ -326,14 +326,20 @@ const FIRST_SEMESTER_START_DAY = 12
 //month start from 0
 const FIRST_SEMESTER_START_MONTH = 8
 
+//20th February start of second semester
 const SECOND_SEMESTER_START_DAY = 20
 
 const SECOND_SEMESTER_START_MONTH = 1
 
-export class TimetableDeducer {
-  /* private static classInstance?: TimetableDeducer */
+export declare interface TimetableDeducer {
+  /**
+   * fired when timetable is set
+   * */
+  on(event: "timetable_retrieved", listener: (loggedIn: boolean) => void): this
+}
 
-  private _timetable: Timetable | undefined
+export class TimetableDeducer extends EventEmitter {
+  public timetable: Timetable | undefined
 
   private _matricola: string
 
@@ -343,7 +349,8 @@ export class TimetableDeducer {
 
   private _secondSemesterStartDate: Date | undefined
 
-  private constructor(matricola: string) {
+  constructor(matricola: string) {
+    super()
     this._matricola = matricola
     void this._readFromStorage()
     this._initializeSemesterDates()
@@ -390,20 +397,21 @@ export class TimetableDeducer {
       const timetable = JSON.parse(timetableJSON) as Timetable
 
       if (!this._checkNeedCalculating(timetable.date)) {
-        this._timetable = timetable
+        this.timetable = timetable
+        this.emit("timetable_retrieved")
       } else {
         void this._deduceTimetableFromEvents()
       }
     } catch (err) {
       console.log(err)
-      console.log("Error reading timetable")
+      console.log("First time opening timetable page")
+      void this._deduceTimetableFromEvents()
     }
   }
 
   private _writeToStorage = async (timetable: Timetable): Promise<boolean> => {
     const timetableJSON = JSON.stringify(timetable)
     try {
-      this._timetable = timetable
       await FileSystem.writeAsStringAsync(
         FileSystem.documentDirectory + "timetable.json",
         timetableJSON
@@ -429,7 +437,8 @@ export class TimetableDeducer {
     } else {
       referenceDate = this._secondSemesterStartDate
     }
-    const lastDateOfCalculation = date
+    //for some reason I need to create a new Date from date, otherwise .getTime() breaks
+    const lastDateOfCalculation = new Date(date)
     const now = new Date()
 
     if (
@@ -444,46 +453,52 @@ export class TimetableDeducer {
   }
 
   private _deduceTimetableFromEvents = async () => {
-    if (!this._firstSemesterStartDate || !this._secondSemesterStartDate) {
-      return
+    try {
+      if (!this._firstSemesterStartDate || !this._secondSemesterStartDate) {
+        return
+      }
+
+      let startDate: Date
+      if (this._isNowFirstSemester) {
+        startDate = this._firstSemesterStartDate
+      } else {
+        startDate = this._secondSemesterStartDate
+      }
+
+      const events = await api.events.getEvents({
+        matricola: this._matricola ?? "",
+        startDate: startDate.toISOString().substring(0, 10),
+        nEvents: 200,
+      })
+
+      const filteredEvents = events
+        .filter(
+          event =>
+            //11 week range
+            new Date(event.date_start).getTime() <=
+            new Date(
+              new Date(event.date_start).getTime() + 11 * 24 * 60 * 60 * 1000
+            ).getTime()
+        )
+        .filter(e => e.event_type.typeId === EventType.LECTURES) //filter only the lectures)
+
+      const busiestWeek: Event[] = this._calculateBusiestWeek(filteredEvents)
+
+      const formattedTable = getFormattedTable(busiestWeek)
+
+      //update instance member
+      this.timetable = {
+        table: formattedTable,
+        date: new Date(),
+        matricola: this._matricola,
+      }
+      this.emit("timetable_retrieved")
+
+      //update storage
+      void this._writeToStorage(this.timetable)
+    } catch (err) {
+      console.log(err)
     }
-
-    let startDate: Date
-    if (this._isNowFirstSemester) {
-      startDate = this._firstSemesterStartDate
-    } else {
-      startDate = this._secondSemesterStartDate
-    }
-
-    const events = await api.events.getEvents({
-      matricola: this._matricola ?? "",
-      startDate: startDate.toISOString(),
-      nEvents: 200,
-    })
-
-    const filteredEvents = events
-      .filter(
-        event =>
-          //11 week range
-          new Date(event.date_start) >= moment().startOf("day").toDate() &&
-          new Date(event.date_start) <=
-            moment().startOf("day").add(77, "days").toDate()
-      )
-      .filter(e => e.event_type.typeId === EventType.LECTURES) //filter only the lectures)
-
-    const busiestWeek: Event[] = this._calculateBusiestWeek(filteredEvents)
-
-    const formattedTable = getFormattedTable(busiestWeek)
-
-    //update instance member
-    this._timetable = {
-      table: formattedTable,
-      date: new Date(),
-      matricola: this._matricola,
-    }
-
-    //update storage
-    void this._writeToStorage(this._timetable)
   }
 
   private _calculateBusiestWeek = (events: Event[]): Event[] => {
@@ -496,16 +511,17 @@ export class TimetableDeducer {
       sab: [],
       dom: [],
     }
+
     for (let i = 0; i < events.length; i++) {
-      const startDate = events[i].date_start
-      const dayOfTheWeek: ValidDayTimeTable =
-        dayMappingObject[new Date(startDate).getDate()]
+      const startDateDay = new Date(events[i].date_start).getDay()
+      const dayOfTheWeek: ValidDayTimeTable = dayMappingObject[startDateDay]
 
       //count how many lectures in given day
       const lectures: Event[] = []
       for (
-        let j = 0;
-        j < events.length && events[j].date_start === startDate;
+        let j = i;
+        j < events.length &&
+        new Date(events[j].date_start).getDay() === startDateDay;
         j++
       ) {
         //iterate until date start is different
@@ -520,7 +536,7 @@ export class TimetableDeducer {
       const counter = lectures.length
 
       //skip events until next day
-      i += counter
+      i += counter - 1
     }
 
     //puts all togheter
