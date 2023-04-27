@@ -541,7 +541,7 @@ export class NotificationCenter {
                     channelId: "comunicazioni",
                     content: contentMessage,
                     object: getObjectMessageFromType(item.type),
-                    sender: "Sender",
+                    sender: "Centro Notifiche",
                   },
                 },
                 {
