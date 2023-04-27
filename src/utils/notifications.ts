@@ -176,3 +176,25 @@ export const getNewChannelsStatuses = (
   }
   return newChannels
 }
+
+export const getContentMessageFromType = (
+  type: WidgetType,
+  date: string,
+  time: string
+) => {
+  if (type === WidgetType.DEADLINE) {
+    return `la deadline scadrà ${date} alle ${time}`
+  } else if (type === WidgetType.EXAMS) {
+    return `l'esame si svolgerà ${date} alle ${time}`
+  }
+  return `l'evento si svolgerà ${date} alle ${time}`
+}
+
+export const getObjectMessageFromType = (type: WidgetType) => {
+  if (type === WidgetType.DEADLINE) {
+    return "è arrivata una notifica riguardo una deadline"
+  } else if (type === WidgetType.EXAMS) {
+    return "è arrivata una notifica riguardo un esame"
+  }
+  return "hai una nuova notifica di un evento"
+}

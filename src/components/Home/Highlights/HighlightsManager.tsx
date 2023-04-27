@@ -35,7 +35,12 @@ export const HighlightsManager: FC = () => {
 
   useEffect(() => {
     if (events) {
-      void notificationCenter.scheduleCarousel(extractAllEvents(events))
+      void notificationCenter.scheduleCarousel(extractAllEvents(events), {
+        //1 day in minutes
+        exam: 1 * 24 * 60,
+        //7 days in minutes
+        deadline: 7 + 24 * 60,
+      })
     }
   }, [events])
 

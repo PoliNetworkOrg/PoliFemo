@@ -1,7 +1,9 @@
 import {
   MinutesBeforeOptions,
   calculateDateFromTrigger,
+  getContentMessageFromType,
   getMinutesBeforeInMilliseconds,
+  getObjectMessageFromType,
   mapNotificationChannelString,
 } from "utils/notifications"
 import * as FileSystem from "expo-file-system"
@@ -520,20 +522,25 @@ export class NotificationCenter {
             )
             if (
               (item.type === WidgetType.DEADLINE ||
-                item.type === WidgetType.EXAMS ||
-                item.type === WidgetType.LECTURES) &&
+                item.type === WidgetType.EXAMS) &&
               item.dateStart.getTime() - deltaMilliseconds > Date.now()
             ) {
+              const contentMessage = getContentMessageFromType(
+                item.type,
+                item.date,
+                item.time
+              )
+
               await this.sendScheduledNotification(
                 {
                   title: item.title,
-                  body: `l'evento si svolgerà ${item.date} alle ${item.time}`,
+                  body: contentMessage,
                   data: {
                     //eventId let us know which notifications have already been scheduled
                     eventId: item.id,
                     channelId: "comunicazioni",
-                    content: `l'evento si svolgerà ${item.date} alle ${item.time}`,
-                    object: "Hai una nuova lezione! Divertiti!",
+                    content: contentMessage,
+                    object: getObjectMessageFromType(item.type),
                     sender: "Sender",
                   },
                 },
