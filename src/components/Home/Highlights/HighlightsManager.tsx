@@ -39,7 +39,7 @@ export const HighlightsManager: FC = () => {
         //1 day in minutes
         exam: 1 * 24 * 60,
         //7 days in minutes
-        deadline: 7 + 24 * 60,
+        deadline: 7 * 24 * 60,
       })
     }
   }, [events])
