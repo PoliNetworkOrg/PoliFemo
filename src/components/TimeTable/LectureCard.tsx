@@ -40,26 +40,35 @@ export const LectureCard: FC<LectureCardProps> = props => {
   const timeStart = new Date(props.lecture.date_start).getHours() - minHour
 
   return (
-    <View
-      style={{
-        position: "absolute",
-        zIndex: 2,
-        backgroundColor: isLight ? palette.primary : palette.darker,
-        height:
-          (open ? LECTURE_HEIGHT_OPEN : LECTURE_HEIGHT_COLLAPSED) +
-          2 * LECTURE_CONTAINER_PADDING,
-        width: timeRange * TIME_SLOT + 2 * LECTURE_CONTAINER_PADDING,
-        left: timeStart * TIME_SLOT + 1 - LECTURE_CONTAINER_PADDING,
-        justifyContent: "center",
-        alignItems: "center",
-        top:
-          props.overlapNumber *
-          ((open ? LECTURE_HEIGHT_OPEN : LECTURE_HEIGHT_COLLAPSED) +
-            2 * LECTURE_CONTAINER_PADDING),
-      }}
-    >
+    <>
+      <View
+        style={{
+          position: "absolute",
+          zIndex: 2,
+          backgroundColor: isLight ? palette.primary : palette.darker,
+          height:
+            (open ? LECTURE_HEIGHT_OPEN : LECTURE_HEIGHT_COLLAPSED) +
+            2 * LECTURE_CONTAINER_PADDING,
+          width: timeRange * TIME_SLOT + 2 * LECTURE_CONTAINER_PADDING,
+          left: timeStart * TIME_SLOT + 1 - LECTURE_CONTAINER_PADDING,
+          justifyContent: "center",
+          alignItems: "center",
+          top:
+            props.overlapNumber *
+            ((open ? LECTURE_HEIGHT_OPEN : LECTURE_HEIGHT_COLLAPSED) +
+              2 * LECTURE_CONTAINER_PADDING),
+        }}
+      />
       <Pressable
         style={{
+          position: "absolute",
+          zIndex: 3,
+          left: timeStart * TIME_SLOT + 1,
+          top:
+            props.overlapNumber *
+              ((open ? LECTURE_HEIGHT_OPEN : LECTURE_HEIGHT_COLLAPSED) +
+                2 * LECTURE_CONTAINER_PADDING) +
+            LECTURE_CONTAINER_PADDING,
           width: timeRange * TIME_SLOT,
           height: open ? LECTURE_HEIGHT_OPEN : LECTURE_HEIGHT_COLLAPSED,
           borderRadius: 18,
@@ -97,6 +106,6 @@ export const LectureCard: FC<LectureCardProps> = props => {
           </BodyText>
         )}
       </Pressable>
-    </View>
+    </>
   )
 }

@@ -300,7 +300,6 @@ export const TimeTableGrid: FC = () => {
         deducer.current = new TimetableDeducer(matricola)
         deducer.current.addListener("timetable_retrieved", () => {
           if (deducer?.current?.timetable?.table) {
-            console.log("new formatted table")
             setFormattedTimetable({ ...deducer?.current?.timetable?.table })
           }
         })
