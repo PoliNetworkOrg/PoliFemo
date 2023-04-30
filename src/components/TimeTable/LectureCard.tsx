@@ -65,8 +65,10 @@ export const LectureCard: FC<LectureCardProps> = props => {
           borderRadius: 18,
           borderWidth: 2,
           padding: open ? 10 : 0,
-          borderColor: props.borderColor,
-          backgroundColor: props.isSelected ? props.borderColor : undefined,
+          borderColor: props.lecture.lectureColor,
+          backgroundColor: props.isSelected
+            ? props.lecture.lectureColor
+            : undefined,
           justifyContent: "center",
         }}
         onPress={() => props.onPress()}

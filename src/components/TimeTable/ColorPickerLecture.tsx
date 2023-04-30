@@ -1,16 +1,16 @@
 import { FC } from "react"
 import { Pressable, View } from "react-native"
-import { Event } from "api/collections/event"
 import { Icon } from "components/Icon"
 import colorPickerSvg from "assets/timetable/color_picker.svg"
 
 export interface ColorPickerLectureProps {
-  lecture?: Event
+  color?: string
+  onPress?: () => void
 }
 
 export const ColorPickerLecture: FC<ColorPickerLectureProps> = props => {
   return (
-    <Pressable>
+    <Pressable onPress={props.onPress}>
       <View
         style={{
           height: 20,
@@ -18,7 +18,7 @@ export const ColorPickerLecture: FC<ColorPickerLectureProps> = props => {
           borderRadius: 10,
           marginLeft: 8,
           marginTop: 4,
-          backgroundColor: "red",
+          backgroundColor: props.color ?? "grey",
           justifyContent: "center",
           alignItems: "center",
         }}

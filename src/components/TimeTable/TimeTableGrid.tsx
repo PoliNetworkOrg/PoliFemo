@@ -12,7 +12,6 @@ import { TimeTableContext } from "contexts/timeTable"
 import {
   FormattedTable,
   TimetableDeducer,
-  formattedTableKeys,
   getFormattedTable,
   getLectureRoomFormattedString,
   getMarginDays,
@@ -300,7 +299,8 @@ export const TimeTableGrid: FC = () => {
         deducer.current = new TimetableDeducer(matricola)
         deducer.current.addListener("timetable_retrieved", () => {
           if (deducer?.current?.timetable?.table) {
-            setFormattedTimetable(deducer?.current?.timetable?.table)
+            console.log("new formatted table")
+            setFormattedTimetable({ ...deducer?.current?.timetable?.table })
           }
         })
       }
@@ -356,18 +356,36 @@ export const TimeTableGrid: FC = () => {
               <View>
                 <TimeLine />
                 <View style={{ height: "100%" }}>
-                  {formattedTableKeys.map(day => (
-                    <TimetableRow
-                      onEventPress={(event: Event) => {
-                        setTimeTableOpen(!timeTableOpen)
-                        setCurrentLecture(event)
-                        setSelectedLectureId(event.event_id)
-                      }}
-                      row={formattedTable[day]}
-                      selectedLectureId={selectedLectureId}
-                      key={day}
-                    />
-                  ))}
+                  {Object.keys(formattedTable).map(day => {
+                    const _day = day as keyof FormattedTable
+                    return (
+                      <TimetableRow
+                        onEventPress={(event: Event) => {
+                          /* setTimeTableOpen(!timeTableOpen) */
+                          if (timeTableOpen) {
+                            //set lecture and open bottom sheet
+                            setTimeTableOpen(!timeTableOpen)
+                            setCurrentLecture(event)
+                            setSelectedLectureId(event.event_id)
+                          } else if (
+                            currentLecture?.event_id === event.event_id
+                          ) {
+                            //close bottom sheet if click on same lecture
+                            setTimeTableOpen(!timeTableOpen)
+                            setCurrentLecture(event)
+                            setSelectedLectureId(event.event_id)
+                          } else {
+                            //set lecture and bottom sheet remains open
+                            setCurrentLecture(event)
+                            setSelectedLectureId(event.event_id)
+                          }
+                        }}
+                        row={formattedTable[_day]}
+                        selectedLectureId={selectedLectureId}
+                        key={day}
+                      />
+                    )
+                  })}
 
                   <Grid />
                 </View>
@@ -403,7 +421,14 @@ export const TimeTableGrid: FC = () => {
                 {currentLecture?.title.it}
               </BodyText>
             </View>
-            <ColorPickerLecture />
+            <ColorPickerLecture
+              color={currentLecture?.lectureColor}
+              onPress={() => {
+                if (deducer.current) {
+                  deducer.current.changeColor(currentLecture?.event_id)
+                }
+              }}
+            />
           </View>
           <View style={{ marginTop: 32 }}>
             <BodyText

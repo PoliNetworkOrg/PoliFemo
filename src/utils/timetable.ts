@@ -178,7 +178,10 @@ export const getFormattedTable = (events: Event[]): FormattedTable => {
       if (relevantMultiRow.singleRows[k].overlapNumber === overlapNumber) {
         found = true
         //push event in row
-        relevantMultiRow.singleRows[k].events.push(orderedEvents[i])
+        relevantMultiRow.singleRows[k].events.push({
+          ...orderedEvents[i],
+          lectureColor: getRandomLectureColor(),
+        })
 
         if (relevantMultiRow.maxOverlapNumber < overlapNumber) {
           relevantMultiRow.maxOverlapNumber = overlapNumber
@@ -188,7 +191,9 @@ export const getFormattedTable = (events: Event[]): FormattedTable => {
     if (!found) {
       //add new row in multiRow with correct overlapNumber
       relevantMultiRow.singleRows.push({
-        events: [orderedEvents[i]],
+        events: [
+          { ...orderedEvents[i], lectureColor: getRandomLectureColor() },
+        ],
         overlapNumber: overlapNumber,
       })
       if (relevantMultiRow.maxOverlapNumber < overlapNumber) {
@@ -309,6 +314,25 @@ export const getLectureRoomFormattedString = (room?: string) => {
   }
 
   return `lezione in aula: ${room}`
+}
+
+export const randomInteger = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+const colorList = ["#52E8F2", "#52F275", "#F06876", "#F28252", "#B50E1E"]
+
+const getRandomLectureColor = () => {
+  const randomNumber = randomInteger(0, colorList.length - 1)
+
+  return colorList[randomNumber]
+}
+
+const shiftColor = (color?: string) => {
+  if (!color) {
+    return colorList[0]
+  }
+  const colorPos = colorList.findIndex(c => c === color)
+  return colorList[(colorPos + 1) % colorList.length]
 }
 
 interface Timetable {
@@ -546,4 +570,50 @@ export class TimetableDeducer extends EventEmitter {
     }
     return newArray
   }
+
+  public changeColor = (id?: number) => {
+    if (!id || !this.timetable) {
+      return
+    }
+    let found = false
+    for (const key of formattedTableKeys) {
+      for (let i = 0; i < this.timetable.table[key].singleRows.length; i++) {
+        for (
+          let j = 0;
+          j < this.timetable.table[key].singleRows[i].events.length;
+          j++
+        ) {
+          if (
+            this.timetable.table[key].singleRows[i].events[j].event_id === id
+          ) {
+            this.timetable.table[key].singleRows[i].events[j].lectureColor =
+              shiftColor(
+                this.timetable.table[key].singleRows[i].events[j].lectureColor
+              )
+            found = true
+          }
+          if (found) break
+        }
+
+        if (found) {
+          break
+        }
+      }
+      if (found) {
+        this.emit("timetable_retrieved")
+        void this._writeToStorage(this.timetable)
+        break
+      }
+    }
+  }
+
+  /* private _clearStorage = async () => {
+    try {
+      await FileSystem.deleteAsync(
+        FileSystem.documentDirectory + "timetable.json"
+      )
+    } catch (err) {
+      console.log(err)
+    }
+  } */
 }

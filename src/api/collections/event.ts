@@ -34,6 +34,8 @@ export interface Event {
     classroom_id: number
     room_dn: string
   }
+  //used by Timetable to store color
+  lectureColor?: string
 }
 
 const client = HttpClient.getInstance()
