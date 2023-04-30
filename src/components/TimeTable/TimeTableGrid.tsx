@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { FC, useContext, useEffect, useRef, useState } from "react"
+import { FC, useCallback, useContext, useEffect, useRef, useState } from "react"
 import { Dimensions, View } from "react-native"
 import { TimeLine } from "./TimeLine"
 import { WeekLine } from "./WeekLine"
@@ -23,6 +23,7 @@ import { LoginContext } from "contexts/login"
 import { Grid } from "./OverlayGrid"
 import { usePalette } from "utils/colors"
 import { ColorPickerLecture } from "./ColorPickerLecture"
+import { useFocusEffect } from "@react-navigation/native"
 
 const { width } = Dimensions.get("window")
 
@@ -326,6 +327,12 @@ export const TimeTableGrid: FC = () => {
       )
     }
   }, [timeTableOpen])
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => bottomSheetRef.current?.close()
+    }, [])
+  )
 
   return (
     <>
