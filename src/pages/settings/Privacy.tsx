@@ -13,8 +13,7 @@ import { LoginContext } from "contexts/login"
 //import { ModalPicker } from "components/Settings/ModalPicker"
 import { Description } from "components/Settings/Description"
 import { useTranslation } from "react-i18next"
-import { Modal } from "components/Modal"
-import { SelectTile } from "components/Settings"
+import { ModalPicker } from "components/Settings/ModalPicker"
 
 const client = HttpClient.getInstance()
 
@@ -172,58 +171,34 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
         </HyperLink>
         .
       </Description>
-      <Modal
+      <ModalPicker
         title={t("settings_autoDelete_modalTitle")}
         subTitle={"" + t("settings_autoDelete_modalSubTitle")}
         centerText
         isShowing={showingAutodeleteModal}
-        buttons={[
-          {
-            light: true,
-            text: "" + t("cancel", { ns: "common" }),
-            onPress: () => {
-              //restore real autodelete time value
-              setAutodeleteTime(autodeleteTime)
-              setShowingAutodeleteModal(false)
-            },
-          },
-          {
-            text: "OK",
-            onPress: async () => {
-              try {
-                await api.user.updatePoliNetworkSettings({
-                  settings: {
-                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                    expire_in_days: autodeleteTime,
-                  },
-                })
-                setAutodeleteTime(autodeleteTime)
-                setShowingAutodeleteModal(false)
-                Alert.alert(
-                  "Impostazioni aggiornate",
-                  `Nuovo periodo di inattività per la cancellazione automatica dei dati impostato a ${autodeleteTime} giorni`
-                )
-              } catch (e) {
-                Alert.alert("Errore durante l'aggiornamento", e + "")
-                console.error(e)
-              }
-            },
-          },
-        ]}
-      >
-        {autodeleteTimes?.map((time, index) => {
-          return (
-            <SelectTile
-              key={index}
-              value={"" + t(time.label)}
-              selected={autodeleteTime === autodeleteTimes[index].value}
-              onPress={() => {
-                setAutodeleteTime(autodeleteTimes[index].value)
-              }}
-            />
-          )
-        })}
-      </Modal>
+        onClose={() => setShowingAutodeleteModal(false)}
+        elements={autodeleteTimes}
+        selectedValue={autodeleteTime}
+        onSelect={async value => {
+          try {
+            await api.user.updatePoliNetworkSettings({
+              settings: {
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                expire_in_days: value,
+              },
+            })
+            setAutodeleteTime(value)
+            setShowingAutodeleteModal(false)
+            Alert.alert(
+              "Impostazioni aggiornate",
+              `Nuovo periodo di inattività per la cancellazione automatica dei dati impostato a ${value} giorni`
+            )
+          } catch (e) {
+            Alert.alert("Errore durante l'aggiornamento", e + "")
+            console.error(e)
+          }
+        }}
+      />
     </ContentWrapperScroll>
   )
 }

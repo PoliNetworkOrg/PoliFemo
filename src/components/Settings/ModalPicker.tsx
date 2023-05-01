@@ -1,8 +1,7 @@
 import React, { useEffect } from "react"
 import { Modal } from "components/Modal"
-import { Picker } from "@react-native-picker/picker"
-import { usePalette } from "utils/colors"
 import { useTranslation } from "react-i18next"
+import { SelectTile } from "./SelectTile"
 
 interface ModalPickerProps<T> {
   /**
@@ -46,7 +45,6 @@ interface ModalPickerProps<T> {
  * */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function ModalPicker<T>(props: ModalPickerProps<T>) {
-  const { bodyText, palette } = usePalette()
   const [selectedValue, setSelectedValue] = React.useState(
     props.selectedValue ?? props.elements[0].value
   )
@@ -75,26 +73,18 @@ export function ModalPicker<T>(props: ModalPickerProps<T>) {
         },
       ]}
     >
-      <Picker
-        style={{
-          marginHorizontal: 16,
-          color: bodyText,
-        }}
-        itemStyle={{
-          color: bodyText,
-        }}
-        dropdownIconColor={palette.accent}
-        selectedValue={selectedValue}
-        onValueChange={itemValue => setSelectedValue(itemValue)}
-      >
-        {props.elements.map((element, idx) => (
-          <Picker.Item
-            key={`__modal-picker-item-${idx}`}
-            label={element.label}
-            value={element.value}
+      {props.elements?.map((element, index) => {
+        return (
+          <SelectTile
+            key={index}
+            value={"" + t(element.label)}
+            selected={selectedValue === props.elements[index].value}
+            onPress={() => {
+              setSelectedValue(props.elements[index].value)
+            }}
           />
-        ))}
-      </Picker>
+        )
+      })}
     </Modal>
   )
 }
