@@ -37,6 +37,7 @@ module.exports = {
     "react/self-closing-comp": ["error"],
 
     "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/unbound-method": "off",
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": [
       "warn",
@@ -67,7 +68,12 @@ module.exports = {
         leadingUnderscore: "allow",
         trailingUnderscore: "allow",
       },
-
+      {
+        selector: "memberLike",
+        format: ["camelCase", "UPPER_CASE"],
+        leadingUnderscore: "allow",
+        trailingUnderscore: "allow",
+      },
       {
         selector: "typeLike",
         format: ["PascalCase"],

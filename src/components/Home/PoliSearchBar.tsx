@@ -10,6 +10,7 @@ import {
 import { usePalette } from "utils/colors"
 import searchDark from "assets/menu/searchDark.svg"
 import { Icon } from "components/Icon"
+import { useTranslation } from "react-i18next"
 
 /**
  * the search bar, which requests a search everytime the input text changes
@@ -24,6 +25,8 @@ export const PoliSearchBar: FC<{
   const [isFocused, setIsFocused] = useState(false)
   const shadowAnim = useRef(new Animated.Value(0)).current
   const inputText = useRef<TextInput>(null)
+
+  const { t } = useTranslation() //i18n hook
 
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener(
@@ -89,7 +92,7 @@ export const PoliSearchBar: FC<{
         }}
         ref={inputText}
         autoCorrect={true}
-        placeholder="Cerca"
+        placeholder={"" + t("search")}
         placeholderTextColor={fieldText}
         selectionColor={bodyText}
         onChangeText={onChange}

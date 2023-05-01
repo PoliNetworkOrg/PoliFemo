@@ -3,7 +3,7 @@ import { ScrollView, View } from "react-native"
 
 import { useNavigation } from "navigation/NavigationTypes"
 
-import { MenuButton, ButtonInterface } from "./MenuButton"
+import { MenuButton, ButtonInterface, ButtonType } from "./MenuButton"
 
 import calendar from "assets/menu/calendar.svg"
 import clock from "assets/menu/clock.svg"
@@ -18,22 +18,7 @@ import add from "assets/menu/add.svg"
 import { Modal } from "components/Modal"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useOutsideClick } from "utils/outsideClick"
-
-/**
- * the buttons and their features
- */
-export const defaultIcons: ButtonInterface[] = [
-  { id: 0, title: "Calendario", icon: calendar },
-  { id: 1, title: "Orario Lezioni", icon: clock },
-  { id: 2, title: "PoliAssociazioni", icon: association },
-  { id: 3, title: "Aule Libere", icon: free_classrooms },
-  { id: 4, title: "Materiali", icon: materials },
-  { id: 5, title: "Gruppi", icon: groups },
-  { id: 6, title: "Valutazioni", icon: marks },
-  { id: 7, title: "Libretto", icon: grading_book },
-  { id: 8, title: "Test e Prove", icon: tests },
-  { id: 9, title: "Aggiungi", icon: add },
-]
+import { useTranslation } from "react-i18next"
 
 type ButtonState = ButtonInterface & { shown: boolean }
 
@@ -43,12 +28,81 @@ type ButtonState = ButtonInterface & { shown: boolean }
 export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
   const { navigate } = useNavigation()
 
+  const defaultIcons: ButtonInterface[] = [
+    {
+      type: ButtonType.CALENDAR,
+      title: "menu_calendar",
+      icon: calendar,
+      onClick: () => navigate("Error404"),
+    },
+    {
+      type: ButtonType.TIMETABLE,
+      title: "menu_timetable",
+      icon: clock,
+      onClick: () => navigate("Error404"),
+    },
+    {
+      type: ButtonType.ASSOCIATIONS,
+      title: "menu_associations",
+      icon: association,
+      onClick: () => navigate("Error404"),
+    },
+    {
+      type: ButtonType.FREECLASSROOMS,
+      title: "menu_freeclass",
+      icon: free_classrooms,
+      onClick: () => navigate("FreeClassrooms"),
+    },
+    {
+      type: ButtonType.MATERIALS,
+      title: "menu_materials",
+      icon: materials,
+      onClick: () => navigate("Error404"),
+    },
+    {
+      type: ButtonType.GROUPS,
+      title: "menu_groups",
+      icon: groups,
+      onClick: () => navigate("Groups"),
+    },
+    {
+      type: ButtonType.MARKS,
+      title: "menu_marks",
+      icon: marks,
+      onClick: () => navigate("Error404"),
+    },
+    {
+      type: ButtonType.GRADING_BOOK,
+      title: "menu_gradingBook",
+      icon: grading_book,
+      onClick: () => navigate("Error404"),
+    },
+    {
+      type: ButtonType.TEST,
+      title: "menu_test",
+      icon: tests,
+      onClick: () => navigate("Error404"),
+    },
+    {
+      type: ButtonType.ADD,
+      title: "menu_add",
+      icon: add,
+      onClick: () => setModalVisible(true),
+    },
+  ]
+
   const [icons, setIcons] = useState<ButtonState[]>(
-    defaultIcons.map(icon => ({ ...icon, shown: true }))
+    defaultIcons.map(icon =>
+      icon.type === ButtonType.ADD
+        ? { ...icon, shown: false }
+        : { ...icon, shown: true }
+    )
   )
 
   const [isModalVisible, setModalVisible] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+
+  const { t } = useTranslation("home") //i18n hook
 
   const scrollView = useOutsideClick<ScrollView>(() => {
     setIsDeleting(false)
@@ -63,11 +117,11 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
       .then(iconJSON => {
         if (iconJSON) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          const showns: number[] = JSON.parse(iconJSON)
+          const showns: ButtonType[] = JSON.parse(iconJSON)
           setIcons(
             icons.map(icon => ({
               ...icon,
-              shown: showns.includes(icon.id),
+              shown: showns.includes(icon.type),
             }))
           )
         }
@@ -76,9 +130,14 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
   }, [])
 
   useEffect(() => {
+    const visibleIcons = icons.filter(icon => icon.shown)
+    if (visibleIcons.length === icons.length) {
+      icons[9].shown = false
+      setModalVisible(false)
+    }
     AsyncStorage.setItem(
       "menu:icons",
-      JSON.stringify(icons.filter(i => i.shown).map(i => i.id))
+      JSON.stringify(icons.filter(i => i.shown).map(i => i.type))
     ).catch(err => console.log(err))
   }, [icons])
 
@@ -103,8 +162,8 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
     >
       <Modal
         centerText={false}
-        title={"Aggiungi features"}
-        subTitle={"Personalizza la tua bacheca"}
+        title={"" + t("modal_add")}
+        subTitle={"" + t("modal_message")}
         isShowing={isModalVisible}
         onClose={() => setModalVisible(false)}
         contentContainerStyle={{
@@ -131,13 +190,13 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                   onPress={() => {
                     setIcons(
                       icons.map(i =>
-                        i.id === buttonIcon.id ? { ...i, shown: true } : i
+                        i.type === buttonIcon.type ? { ...i, shown: true } : i
                       )
                     )
                   }}
                   buttonIcon={buttonIcon}
                   isDeleting={false}
-                  key={"menu_add_icon" + buttonIcon.id}
+                  key={"menu_add_icon" + buttonIcon.type}
                   inMenu
                 />
               ))}
@@ -149,7 +208,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
         .filter(i => i.shown)
         .filter(
           i =>
-            i.id === 9 ||
+            i.type === ButtonType.ADD ||
             (filter
               ? i.title.toLowerCase().includes(filter.toLowerCase())
               : true)
@@ -158,26 +217,34 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
           <MenuButton
             onPress={() => {
               if (isDeleting) setIsDeleting(false)
-              if (buttonIcon.id === 9) setModalVisible(true)
-              // TODO: actual navigation
-              if (buttonIcon.id === 5) {
-                navigate("Groups")
-              } else if (!isDeleting && buttonIcon.id !== 9) {
-                navigate("Error404")
+              else {
+                buttonIcon.onClick?.()
               }
             }}
             onLongPress={() => {
-              if (buttonIcon.id !== 9) setIsDeleting(!isDeleting)
+              if (buttonIcon.type !== ButtonType.ADD) setIsDeleting(!isDeleting)
             }}
             buttonIcon={buttonIcon}
             isDeleting={isDeleting}
             onDelete={() => {
-              const { id } = buttonIcon
+              const { type } = buttonIcon
               setIcons(
-                icons.map(i => (i.id === id ? { ...i, shown: false } : i))
+                icons.map(i =>
+                  i.type === ButtonType.ADD && !i.shown
+                    ? { ...i, shown: true }
+                    : i.type === type
+                    ? { ...i, shown: false }
+                    : i
+                )
               )
+              if (
+                icons.filter(icon => icon.shown && icon.type !== ButtonType.ADD)
+                  .length === 1
+              ) {
+                setIsDeleting(false)
+              }
             }}
-            key={"menu_" + buttonIcon.id}
+            key={"menu_" + buttonIcon.type}
           />
         ))}
     </ScrollView>

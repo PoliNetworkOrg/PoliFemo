@@ -1,4 +1,4 @@
-import { Group } from "api/groups"
+import { Group } from "api/collections/groups"
 import whatsapp from "assets/groups/whatsapp.svg"
 import facebook from "assets/groups/facebook.svg"
 import telegram from "assets/groups/telegram.svg"
@@ -68,13 +68,13 @@ export type ValidModalType = "year" | "course" | "type" | "platform"
 
 export const getNameFromMode = (mode: ValidModalType) => {
   if (mode === "year") {
-    return "Anno"
+    return "group_year"
   } else if (mode === "course") {
-    return "Corso"
+    return "group_course"
   } else if (mode === "platform") {
-    return "Piattaforma"
+    return "group_platform"
   } else {
-    return "Tipo"
+    return "group_type"
   }
 }
 
@@ -99,8 +99,11 @@ export function choosePlatformIcon(platform?: string) {
   return null
 }
 
-export function applyFilters(groups: Group[], filters: Filters): Group[] {
-  let newGroups: Group[] = groups
+export function applyFilters(
+  groups: Group[] | null,
+  filters: Filters
+): Group[] {
+  let newGroups: Group[] = groups ?? []
   if (filters.year !== undefined) {
     newGroups = newGroups.filter(group => {
       return group.year === filters.year

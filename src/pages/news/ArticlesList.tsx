@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useContext } from "react"
 import { View } from "react-native"
 
 import { api, RetryType } from "api"
-import { Article } from "api/articles"
+import { Article } from "api/collections/articles"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { ScrollPageInfinite } from "components/ScrollPageInfinite"
 import { CardWithGradient } from "components/CardWithGradient"
@@ -34,9 +34,11 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
   const fetchArticles = async (keepArticles: boolean) => {
     try {
       const response = await api.articles.getFromOffsetByTag(
-        tagName,
-        MAX_ARTICLES_PER_REQUEST,
-        offset.current,
+        {
+          tag: tagName,
+          limit: MAX_ARTICLES_PER_REQUEST,
+          offset: offset.current,
+        },
         { retryType: RetryType.NO_RETRY }
       )
       if (keepArticles) {

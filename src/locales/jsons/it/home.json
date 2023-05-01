@@ -1,0 +1,18 @@
+{
+    "menu_calendar": "Calendario",
+    "menu_timetable": "Orario Lezioni",
+    "menu_associations": "PoliAssociazioni",
+    "menu_freeclass": "Aule Libere",
+    "menu_materials": "Materiali",
+    "menu_groups": "Gruppi",
+    "menu_marks": "Valutazioni",
+    "menu_gradingBook": "Libretto",
+    "menu_test": "Test e Prove",
+    "menu_add": "Aggiungi",
+
+    "modal_add": "Aggiungi features",
+    "modal_message": "Personalizza la tua bacheca",
+
+    "highlights_defaultTitle": "Goditi la tua tranquillità, puoi rilassarti",
+    "highlights_defaultSubtitle": "Nessun avviso in evidenza"
+}
