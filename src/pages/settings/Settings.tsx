@@ -1,7 +1,6 @@
 import { useContext, useState } from "react"
 import { View } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { ContentWrapperScroll } from "components/Settings"
 import { Divider } from "components/Divider"
 import { SettingTile } from "components/Settings"
 import { settingsIcons } from "assets/settings"
@@ -17,6 +16,7 @@ import { HttpClient } from "api/HttpClient"
 import { Modal } from "components/Modal"
 import { useTranslation } from "react-i18next"
 import { Linking } from "react-native"
+import { ScrollPage } from "components/PageLayout"
 
 const themes: string[] = ["settings_default", "settings_dark", "settings_light"]
 const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
@@ -57,8 +57,8 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
   const { navigate } = useNavigation()
 
   return (
-    <View style={{ flex: 1 }}>
-      <ContentWrapperScroll title={"" + t("settings_title")}>
+    <>
+      <ScrollPage upperTitle={"" + t("settings_title")}>
         {loggedIn ? (
           <UserDetailsTile user={userInfo} />
         ) : (
@@ -119,7 +119,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
             />
           </>
         )}
-      </ContentWrapperScroll>
+      </ScrollPage>
 
       <Modal
         title={t("settings_chooseTheme")}
@@ -196,6 +196,6 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
           )
         })}
       </Modal>
-    </View>
+    </>
   )
 }
