@@ -29,7 +29,8 @@
       },
       "googleServicesFile": "./config/google-services.json",
       "package": "org.polinetwork.polifemo",
-      "softwareKeyboardLayoutMode": "pan"
+      "softwareKeyboardLayoutMode": "pan",
+      "useNextNotificationsApi": true
     },
     "web": {
       "favicon": "./assets/favicon.png"

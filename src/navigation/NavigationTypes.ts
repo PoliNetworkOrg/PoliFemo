@@ -15,9 +15,10 @@
  */
 
 import { StackScreenProps } from "@react-navigation/stack"
-import { FC } from "react"
+import { FC, createRef } from "react"
 import {
   CompositeScreenProps,
+  NavigationContainerRef,
   NavigationProp,
   useNavigation as nativeUseNav,
 } from "@react-navigation/native"
@@ -31,6 +32,10 @@ import {
   CampusItem,
   BuildingItem,
 } from "components/FreeClass/DefaultList"
+import {
+  ValidChannelId,
+  NotificationStorage,
+} from "notifications/NotificationTypes"
 
 /**
  * interface containing the info about the params for each page of the stack navigator
@@ -76,6 +81,11 @@ export type MainStackNavigatorParams = {
   }
   Groups: undefined
   Notifications: undefined
+  NotificationsCategory: {
+    category: string
+    channelId: ValidChannelId
+  }
+  NotificationDetails: { notification: NotificationStorage; category?: string }
 }
 
 export type SettingsStackNavigatorParams = {
@@ -188,3 +198,7 @@ export type SettingsStackScreen<
  */
 export const useNavigation = () =>
   nativeUseNav<NavigationProp<GlobalStackNavigatorParams>>()
+
+//call navigate() from outside a page
+export const navigationRef =
+  createRef<NavigationContainerRef<RootStackNavigatorParams>>()

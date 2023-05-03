@@ -11,10 +11,8 @@ import {
   Roboto_900Black,
 } from "@expo-google-fonts/roboto"
 import { AppContainer } from "./src/AppContainer"
-
 import { OutsideClickProvider } from "utils/outsideClick"
 import { api } from "api"
-
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { LoginContext, LoginState } from "contexts/login"
 import { SettingsContext, Settings } from "contexts/settings"
@@ -23,6 +21,7 @@ import { HttpClient } from "api/HttpClient"
 import { usePalette } from "utils/colors"
 import { StatusBar } from "react-native"
 import { Host } from "react-native-portalize"
+import { navigationRef } from "navigation/NavigationTypes"
 // eslint-disable-next-line unused-imports/no-unused-imports
 import "./src/locales/i18n"
 import { useLoadI18n } from "./src/locales/i18n"
@@ -156,6 +155,7 @@ export default function App() {
               background: homeBackground,
             },
           }}
+          ref={navigationRef}
         >
           <StatusBar
             barStyle={"light-content"}
