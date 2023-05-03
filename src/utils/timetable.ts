@@ -12,9 +12,9 @@ import { EventEmitter } from "events"
 
 export const LECTURE_WIDTH = 64
 
-export const LECTURE_HEIGHT_OPEN = 60
+export const LECTURE_HEIGHT_OPEN = 90
 
-export const LECTURE_HEIGHT_COLLAPSED = 17
+export const LECTURE_HEIGHT_COLLAPSED = 26
 
 //space between a one-hour slot
 export const TIME_SLOT = LECTURE_WIDTH / 2
@@ -203,7 +203,7 @@ export const getFormattedTable = (events: Event[]): FormattedTable => {
   }
 
   //TODO: forse è meglio estrarre questa logica in una funzione a parte e togliere marginTop e collapsedMarginTop
-  //TODO : dal formattedTable
+  //TODO : dal formattedTable, anche perchè se dobbiamo cambiare la ui poi abbiamo valori obsoleti in memoria...
   //calculate proper margin
   let accumulatedMargin = 0
   let accumulatedMarginCollapsed = 0
@@ -616,4 +616,8 @@ export class TimetableDeducer extends EventEmitter {
       console.log(err)
     }
   } */
+
+  public refresh = () => {
+    void this._deduceTimetableFromEvents()
+  }
 }

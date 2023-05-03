@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { FC, useCallback, useContext, useEffect, useRef, useState } from "react"
-import { Dimensions, View } from "react-native"
+import { Dimensions, Pressable, View } from "react-native"
 import { TimeLine } from "./TimeLine"
 import { WeekLine } from "./WeekLine"
 import { ScrollView } from "react-native-gesture-handler"
@@ -103,11 +102,42 @@ export const TimeTableGrid: FC = () => {
         style={{
           flex: 1,
           width,
-          marginTop: 163,
-          marginLeft: 29,
+          marginTop: 28,
+          paddingLeft: 27,
           marginBottom: 100,
         }}
       >
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "baseline",
+            marginBottom: 30,
+            marginRight: 27,
+          }}
+        >
+          <BodyText
+            style={{
+              color: isLight ? palette.variant1 : "#fff",
+              fontSize: 40,
+              fontWeight: "900",
+            }}
+          >
+            Orario
+          </BodyText>
+          <Pressable onPress={() => deducer.current?.refresh()}>
+            <BodyText
+              style={{
+                color: isLight ? palette.variant1 : "#fff",
+                fontSize: 14,
+                fontWeight: "900",
+              }}
+            >
+              Refresh
+            </BodyText>
+          </Pressable>
+        </View>
+
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ flexDirection: "row" }}>
             <WeekLine

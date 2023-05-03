@@ -2,6 +2,7 @@ import { BodyText } from "components/Text"
 import { TimeTableContext } from "contexts/timeTable"
 import { FC, useContext } from "react"
 import { View } from "react-native"
+import { usePalette } from "utils/colors"
 
 interface WeekLineProps {
   overlapsNumberList: number[]
@@ -11,6 +12,8 @@ interface WeekLineProps {
 export const WeekLine: FC<WeekLineProps> = props => {
   const { timeTableOpen } = useContext(TimeTableContext)
 
+  const { isLight, primary } = usePalette()
+
   const days = ["L", "M", "M", "G", "V", "S"]
   return (
     <View style={{ flexDirection: "row", marginTop: 34 }}>
@@ -18,7 +21,7 @@ export const WeekLine: FC<WeekLineProps> = props => {
         style={{
           flexDirection: "column",
           borderRightWidth: 1,
-          borderColor: "white",
+          borderColor: isLight ? primary : "white",
           padding: 10,
           height: timeTableOpen
             ? props.overlapsNumberList[6]
@@ -31,8 +34,7 @@ export const WeekLine: FC<WeekLineProps> = props => {
               position: "absolute",
               fontWeight: "900",
               fontSize: 12,
-              color: "white",
-              //TODO: capire la quantità corretta da mettere per il margine
+              color: isLight ? primary : "#fff",
               top: timeTableOpen
                 ? props.overlapsNumberList[index] - 4
                 : props.overlapsNumberListCollapsed[index] - 4,

@@ -27,7 +27,7 @@ const minHour = 8
 export const LectureCard: FC<LectureCardProps> = props => {
   const { timeTableOpen } = useContext(TimeTableContext)
 
-  const { isLight, palette } = usePalette()
+  const { isLight, palette, primary } = usePalette()
 
   const open = timeTableOpen
 
@@ -45,7 +45,7 @@ export const LectureCard: FC<LectureCardProps> = props => {
         style={{
           position: "absolute",
           zIndex: 2,
-          backgroundColor: isLight ? palette.primary : palette.darker,
+          backgroundColor: isLight ? "#fff" : palette.darker,
           height:
             (open ? LECTURE_HEIGHT_OPEN : LECTURE_HEIGHT_COLLAPSED) +
             2 * LECTURE_CONTAINER_PADDING,
@@ -72,11 +72,13 @@ export const LectureCard: FC<LectureCardProps> = props => {
           width: timeRange * TIME_SLOT,
           height: open ? LECTURE_HEIGHT_OPEN : LECTURE_HEIGHT_COLLAPSED,
           borderRadius: 18,
-          borderWidth: 2,
-          padding: open ? 10 : 0,
+          borderWidth: 4,
+          padding: open ? 8 : 0,
           borderColor: props.lecture.lectureColor,
           backgroundColor: props.isSelected
             ? props.lecture.lectureColor
+            : isLight
+            ? primary
             : undefined,
           justifyContent: "center",
         }}
