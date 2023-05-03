@@ -1,8 +1,8 @@
 import { BodyText } from "components/Text"
 import { FC } from "react"
-import { StyleProp, View, TextStyle } from "react-native"
-import { Canvas, Group, ImageSVG, useSVG } from "@shopify/react-native-skia"
-import polifemoIcon from "assets/polifemo/happy.svg" // <-- NON è quella giusta!!
+import { StyleProp, View, TextStyle, Dimensions } from "react-native"
+import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
+import polifemoIcon from "assets/polifemo/empty.svg" // <-- NON è quella giusta!!
 import { usePalette } from "utils/colors"
 import { useTranslation } from "react-i18next"
 
@@ -25,43 +25,40 @@ export const EmptyListMessage: FC<EmptyMessageProps> = props => {
     <View
       style={{
         justifyContent: "center",
-        flex: 0.8,
+        marginVertical: 40,
       }}
     >
-      <View style={{ justifyContent: "space-evenly", flex: 0.9 }}>
-        <Canvas
-          style={{
-            height: 192,
-            width: 97.5,
-            alignSelf: "center",
-          }}
-        >
-          {polifemoSVG && (
-            <Group transform={[{ scale: 2.73 }]}>
-              <ImageSVG
-                svg={polifemoSVG}
-                x={-9.2}
-                y={-29.5}
-                width={63}
-                height={128}
-              />
-            </Group>
-          )}
-        </Canvas>
-        <BodyText
-          style={[
-            {
-              color: primary,
-              fontWeight: "400",
-              fontSize: 16,
-              textAlign: "center",
-            },
-            props.styleMessage,
-          ]}
-        >
-          {props.message + t("freeClass_emptyList")}
-        </BodyText>
-      </View>
+      <Canvas
+        style={{
+          height: 200,
+          width: Dimensions.get("window").width,
+          alignSelf: "center",
+          marginBottom: 24,
+        }}
+      >
+        {polifemoSVG && (
+          <ImageSVG
+            svg={polifemoSVG}
+            x={0}
+            y={0}
+            width={Dimensions.get("window").width}
+            height={200}
+          />
+        )}
+      </Canvas>
+      <BodyText
+        style={[
+          {
+            color: primary,
+            fontWeight: "400",
+            fontSize: 16,
+            textAlign: "center",
+          },
+          props.styleMessage,
+        ]}
+      >
+        {props.message + t("freeClass_emptyList")}
+      </BodyText>
     </View>
   )
 }
