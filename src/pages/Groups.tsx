@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { FlatList, Linking, View } from "react-native"
-import { Title } from "components/Text"
+import { Linking, View } from "react-native"
 import { FiltersList } from "components/Groups/FiltersList"
 import { api } from "api"
 import { Group } from "api/collections/groups"
@@ -15,11 +14,11 @@ import {
 } from "utils/groups"
 
 import { GroupTile } from "components/Groups/GroupTile"
-import { PageWrapper } from "components/Groups/PageWrapper"
 import { ModalGroup } from "components/Groups/ModalGroup"
 import { PoliSearchBar } from "components/Home/PoliSearchBar"
 import { useTranslation } from "react-i18next"
 import { useApiCall } from "api/useApiCall"
+import { ListPage } from "components/PageLayout/ListPage"
 
 const deltaTime = 100 //ms
 let searchTimeout: NodeJS.Timeout
@@ -44,12 +43,8 @@ export const Groups: MainStackScreen<"Groups"> = () => {
   useEffect(() => {
     clearTimeout(searchTimeout)
     searchTimeout = setTimeout(() => {
-      if (search.trimEnd().length > 2) {
-        const newGroups = searchGroups(filteredGroups, search)
-        setSearchableGroups(newGroups)
-      } else {
-        setSearchableGroups([])
-      }
+      const newGroups = searchGroups(filteredGroups, search)
+      setSearchableGroups(newGroups)
     }, deltaTime)
   }, [search, filteredGroups])
 
@@ -59,32 +54,25 @@ export const Groups: MainStackScreen<"Groups"> = () => {
       : searchableGroups
 
   return (
-    <PageWrapper>
-      <View style={{ paddingHorizontal: 28, paddingTop: 56 }}>
-        <Title>{t("groups_title")}</Title>
-        <View style={{ marginTop: 36, marginBottom: 22 }}>
-          <PoliSearchBar
-            onChange={val => {
-              setSearch(val)
-            }}
-            style={{ marginTop: 0, marginBottom: 0 }}
-          />
-        </View>
-        <FiltersList
-          onFilterChange={filters => setFilters(filters)}
-          filters={filters}
-        />
-      </View>
-      <FlatList
-        style={{
-          flex: 1,
-          marginTop: 16,
-          marginBottom: 93,
-          paddingHorizontal: 8,
-        }}
-        contentContainerStyle={{
-          paddingBottom: 20,
-        }}
+    <>
+      <ListPage
+        title={t("groups_title")}
+        headerComponent={
+          <>
+            <View style={{ marginTop: 36, marginBottom: 22 }}>
+              <PoliSearchBar
+                onChange={val => {
+                  setSearch(val)
+                }}
+                style={{ marginTop: 0, marginBottom: 0 }}
+              />
+            </View>
+            <FiltersList
+              onFilterChange={filters => setFilters(filters)}
+              filters={filters}
+            />
+          </>
+        }
         data={orderedGroups}
         renderItem={({ item }) => (
           <GroupTile
@@ -120,6 +108,6 @@ export const Groups: MainStackScreen<"Groups"> = () => {
           }}
         />
       )}
-    </PageWrapper>
+    </>
   )
 }

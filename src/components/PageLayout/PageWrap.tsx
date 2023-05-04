@@ -6,7 +6,7 @@ import { Text, Title } from "components/Text"
 import { usePalette } from "utils/colors"
 
 export interface PageWrapProps {
-  title?: string | [string, string]
+  title?: string | [string, string] | null
 
   upperTitle?: string
 
