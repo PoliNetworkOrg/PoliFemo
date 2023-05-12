@@ -6,14 +6,10 @@ import { getNameFromMode, ValidModalType } from "utils/groups"
 import { Filters } from "utils/groups"
 import { useTranslation } from "react-i18next"
 import { ModalPicker } from "components/ModalPicker"
+import { ItemToShow } from "../../interfaces/ItemToShow"
 export interface FiltersProps {
   filters: Filters
   onFilterChange: (filters: Filters) => void
-}
-
-interface ItemToShow {
-  value: string
-  label: string
 }
 
 interface ModalItemList {
@@ -146,28 +142,30 @@ export const FiltersList: FC<FiltersProps> = props => {
         selectedValue={selectedItem}
         onClose={() => setIsModalShowing(false)}
         onSelect={value => {
+          const valueAsString = value?.toString()
           if (modalMode === "course") {
+           
             props.onFilterChange({
               ...props.filters,
-              course: value,
+              course: valueAsString,
             })
           } else if (modalMode === "platform") {
             props.onFilterChange({
               ...props.filters,
-              platform: value,
+              platform: valueAsString,
             })
           } else if (modalMode === "year") {
             props.onFilterChange({
               ...props.filters,
-              year: value,
+              year: valueAsString,
             })
           } else if (modalMode === "type") {
             props.onFilterChange({
               ...props.filters,
-              type: value,
+              type: valueAsString,
             })
           }
-          setSelectedItem(value)
+          setSelectedItem(valueAsString)
           setIsModalShowing(false)
         }}
       />

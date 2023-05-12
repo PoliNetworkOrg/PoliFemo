@@ -13,6 +13,7 @@ import { LoginContext } from "contexts/login"
 import { Description } from "components/Settings/Description"
 import { useTranslation } from "react-i18next"
 import { ModalPicker } from "components/ModalPicker"
+import { ItemToShow } from "src/interfaces/ItemToShow"
 
 const client = HttpClient.getInstance()
 
@@ -30,7 +31,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
 
   const { t } = useTranslation("settings")
 
-  const autodeleteTimes: { value: number | string; label: string }[] = [
+  const autodeleteTimes: ItemToShow[] = [
     //non so per quale dannato motivo non mi funzionino i plurali, devo per forza mettere one e other!
     { value: 30, label: t("day.dayCount_other", { ns: "common", count: 30 }) },
     { value: 60, label: t("day.dayCount_other", { ns: "common", count: 60 }) },
