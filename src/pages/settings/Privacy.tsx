@@ -189,9 +189,10 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
             })
             setAutodeleteTime(value as number)
             setShowingAutodeleteModal(false)
+            const valueAsString = value?.toString() ?? ""
             Alert.alert(
               "Impostazioni aggiornate",
-              `Nuovo periodo di inattività per la cancellazione automatica dei dati impostato a ${value} giorni`
+              `Nuovo periodo di inattività per la cancellazione automatica dei dati impostato a ${valueAsString} giorni`
             )
           } catch (e) {
             Alert.alert("Errore durante l'aggiornamento", e + "")
