@@ -4,6 +4,7 @@ import { FC } from "react"
 import { View, StyleSheet } from "react-native"
 import { Text, Title } from "components/Text"
 import { usePalette } from "utils/colors"
+import { ToggleSwitch, ToggleSwitchProps } from "components/ToggleSwitch"
 
 export interface PageWrapProps {
   title?: string | [string, string] | null
@@ -11,6 +12,8 @@ export interface PageWrapProps {
   upperTitle?: string
 
   children: React.ReactNode
+
+  switchControl?: ToggleSwitchProps
 }
 
 export const PageWrap: FC<PageWrapProps> = props => {
@@ -64,6 +67,7 @@ export const PageWrap: FC<PageWrapProps> = props => {
             style={{
               padding: 28,
               paddingBottom: 0,
+              flexDirection: "row",
             }}
           >
             {typeof props.title === "string" ? (
@@ -75,6 +79,14 @@ export const PageWrap: FC<PageWrapProps> = props => {
                 </Title>
                 {props.title[1]}
               </Title>
+            )}
+            {props.switchControl && (
+              <View style={styles.switch}>
+                <ToggleSwitch
+                  value={props.switchControl.value}
+                  onValueChange={props.switchControl.onValueChange}
+                />
+              </View>
             )}
           </View>
         )}
@@ -89,5 +101,10 @@ export const PageWrap: FC<PageWrapProps> = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  switch: {
+    flex: 1,
+    alignItems: "flex-end",
+    justifyContent: "center",
   },
 })

@@ -11,7 +11,11 @@ type ListPageProps<T> = Omit<PageWrapProps, "children"> & {
 
 export const ListPage = <T,>(props: ListPageProps<T>) => {
   return (
-    <PageWrap title={props.title} upperTitle={props.upperTitle}>
+    <PageWrap
+      title={props.title}
+      upperTitle={props.upperTitle}
+      switchControl={props.switchControl}
+    >
       {props.headerComponent && (
         <View
           style={{
