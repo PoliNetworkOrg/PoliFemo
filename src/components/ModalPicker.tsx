@@ -1,7 +1,8 @@
 import React, { useEffect } from "react"
 import { Modal } from "components/Modal"
 import { useTranslation } from "react-i18next"
-import { SelectTile } from "./SelectTile"
+import { SelectTile } from "./Settings/SelectTile"
+import { ScrollView } from "react-native-gesture-handler"
 
 interface ModalPickerProps<T> {
   /**
@@ -53,7 +54,7 @@ export function ModalPicker<T>(props: ModalPickerProps<T>) {
     setSelectedValue(props.selectedValue ?? props.elements[0].value)
   }, [props.selectedValue, props.elements])
 
-  const { t } = useTranslation()
+  const { t } = useTranslation(["common", "settings"])
 
   return (
     <Modal
@@ -73,18 +74,20 @@ export function ModalPicker<T>(props: ModalPickerProps<T>) {
         },
       ]}
     >
-      {props.elements?.map((element, index) => {
-        return (
-          <SelectTile
-            key={index}
-            value={"" + t(element.label)}
-            selected={selectedValue === props.elements[index].value}
-            onPress={() => {
-              setSelectedValue(props.elements[index].value)
-            }}
-          />
-        )
-      })}
+      <ScrollView style={{ minHeight: 100 }} alwaysBounceVertical={false}>
+        {props.elements?.map((element, index) => {
+          return (
+            <SelectTile
+              key={index}
+              value={element.label}
+              selected={selectedValue === props.elements[index].value}
+              onPress={() => {
+                setSelectedValue(props.elements[index].value)
+              }}
+            />
+          )
+        })}
+      </ScrollView>
     </Modal>
   )
 }

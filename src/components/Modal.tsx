@@ -7,7 +7,6 @@ import {
   StyleProp,
   Dimensions,
   TextStyle,
-  ScrollView,
 } from "react-native"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
@@ -173,9 +172,7 @@ export const Modal: FC<ModalCustomProps> = props => {
                   {props.subTitle}
                 </Text>
               )}
-              <ScrollView style={{ maxHeight: 200 }} bounces={false}>
-                {props.children}
-              </ScrollView>
+              <View style={{ maxHeight: 200 }}>{props.children}</View>
               {props.buttons && (
                 <View
                   style={{

@@ -7,19 +7,14 @@ import { SettingTile } from "components/Settings"
 import { settingsIcons } from "assets/settings"
 import { UserDetailsTile } from "components/Settings"
 import { CareerTile } from "components/Settings"
-import { SelectTile } from "components/Settings"
 import { UserAnonymousTile } from "components/Settings"
 import { SettingsContext, ValidColorSchemeName } from "contexts/settings"
-import { CareerColumn } from "components/Settings"
 import { LoginContext } from "contexts/login"
 import { Career } from "api/collections/user"
 import { HttpClient } from "api/HttpClient"
-import { Modal } from "components/Modal"
 import { useTranslation } from "react-i18next"
 import { Linking } from "react-native"
-
-const themes: string[] = ["settings_default", "settings_dark", "settings_light"]
-const themesToSave: ValidColorSchemeName[] = ["predefined", "dark", "light"]
+import { ModalPicker } from "components/ModalPicker"
 
 const client = HttpClient.getInstance()
 /**
@@ -27,6 +22,12 @@ const client = HttpClient.getInstance()
  */
 export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
   const { t } = useTranslation("settings")
+
+  const themes: { value: ValidColorSchemeName; label: string }[] = [
+    { value: "predefined", label: t("settings_default") },
+    { value: "dark", label: t("settings_dark") },
+    { value: "light", label: t("settings_light") },
+  ]
 
   //for testing logged in/out view
   const { loggedIn, userInfo } = useContext(LoginContext)
@@ -120,44 +121,46 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
           </>
         )}
       </ContentWrapperScroll>
-
-      <Modal
+      <ModalPicker
         title={t("settings_chooseTheme")}
         centerText
         isShowing={isModalThemeVisible}
-        buttons={[
-          {
-            light: true,
-            text: "" + t("cancel", { ns: "common" }),
-            onPress: () => {
-              //restore real theme value
-              setSelectedTheme(theme)
-              setModalThemeVisible(false)
-            },
-          },
-          {
-            text: "OK",
-            onPress: () => {
-              setSettings({ ...settings, theme: selectedTheme })
-              setModalThemeVisible(false)
-            },
-          },
-        ]}
-      >
-        {themes?.map((themeName, index) => {
-          return (
-            <SelectTile
-              key={index}
-              value={"" + t(themeName)}
-              selected={selectedTheme === themesToSave[index]}
-              onPress={() => {
-                setSelectedTheme(themesToSave[index])
-              }}
-            />
-          )
-        })}
-      </Modal>
-      <Modal
+        onClose={() => {
+          //restore real theme value
+          setSelectedTheme(theme)
+          setModalThemeVisible(false)
+        }}
+        selectedValue={selectedTheme}
+        elements={themes}
+        onSelect={value => {
+          setSettings({ ...settings, theme: value })
+          setModalThemeVisible(false)
+          setSelectedTheme(value)
+        }}
+      />
+      <ModalPicker
+        title={t("settings_changeId")}
+        centerText
+        isShowing={isModalCareerVisible}
+        onClose={() => {
+          //restore selectedCareer to career
+          if (career) setSelectedCareer(career)
+          setModalCareerVisible(false)
+        }}
+        selectedValue={selectedCareer}
+        elements={
+          userInfo?.careers?.map(c => {
+            return { value: c, label: c.matricola }
+          }) ?? []
+        }
+        onSelect={value => {
+          //change career to selectedCareer
+          setCareer(value)
+          setSelectedCareer(value)
+          setModalCareerVisible(false)
+        }}
+      />
+      {/*<Modal
         title={t("settings_changeId")}
         centerText
         isShowing={isModalCareerVisible}
@@ -195,7 +198,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
             </SelectTile>
           )
         })}
-      </Modal>
+      </Modal>*/}
     </View>
   )
 }
