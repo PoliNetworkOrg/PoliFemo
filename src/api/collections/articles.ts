@@ -20,6 +20,12 @@ export interface Articles {
   author_id: number | null
   title: string | null
 }
+interface Author {
+  name?: string
+  link?: string
+  image?: string
+}
+
 export interface Article {
   id: number
   tag_id: string
@@ -31,7 +37,7 @@ export interface Article {
   target_time?: string
   content: string
   image?: string
-  author?: { name?: string; link?: string; image?: string }
+  author?: Author
 }
 
 const client = HttpClient.getInstance()
