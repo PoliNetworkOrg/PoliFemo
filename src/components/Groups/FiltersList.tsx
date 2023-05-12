@@ -11,8 +11,13 @@ export interface FiltersProps {
   onFilterChange: (filters: Filters) => void
 }
 
+interface ItemToShow {
+  value: string
+  label: string
+}
+
 interface ModalItemList {
-  itemsToShow: { value: string; label: string }[]
+  itemsToShow: ItemToShow[]
   itemsToSave: string[]
 }
 
