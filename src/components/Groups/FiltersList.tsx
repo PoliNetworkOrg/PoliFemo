@@ -144,7 +144,6 @@ export const FiltersList: FC<FiltersProps> = props => {
         onSelect={value => {
           const valueAsString = value?.toString()
           if (modalMode === "course") {
-           
             props.onFilterChange({
               ...props.filters,
               course: valueAsString,
