@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useMemo, useState } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { Linking, View } from "react-native"
 import { FiltersList } from "components/Groups/FiltersList"
@@ -20,9 +20,6 @@ import { useTranslation } from "react-i18next"
 import { useApiCall } from "api/useApiCall"
 import { ListPage } from "components/PageLayout/ListPage"
 
-const deltaTime = 100 //ms
-let searchTimeout: NodeJS.Timeout
-
 export const Groups: MainStackScreen<"Groups"> = () => {
   const { t } = useTranslation()
 
@@ -30,23 +27,20 @@ export const Groups: MainStackScreen<"Groups"> = () => {
 
   const [filters, setFilters] = useState<Filters>({})
 
-  const [groups] = useApiCall(api.groups.getFromGithub, {}, [])
-  const filteredGroups = applyFilters(groups, filters)
-
-  const [searchableGroups, setSearchableGroups] = useState<Group[]>([])
+  const [groups, loading] = useApiCall(api.groups.getFromGithub, {}, [])
 
   const [isModalShowing, setIsModalShowing] = useState(false)
 
   const [modalGroup, setModalGroup] = useState<Group | undefined>(undefined)
 
-  //Search among filtered groups
-  useEffect(() => {
-    clearTimeout(searchTimeout)
-    searchTimeout = setTimeout(() => {
-      const newGroups = searchGroups(filteredGroups, search)
-      setSearchableGroups(newGroups)
-    }, deltaTime)
-  }, [search, filteredGroups])
+  const filteredGroups = useMemo(
+    () => applyFilters(groups, filters),
+    [groups, filters]
+  )
+  const searchableGroups = useMemo(
+    () => searchGroups(filteredGroups, search),
+    [filteredGroups, search]
+  )
 
   const orderedGroups =
     filters.year === undefined
@@ -86,6 +80,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
             icon={choosePlatformIcon(item.platform)}
           />
         )}
+        loading={loading}
       />
       {modalGroup && (
         <ModalGroup
