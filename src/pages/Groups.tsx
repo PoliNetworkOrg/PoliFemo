@@ -24,13 +24,11 @@ export const Groups: MainStackScreen<"Groups"> = () => {
   const { t } = useTranslation()
 
   const [search, setSearch] = useState("")
-
   const [filters, setFilters] = useState<Filters>({})
 
-  const [groups, loading] = useApiCall(api.groups.getFromGithub, {}, [])
+  const [groups, loading, error] = useApiCall(api.groups.getFromGithub, {}, [])
 
   const [isModalShowing, setIsModalShowing] = useState(false)
-
   const [modalGroup, setModalGroup] = useState<Group | undefined>(undefined)
 
   const filteredGroups = useMemo(
@@ -51,6 +49,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
     <>
       <ListPage
         title={t("groups_title")}
+        errorMessage={error?.message}
         headerComponent={
           <>
             <View style={{ marginTop: 36, marginBottom: 22 }}>
