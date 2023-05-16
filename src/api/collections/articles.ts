@@ -29,8 +29,10 @@ export interface Article {
   longitude?: number
   publish_time: string
   target_time?: string
+  hidden_until?: string
   content: string
   image?: string
+  blurhash?: string
   author?: { name?: string; link?: string; image?: string }
 }
 
@@ -76,6 +78,7 @@ export const articles = {
         limit: params.limit,
         pageOffset: params.offset,
         tag: params.tag,
+        platform: 1,
         sort: "date",
       },
       ...options,
