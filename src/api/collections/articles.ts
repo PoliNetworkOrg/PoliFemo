@@ -105,7 +105,7 @@ export const articles = {
     const request = client.callPoliNetwork<Articles>({
       url: "/v1/articles",
       method: "GET",
-      params: { tag: params.tag, limit: 1, sort: "date" },
+      params: { tag: params.tag, limit: 1, sort: "date", platform: 1 },
       ...options,
     })
     return mapAxiosRequest(request, res => res.articles[0])
