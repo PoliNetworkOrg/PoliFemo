@@ -14,7 +14,7 @@ declare module "react-native-markdown-display" {
 }
 
 export const Article: MainStackScreen<"Article"> = props => {
-  const { isLight } = usePalette()
+  const { isLight, background } = usePalette()
 
   const currentLanguage = useCurrentLanguage()
 
@@ -29,6 +29,9 @@ export const Article: MainStackScreen<"Article"> = props => {
       color: isLight ? "#000" : "#fff",
     },
     textgroup: { textAlign: "justify", width: "100%" },
+    blockquote: {
+      backgroundColor: !isLight ? background : "#F7F7F7",
+    },
   }
 
   const title =
