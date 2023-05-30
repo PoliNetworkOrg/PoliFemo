@@ -1,9 +1,10 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { Image } from "react-native"
-import { ArticleWrapper } from "components/Home/News/ArticleWrapper"
+import { ArticleDetailsWrapper } from "components/Home/News/ArticleDetailsWrapper"
 import Markdown from "react-native-markdown-display"
 import React from "react"
 import { usePalette } from "utils/colors"
+import { useCurrentLanguage } from "utils/articles"
 
 declare module "react-native-markdown-display" {
   // https://www.typescriptlang.org/docs/handbook/declaration-merging.html#merging-interfaces
@@ -12,14 +13,10 @@ declare module "react-native-markdown-display" {
   }
 }
 
-// ! This is not a very solid approach, should search for another library which supports <br> tag?
-const preprocessMarkdown = (markdown: string) => {
-  const replacedMarkdown = markdown.replace(/<br>/g, "\n")
-  return replacedMarkdown
-}
-
 export const Article: MainStackScreen<"Article"> = props => {
   const { isLight } = usePalette()
+
+  const currentLanguage = useCurrentLanguage()
 
   const article = props.route.params.article
 
@@ -34,11 +31,25 @@ export const Article: MainStackScreen<"Article"> = props => {
     textgroup: { textAlign: "justify", width: "100%" },
   }
 
+  const title =
+    currentLanguage === "it"
+      ? article.content.it.title
+      : article.content.en.title
+
+  const subtitle =
+    currentLanguage === "it"
+      ? article.content.it.subtitle
+      : article.content.en.subtitle
+
+  const content =
+    currentLanguage === "it"
+      ? article.content.it.content
+      : article.content.en.content
   return (
-    <ArticleWrapper
+    <ArticleDetailsWrapper
       navbarOptions={{ elevated: true }}
-      title={article.title}
-      subtitle={article.subtitle}
+      title={title}
+      subtitle={subtitle}
       backdropElement={
         article.image ? (
           <Image
@@ -53,9 +64,7 @@ export const Article: MainStackScreen<"Article"> = props => {
         ) : undefined
       }
     >
-      <Markdown style={{ ...markdownStyle }}>
-        {preprocessMarkdown(article.content)}
-      </Markdown>
-    </ArticleWrapper>
+      <Markdown style={{ ...markdownStyle }}>{content}</Markdown>
+    </ArticleDetailsWrapper>
   )
 }

@@ -23,17 +23,25 @@ export interface Articles {
 export interface Article {
   id: number
   tag_id: string
-  title: string
-  subtitle?: string
   latitude?: number
   longitude?: number
   publish_time: string
   target_time?: string
   hidden_until?: string
-  content: string
+  content: {
+    it: ArticlesParams
+    en: ArticlesParams
+  }
   image?: string
   blurhash?: string
   author?: { name?: string; link?: string; image?: string }
+}
+
+interface ArticlesParams {
+  content: string
+  title: string
+  subtitle: string
+  url: string
 }
 
 const client = HttpClient.getInstance()

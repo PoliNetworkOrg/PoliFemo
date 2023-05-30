@@ -9,7 +9,7 @@ import { LinearGradient } from "expo-linear-gradient"
 /**
  * Wrapper for Article Details page
  */
-export const ArticleWrapper: FC<{
+export const ArticleDetailsWrapper: FC<{
   /**
    * Title in the sticky header.
    */
