@@ -46,6 +46,26 @@ interface ArticlesParams {
 
 const client = HttpClient.getInstance()
 
+function getArticles({
+  tag,
+  limit,
+  pageOffset,
+  options,
+}: {
+  tag: string
+  limit: number
+  pageOffset?: number
+  options?: RequestOptions
+}) {
+  const request = client.callPoliNetwork<Articles>({
+    url: "/v1/articles",
+    method: "GET",
+    params: { tag, limit, sort: "date", platform: 1, pageOffset: pageOffset },
+    ...options,
+  })
+  return mapAxiosRequest(request, res => res.articles[0])
+}
+
 /**
  * Collection of endpoints related to Articles.
  */
@@ -79,19 +99,12 @@ export const articles = {
     params: { tag: string; limit: number; offset: number },
     options?: RequestOptions
   ) {
-    const request = client.callPoliNetwork<Articles>({
-      url: "/v1/articles",
-      method: "GET",
-      params: {
-        limit: params.limit,
-        pageOffset: params.offset,
-        tag: params.tag,
-        platform: 1,
-        sort: "date",
-      },
-      ...options,
+    return getArticles({
+      limit: params.limit,
+      tag: params.tag,
+      pageOffset: params.offset,
+      options: options,
     })
-    return mapAxiosRequest(request, res => res.articles)
   },
 
   /**
@@ -102,13 +115,7 @@ export const articles = {
    * @param options see {@link RequestOptions}
    */
   getLastArticleByTag(params: { tag: string }, options?: RequestOptions) {
-    const request = client.callPoliNetwork<Articles>({
-      url: "/v1/articles",
-      method: "GET",
-      params: { tag: params.tag, limit: 1, sort: "date", platform: 1 },
-      ...options,
-    })
-    return mapAxiosRequest(request, res => res.articles[0])
+    return getArticles({ limit: 1, tag: params.tag, options, pageOffset: 1 })
   },
 
   /**
