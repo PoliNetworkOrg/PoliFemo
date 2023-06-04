@@ -22,3 +22,17 @@ export const useCurrentLanguage = () => {
 
   return currentLanguage
 }
+
+export const extractImageLinks = (markdown: string): string[] => {
+  const regex = /!\[.*?\]\((.*?)\)/g
+  const imageLinks: string[] = []
+  let match
+
+  while ((match = regex.exec(markdown)) !== null) {
+    if (match.length > 1) {
+      imageLinks.push(match[1])
+    }
+  }
+
+  return imageLinks
+}

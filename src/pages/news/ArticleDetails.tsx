@@ -1,10 +1,10 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { Image } from "react-native"
 import { ArticleDetailsWrapper } from "components/Home/News/ArticleDetailsWrapper"
-import Markdown from "react-native-markdown-display"
-import React from "react"
-import { usePalette } from "utils/colors"
-import { useCurrentLanguage } from "utils/articles"
+import React, { useCallback, useRef, useState } from "react"
+import { extractImageLinks, useCurrentLanguage } from "utils/articles"
+import { ModalSlider } from "components/Home/News/ModalSlider/ModalSlider"
+import { MemoizedMarkdown } from "components/Home/News/ModalSlider/MemoizedMarkdown"
 
 declare module "react-native-markdown-display" {
   // https://www.typescriptlang.org/docs/handbook/declaration-merging.html#merging-interfaces
@@ -14,25 +14,9 @@ declare module "react-native-markdown-display" {
 }
 
 export const Article: MainStackScreen<"Article"> = props => {
-  const { isLight, background } = usePalette()
-
   const currentLanguage = useCurrentLanguage()
 
   const article = props.route.params.article
-
-  const markdownStyle = {
-    body: {
-      fontSize: 16,
-      marginBottom: -8,
-      marginTop: -8,
-      padding: 0,
-      color: isLight ? "#000" : "#fff",
-    },
-    textgroup: { textAlign: "justify", width: "100%" },
-    blockquote: {
-      backgroundColor: !isLight ? background : "#F7F7F7",
-    },
-  }
 
   const title =
     currentLanguage === "it"
@@ -44,10 +28,25 @@ export const Article: MainStackScreen<"Article"> = props => {
       ? article.content.it.subtitle
       : article.content.en.subtitle
 
-  const content =
-    currentLanguage === "it"
+  const content = useRef(
+    article.id === 10
+      ? "E’ online la guida di tutti gli incontri e i servizi del Career Service per gli studenti nel prossimo semestre.\n\r![ciao](https://images.unsplash.com/photo-1599009434802-ca1dd09895e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80)\n\r![ciao](https://images.unsplash.com/photo-1685681564926-41c950d7434a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80)\n\rPer maggiori informazioni:  \r\n[www.careerservice.polimi.it/](https://cm.careerservice.polimi.it/2023/02/08/career-service-guide-feb-lug-2023-2-semestre/)"
+      : currentLanguage === "it"
       ? article.content.it.content
       : article.content.en.content
+  ).current
+
+  const [isModalVisible, setIsModalVisible] = useState(false)
+
+  const imageSources = useRef(extractImageLinks(content)).current
+
+  const activeIndex = useRef(0)
+
+  const onImagePress = useCallback((src: string) => {
+    activeIndex.current = imageSources.indexOf(src)
+    setIsModalVisible(true)
+  }, [])
+
   return (
     <ArticleDetailsWrapper
       navbarOptions={{ elevated: true }}
@@ -67,7 +66,14 @@ export const Article: MainStackScreen<"Article"> = props => {
         ) : undefined
       }
     >
-      <Markdown style={{ ...markdownStyle }}>{content}</Markdown>
+      <MemoizedMarkdown content={content} onPress={onImagePress} />
+
+      <ModalSlider
+        activeIndex={activeIndex.current}
+        imageSources={imageSources}
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+      />
     </ArticleDetailsWrapper>
   )
 }
