@@ -16,6 +16,8 @@ export const LECTURE_HEIGHT_OPEN = 90
 
 export const LECTURE_HEIGHT_COLLAPSED = 26
 
+export const LECTURE_HEIGHT_COLLAPSED_NOT_SELECTED = 20
+
 //space between a one-hour slot
 export const TIME_SLOT = LECTURE_WIDTH / 2
 
@@ -27,6 +29,9 @@ export const LECTURE_CONTAINER_PADDING = 4
 
 //space between multi-rows
 export const LECTURE_ROW_DISTANCE = 16
+
+//space between adjacent lectures (subtracted to width and added to left distance (x2))
+export const ATTACHED_LECTURES_MARGIN = 1
 
 const dayMappingObject: Record<number, ValidDayTimeTable> = {
   1: "lun",
@@ -129,6 +134,8 @@ export const getFormattedTable = (events: Event[]): FormattedTable => {
     },
   }
 
+  const usedColorsCourse: Record<string, string> = {}
+
   for (let i = 0; i < orderedEvents.length; i++) {
     const dayOfTheWeek: ValidDayTimeTable = getDayFromEvent(orderedEvents[i])
 
@@ -177,10 +184,19 @@ export const getFormattedTable = (events: Event[]): FormattedTable => {
     for (let k = 0; k < relevantMultiRow.singleRows.length && !found; k++) {
       if (relevantMultiRow.singleRows[k].overlapNumber === overlapNumber) {
         found = true
+
+        let color: string | undefined
+        if (usedColorsCourse[orderedEvents[i].title.it]) {
+          color = usedColorsCourse[orderedEvents[i].title.it]
+        } else {
+          color = getRandomLectureColor(usedColorsCourse)
+          usedColorsCourse[orderedEvents[i].title.it] = color
+        }
+
         //push event in row
         relevantMultiRow.singleRows[k].events.push({
           ...orderedEvents[i],
-          lectureColor: getRandomLectureColor(),
+          lectureColor: color,
         })
 
         if (relevantMultiRow.maxOverlapNumber < overlapNumber) {
@@ -189,11 +205,16 @@ export const getFormattedTable = (events: Event[]): FormattedTable => {
       }
     }
     if (!found) {
+      let color: string | undefined
+      if (usedColorsCourse[orderedEvents[i].title.it]) {
+        color = usedColorsCourse[orderedEvents[i].title.it]
+      } else {
+        color = getRandomLectureColor(usedColorsCourse)
+        usedColorsCourse[orderedEvents[i].title.it] = color
+      }
       //add new row in multiRow with correct overlapNumber
       relevantMultiRow.singleRows.push({
-        events: [
-          { ...orderedEvents[i], lectureColor: getRandomLectureColor() },
-        ],
+        events: [{ ...orderedEvents[i], lectureColor: color }],
         overlapNumber: overlapNumber,
       })
       if (relevantMultiRow.maxOverlapNumber < overlapNumber) {
@@ -319,12 +340,32 @@ export const getLectureRoomFormattedString = (room?: string) => {
 export const randomInteger = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
-const colorList = ["#52E8F2", "#52F275", "#F06876", "#F28252", "#B50E1E"]
+const colorList = [
+  "#52E8F2",
+  "#52F275",
+  "#F06876",
+  "#F28252",
+  "#B50E1E",
+  "#DC46F5",
+]
 
-const getRandomLectureColor = () => {
-  const randomNumber = randomInteger(0, colorList.length - 1)
+const getRandomLectureColor = (ban: Record<string, string>) => {
+  const newColorArray: string[] = [...colorList]
 
-  return colorList[randomNumber]
+  //remove colors already used
+  Object.keys(ban).forEach(key =>
+    newColorArray.splice(newColorArray.indexOf(ban[key]), 1)
+  )
+
+  //if there are still colors available
+  if (newColorArray.length !== 0) {
+    const randomNumber = randomInteger(0, newColorArray.length - 1)
+    return newColorArray[randomNumber]
+  } else {
+    //if there are no colors available
+    const randomNumber = randomInteger(0, colorList.length - 1)
+    return colorList[randomNumber]
+  }
 }
 
 const shiftColor = (color?: string) => {

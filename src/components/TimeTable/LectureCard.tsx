@@ -5,8 +5,10 @@ import { Event } from "api/collections/event"
 import { TimeTableContext } from "contexts/timeTable"
 import { usePalette } from "utils/colors"
 import {
+  ATTACHED_LECTURES_MARGIN,
   LECTURE_CONTAINER_PADDING,
   LECTURE_HEIGHT_COLLAPSED,
+  LECTURE_HEIGHT_COLLAPSED_NOT_SELECTED,
   LECTURE_HEIGHT_OPEN,
   TIME_SLOT,
 } from "utils/timetable"
@@ -47,7 +49,11 @@ export const LectureCard: FC<LectureCardProps> = props => {
           zIndex: 2,
           backgroundColor: isLight ? "#fff" : palette.darker,
           height:
-            (open ? LECTURE_HEIGHT_OPEN : LECTURE_HEIGHT_COLLAPSED) +
+            (open
+              ? LECTURE_HEIGHT_OPEN
+              : props.isSelected
+              ? LECTURE_HEIGHT_COLLAPSED
+              : LECTURE_HEIGHT_COLLAPSED_NOT_SELECTED) +
             2 * LECTURE_CONTAINER_PADDING,
           width: timeRange * TIME_SLOT + 2 * LECTURE_CONTAINER_PADDING,
           left: timeStart * TIME_SLOT + 1 - LECTURE_CONTAINER_PADDING,
@@ -55,7 +61,11 @@ export const LectureCard: FC<LectureCardProps> = props => {
           alignItems: "center",
           top:
             props.overlapNumber *
-            ((open ? LECTURE_HEIGHT_OPEN : LECTURE_HEIGHT_COLLAPSED) +
+            ((open
+              ? LECTURE_HEIGHT_OPEN
+              : props.isSelected
+              ? LECTURE_HEIGHT_COLLAPSED
+              : LECTURE_HEIGHT_COLLAPSED_NOT_SELECTED) +
               2 * LECTURE_CONTAINER_PADDING),
         }}
       />
@@ -63,23 +73,29 @@ export const LectureCard: FC<LectureCardProps> = props => {
         style={{
           position: "absolute",
           zIndex: 3,
-          left: timeStart * TIME_SLOT + 1,
+          left: timeStart * TIME_SLOT + ATTACHED_LECTURES_MARGIN + 1,
           top:
             props.overlapNumber *
-              ((open ? LECTURE_HEIGHT_OPEN : LECTURE_HEIGHT_COLLAPSED) +
+              ((open
+                ? LECTURE_HEIGHT_OPEN
+                : props.isSelected
+                ? LECTURE_HEIGHT_COLLAPSED
+                : LECTURE_HEIGHT_COLLAPSED_NOT_SELECTED) +
                 2 * LECTURE_CONTAINER_PADDING) +
             LECTURE_CONTAINER_PADDING,
-          width: timeRange * TIME_SLOT,
-          height: open ? LECTURE_HEIGHT_OPEN : LECTURE_HEIGHT_COLLAPSED,
+          width: timeRange * TIME_SLOT - ATTACHED_LECTURES_MARGIN * 2,
+          height: open
+            ? LECTURE_HEIGHT_OPEN
+            : props.isSelected
+            ? LECTURE_HEIGHT_COLLAPSED
+            : LECTURE_HEIGHT_COLLAPSED_NOT_SELECTED,
           borderRadius: 18,
-          borderWidth: 4,
           padding: open ? 8 : 0,
-          borderColor: props.lecture.lectureColor,
           backgroundColor: props.isSelected
             ? props.lecture.lectureColor
             : isLight
             ? primary
-            : undefined,
+            : palette.variant1,
           justifyContent: "center",
         }}
         onPress={() => props.onPress()}
@@ -106,6 +122,19 @@ export const LectureCard: FC<LectureCardProps> = props => {
           >
             {props.lecture.room?.acronym_dn}
           </BodyText>
+        )}
+        {(open || !props.isSelected) && (
+          <View
+            style={{
+              position: "absolute",
+              top: -7,
+              right: -6,
+              width: 20,
+              height: 20,
+              borderRadius: 10,
+              backgroundColor: props.lecture.lectureColor,
+            }}
+          />
         )}
       </Pressable>
     </>
