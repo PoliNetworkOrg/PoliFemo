@@ -201,7 +201,12 @@ export const TimeTableGrid: FC = () => {
         snapPoints={[getUsableScreenHeight() - distanceFromTop.closed]}
         enablePanDownToClose={true}
         onClose={() => setTimeTableOpen(true)}
-        backgroundStyle={{ backgroundColor: background }}
+        backgroundStyle={{
+          backgroundColor: background,
+          // Not 30 borderRadius because on IOS on dark mode there where white borders
+          borderTopLeftRadius: 33,
+          borderTopRightRadius: 33,
+        }}
       >
         <BottomSheetScrollView
           contentContainerStyle={{

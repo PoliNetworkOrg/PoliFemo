@@ -20,10 +20,13 @@ export const TimetableBottomSheetHandle: FC = () => {
           spread: isLight ? 0 : 9,
           color: isLight ? palette.primary : "#000",
         }}
-        canvasStyle={{ marginTop: 1 }}
+        canvasStyle={{
+          marginTop: 1,
+          maxHeight: 109, // very specific max height to avoid blocking the color picker
+        }}
         canvasDimensions={{
           width: Dimensions.get("window").width,
-          height: 26,
+          height: 30,
           radii: [30, 30, 0, 0],
         }}
       />
