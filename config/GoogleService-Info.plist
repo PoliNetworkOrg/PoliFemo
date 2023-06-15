@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>771411215965-co8avdq34spn3u72hhs3npgt642qgib8.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.771411215965-co8avdq34spn3u72hhs3npgt642qgib8</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDo6IzMowPewZxSXl0Qdr-TzwlbDBqYQho</string>
+	<key>GCM_SENDER_ID</key>
+	<string>771411215965</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.polinetwork.polifemo</string>
+	<key>PROJECT_ID</key>
+	<string>polifemo-89bb5</string>
+	<key>STORAGE_BUCKET</key>
+	<string>polifemo-89bb5.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:771411215965:ios:44f56972ce32cc9361afb4</string>
+</dict>
+</plist>

@@ -1,0 +1,56 @@
+{
+    "settings_title": "Impostazioni",
+    "settings_changeId": "Cambia matricola",
+    "settings_appearance": "Aspetto",
+    "settings_language": "Cambia Lingua",
+    "settings_infoAppTitle": "Su quest'app",
+    "settings_infoAppSubTitle": "Informazioni sull'app, versione, contatti",
+    "settings_privacySubTitle": "Informativa sulla privacy\nImpostazioni del tuo account relative alla privacy",
+    "settings_logout": "Disconnetti",
+
+    "settings_chooseTheme": "Scegli Tema",
+    "settings_default": "Predefinito",
+    "settings_dark": "Scuro",
+    "settings_light": "Chiaro",   
+
+    "settings_info": "Informazioni sull'app",
+    "settings_info_message": "Un'app pensata per semplificare la vita di tutti gli studenti del Politecnico permettendo loro di potersi concentrare al massimo sullo studio e lasciare il resto a PoliFemo\nSvilluppata con ❤️ da PoliNetwork\n\n",
+    "settings_sourceCode_message": "PoliFemo è un progetto open source, puoi contribuire al suo sviluppo su GitHub!\n",
+    "settings_report": "Riporta un problema",
+    "settings_reportSubTitle": "Segnala un bug o suggerisci una nuova funzionalità",
+    "settings_contacts": "Contattaci",
+    "settings_contactsSubTitile": "Link di contatto per qualsiasi domanda",
+    "settings_userId": "Copia ID utente",
+    "settings_userIdSubTitle": "Copia il tuo ID utente PoliNetwork negli appunti",
+    "settings_copied": "Copiato!",
+    "settings_alert_message": "Il tuo ID utente è stato copiato negli appunti.",
+    "settings_licenses": "Licenze",
+    "settings_licensesSubTitle": "Visualizza le licenze dei pacchetti utilizzati",
+
+    "settings_privacy_message": "PoliNetwork riconosce la privacy come un valore fondamentale e sostiene il diritto degli utenti di avere il pieno controllo dei propri dati. Nonostante l'app sia progettata per archiviare la minima quantità possibile di dati, e che non ci è possibile risalire all'identità di una persona fisica partendo dai dati in nostro possesso, PoliNetwork fornisce comunque gli strumenti per una buona gestione della privacy, come la cancellazione e l'esportazione dei dati.\n",
+    "settings_privacy_questions": "Per eventuali domande o dubbi sulla privacy, si prega di leggere la Privacy Policy o di contattare ",
+
+    "settings_export": "Esporta dati",
+    "settings_export_error": "Errore durante l'esportazione dei dati",
+    "settings_exportSubtitle": "Scarica una copia in formato JSON di tutti i dati che PoliNetwork ha in suo possesso in modo semplice e sicuro.",
+
+    "settings_autoDelete": "Autocancellazione dei dati per inattività",
+    "settings_autoDeleteSubTitle": "Dopo un periodo di inattività, i tuoi dati verranno cancellati automaticamente. Il periodo predefinito è 2 anni senza accesso, puoi modificarlo da un minimo di 30 giorni a un massimo di 5 anni.",
+    "settings_autoDelete_modalTitle": "Cancellazione dei dati per inattività",
+    "settings_autoDelete_modalSubTitle": "Scegli un periodo di inattività dopo il quale i tuoi dati verranno eliminati per la tua privacy.",
+    
+    "settings_delete": "Cancella account",
+    "settings_deleteSubTitle": "Cancella permanentemente i dati relativi a questo account ed effettua il logout.",
+    "settings_delete_question": "Sicuro di voler cancellare l'account?",
+    "settings_delete_alert_message": "Questa azione è irreversibile\n\nTutti i tuoi dati verranno eliminati e non potrai più accedere a PoliNetwork con questo account\n\nSei sicuro di voler procedere?",
+    
+    "settings_deleted": "Account cancellato",
+    "settings_deleted_message": "Il tuo account è stato cancellato con successo",
+    "settings_deleted_error": "Errore durante la cancellazione dell'account",
+    
+    "settings_delete_message": "La possibilità di cancellare i tuoi dati in modo semplice è un aspetto cruciale per garantire la tua privacy e la tua sicurezza nella nostra app. Questa opzione ti permette di rimuovere in modo permanente tutte le informazioni che hai fornito a PoliNetwork.\nÈ sempre possibile verificare i dati collegati al tuo account salvati da noi tramite la sezione \"Esporta\" delle impostazioni privacy.\nUna volta che i dati sono stati cancellati, non saranno più disponibili o recuperabili. Questa opzione fornisce agli utenti il pieno controllo sui propri dati. La cancellazione dei dati può essere eseguita in qualsiasi momento.",
+    
+    "settings_privacyDisclaimer": "Informativa sulla privacy",
+    "settings_privacyDisclaimerSubTitle": "Leggi la nostra privacy policy",
+    "settings_privacyDisclaimer_message": "In PoliNetwork, la privacy è un valore fondamentale, per questo abbiamo progettato la nostra app tenendo sempre presente questo aspetto. La Privacy Policy è molto importante per PoliNetwork e fornisce ai nostri utenti informazioni complete sulle nostre politiche sulla privacy e sulla protezione dei dati personali. Per garantire la tua privacy, molte funzionalità dell'app possono essere utilizzate anche senza effettuare il login. Per le funzionalità che richiedono il login, abbiamo scelto di utilizzare hashing, per proteggere i tuoi dati nel modo migliore. Non conosciamo chi sei, ma possiamo solo autenticarti. Puoi sempre verificare cosa sappiamo su di te usando il tasto \"Esporta\" nelle impostazioni privacy.\n\nSe hai domande o dubbi sulla privacy, ti invitiamo a leggere la Privacy Policy per avere maggiori informazioni, o scriverci a "
+}

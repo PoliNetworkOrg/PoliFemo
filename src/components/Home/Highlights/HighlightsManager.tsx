@@ -1,10 +1,14 @@
-import { FC, useContext } from "react"
+import { FC, useContext, useEffect } from "react"
 import { View } from "react-native"
 import { PoliCarousel } from "./PoliCarousel"
 import { LoginContext } from "contexts/login"
 import { extractNextEvents } from "utils/carousel"
 import { api } from "api"
+import { NotificationCenter } from "notifications/NotificationCenter"
+import { extractAllEvents } from "utils/notifications"
 import { useApiCall } from "api/useApiCall"
+
+const notificationCenter = NotificationCenter.getInstance()
 
 /**
  * Component that decides the content of the carousel.
@@ -28,6 +32,17 @@ export const HighlightsManager: FC = () => {
     !loggedIn // only call if logged in
   )
   const widgets = extractNextEvents(events ?? [])
+
+  useEffect(() => {
+    if (events) {
+      void notificationCenter.scheduleCarousel(extractAllEvents(events), {
+        //1 day in minutes
+        exam: 1 * 24 * 60,
+        //7 days in minutes
+        deadline: 7 * 24 * 60,
+      })
+    }
+  }, [events])
 
   return (
     <View>

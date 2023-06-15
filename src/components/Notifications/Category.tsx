@@ -5,33 +5,40 @@ import { Switch } from "react-native-switch"
 import { usePalette } from "utils/colors"
 
 import { Icon } from "components/Icon"
+import { ValidChannelId } from "notifications/NotificationTypes"
+import { useNotificationBadge } from "notifications/useNotificationBadge"
 
 export interface CategoryProps {
-  icon?: number
   title: string
+  channelId: ValidChannelId
+  icon?: number
   switchControl?: {
     /** State of the switch */
     toggled: boolean
     /** Function fired when the state of the switch changes */
     onToggle: (value: boolean) => void
   }
-  notifications?: number
+
   onClick?: () => void
 }
 
 export const Category: FC<CategoryProps> = props => {
   const { backgroundSecondary, palette, isLight } = usePalette()
 
-  const notifications = props.notifications ?? 0
+  const badgeCount = useNotificationBadge(props.channelId)
 
   return (
     <Pressable
       style={[{ backgroundColor: palette.primary }, styles.container]}
       onPress={props.onClick}
     >
-      {notifications ? (
+      {badgeCount ? (
         <View style={[{ backgroundColor: palette.accent }, styles.circle]}>
-          <Text>{props.notifications}</Text>
+          <Text
+            style={{ color: palette.variant1, fontWeight: "900", fontSize: 20 }}
+          >
+            {badgeCount}
+          </Text>
         </View>
       ) : undefined}
 
@@ -78,7 +85,7 @@ export const Category: FC<CategoryProps> = props => {
 
 const styles = StyleSheet.create({
   container: {
-    width: 354,
+    marginHorizontal: 18,
     marginTop: 35,
     height: 132,
     borderRadius: 12,

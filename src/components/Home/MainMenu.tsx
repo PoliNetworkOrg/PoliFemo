@@ -18,6 +18,7 @@ import add from "assets/menu/add.svg"
 import { Modal } from "components/Modal"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useOutsideClick } from "utils/outsideClick"
+import { useTranslation } from "react-i18next"
 
 type ButtonState = ButtonInterface & { shown: boolean }
 
@@ -30,61 +31,61 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
   const defaultIcons: ButtonInterface[] = [
     {
       type: ButtonType.CALENDAR,
-      title: "Calendario",
+      title: "menu_calendar",
       icon: calendar,
       onClick: () => navigate("Error404"),
     },
     {
       type: ButtonType.TIMETABLE,
-      title: "Orario Lezioni",
+      title: "menu_timetable",
       icon: clock,
       onClick: () => navigate("TimeTable"),
     },
     {
       type: ButtonType.ASSOCIATIONS,
-      title: "PoliAssociazioni",
+      title: "menu_associations",
       icon: association,
       onClick: () => navigate("Error404"),
     },
     {
       type: ButtonType.FREECLASSROOMS,
-      title: "Aule Libere",
+      title: "menu_freeclass",
       icon: free_classrooms,
       onClick: () => navigate("FreeClassrooms"),
     },
     {
       type: ButtonType.MATERIALS,
-      title: "Materiali",
+      title: "menu_materials",
       icon: materials,
       onClick: () => navigate("Error404"),
     },
     {
       type: ButtonType.GROUPS,
-      title: "Gruppi",
+      title: "menu_groups",
       icon: groups,
       onClick: () => navigate("Groups"),
     },
     {
       type: ButtonType.MARKS,
-      title: "Valutazioni",
+      title: "menu_marks",
       icon: marks,
       onClick: () => navigate("Error404"),
     },
     {
       type: ButtonType.GRADING_BOOK,
-      title: "Libretto",
+      title: "menu_gradingBook",
       icon: grading_book,
       onClick: () => navigate("Error404"),
     },
     {
       type: ButtonType.TEST,
-      title: "Test e Prove",
+      title: "menu_test",
       icon: tests,
       onClick: () => navigate("Error404"),
     },
     {
       type: ButtonType.ADD,
-      title: "Aggiungi",
+      title: "menu_add",
       icon: add,
       onClick: () => setModalVisible(true),
     },
@@ -100,6 +101,8 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
 
   const [isModalVisible, setModalVisible] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+
+  const { t } = useTranslation("home") //i18n hook
 
   const scrollView = useOutsideClick<ScrollView>(() => {
     setIsDeleting(false)
@@ -159,8 +162,8 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
     >
       <Modal
         centerText={false}
-        title={"Aggiungi features"}
-        subTitle={"Personalizza la tua bacheca"}
+        title={"" + t("modal_add")}
+        subTitle={"" + t("modal_message")}
         isShowing={isModalVisible}
         onClose={() => setModalVisible(false)}
         contentContainerStyle={{

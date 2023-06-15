@@ -113,7 +113,10 @@ export const MainContainer: FC = () => {
           console.log("downloads")
         }}
         onNotifications={() => {
-          console.log("downloads")
+          console.log("notifications")
+          navigate("MainNav", {
+            screen: "Notifications",
+          })
         }}
         onSettings={() => {
           navigate("SettingsNav", {

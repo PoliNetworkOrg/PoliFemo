@@ -5,6 +5,7 @@ import { StyleSheet } from "react-native"
 import { SelectTile } from "components/Settings"
 import { getNameFromMode, ValidModalType } from "utils/groups"
 import { Filters } from "utils/groups"
+import { useTranslation } from "react-i18next"
 import { Modal } from "components/Modal"
 export interface FiltersProps {
   filters: Filters
@@ -33,12 +34,12 @@ const yearsList: ModalItemList = {
   ],
 }
 const coursesList: ModalItemList = {
-  itemsToShow: ["Triennale", "Magistrale", "Ciclo unico"],
+  itemsToShow: ["bachelor", "master", "single_cycle"],
   itemsToSave: ["LT", "LM", "LU"],
 }
 
 const typesList: ModalItemList = {
-  itemsToShow: ["Scuola", "Corso", "Extra"],
+  itemsToShow: ["school", "group_course", "Extra"],
   itemsToSave: ["S", "C", "E"],
 }
 
@@ -64,6 +65,8 @@ export const FiltersList: FC<FiltersProps> = props => {
     props.onFilterChange({})
   }
 
+  const { t } = useTranslation() //i18n hook
+
   return (
     <View>
       <View
@@ -73,7 +76,7 @@ export const FiltersList: FC<FiltersProps> = props => {
         }}
       >
         <OutlinedButton
-          text="Anno"
+          text={"" + t("group_year")}
           buttonStyle={styles.buttonCustomMargin}
           isSelected={props.filters.year ? true : false}
           onPress={() => {
@@ -84,7 +87,7 @@ export const FiltersList: FC<FiltersProps> = props => {
           }}
         />
         <OutlinedButton
-          text="Corso"
+          text={"" + t("group_course")}
           buttonStyle={styles.buttonCustomMargin}
           isSelected={props.filters.course ? true : false}
           onPress={() => {
@@ -95,7 +98,7 @@ export const FiltersList: FC<FiltersProps> = props => {
           }}
         />
         <OutlinedButton
-          text="Tipo"
+          text={"" + t("group_type")}
           buttonStyle={styles.buttonCustomMargin}
           isSelected={props.filters.type ? true : false}
           onPress={() => {
@@ -106,7 +109,7 @@ export const FiltersList: FC<FiltersProps> = props => {
           }}
         />
         <OutlinedButton
-          text="Piattaforma"
+          text={"" + t("group_platform")}
           buttonStyle={styles.buttonCustomMargin}
           isSelected={props.filters.platform ? true : false}
           onPress={() => {
@@ -124,18 +127,18 @@ export const FiltersList: FC<FiltersProps> = props => {
         />
       </View>
       <Modal
-        title={getNameFromMode(modalMode)}
+        title={"" + t(getNameFromMode(modalMode))}
         centerText
         isShowing={isModalShowing}
         buttons={[
           {
-            text: "Annulla",
+            text: "" + t("cancel"),
             onPress: () => {
               setIsModalShowing(false)
             },
           },
           {
-            text: "Conferma",
+            text: "OK",
             onPress: () => {
               if (modalMode === "course") {
                 props.onFilterChange({
@@ -164,7 +167,7 @@ export const FiltersList: FC<FiltersProps> = props => {
         ]}
       >
         <SelectTile
-          value={"Tutti"}
+          value={"" + t("groups_all")}
           selected={selectedItem === undefined}
           onPress={() => {
             setSelectedItem(undefined)
@@ -174,7 +177,7 @@ export const FiltersList: FC<FiltersProps> = props => {
           return (
             <SelectTile
               key={index}
-              value={itemName}
+              value={"" + t(itemName)}
               selected={selectedItem === modalItems.itemsToSave[index]}
               onPress={() => {
                 setSelectedItem(modalItems.itemsToSave[index])

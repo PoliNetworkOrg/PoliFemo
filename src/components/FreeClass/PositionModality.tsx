@@ -5,10 +5,11 @@ import { RoomsSearchDataContext } from "contexts/rooms"
 import { PermissionStatus } from "expo-location"
 import { getDistance } from "geolib"
 import { FC, useContext, useMemo, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { ActivityIndicator, Platform, Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { getBuildingInfo, isRoomFree, ValidAcronym } from "utils/rooms"
-import { ErrorMessage } from "../ErrorMessage"
+import { EmptyListMessage } from "components/EmptyListMessage"
 import { BuildingItem } from "./DefaultList"
 import { FreeClassList } from "./FreeClassList"
 import { Map } from "./Map"
@@ -37,6 +38,8 @@ export const PositionModality: FC<PositionModalityProps> = props => {
   const { rooms } = useContext(RoomsSearchDataContext)
 
   const acronyms: ValidAcronym[] = ["MIA", "MIB", "LCF", "CRG", "PCL", "MNI"]
+
+  const { t } = useTranslation("freeClass")
 
   const allRooms = useMemo(
     () =>
@@ -141,7 +144,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
               color: "white",
             }}
           >
-            Mappa
+            {t("freeClass_map")}
           </BodyText>
         </Pressable>
         <Pressable
@@ -167,7 +170,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
               color: "white",
             }}
           >
-            Lista
+            {t("freeClass_list")}
           </BodyText>
         </Pressable>
       </View>
@@ -232,17 +235,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
               />
             )
           ) : (
-            <ErrorMessage
-              message="Non ci sono aule libere nelle vicinanze"
-              styleView={{ marginTop: 100, marginHorizontal: 20 }}
-              styleMessage={{
-                alignSelf: "center",
-                color: "red",
-                fontWeight: "400",
-                fontSize: 30,
-                textAlign: "center",
-              }}
-            />
+            <EmptyListMessage message={t("positionModalityEmptyList")} />
           )}
         </View>
       ) : (

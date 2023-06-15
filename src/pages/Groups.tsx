@@ -18,12 +18,15 @@ import { GroupTile } from "components/Groups/GroupTile"
 import { PageWrapper } from "components/Groups/PageWrapper"
 import { ModalGroup } from "components/Groups/ModalGroup"
 import { PoliSearchBar } from "components/Home/PoliSearchBar"
+import { useTranslation } from "react-i18next"
 import { useApiCall } from "api/useApiCall"
 
 const deltaTime = 100 //ms
 let searchTimeout: NodeJS.Timeout
 
 export const Groups: MainStackScreen<"Groups"> = () => {
+  const { t } = useTranslation()
+
   const [search, setSearch] = useState("")
 
   const [filters, setFilters] = useState<Filters>({})
@@ -58,7 +61,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
   return (
     <PageWrapper>
       <View style={{ paddingHorizontal: 28, paddingTop: 56 }}>
-        <Title>Gruppi Corsi</Title>
+        <Title>{t("groups_title")}</Title>
         <View style={{ marginTop: 36, marginBottom: 22 }}>
           <PoliSearchBar
             onChange={val => {

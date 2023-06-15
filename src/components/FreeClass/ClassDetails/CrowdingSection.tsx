@@ -9,6 +9,7 @@ import { api, RetryType } from "api"
 import { Modal } from "components/Modal"
 import { LoginContext } from "contexts/login"
 import { useNavigation } from "@react-navigation/native"
+import { useTranslation } from "react-i18next"
 import { useApiCall } from "api/useApiCall"
 
 const contentPadding = 20
@@ -27,6 +28,10 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
   const { loggedIn } = useContext(LoginContext)
 
   const { navigate } = useNavigation()
+
+  const { t } = useTranslation("freeClass")
+
+  const crowdingOpinionMessage = t("freeClass_crowdingOpinion").split("-")
 
   let occupancyRateUser = 3
 
@@ -61,7 +66,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
           color: labelsHighContrast,
         }}
       >
-        Affollamento:
+        {t("freeClass_crowding")}:
       </BodyText>
 
       <CrowdSliderStatic position={occupancyRate} />
@@ -74,7 +79,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
             color: iconHighContrast,
           }}
         >
-          Se il dato sull&apos;affollamento non è corretto
+          {crowdingOpinionMessage[0]}
         </BodyText>
         <Pressable
           hitSlop={8}
@@ -102,7 +107,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
               textDecorationLine: "underline",
             }}
           >
-            esprimi opinione
+            {crowdingOpinionMessage[1]}
           </BodyText>
         </Pressable>
       </View>
@@ -110,8 +115,8 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
       <Modal
         isShowing={isModalVisible}
         onClose={() => setIsModalVisible(false)}
-        title={"Esprimi\nOpinione"}
-        subTitle={"Indica il livello di affollamento\ndell'aula"}
+        title={t("freeClass_modalTitle")}
+        subTitle={"" + t("freeClass_modalSubtitle").replace("-", "\n")}
         subTitleStyle={{
           fontWeight: "900",
           color: iconHighContrast,
