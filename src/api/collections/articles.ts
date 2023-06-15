@@ -73,6 +73,7 @@ export const articles = {
       url: "/v1/articles",
       method: "GET",
       params: {
+        platform: 1,
         limit: params.limit,
         pageOffset: params.offset,
         tag: params.tag,

@@ -3,6 +3,7 @@ import { PageWrap, PageWrapProps } from "./PageWrap"
 import { FlatList, ListRenderItem, View } from "react-native"
 import { LoadingIndicator } from "components/LoadingIndicator"
 import { ErrorMessage } from "components/ErrorMessage"
+import { RefreshControl } from "react-native-gesture-handler"
 
 type ListPageProps<T> = Omit<PageWrapProps, "children"> & {
   /**
@@ -37,6 +38,28 @@ type ListPageProps<T> = Omit<PageWrapProps, "children"> & {
    * instead of the list.
    */
   loading?: boolean
+
+  /**
+   * Fetch control, if provided the onFetch function will be called on the reach
+   * of the end of the scroll page.
+   * If fetching is true, a loading indicator will be displayed at the end of the
+   * list. Different from global loading, this will not disable the list.
+   */
+  fetchControl?: {
+    fetching: boolean
+    onFetch: () => void
+  }
+
+  /**
+   * Refresh control, if provided the onRefresh function will be called on the
+   * pull down of the list.
+   * If refreshing is true, a loading indicator will be displayed at the top of
+   * the list. Different from global loading, this will not disable the list.
+   */
+  refreshControl?: {
+    refreshing: boolean
+    onRefresh: () => void
+  }
 }
 
 /**
@@ -85,7 +108,18 @@ export const ListPage = <T,>(props: ListPageProps<T>) => {
           contentContainerStyle={{
             paddingBottom: 30,
           }}
+          refreshControl={
+            props.refreshControl ? (
+              <RefreshControl
+                refreshing={props.refreshControl.refreshing}
+                onRefresh={props.refreshControl.onRefresh}
+              />
+            ) : undefined
+          }
           ListEmptyComponent={<EmptyListMessage message={props.emptyMessage} />}
+          ListFooterComponent={
+            props.fetchControl?.fetching ? <LoadingIndicator /> : null
+          }
         />
       )}
     </PageWrap>
