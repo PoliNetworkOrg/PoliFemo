@@ -1,51 +1,85 @@
 import { BodyText } from "components/Text"
-import { TimeTableContext } from "contexts/timeTable"
-import { FC, useContext } from "react"
+import { FC } from "react"
 import { View } from "react-native"
+import Animated, {
+  SharedValue,
+  interpolate,
+  useAnimatedStyle,
+} from "react-native-reanimated"
 import { usePalette } from "utils/colors"
 
 interface WeekLineProps {
   overlapsNumberList: number[]
   overlapsNumberListCollapsed: number[]
+  animatedValue: SharedValue<number>
 }
 
 export const WeekLine: FC<WeekLineProps> = props => {
-  const { timeTableOpen } = useContext(TimeTableContext)
-
   const { isLight, primary } = usePalette()
 
   const days = ["L", "M", "M", "G", "V", "S"]
+
+  const heightStyle = useAnimatedStyle(() => {
+    return {
+      height: interpolate(
+        props.animatedValue.value,
+        [-1, 0],
+        [props.overlapsNumberList[6], props.overlapsNumberListCollapsed[6]]
+      ),
+    }
+  }, [props.animatedValue])
+
+  const animatedStyles = new Array(7).fill(0).map((_, index) => {
+    return useAnimatedStyle(() => {
+      const top = interpolate(
+        props.animatedValue.value,
+        [-1, 0],
+        [
+          props.overlapsNumberList[index] - 4,
+          props.overlapsNumberListCollapsed[index] - 4,
+        ]
+      )
+
+      return { top }
+    }, [props.animatedValue])
+  })
+
   return (
     <View style={{ flexDirection: "row", marginTop: 34 }}>
-      <View
-        style={{
-          flexDirection: "column",
-          borderRightWidth: 1,
-          borderColor: isLight ? primary : "white",
-          padding: 10,
-          height: timeTableOpen
-            ? props.overlapsNumberList[6]
-            : props.overlapsNumberListCollapsed[6],
-        }}
+      <Animated.View
+        style={[
+          {
+            flexDirection: "column",
+            borderRightWidth: 1,
+            borderColor: isLight ? primary : "white",
+            padding: 10,
+          },
+          heightStyle,
+        ]}
       >
         {days.map((item, index) => (
-          <BodyText
-            style={{
-              position: "absolute",
-              fontWeight: "900",
-              fontSize: 12,
-              color: isLight ? primary : "#fff",
-              top: timeTableOpen
-                ? props.overlapsNumberList[index] - 4
-                : props.overlapsNumberListCollapsed[index] - 4,
-              left: 0,
-            }}
+          <Animated.View
+            style={[
+              {
+                position: "absolute",
+                left: 0,
+              },
+              animatedStyles[index],
+            ]}
             key={index}
           >
-            {item}
-          </BodyText>
+            <BodyText
+              style={{
+                fontWeight: "900",
+                fontSize: 12,
+                color: isLight ? primary : "#fff",
+              }}
+            >
+              {item}
+            </BodyText>
+          </Animated.View>
         ))}
-      </View>
+      </Animated.View>
     </View>
   )
 }

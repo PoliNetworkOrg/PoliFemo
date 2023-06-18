@@ -24,6 +24,7 @@ import { usePalette } from "utils/colors"
 import { ColorPickerLecture } from "./ColorPickerLecture"
 import { useFocusEffect } from "@react-navigation/native"
 import { TimetableBottomSheetHandle } from "./TimetableBottomSheetHandle"
+import { useSharedValue } from "react-native-reanimated"
 
 const { width } = Dimensions.get("window")
 
@@ -96,6 +97,8 @@ export const TimeTableGrid: FC = () => {
     }, [])
   )
 
+  const animValue = useSharedValue(0)
+
   return (
     <>
       <View
@@ -141,6 +144,7 @@ export const TimeTableGrid: FC = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ flexDirection: "row" }}>
             <WeekLine
+              animatedValue={animValue}
               overlapsNumberList={getMarginDays(formattedTable)}
               overlapsNumberListCollapsed={getMarginDaysCollapsed(
                 formattedTable
@@ -160,6 +164,7 @@ export const TimeTableGrid: FC = () => {
                     const _day = day as keyof FormattedTable
                     return (
                       <TimetableRow
+                        animatedValue={animValue}
                         onEventPress={(event: Event) => {
                           /* setTimeTableOpen(!timeTableOpen) */
                           if (timeTableOpen) {
@@ -200,6 +205,11 @@ export const TimeTableGrid: FC = () => {
         index={-1}
         snapPoints={[getUsableScreenHeight() - distanceFromTop.closed]}
         enablePanDownToClose={true}
+        animatedIndex={animValue}
+        onAnimate={(fromIndex, toIndex) => {
+          // quicker callback
+          if (toIndex === -1) setTimeTableOpen(true)
+        }}
         onClose={() => setTimeTableOpen(true)}
         backgroundStyle={{
           backgroundColor: background,
