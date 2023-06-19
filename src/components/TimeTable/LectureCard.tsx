@@ -1,8 +1,7 @@
 import { BodyText } from "components/Text"
-import { FC, useContext, useEffect, useRef } from "react"
-import { Animated, Easing, Pressable, View } from "react-native"
+import { FC, useEffect } from "react"
+import { Pressable, StyleSheet } from "react-native"
 import { Event } from "api/collections/event"
-import { TimeTableContext } from "contexts/timeTable"
 import { usePalette } from "utils/colors"
 import {
   ATTACHED_LECTURES_MARGIN,
@@ -12,7 +11,15 @@ import {
   LECTURE_HEIGHT_OPEN,
   TIME_SLOT,
 } from "utils/timetable"
-import { SharedValue } from "react-native-reanimated"
+import Animated, {
+  Easing,
+  SharedValue,
+  interpolate,
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated"
 
 export interface LectureCardProps {
   lecture: Event
@@ -29,11 +36,7 @@ const minHour = 8
  * Component that represents the card that contains the name and the room of the lecture.
  */
 export const LectureCard: FC<LectureCardProps> = props => {
-  const { timeTableOpen } = useContext(TimeTableContext)
-
-  const { isLight, palette, primary } = usePalette()
-
-  const open = timeTableOpen
+  const { palette } = usePalette()
 
   const timeRange =
     Math.abs(
@@ -43,100 +46,164 @@ export const LectureCard: FC<LectureCardProps> = props => {
 
   const timeStart = new Date(props.lecture.date_start).getHours() - minHour
 
-  const top =
-    props.overlapNumber *
-      ((open ? LECTURE_HEIGHT_OPEN : LECTURE_HEIGHT_COLLAPSED_NOT_SELECTED) +
-        2 * LECTURE_CONTAINER_PADDING) +
-    LECTURE_CONTAINER_PADDING -
-    (props.isSelected ? 3 : 0)
-  const height = open
-    ? LECTURE_HEIGHT_OPEN
-    : props.isSelected
-    ? LECTURE_HEIGHT_COLLAPSED
-    : LECTURE_HEIGHT_COLLAPSED_NOT_SELECTED
-
-  const topAnim = useRef(new Animated.Value(top)).current
+  // animation that goes from 0 to 1 if the card is selected
+  const selectedAnim = useSharedValue(0)
   useEffect(() => {
-    Animated.timing(topAnim, {
-      toValue: top,
-      duration: 250,
-      easing: Easing.ease,
-      useNativeDriver: false,
-    }).start()
-  })
+    // animate the card when it is selected
+    selectedAnim.value = withTiming(props.isSelected ? 1 : 0, {
+      duration: 200,
+      easing: Easing.inOut(Easing.ease),
+    })
+  }, [props.isSelected, selectedAnim])
 
-  const heightAnim = useRef(new Animated.Value(height)).current
-  useEffect(() => {
-    Animated.timing(heightAnim, {
-      toValue: height,
-      duration: 250,
-      easing: Easing.ease,
-      useNativeDriver: false,
-    }).start()
-  })
+  const cardStyle = useAnimatedStyle(() => {
+    // the height of the card when it is collapsed
+    // changes in case the card is selected
+    const collapsedHeight = interpolate(
+      selectedAnim.value,
+      [0, 1],
+      [LECTURE_HEIGHT_COLLAPSED_NOT_SELECTED, LECTURE_HEIGHT_COLLAPSED]
+    )
+    // the color of the card when it is collapsed
+    // changes in case the card is selected
+    const collapsedColor = interpolateColor(
+      selectedAnim.value,
+      [0, 1],
+      [palette.variant1, props.lecture.lectureColor ?? ""]
+    )
+    // the height of a previous card
+    const prevHeight =
+      interpolate(
+        props.animatedValue.value,
+        [-1, 0],
+        [LECTURE_HEIGHT_OPEN, LECTURE_HEIGHT_COLLAPSED_NOT_SELECTED]
+      ) +
+      2 * LECTURE_CONTAINER_PADDING
+
+    return {
+      // interpolate height of card from open to closed,
+      height: interpolate(
+        props.animatedValue.value,
+        [-1, 0],
+        [LECTURE_HEIGHT_OPEN, collapsedHeight]
+      ),
+      // calculate top offset for each card,
+      top:
+        props.overlapNumber * prevHeight +
+        LECTURE_CONTAINER_PADDING -
+        interpolate(selectedAnim.value, [0, 1], [0, 3]),
+      // background color of the card
+      backgroundColor: interpolateColor(
+        props.animatedValue.value,
+        [-1, 0],
+        [palette.variant1, collapsedColor]
+      ),
+    }
+  }, [selectedAnim, props.animatedValue, props.lecture.lectureColor])
+
+  const abbreviatedOpacity = useAnimatedStyle(
+    () => ({
+      opacity: interpolate(props.animatedValue.value, [-0.5, 0], [0, 1]),
+    }),
+    [props.animatedValue]
+  )
+
+  const fullOpacity = useAnimatedStyle(
+    () => ({
+      opacity: interpolate(props.animatedValue.value, [-1, -0.5], [1, 0]),
+    }),
+    [props.animatedValue]
+  )
+
+  const previewColor = useAnimatedStyle(
+    () => ({
+      opacity: interpolate(
+        props.animatedValue.value,
+        [-1, 0],
+        [1, interpolate(selectedAnim.value, [0, 1], [1, 0])]
+      ),
+    }),
+    [props.animatedValue, selectedAnim]
+  )
 
   return (
     <Animated.View
-      style={{
-        position: "absolute",
-        zIndex: 3,
-        left: timeStart * TIME_SLOT + ATTACHED_LECTURES_MARGIN + 1,
-        top: topAnim,
-        width: timeRange * TIME_SLOT - ATTACHED_LECTURES_MARGIN * 2,
-        height: heightAnim,
-        borderRadius: 18,
-        backgroundColor: props.isSelected
-          ? props.lecture.lectureColor
-          : isLight
-          ? primary
-          : palette.variant1,
-      }}
+      style={[
+        {
+          left: timeStart * TIME_SLOT + ATTACHED_LECTURES_MARGIN + 1,
+          width: timeRange * TIME_SLOT - ATTACHED_LECTURES_MARGIN * 2,
+        },
+        styles.container,
+        cardStyle,
+      ]}
     >
-      <Pressable
-        style={{
-          height,
-          justifyContent: open ? "flex-start" : "center",
-          padding: open ? 8 : 0,
-        }}
-        onPress={() => props.onPress()}
-      >
-        {open ? (
-          <BodyText
-            style={{
-              color: "white",
-              fontSize: 10,
-              fontWeight: "900",
-              alignSelf: "center",
-            }}
-          >
+      <Pressable style={styles.pressable} onPress={() => props.onPress()}>
+        <Animated.View
+          style={[{ padding: 8 }, styles.cardTextContainer, fullOpacity]}
+        >
+          <BodyText style={styles.cardText}>
             {props.lecture.room?.acronym_dn + " - " + props.lecture.title.it}
           </BodyText>
-        ) : (
-          <BodyText
-            style={{
-              color: "white",
-              fontSize: 10,
-              fontWeight: "900",
-              alignSelf: "center",
-            }}
-          >
+        </Animated.View>
+        <Animated.View
+          style={[
+            {
+              height: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            styles.cardTextContainer,
+            abbreviatedOpacity,
+          ]}
+        >
+          <BodyText style={styles.cardText}>
             {props.lecture.room?.acronym_dn}
           </BodyText>
-        )}
+        </Animated.View>
       </Pressable>
-      {(open || !props.isSelected) && (
-        <View
-          style={{
-            position: "absolute",
-            top: -7,
-            right: -6,
-            width: 20,
-            height: 20,
-            borderRadius: 10,
+      <Animated.View
+        style={[
+          {
             backgroundColor: props.lecture.lectureColor,
-          }}
-        />
-      )}
+          },
+          styles.preview,
+          previewColor,
+        ]}
+      />
     </Animated.View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    position: "absolute",
+    zIndex: 3,
+    borderRadius: 18,
+  },
+  pressable: {
+    flex: 1,
+    overflow: "hidden",
+    ùborderRadius: 18,
+  },
+  cardTextContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    flex: 1,
+    width: "100%",
+  },
+  cardText: {
+    color: "white",
+    fontSize: 10,
+    fontWeight: "900",
+    alignSelf: "center",
+  },
+  preview: {
+    position: "absolute",
+    top: -7,
+    right: -6,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+  },
+})

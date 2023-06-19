@@ -22,24 +22,20 @@ export interface TimetableRowProps {
 export const TimetableRow: FC<TimetableRowProps> = props => {
   const topAnim = useAnimatedStyle(() => {
     return {
-      top: interpolate(
-        props.animatedValue.value,
-        [-1, 0],
-        [props.row.marginTop, props.row.collapsedMarginTop]
-      ),
+      transform: [
+        {
+          translateY: interpolate(
+            props.animatedValue.value,
+            [-1, 0],
+            [props.row.marginTop, props.row.collapsedMarginTop]
+          ),
+        },
+      ],
     }
-  })
+  }, [props.animatedValue])
 
   return (
-    <Animated.View
-      style={[
-        {
-          position: "absolute",
-          zIndex: 1,
-        },
-        topAnim,
-      ]}
-    >
+    <Animated.View style={[{ zIndex: 1 }, topAnim]}>
       {props.row.singleRows.map((lectures, index) => {
         return (
           <View
