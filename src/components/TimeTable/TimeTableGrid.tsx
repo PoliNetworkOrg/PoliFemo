@@ -24,14 +24,19 @@ import { usePalette } from "utils/colors"
 import { ColorPickerLecture } from "./ColorPickerLecture"
 import { useFocusEffect } from "@react-navigation/native"
 import { TimetableBottomSheetHandle } from "./TimetableBottomSheetHandle"
-import { useSharedValue } from "react-native-reanimated"
+import {
+  Extrapolate,
+  interpolate,
+  useDerivedValue,
+  useSharedValue,
+} from "react-native-reanimated"
 
 const { width } = Dimensions.get("window")
 
 // distance of the bottom sheet from the top of the screen, when opened or closed
 const distanceFromTop = {
   closed: 500,
-  opened: 106,
+  opened: 191,
 }
 
 export const TimeTableGrid: FC = () => {
@@ -85,9 +90,7 @@ export const TimeTableGrid: FC = () => {
       bottomSheetRef.current?.close?.()
       setSelectedLectureId(undefined)
     } else {
-      bottomSheetRef.current?.snapToPosition(
-        getUsableScreenHeight() - distanceFromTop.closed
-      )
+      bottomSheetRef.current?.snapToIndex(0)
     }
   }, [timeTableOpen])
 
@@ -98,6 +101,14 @@ export const TimeTableGrid: FC = () => {
   )
 
   const animValue = useSharedValue(0)
+  const clipped = useDerivedValue(
+    () =>
+      interpolate(animValue.value, [-1, 0], [-1, 0], {
+        extrapolateLeft: Extrapolate.CLAMP,
+        extrapolateRight: Extrapolate.CLAMP,
+      }),
+    [animValue]
+  )
 
   return (
     <>
@@ -144,7 +155,7 @@ export const TimeTableGrid: FC = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ flexDirection: "row" }}>
             <WeekLine
-              animatedValue={animValue}
+              animatedValue={clipped}
               overlapsNumberList={getMarginDays(formattedTable)}
               overlapsNumberListCollapsed={getMarginDaysCollapsed(
                 formattedTable
@@ -164,7 +175,7 @@ export const TimeTableGrid: FC = () => {
                     const _day = day as keyof FormattedTable
                     return (
                       <TimetableRow
-                        animatedValue={animValue}
+                        animatedValue={clipped}
                         onEventPress={(event: Event) => {
                           /* setTimeTableOpen(!timeTableOpen) */
                           if (timeTableOpen) {
@@ -203,7 +214,10 @@ export const TimeTableGrid: FC = () => {
         ref={bottomSheetRef}
         handleComponent={TimetableBottomSheetHandle}
         index={-1}
-        snapPoints={[getUsableScreenHeight() - distanceFromTop.closed]}
+        snapPoints={[
+          getUsableScreenHeight() - distanceFromTop.closed,
+          getUsableScreenHeight() - distanceFromTop.opened,
+        ]}
         enablePanDownToClose={true}
         animatedIndex={animValue}
         onAnimate={(fromIndex, toIndex) => {
