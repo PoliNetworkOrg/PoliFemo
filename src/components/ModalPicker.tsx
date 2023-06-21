@@ -1,8 +1,8 @@
 import React, { useEffect } from "react"
 import { Modal } from "components/Modal"
-import { Picker } from "@react-native-picker/picker"
-import { usePalette } from "utils/colors"
 import { useTranslation } from "react-i18next"
+import { SelectTile } from "./Settings/SelectTile"
+import { ScrollView } from "react-native-gesture-handler"
 
 interface ModalPickerProps<T> {
   /**
@@ -46,7 +46,6 @@ interface ModalPickerProps<T> {
  * */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function ModalPicker<T>(props: ModalPickerProps<T>) {
-  const { bodyText, palette } = usePalette()
   const [selectedValue, setSelectedValue] = React.useState(
     props.selectedValue ?? props.elements[0].value
   )
@@ -55,7 +54,7 @@ export function ModalPicker<T>(props: ModalPickerProps<T>) {
     setSelectedValue(props.selectedValue ?? props.elements[0].value)
   }, [props.selectedValue, props.elements])
 
-  const { t } = useTranslation()
+  const { t } = useTranslation(["common", "settings"])
 
   return (
     <Modal
@@ -75,26 +74,20 @@ export function ModalPicker<T>(props: ModalPickerProps<T>) {
         },
       ]}
     >
-      <Picker
-        style={{
-          marginHorizontal: 16,
-          color: bodyText,
-        }}
-        itemStyle={{
-          color: bodyText,
-        }}
-        dropdownIconColor={palette.accent}
-        selectedValue={selectedValue}
-        onValueChange={itemValue => setSelectedValue(itemValue)}
-      >
-        {props.elements.map((element, idx) => (
-          <Picker.Item
-            key={`__modal-picker-item-${idx}`}
-            label={element.label}
-            value={element.value}
-          />
-        ))}
-      </Picker>
+      <ScrollView style={{ minHeight: 100 }} alwaysBounceVertical={false}>
+        {props.elements?.map((element, index) => {
+          return (
+            <SelectTile
+              key={index}
+              value={element.label}
+              selected={selectedValue === props.elements[index].value}
+              onPress={() => {
+                setSelectedValue(props.elements[index].value)
+              }}
+            />
+          )
+        })}
+      </ScrollView>
     </Modal>
   )
 }
