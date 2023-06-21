@@ -160,45 +160,6 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
           setModalCareerVisible(false)
         }}
       />
-      {/*<Modal
-        title={t("settings_changeId")}
-        centerText
-        isShowing={isModalCareerVisible}
-        buttons={[
-          {
-            light: true,
-            text: "" + t("cancel", { ns: "common" }),
-            onPress: () => {
-              //restore selectedCareer to career
-              if (career) setSelectedCareer(career)
-              setModalCareerVisible(false)
-            },
-          },
-          {
-            text: "OK",
-            onPress: () => {
-              //change career to selectedCareer
-              setCareer(selectedCareer)
-              setModalCareerVisible(false)
-            },
-          },
-        ]}
-      >
-        {userInfo?.careers?.map((careerOfIndex, index) => {
-          return (
-            <SelectTile
-              key={index}
-              selected={selectedCareer?.matricola === careerOfIndex.matricola}
-              onPress={() => {
-                setSelectedCareer(careerOfIndex)
-              }}
-              flexStyle={"space-between"}
-            >
-              <CareerColumn career={careerOfIndex} />
-            </SelectTile>
-          )
-        })}
-      </Modal>*/}
     </View>
   )
 }
