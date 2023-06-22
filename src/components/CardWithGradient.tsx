@@ -1,8 +1,8 @@
-import { FC } from "react"
+import { FC, useEffect, useState } from "react"
 import { Pressable, View, ViewStyle } from "react-native"
-import { Image } from "expo-image"
+import { ImageBackground } from "expo-image"
 import { LinearGradient } from "expo-linear-gradient"
-import { CardTitle } from "components/Text"
+import { CardTitle } from "./Text"
 
 export interface CardWithGradientProps {
   /**
@@ -49,12 +49,20 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
 
   const closerToCorner = props.closerToCorner ?? false
 
-  // for some fucking reason having question marks in the blurhash string breaks
-  // expo images, on github it's marked as fixed but it's not fucking fixed
-  const bh = (props.blurhash || "LEHLh[WB2yk8pyoJadR*.7kCMdnj").replace(
-    /\?/g,
-    "="
-  )
+  const [blurhash, setBlurhash] = useState<string>()
+  useEffect(() => {
+    // blurhash crashes on android if it's rendered immediatly
+    // this immediatly re-renders the component after the first render
+    setImmediate(() => {
+      // for some fucking reason having question marks in the blurhash string breaks
+      // expo images, on github it's marked as fixed but it's not fucking fixed
+      const bh = (props.blurhash || "LEHLh[WB2yk8pyoJadR*.7kCMdnj").replace(
+        /\?/g,
+        "="
+      )
+      setBlurhash(bh)
+    })
+  }, [props.blurhash])
 
   return (
     <Pressable
@@ -63,38 +71,33 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
           marginBottom: 17,
           borderRadius: borderRadius,
           overflow: "hidden",
-          backgroundColor: "red",
         },
         props.style,
       ]}
       onPress={props.onClick}
     >
-      <Image
+      <ImageBackground
         source={props.imageURL ? { uri: props.imageURL } : {}}
-        placeholder={bh}
-        style={{ flex: 1 }}
-      />
-      <LinearGradient
-        colors={["rgba(255, 181, 68, 0.88)", "rgba(255, 181, 68, 0)"]}
-        locations={[0, 0.5656]}
-        style={{
-          flex: 1,
-          borderRadius: borderRadius,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-        }}
+        placeholder={blurhash}
+        style={{ flex: 1, alignItems: "stretch" }}
       >
-        <View
+        <LinearGradient
+          colors={["rgba(255, 181, 68, 0.88)", "rgba(255, 181, 68, 0)"]}
+          locations={[0, 0.5656]}
           style={{
-            margin: closerToCorner ? 9 : 17,
+            flex: 1,
+            borderRadius: borderRadius,
           }}
         >
-          <CardTitle style={{ lineHeight: 19 }}>{props.title}</CardTitle>
-        </View>
-      </LinearGradient>
+          <View
+            style={{
+              margin: closerToCorner ? 9 : 17,
+            }}
+          >
+            <CardTitle style={{ lineHeight: 19 }}>{props.title}</CardTitle>
+          </View>
+        </LinearGradient>
+      </ImageBackground>
     </Pressable>
   )
 }
