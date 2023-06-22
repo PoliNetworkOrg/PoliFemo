@@ -2,11 +2,11 @@ import { BodyText } from "components/Text"
 import { FC } from "react"
 import { StyleProp, View, TextStyle, Dimensions } from "react-native"
 import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
-import polifemoIcon from "assets/polifemo/error.svg" // <-- NON è quella giusta!!
+import polifemoIcon from "assets/polifemo/empty.svg" // <-- NON è quella giusta!!
 import { usePalette } from "utils/colors"
 import { useTranslation } from "react-i18next"
 
-interface ErrorMessageProps {
+interface EmptyMessageProps {
   message: string
   styleMessage?: StyleProp<TextStyle>
 }
@@ -14,12 +14,12 @@ interface ErrorMessageProps {
 /**
  * This component displays a message if an error occurs.
  */
-export const ErrorMessage: FC<ErrorMessageProps> = props => {
+export const EmptyListMessage: FC<EmptyMessageProps> = props => {
   const polifemoSVG = useSVG(polifemoIcon)
 
   const { primary } = usePalette()
 
-  const { t } = useTranslation("common")
+  const { t } = useTranslation("freeClass")
 
   return (
     <View
@@ -49,16 +49,15 @@ export const ErrorMessage: FC<ErrorMessageProps> = props => {
       <BodyText
         style={[
           {
+            color: primary,
+            fontWeight: "400",
+            fontSize: 16,
             textAlign: "center",
           },
           props.styleMessage,
         ]}
       >
-        <BodyText style={{ fontSize: 24, color: primary }}>Ops! </BodyText>
-        <BodyText style={{ fontWeight: "900", fontSize: 24, color: primary }}>
-          {t("error") + "\n"}
-        </BodyText>
-        <BodyText style={{ color: primary }}>{props.message}</BodyText>
+        {props.message + t("freeClass_emptyList")}
       </BodyText>
     </View>
   )

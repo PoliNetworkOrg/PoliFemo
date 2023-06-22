@@ -8,7 +8,8 @@ import { PageWrapper } from "components/Groups/PageWrapper"
 import { getBuildingCoords, isRoomFree } from "utils/rooms"
 import { RoomsSearchDataContext } from "contexts/rooms"
 import { Room } from "api/collections/rooms"
-import { ErrorMessage } from "components/ErrorMessage"
+import { EmptyListMessage } from "components/EmptyListMessage"
+import { useTranslation } from "react-i18next"
 
 /**
  * In this page the user can select finally the free class he wants.
@@ -42,6 +43,8 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
     setFilteredRooms(newFilteredRooms ?? [])
   }, [buildingRooms, date])
 
+  const { t } = useTranslation("freeClass")
+
   return (
     <PageWrapper>
       <View style={{ paddingTop: 28 }}>
@@ -73,10 +76,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
         }}
       >
         {filteredRooms?.length === 0 && !isRoomsSearching ? (
-          <ErrorMessage
-            message="Non ci sono aule disponibili"
-            styleView={{ marginTop: 100 }}
-          />
+          <EmptyListMessage message={t("classChoiceEmptyList")} />
         ) : !isRoomsSearching && filteredRooms.length > 0 ? (
           <FreeClassList
             data={filteredRooms}

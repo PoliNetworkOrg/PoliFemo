@@ -13,7 +13,9 @@
       "utils/*": ["src/utils/*"],
       "contexts/*": ["src/contexts/*"],
       "api": ["src/api"],
-      "api/*": ["src/api/*"]
+      "api/*": ["src/api/*"],
+      "notifications/*": ["src/notifications/*"]
+
     },
     "forceConsistentCasingInFileNames": true
   }

@@ -9,7 +9,8 @@ import { BuildingItem, DefaultList } from "components/FreeClass/DefaultList"
 import { formatBuildingName, isCampusCorrect, isRoomFree } from "utils/rooms"
 
 import { RoomsSearchDataContext } from "contexts/rooms"
-import { ErrorMessage } from "components/ErrorMessage"
+import { EmptyListMessage } from "components/EmptyListMessage"
+import { useTranslation } from "react-i18next"
 
 /**
  * In this page the user can select the building.
@@ -69,6 +70,8 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
     void findAvailableBuildings()
   }, [rooms, date])
 
+  const { t } = useTranslation("freeClass")
+
   return (
     <PageWrapper>
       <View style={{ paddingTop: 28 }}>
@@ -89,17 +92,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
         <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       </View>
       {error || (!isRoomsSearching && buildingList.length === 0) ? (
-        <ErrorMessage
-          message="Non ci sono edifici disponibili"
-          styleView={{ marginTop: 100, marginHorizontal: 20 }}
-          styleMessage={{
-            alignSelf: "center",
-            color: "red",
-            fontWeight: "400",
-            fontSize: 30,
-            textAlign: "center",
-          }}
-        />
+        <EmptyListMessage message={t("buildingChoiceEmptyList")} />
       ) : !isRoomsSearching && buildingList ? (
         <DefaultList dataToShow={buildingList} />
       ) : (
