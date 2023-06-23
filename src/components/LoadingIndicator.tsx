@@ -10,10 +10,14 @@ import {
   vec,
 } from "@shopify/react-native-skia"
 import { FC } from "react"
-import { View } from "react-native"
+import { StyleProp, View, ViewStyle } from "react-native"
 import { usePalette } from "utils/colors"
 
-export const LoadingIndicator: FC = () => {
+interface LoadingIndicatorProps {
+  style?: StyleProp<ViewStyle>
+}
+
+export const LoadingIndicator: FC<LoadingIndicatorProps> = props => {
   const { palette } = usePalette()
 
   const clock = useClockValue()
@@ -32,12 +36,15 @@ export const LoadingIndicator: FC = () => {
 
   return (
     <View
-      style={{
-        flex: 1,
-        marginVertical: 40,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+      style={[
+        {
+          flex: 1,
+          marginVertical: 40,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        props.style,
+      ]}
     >
       <Canvas style={{ width: 105, height: 105 }}>
         <Group transform={transform} origin={{ x: 52.5, y: 52.5 }}>
