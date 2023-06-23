@@ -4,7 +4,6 @@ import { FC } from "react"
 import { View, StyleSheet } from "react-native"
 import { Text, Title } from "components/Text"
 import { usePalette } from "utils/colors"
-import { ToggleSwitch, ToggleSwitchProps } from "components/ToggleSwitch"
 
 export interface PageWrapProps {
   /**
@@ -20,17 +19,17 @@ export interface PageWrapProps {
   upperTitle?: string
 
   /**
-   * Controls for a toggle switch on the right of the title, displays nothing if
+   * Element to be displayed on the right of the title, displays nothing if
    * not provided.
    */
-  switchControl?: ToggleSwitchProps
+  sideTitleElement?: React.ReactNode
 
   children: React.ReactNode
 }
 
 /**
  * Wrapper for a generic page, just gives the right background, shadow and styles.
- * Also has a title and a switch control for where it's needed.
+ * Also has a title and a sideElem control for where it's needed.
  */
 export const PageWrap: FC<PageWrapProps> = props => {
   const { homeBackground, background, isLight, palette } = usePalette()
@@ -75,13 +74,9 @@ export const PageWrap: FC<PageWrapProps> = props => {
                 {props.title[1]}
               </Title>
             )}
-            {props.switchControl && (
-              <View style={styles.switch}>
-                <ToggleSwitch
-                  value={props.switchControl.value}
-                  onValueChange={props.switchControl.onValueChange}
-                />
-              </View>
+
+            {props.sideTitleElement && (
+              <View style={styles.sideElem}>{props.sideTitleElement}</View>
             )}
           </View>
         )}
@@ -97,7 +92,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  switch: {
+  sideElem: {
     flex: 1,
     alignItems: "flex-end",
     justifyContent: "center",

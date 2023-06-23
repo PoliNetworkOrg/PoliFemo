@@ -64,6 +64,9 @@ type ListPageProps<T> = Omit<PageWrapProps, "children"> & {
 
 /**
  * A component that wraps a page with a header component and a list of items.
+ *
+ * Automatically handles loading indication, error message and empty list message.
+ *
  * @example
  * ```tsx
  * <ListPage
@@ -81,7 +84,7 @@ export const ListPage = <T,>(props: ListPageProps<T>) => {
     <PageWrap
       title={props.title}
       upperTitle={props.upperTitle}
-      switchControl={props.switchControl}
+      sideTitleElement={props.sideTitleElement}
     >
       {props.headerComponent && (
         <View

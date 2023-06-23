@@ -8,6 +8,7 @@ import { CardWithGradient } from "components/CardWithGradient"
 import { capitalize } from "utils/functions"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 import { ListPage } from "components/PageLayout"
+import { ToggleSwitch } from "components/ToggleSwitch"
 
 const MAX_ARTICLES_PER_REQUEST = 8
 
@@ -105,16 +106,18 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
           }
         },
       }}
-      switchControl={{
-        value: toggled,
-        onValueChange: value => {
-          setToggled(value)
-          const newFavorites = { ...preferences }
-          if (value) newFavorites[tagName] = Preference.FAVOURITE
-          else newFavorites[tagName] = Preference.UNFAVOURITE
-          setArticlesPreferences({ preferences: newFavorites })
-        },
-      }}
+      sideTitleElement={
+        <ToggleSwitch
+          value={toggled}
+          onValueChange={value => {
+            setToggled(value)
+            const newFavorites = { ...preferences }
+            if (value) newFavorites[tagName] = Preference.FAVOURITE
+            else newFavorites[tagName] = Preference.UNFAVOURITE
+            setArticlesPreferences({ preferences: newFavorites })
+          }}
+        />
+      }
     />
   )
 }
