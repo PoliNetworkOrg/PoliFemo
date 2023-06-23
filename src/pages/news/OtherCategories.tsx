@@ -46,7 +46,7 @@ export const OtherCategories: MainStackScreen<"OtherCategories"> = props => {
     navigation.isFocused() &&
     navigation.canGoBack()
   ) {
-    navigation.goBack()
+    setImmediate(() => navigation.goBack())
   }
 
   return (
