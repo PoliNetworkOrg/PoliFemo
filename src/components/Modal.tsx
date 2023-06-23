@@ -172,7 +172,7 @@ export const Modal: FC<ModalCustomProps> = props => {
                   {props.subTitle}
                 </Text>
               )}
-              <View>{props.children}</View>
+              <View style={{ maxHeight: 280 }}>{props.children}</View>
               {props.buttons && (
                 <View
                   style={{
