@@ -104,7 +104,12 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
 
   return (
     <PageWrap title={t("freeClass_title") + ""}>
-      <PoliSearchBar onChange={searchKey => setSearch(searchKey)} />
+      <PoliSearchBar
+        style={{
+          marginTop: 12,
+        }}
+        onChange={searchKey => setSearch(searchKey)}
+      />
       {isRoomsSearching && search.length > 1 ? (
         <ActivityIndicator size={"large"} style={{ marginTop: 100 }} />
       ) : search.length <= 1 ? (

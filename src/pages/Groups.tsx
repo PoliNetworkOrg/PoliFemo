@@ -18,7 +18,7 @@ import { ModalGroup } from "components/Groups/ModalGroup"
 import { PoliSearchBar } from "components/Home/PoliSearchBar"
 import { useTranslation } from "react-i18next"
 import { useApiCall } from "api/useApiCall"
-import { ListPage } from "components/PageLayout/ListPage"
+import { ListPage } from "components/PageLayout"
 
 export const Groups: MainStackScreen<"Groups"> = () => {
   const { t } = useTranslation()

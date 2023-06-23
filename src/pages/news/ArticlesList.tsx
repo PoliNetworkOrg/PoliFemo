@@ -7,7 +7,7 @@ import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { CardWithGradient } from "components/CardWithGradient"
 import { capitalize } from "utils/functions"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
-import { ListPage } from "components/PageLayout/ListPage"
+import { ListPage } from "components/PageLayout"
 
 const MAX_ARTICLES_PER_REQUEST = 8
 

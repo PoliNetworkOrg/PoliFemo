@@ -125,7 +125,6 @@ const styles = StyleSheet.create({
   },
   titleWrapper: {
     padding: 28,
-    paddingBottom: 0,
     flexDirection: "row",
   },
 })
