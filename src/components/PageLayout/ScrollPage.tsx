@@ -3,20 +3,26 @@ import { PageWrap, PageWrapProps } from "./PageWrap"
 import { ScrollView } from "react-native-gesture-handler"
 import { StyleProp, View, ViewStyle } from "react-native"
 
-export const ScrollPage: FC<
-  PageWrapProps & {
-    headerComponent?: React.ReactNode
-    /**
-     * Style to be passed to the ScrollView contentContainerStyle prop.
-     */
-    contentContainerStyle?: StyleProp<ViewStyle>
+type ScrollPageProps = PageWrapProps & {
+  headerComponent?: React.ReactNode
+  /**
+   * Style to be passed to the ScrollView contentContainerStyle prop.
+   */
+  contentContainerStyle?: StyleProp<ViewStyle>
 
-    /**
-     * If true, the page will have a padding of 28 on the sides, useful for most pages.
-     */
-    padded?: boolean
-  }
-> = props => {
+  /**
+   * If true, the page will have a padding of 28 on the sides, useful for most pages.
+   */
+  padded?: boolean
+}
+
+/**
+ * Wrapper for a page with a scroll view, just gives the right background, shadow
+ * and styles.
+ * The scroll view already has content overflow hidden, with right border radius,
+ * and the right padding on the sides via the `padding` prop.
+ */
+export const ScrollPage: FC<ScrollPageProps> = props => {
   return (
     <PageWrap title={props.title} upperTitle={props.upperTitle}>
       {props.headerComponent && (

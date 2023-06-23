@@ -3,9 +3,24 @@ import { Switch } from "react-native-switch"
 import { usePalette } from "utils/colors"
 
 export interface ToggleSwitchProps {
+  /**
+   * Whether the switch is on or off.
+   */
   value: boolean
+  /**
+   * Callback fucntion for when the switch is toggled.
+   * @param value whether the switch is on or off
+   */
   onValueChange: (value: boolean) => void
+  /**
+   * Accent color of the switch, defaults to palette.accent. Changes border color,
+   * inner circle color and active background color.
+   * @default palette.accent
+   */
   color?: string
+  /**
+   * Background color of the switch when it's off, defaults to theme background.
+   */
   overrideUnselectedBackground?: string
 }
 
@@ -13,6 +28,10 @@ const CIRCLE_SIZE = 18.44
 const SWITCH_WIDTH = 52
 const BAR_HEIGHT = 27
 
+/**
+ * A toggle switch component, with a circle that slides on a bar.
+ * Colors can be changed programmatically and style is consistent.
+ */
 export const ToggleSwitch: FC<ToggleSwitchProps> = props => {
   const { background, backgroundSecondary, palette, isLight } = usePalette()
 

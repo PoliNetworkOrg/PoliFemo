@@ -17,6 +17,9 @@ interface LoadingIndicatorProps {
   style?: StyleProp<ViewStyle>
 }
 
+/**
+ * Loading indicator, a circle that spins around.
+ */
 export const LoadingIndicator: FC<LoadingIndicatorProps> = props => {
   const { palette } = usePalette()
 
