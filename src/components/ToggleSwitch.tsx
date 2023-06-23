@@ -6,6 +6,7 @@ export interface ToggleSwitchProps {
   value: boolean
   onValueChange: (value: boolean) => void
   color?: string
+  overrideUnselectedBackground?: string
 }
 
 const CIRCLE_SIZE = 18.44
@@ -35,7 +36,7 @@ export const ToggleSwitch: FC<ToggleSwitchProps> = props => {
         borderColor: !props.value ? color : isLight ? "#EBEBEB" : "#3A4257",
       }}
       backgroundActive={color}
-      backgroundInactive={background}
+      backgroundInactive={props.overrideUnselectedBackground ?? background}
       containerStyle={{
         borderWidth: 1,
         borderColor: color,
