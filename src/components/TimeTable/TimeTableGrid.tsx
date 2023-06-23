@@ -4,39 +4,42 @@ import { TimeLine } from "./TimeLine"
 import { WeekLine } from "./WeekLine"
 import { ScrollView } from "react-native-gesture-handler"
 import { Event } from "api/collections/event"
-import { BodyText } from "components/Text"
+import { BodyText, Title } from "components/Text"
 import { getUsableScreenHeight } from "utils/layout"
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet"
+import BottomSheet from "@gorhom/bottom-sheet"
 import { TimeTableContext } from "contexts/timeTable"
 import {
   FormattedTable,
   Subjects,
   TimetableDeducer,
   getFormattedTable,
-  getLectureRoomFormattedString,
   getMarginDays,
   getMarginDaysCollapsed,
-  getTimeIntervalFormattedString,
 } from "utils/timetable"
 import { TimetableRow } from "./TimetableRow"
 import { LoginContext } from "contexts/login"
 import { Grid } from "./OverlayGrid"
 import { usePalette } from "utils/colors"
-import { ColorPickerLecture } from "./ColorPickerLecture"
 import { useFocusEffect } from "@react-navigation/native"
 import { TimetableBottomSheetHandle } from "./TimetableBottomSheetHandle"
-import { useSharedValue } from "react-native-reanimated"
 import { Modal } from "components/Modal"
 import CheckBox from "expo-checkbox"
 import { Icon } from "components/Icon"
 import list_timetable from "assets/timetable/list_timetable.svg"
+import {
+  Extrapolate,
+  interpolate,
+  useDerivedValue,
+  useSharedValue,
+} from "react-native-reanimated"
+import { LectureInfo } from "./LectureInfo"
 
 const { width } = Dimensions.get("window")
 
 // distance of the bottom sheet from the top of the screen, when opened or closed
 const distanceFromTop = {
   closed: 500,
-  opened: 106,
+  opened: 191,
 }
 
 export const TimeTableGrid: FC = () => {
@@ -97,9 +100,7 @@ export const TimeTableGrid: FC = () => {
       bottomSheetRef.current?.close?.()
       setSelectedLectureId(undefined)
     } else {
-      bottomSheetRef.current?.snapToPosition(
-        getUsableScreenHeight() - distanceFromTop.closed
-      )
+      bottomSheetRef.current?.snapToIndex(0)
     }
   }, [timeTableOpen])
 
@@ -110,6 +111,14 @@ export const TimeTableGrid: FC = () => {
   )
 
   const animValue = useSharedValue(0)
+  const clipped = useDerivedValue(
+    () =>
+      interpolate(animValue.value, [-1, 0], [-1, 0], {
+        extrapolateLeft: Extrapolate.CLAMP,
+        extrapolateRight: Extrapolate.CLAMP,
+      }),
+    [animValue]
+  )
 
   const updateSubjects = (newSubjects: Subjects) => {
     if (deducer.current) {
@@ -137,15 +146,7 @@ export const TimeTableGrid: FC = () => {
             marginRight: 27,
           }}
         >
-          <BodyText
-            style={{
-              color: isLight ? palette.variant1 : "#fff",
-              fontSize: 40,
-              fontWeight: "900",
-            }}
-          >
-            Orario
-          </BodyText>
+          <Title>Orario</Title>
           <Pressable onPress={() => deducer.current?.refresh()}>
             <BodyText
               style={{
@@ -168,7 +169,7 @@ export const TimeTableGrid: FC = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ flexDirection: "row" }}>
             <WeekLine
-              animatedValue={animValue}
+              animatedValue={clipped}
               overlapsNumberList={getMarginDays(formattedTable)}
               overlapsNumberListCollapsed={getMarginDaysCollapsed(
                 formattedTable
@@ -188,7 +189,7 @@ export const TimeTableGrid: FC = () => {
                     const _day = day as keyof FormattedTable
                     return (
                       <TimetableRow
-                        animatedValue={animValue}
+                        animatedValue={clipped}
                         onEventPress={(event: Event) => {
                           /* setTimeTableOpen(!timeTableOpen) */
                           if (timeTableOpen) {
@@ -228,7 +229,10 @@ export const TimeTableGrid: FC = () => {
         ref={bottomSheetRef}
         handleComponent={TimetableBottomSheetHandle}
         index={-1}
-        snapPoints={[getUsableScreenHeight() - distanceFromTop.closed]}
+        snapPoints={[
+          getUsableScreenHeight() - distanceFromTop.closed,
+          getUsableScreenHeight() - distanceFromTop.opened,
+        ]}
         enablePanDownToClose={true}
         animatedIndex={animValue}
         onAnimate={(fromIndex, toIndex) => {
@@ -243,62 +247,12 @@ export const TimeTableGrid: FC = () => {
           borderTopRightRadius: 33,
         }}
       >
-        <BottomSheetScrollView
-          contentContainerStyle={{
-            marginHorizontal: 36,
-            marginBottom: 100,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <View style={{ flex: 1 }}>
-              <BodyText
-                style={{
-                  fontSize: 20,
-                  fontWeight: "900",
-                  color: isLight ? palette.variant3 : "#fff",
-                }}
-              >
-                {currentLecture?.title.it}
-              </BodyText>
-            </View>
-            <ColorPickerLecture
-              color={currentLecture?.lectureColor}
-              onPress={() => {
-                if (deducer.current) {
-                  deducer.current.changeColor(currentLecture?.event_id)
-                }
-              }}
-            />
-          </View>
-          <View style={{ marginTop: 32 }}>
-            <BodyText
-              style={{
-                fontSize: 16,
-                fontWeight: "700",
-                color: isLight ? palette.variant3 : "#fff",
-              }}
-            >
-              {getTimeIntervalFormattedString(
-                currentLecture?.date_start,
-                currentLecture?.date_end
-              )}
-            </BodyText>
-            <BodyText
-              style={{
-                fontSize: 16,
-                fontWeight: "700",
-                color: isLight ? palette.variant3 : "#fff",
-              }}
-            >
-              {getLectureRoomFormattedString(currentLecture?.room?.acronym_dn)}
-            </BodyText>
-          </View>
-        </BottomSheetScrollView>
+        {currentLecture && (
+          <LectureInfo
+            lectureEvent={currentLecture}
+            deducer={deducer.current}
+          />
+        )}
       </BottomSheet>
       <Modal
         isShowing={isModalShowing}
