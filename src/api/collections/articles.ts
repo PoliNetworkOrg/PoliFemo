@@ -10,6 +10,7 @@ export interface Tags {
 export interface Tag {
   name: string
   image: string
+  blurhash: string
 }
 
 export interface Articles {
@@ -31,6 +32,7 @@ export interface Article {
   target_time?: string
   content: string
   image?: string
+  blurhash?: string
   author?: { name?: string; link?: string; image?: string }
 }
 

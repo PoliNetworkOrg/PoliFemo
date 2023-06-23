@@ -1,11 +1,12 @@
 /* eslint-disable prettier/prettier */
 import { useState } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { Image, Linking } from "react-native"
+import { Linking } from "react-native"
 import { WebView } from "react-native-webview"
 import { ScrollPage } from "components/ScrollPage"
 import { usePalette } from "utils/colors"
 import { Asset } from "expo-asset"
+import { Image } from "expo-image"
 import { Roboto_400Regular } from "@expo-google-fonts/roboto"
 
 export const Article: MainStackScreen<"Article"> = props => {
@@ -31,6 +32,7 @@ export const Article: MainStackScreen<"Article"> = props => {
             source={{
               uri: article.image,
             }}
+            placeholder={article.blurhash}
             style={{
               width: "100%",
               height: "100%",
