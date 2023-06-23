@@ -10,6 +10,7 @@ import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet"
 import { TimeTableContext } from "contexts/timeTable"
 import {
   FormattedTable,
+  Subjects,
   TimetableDeducer,
   getFormattedTable,
   getLectureRoomFormattedString,
@@ -25,6 +26,10 @@ import { ColorPickerLecture } from "./ColorPickerLecture"
 import { useFocusEffect } from "@react-navigation/native"
 import { TimetableBottomSheetHandle } from "./TimetableBottomSheetHandle"
 import { useSharedValue } from "react-native-reanimated"
+import { Modal } from "components/Modal"
+import CheckBox from "expo-checkbox"
+import { Icon } from "components/Icon"
+import list_timetable from "assets/timetable/list_timetable.svg"
 
 const { width } = Dimensions.get("window")
 
@@ -49,6 +54,10 @@ export const TimeTableGrid: FC = () => {
     getFormattedTable([])
   )
 
+  const [subjects, setSubjects] = useState<Subjects>({})
+
+  const [isModalShowing, setIsModalShowing] = useState(false)
+
   const [selectedLectureId, setSelectedLectureId] = useState<
     number | undefined
   >(undefined)
@@ -65,6 +74,9 @@ export const TimeTableGrid: FC = () => {
         deducer.current.addListener("timetable_retrieved", () => {
           if (deducer?.current?.timetable?.table) {
             setFormattedTimetable({ ...deducer?.current?.timetable?.table })
+          }
+          if (deducer?.current?.subjects) {
+            setSubjects(deducer?.current?.subjects)
           }
         })
       }
@@ -98,6 +110,12 @@ export const TimeTableGrid: FC = () => {
   )
 
   const animValue = useSharedValue(0)
+
+  const updateSubjects = (newSubjects: Subjects) => {
+    if (deducer.current) {
+      deducer.current.updateSubjects(newSubjects)
+    }
+  }
 
   return (
     <>
@@ -138,6 +156,12 @@ export const TimeTableGrid: FC = () => {
             >
               Refresh
             </BodyText>
+          </Pressable>
+          <Pressable onPress={() => setIsModalShowing(true)}>
+            <Icon
+              source={list_timetable}
+              color={isLight ? palette.primary : undefined}
+            />
           </Pressable>
         </View>
 
@@ -188,6 +212,7 @@ export const TimeTableGrid: FC = () => {
                         row={formattedTable[_day]}
                         selectedLectureId={selectedLectureId}
                         key={day}
+                        subjects={subjects}
                       />
                     )
                   })}
@@ -275,6 +300,41 @@ export const TimeTableGrid: FC = () => {
           </View>
         </BottomSheetScrollView>
       </BottomSheet>
+      <Modal
+        isShowing={isModalShowing}
+        title={"Mostra lezioni"}
+        onClose={() => setIsModalShowing(false)}
+        contentContainerStyle={{ paddingBottom: 16 }}
+        centerText={true}
+      >
+        {Object.keys(subjects).map((subject, index) => {
+          return (
+            <View
+              key={index}
+              style={{
+                marginHorizontal: 28,
+                marginVertical: 8,
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                alignItems: "center",
+              }}
+            >
+              <CheckBox
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                value={subjects[subject]}
+                onValueChange={newValue => {
+                  const newSubjects = { ...subjects, [subject]: newValue }
+                  setSubjects(newSubjects)
+                  updateSubjects(newSubjects)
+                }}
+              />
+              <BodyText style={{ paddingLeft: 16, paddingRight: 16 }}>
+                {subject}
+              </BodyText>
+            </View>
+          )
+        })}
+      </Modal>
     </>
   )
 }

@@ -1,7 +1,7 @@
 import { FC } from "react"
 import { View } from "react-native"
 import { Event } from "api/collections/event"
-import { ValidTableRow } from "utils/timetable"
+import { Subjects, ValidTableRow } from "utils/timetable"
 import { LectureCard } from "./LectureCard"
 import Animated, {
   SharedValue,
@@ -17,6 +17,7 @@ export interface TimetableRowProps {
   onEventPress: (event: Event) => void
   selectedLectureId?: number
   animatedValue: SharedValue<number>
+  subjects: Subjects
 }
 
 export const TimetableRow: FC<TimetableRowProps> = props => {
@@ -46,17 +47,19 @@ export const TimetableRow: FC<TimetableRowProps> = props => {
             key={index}
           >
             {lectures.events.map((lecture, index) => {
-              return (
-                <LectureCard
-                  animatedValue={props.animatedValue}
-                  lecture={lecture}
-                  borderColor={colors[index]}
-                  onPress={() => props.onEventPress(lecture)}
-                  key={lecture.event_id}
-                  overlapNumber={lectures.overlapNumber}
-                  isSelected={lecture.event_id === props.selectedLectureId}
-                />
-              )
+              if (props.subjects[lecture.title.it] === true) {
+                return (
+                  <LectureCard
+                    animatedValue={props.animatedValue}
+                    lecture={lecture}
+                    borderColor={colors[index]}
+                    onPress={() => props.onEventPress(lecture)}
+                    key={lecture.event_id}
+                    overlapNumber={lectures.overlapNumber}
+                    isSelected={lecture.event_id === props.selectedLectureId}
+                  />
+                )
+              }
             })}
           </View>
         )

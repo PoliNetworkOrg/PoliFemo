@@ -383,6 +383,8 @@ interface Timetable {
   matricola: string
 }
 
+export type Subjects = Record<string, boolean>
+
 //hardcoding day and month of semester start date
 
 //12th September start of first semester
@@ -405,6 +407,8 @@ export declare interface TimetableDeducer {
 
 export class TimetableDeducer extends EventEmitter {
   public timetable: Timetable | undefined
+
+  public subjects: Subjects = {}
 
   private _matricola: string
 
@@ -461,8 +465,14 @@ export class TimetableDeducer extends EventEmitter {
       )
       const timetable = JSON.parse(timetableJSON) as Timetable
 
+      const subjectsJSON = await FileSystem.readAsStringAsync(
+        FileSystem.documentDirectory + "subjects.json"
+      )
+      const subjects = JSON.parse(subjectsJSON) as Subjects
+
       if (!this._checkNeedCalculating(timetable.date)) {
         this.timetable = timetable
+        this.subjects = subjects
         this.emit("timetable_retrieved")
       } else {
         void this._deduceTimetableFromEvents()
@@ -488,6 +498,29 @@ export class TimetableDeducer extends EventEmitter {
       console.log("Error storing timetable")
       return false
     }
+  }
+
+  private _writeSubjectsToStorage = async (
+    subjects: Subjects
+  ): Promise<boolean> => {
+    const subjectsJSON = JSON.stringify(subjects)
+    try {
+      await FileSystem.writeAsStringAsync(
+        FileSystem.documentDirectory + "subjects.json",
+        subjectsJSON
+      )
+
+      return true
+    } catch (err) {
+      console.log(err)
+      console.log("Error storing subjects")
+      return false
+    }
+  }
+
+  public updateSubjects = (subjects: Subjects) => {
+    this.subjects = subjects
+    void this._writeSubjectsToStorage(subjects)
   }
 
   private _checkNeedCalculating = (date: Date): boolean => {
@@ -557,10 +590,23 @@ export class TimetableDeducer extends EventEmitter {
         date: new Date(),
         matricola: this._matricola,
       }
+
+      const subjects: Subjects = {}
+
+      busiestWeek.forEach(event => {
+        if (!subjects[event.title.it]) {
+          subjects[event.title.it] = true
+        }
+      })
+
+      this.subjects = subjects
+
       this.emit("timetable_retrieved")
 
       //update storage
       void this._writeToStorage(this.timetable)
+
+      void this._writeSubjectsToStorage(subjects)
     } catch (err) {
       console.log(err)
     }
