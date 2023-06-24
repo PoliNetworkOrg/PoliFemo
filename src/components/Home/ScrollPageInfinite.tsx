@@ -11,7 +11,7 @@ import { Switch } from "react-native-switch"
 import { Title, Subtitle } from "components/Text"
 import { NavBar, NavbarProps } from "components/NavBar"
 import { usePalette } from "utils/colors"
-import { BoxShadowView } from "../../BoxShadow"
+import { BoxShadowView } from "../BoxShadow"
 
 interface PageProps<T> {
   /**
@@ -144,99 +144,92 @@ export const ScrollPageInfinite = <T,>(props: PageProps<T>): JSX.Element => {
           borderTopRightRadius: 30,
         }}
       >
-        <View
+        <FlatList
+          data={props.items}
           style={{
             borderTopLeftRadius: 30,
             borderTopRightRadius: 30,
-            backgroundColor: background,
             overflow: "hidden",
-            height: "100%",
           }}
-        >
-          <FlatList
-            data={props.items}
-            renderItem={({ item, index }) => props.render(item, index)}
-            onEndReached={props.fetchControl?.onFetch}
-            onEndReachedThreshold={endThreshold}
-            refreshControl={
-              props.refreshControl ? (
-                <RefreshControl
-                  refreshing={props.refreshControl.refreshing}
-                  onRefresh={props.refreshControl.onRefresh}
-                />
-              ) : undefined
-            }
-            stickyHeaderIndices={props.title ? [0] : undefined} // first child is the sticky header
-            ListHeaderComponent={
-              showHeader ? (
-                // Sticky page header with the title, subtitle and toggle switch
-                <View
-                  style={[
-                    styles.header,
-                    {
-                      backgroundColor: background,
-                    },
-                  ]}
-                >
-                  <View>
-                    <Title>{props.title}</Title>
-                    {props.subtitle && <Subtitle>{props.subtitle}</Subtitle>}
-                  </View>
-                  {showSwitch && (
-                    // Toggle switch
-                    <View style={styles.switch}>
-                      <Switch
-                        value={props.switchControl?.toggled}
-                        onValueChange={value => {
-                          props.switchControl?.onToggle(value)
-                        }}
-                        changeValueImmediately={true}
-                        renderActiveText={false}
-                        renderInActiveText={false}
-                        barHeight={27}
-                        switchWidthMultiplier={3}
-                        circleSize={18}
-                        circleActiveColor={backgroundSecondary}
-                        circleInActiveColor={palette.accent}
-                        circleBorderWidth={0}
-                        innerCircleStyle={{
-                          borderWidth: 1,
-                          borderColor: !props.switchControl?.toggled
-                            ? palette.accent
-                            : isLight
-                            ? "#EBEBEB"
-                            : "#3A4257",
-                        }}
-                        backgroundActive={palette.accent}
-                        backgroundInactive={"#FFF"}
-                        containerStyle={{
-                          borderWidth: 1,
-                          borderColor: palette.accent,
-                        }}
-                        switchLeftPx={1.5}
-                        switchRightPx={1.3}
-                      />
-                    </View>
-                  )}
-                </View>
-              ) : undefined
-            }
-            ListFooterComponent={
-              <ActivityIndicator
-                size={"large"}
-                animating={fetching}
-                color={primary}
+          renderItem={({ item, index }) => props.render(item, index)}
+          onEndReached={props.fetchControl?.onFetch}
+          onEndReachedThreshold={endThreshold}
+          refreshControl={
+            props.refreshControl ? (
+              <RefreshControl
+                refreshing={props.refreshControl.refreshing}
+                onRefresh={props.refreshControl.onRefresh}
               />
-            }
-            contentContainerStyle={{
-              backgroundColor: background,
-              paddingTop: !showHeader ? 30 : 0,
-              paddingBottom: 120,
-              borderTopLeftRadius: 30,
-              borderTopRightRadius: 30,
-            }}
-          />
-        </View>
+            ) : undefined
+          }
+          stickyHeaderIndices={props.title ? [0] : undefined} // first child is the sticky header
+          ListHeaderComponent={
+            showHeader ? (
+              // Sticky page header with the title, subtitle and toggle switch
+              <View
+                style={[
+                  styles.header,
+                  {
+                    backgroundColor: background,
+                  },
+                ]}
+              >
+                <View>
+                  <Title>{props.title}</Title>
+                  {props.subtitle && <Subtitle>{props.subtitle}</Subtitle>}
+                </View>
+                {showSwitch && (
+                  // Toggle switch
+                  <View style={styles.switch}>
+                    <Switch
+                      value={props.switchControl?.toggled}
+                      onValueChange={value => {
+                        props.switchControl?.onToggle(value)
+                      }}
+                      changeValueImmediately={true}
+                      renderActiveText={false}
+                      renderInActiveText={false}
+                      barHeight={27}
+                      switchWidthMultiplier={3}
+                      circleSize={18}
+                      circleActiveColor={backgroundSecondary}
+                      circleInActiveColor={palette.accent}
+                      circleBorderWidth={0}
+                      innerCircleStyle={{
+                        borderWidth: 1,
+                        borderColor: !props.switchControl?.toggled
+                          ? palette.accent
+                          : isLight
+                          ? "#EBEBEB"
+                          : "#3A4257",
+                      }}
+                      backgroundActive={palette.accent}
+                      backgroundInactive={"#FFF"}
+                      containerStyle={{
+                        borderWidth: 1,
+                        borderColor: palette.accent,
+                      }}
+                      switchLeftPx={1.5}
+                      switchRightPx={1.3}
+                    />
+                  </View>
+                )}
+              </View>
+            ) : undefined
+          }
+          ListFooterComponent={
+            <ActivityIndicator
+              size={"large"}
+              animating={fetching}
+              color={primary}
+            />
+          }
+          contentContainerStyle={{
+            backgroundColor: background,
+            paddingTop: !showHeader ? 30 : 0,
+            paddingBottom: 120,
+          }}
+        />
       </BoxShadowView>
       {navbar ? <NavBar {...props.navbarOptions} /> : null}
     </View>

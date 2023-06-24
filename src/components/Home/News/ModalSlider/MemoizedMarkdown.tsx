@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react"
+import React, { ReactNode, useCallback } from "react"
 import Markdown, { ASTNode } from "react-native-markdown-display"
 import { Pressable } from "react-native"
 import FitImage from "react-native-fit-image"
@@ -41,60 +41,64 @@ export const MemoizedMarkdown: React.FC<MemoizedMarkdownProps> = React.memo(
      *
      *
      */
-    const onRenderImage: RenderImageFunction = (
-      node: ASTNode,
-      children: ReactNode[],
-      parentNodes: ASTNode[],
-      styles: any,
-      allowedImageHandlers: string[],
-      defaultImageHandler: string
-    ) => {
-      const { src, alt } = node.attributes
+    const onRenderImage: RenderImageFunction = useCallback(
+      (
+        node: ASTNode,
+        children: ReactNode[],
+        parentNodes: ASTNode[],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        styles: any,
+        allowedImageHandlers: string[],
+        defaultImageHandler: string
+      ) => {
+        const { src, alt } = node.attributes
 
-      // we check that the source starts with at least one of the elements in allowedImageHandlers
-      const show =
-        allowedImageHandlers.filter(value => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-          return src.toLowerCase().startsWith(value.toLowerCase())
-        }).length > 0
+        // we check that the source starts with at least one of the elements in allowedImageHandlers
+        const show =
+          allowedImageHandlers.filter(value => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+            return src.toLowerCase().startsWith(value.toLowerCase())
+          }).length > 0
 
-      if (show === false && defaultImageHandler === null) {
-        return null
-      }
+        if (show === false && defaultImageHandler === null) {
+          return null
+        }
 
-      const imageProps = {
-        indicator: true,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        style: styles._VIEW_SAFE_image,
-        source: {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions
-          uri: show === true ? src : `${defaultImageHandler}${src}`,
-        },
-        accessible: false,
-        accessibilityLabel: "",
-      }
+        const imageProps = {
+          indicator: true,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+          style: styles._VIEW_SAFE_image,
+          source: {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions
+            uri: show === true ? src : `${defaultImageHandler}${src}`,
+          },
+          accessible: false,
+          accessibilityLabel: "",
+        }
 
-      if (alt) {
-        imageProps.accessible = true
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        imageProps.accessibilityLabel = alt
-      }
+        if (alt) {
+          imageProps.accessible = true
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          imageProps.accessibilityLabel = alt
+        }
 
-      return (
-        <Pressable
-          key={node.key}
-          onPress={() => {
-            if (onPress) {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-              onPress(src)
-            }
-          }}
-          style={{ width: "100%" }}
-        >
-          <FitImage {...imageProps} />
-        </Pressable>
-      )
-    }
+        return (
+          <Pressable
+            key={node.key}
+            onPress={() => {
+              if (onPress) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                onPress(src)
+              }
+            }}
+            style={{ width: "100%" }}
+          >
+            <FitImage {...imageProps} />
+          </Pressable>
+        )
+      },
+      []
+    )
 
     return (
       <Markdown style={markdownStyle} rules={{ image: onRenderImage }}>

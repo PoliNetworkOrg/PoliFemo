@@ -29,9 +29,7 @@ export const Article: MainStackScreen<"Article"> = props => {
       : article.content.en.subtitle
 
   const content = useRef(
-    article.id === 10
-      ? "E’ online la guida di tutti gli incontri e i servizi del Career Service per gli studenti nel prossimo semestre.\n\r![ciao](https://images.unsplash.com/photo-1599009434802-ca1dd09895e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80)\n\r![ciao](https://images.unsplash.com/photo-1685681564926-41c950d7434a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80)\n\rPer maggiori informazioni:  \r\n[www.careerservice.polimi.it/](https://cm.careerservice.polimi.it/2023/02/08/career-service-guide-feb-lug-2023-2-semestre/)"
-      : currentLanguage === "it"
+    currentLanguage === "it"
       ? article.content.it.content
       : article.content.en.content
   ).current
