@@ -52,7 +52,7 @@ export const Groups: MainStackScreen<"Groups"> = () => {
         errorMessage={error?.message}
         headerComponent={
           <>
-            <View style={{ marginTop: 36, marginBottom: 22 }}>
+            <View style={{ marginBottom: 22 }}>
               <PoliSearchBar
                 onChange={val => {
                   setSearch(val)

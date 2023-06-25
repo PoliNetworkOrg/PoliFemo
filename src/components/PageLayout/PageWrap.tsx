@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   },
   boxShadow: {
     flex: 1,
-    marginTop: 100,
+    marginTop: 106,
     overflow: "visible",
   },
   boxShadowContainer: {

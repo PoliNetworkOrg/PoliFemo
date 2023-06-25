@@ -36,26 +36,29 @@ export const ScrollPage: FC<ScrollPageProps> = props => {
         </View>
       )}
 
-      <ScrollView
-        alwaysBounceVertical={false}
+      <View
         style={{
-          overflow: "hidden",
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
+          overflow: "hidden",
         }}
-        contentContainerStyle={[
-          {
-            overflow: "visible",
-            paddingBottom: 130,
-          },
-          props.padded && {
-            paddingHorizontal: 28,
-          },
-          props.contentContainerStyle,
-        ]}
       >
-        {props.children}
-      </ScrollView>
+        <ScrollView
+          alwaysBounceVertical={false}
+          contentContainerStyle={[
+            {
+              overflow: "visible",
+              paddingBottom: 130,
+            },
+            props.padded && {
+              paddingHorizontal: 28,
+            },
+            props.contentContainerStyle,
+          ]}
+        >
+          {props.children}
+        </ScrollView>
+      </View>
     </PageWrap>
   )
 }

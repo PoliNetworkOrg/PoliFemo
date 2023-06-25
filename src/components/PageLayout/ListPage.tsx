@@ -100,7 +100,7 @@ export const ListPage = <T,>(props: ListPageProps<T>) => {
       {props.errorMessage ? (
         <ErrorMessage message={props.errorMessage} />
       ) : props.loading ? (
-        <LoadingIndicator />
+        <LoadingIndicator style={{ marginBottom: 120 }} />
       ) : (
         <FlatList
           data={props.data}
