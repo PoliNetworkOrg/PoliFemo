@@ -16,9 +16,16 @@ export interface Room {
   longitude?: number
 }
 
+type OccupanciesRecordStatus = "FREE" | "OCCUPIED"
+
+interface OccupanciesRecord {
+  status: OccupanciesRecordStatus
+  text: string | null
+}
+
 export type Occupancies = Record<
   string,
-  { status: "FREE" | "OCCUPIED"; text: string | null }
+  OccupanciesRecord
 >
 
 export interface RoomSimplified {
