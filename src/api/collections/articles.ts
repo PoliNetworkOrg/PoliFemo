@@ -24,16 +24,25 @@ export interface Articles {
 export interface Article {
   id: number
   tag_id: string
-  title: string
-  subtitle?: string
   latitude?: number
   longitude?: number
   publish_time: string
   target_time?: string
-  content: string
+  hidden_until?: string
+  content: {
+    it: ArticlesParams
+    en: ArticlesParams
+  }
   image?: string
   blurhash?: string
   author?: { name?: string; link?: string; image?: string }
+}
+
+interface ArticlesParams {
+  content: string
+  title: string
+  subtitle: string
+  url: string
 }
 
 const client = HttpClient.getInstance()
@@ -78,6 +87,7 @@ export const articles = {
         limit: params.limit,
         pageOffset: params.offset,
         tag: params.tag,
+        platform: 1,
         sort: "date",
       },
       ...options,
@@ -96,7 +106,7 @@ export const articles = {
     const request = client.callPoliNetwork<Articles>({
       url: "/v1/articles",
       method: "GET",
-      params: { tag: params.tag, limit: 1, sort: "date" },
+      params: { tag: params.tag, limit: 1, sort: "date", platform: 1 },
       ...options,
     })
     return mapAxiosRequest(request, res => res.articles[0])

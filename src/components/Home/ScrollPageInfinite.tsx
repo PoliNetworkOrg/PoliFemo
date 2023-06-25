@@ -11,7 +11,7 @@ import { Switch } from "react-native-switch"
 import { Title, Subtitle } from "components/Text"
 import { NavBar, NavbarProps } from "components/NavBar"
 import { usePalette } from "utils/colors"
-import { BoxShadowView } from "./BoxShadow"
+import { BoxShadowView } from "../BoxShadow"
 
 interface PageProps<T> {
   /**

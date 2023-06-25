@@ -9,7 +9,7 @@ import {
   Preference,
   TagWithData,
 } from "contexts/newsPreferences"
-import { ScrollPageInfinite } from "components/ScrollPageInfinite"
+import { ScrollPageInfinite } from "components/Home/ScrollPageInfinite"
 
 /**
  * News page containing the articles of a specific tag.

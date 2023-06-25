@@ -4,10 +4,11 @@ import { View } from "react-native"
 import { api, RetryType } from "api"
 import { Article } from "api/collections/articles"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { ScrollPageInfinite } from "components/ScrollPageInfinite"
+import { ScrollPageInfinite } from "components/Home/ScrollPageInfinite"
 import { CardWithGradient } from "components/CardWithGradient"
 import { capitalize } from "utils/functions"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
+import { useCurrentLanguage } from "utils/articles"
 
 const MAX_ARTICLES_PER_REQUEST = 8
 
@@ -61,6 +62,8 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
     })
   }, [])
 
+  const currentLanguage = useCurrentLanguage()
+
   return (
     <ScrollPageInfinite
       title={capitalize(tagName, 3)}
@@ -69,7 +72,11 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
         <View style={{ paddingHorizontal: 28 }}>
           <CardWithGradient
             key={article.id}
-            title={article.title}
+            title={
+              currentLanguage === "it"
+                ? article.content.it.title
+                : article.content.en.title
+            }
             imageURL={article.image}
             blurhash={article.blurhash}
             onClick={() =>
