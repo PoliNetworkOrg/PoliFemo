@@ -21,6 +21,12 @@ export interface Articles {
   author_id: number | null
   title: string | null
 }
+interface ArticleAuthor {
+  name?: string
+  link?: string
+  image?: string
+}
+
 export interface Article {
   id: number
   tag_id: string
@@ -35,7 +41,7 @@ export interface Article {
   }
   image?: string
   blurhash?: string
-  author?: { name?: string; link?: string; image?: string }
+  author?: ArticleAuthor
 }
 
 interface ArticlesParams {
