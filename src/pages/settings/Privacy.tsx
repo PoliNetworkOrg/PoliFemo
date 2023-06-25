@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { Alert, Linking } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import { Divider } from "components/Divider"
 import { SettingTile } from "components/Settings/SettingTile"
 import { BodyText, HyperLink } from "components/Text"
@@ -12,6 +11,7 @@ import { HttpClient } from "api/HttpClient"
 import { LoginContext } from "contexts/login"
 import { Description } from "components/Settings/Description"
 import { useTranslation } from "react-i18next"
+import { ScrollPage } from "components/PageLayout"
 import { ModalPicker } from "components/ModalPicker"
 
 const client = HttpClient.getInstance()
@@ -72,7 +72,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
   }, [loggedIn])
 
   return (
-    <ContentWrapperScroll title="Privacy">
+    <ScrollPage upperTitle="Privacy">
       <BodyText
         style={{
           paddingTop: 36,
@@ -163,7 +163,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
           Linking.openURL("https://polinetwork.org/learnmore/privacy/")
         }
       />
-      <Description last>
+      <Description>
         {t("settings_privacyDisclaimer_message")}{" "}
         <HyperLink href="mailto:privacy@polinetwork.org">
           privacy@polinetwork.org
@@ -198,6 +198,6 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
           }
         }}
       />
-    </ContentWrapperScroll>
+    </ScrollPage>
   )
 }

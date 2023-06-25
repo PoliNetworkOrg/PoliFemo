@@ -9,7 +9,7 @@ import {
   Preference,
   TagWithData,
 } from "contexts/newsPreferences"
-import { ScrollPageInfinite } from "components/Home/ScrollPageInfinite"
+import { ListPage } from "components/PageLayout"
 
 /**
  * News page containing the articles of a specific tag.
@@ -47,15 +47,15 @@ export const OtherCategories: MainStackScreen<"OtherCategories"> = props => {
     navigation.isFocused() &&
     navigation.canGoBack()
   ) {
-    navigation.goBack()
+    setImmediate(() => navigation.goBack())
   }
 
   return (
-    <ScrollPageInfinite
+    <ListPage
       title="Altre categorie"
-      items={nonFavTags}
-      render={tag => (
-        <View style={{ paddingHorizontal: 28 }}>{getTagCard(tag)}</View>
+      data={nonFavTags}
+      renderItem={({ item }) => (
+        <View style={{ paddingHorizontal: 28 }}>{getTagCard(item)}</View>
       )}
     />
   )

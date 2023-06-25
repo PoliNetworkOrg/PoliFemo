@@ -1,15 +1,14 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { useContext, useEffect, useState } from "react"
 import { ActivityIndicator, Platform, View } from "react-native"
-import { Title } from "components/Text"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
-import { PageWrapper } from "components/Groups/PageWrapper"
 import { getBuildingCoords, isRoomFree } from "utils/rooms"
 import { RoomsSearchDataContext } from "contexts/rooms"
 import { Room } from "api/collections/rooms"
 import { EmptyListMessage } from "components/EmptyListMessage"
 import { useTranslation } from "react-i18next"
+import { PageWrap } from "components/PageLayout"
 
 /**
  * In this page the user can select finally the free class he wants.
@@ -46,28 +45,14 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
   const { t } = useTranslation("freeClass")
 
   return (
-    <PageWrapper>
-      <View style={{ paddingTop: 28 }}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Title
-            style={{
-              paddingLeft: 28,
-              fontWeight: "300",
-              fontFamily: "Roboto_300Light",
-            }}
-          >
-            {building.fullName?.split(" ")[0]}
-            <Title>{" " + building.name[1]}</Title>
-          </Title>
-        </View>
-        <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
-      </View>
+    <PageWrap
+      title={
+        building.fullName
+          ? [building.fullName.split(" ")[0], building.name[1]]
+          : building.name
+      }
+    >
+      <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       <View
         style={{
           flex: 1,
@@ -88,6 +73,6 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
           <ActivityIndicator size={"large"} style={{ marginTop: 100 }} />
         )}
       </View>
-    </PageWrapper>
+    </PageWrap>
   )
 }

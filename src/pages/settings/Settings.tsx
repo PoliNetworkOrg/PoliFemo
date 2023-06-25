@@ -1,7 +1,6 @@
 import { useContext, useState } from "react"
 import { View } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { ContentWrapperScroll } from "components/Settings"
 import { Divider } from "components/Divider"
 import { SettingTile } from "components/Settings"
 import { settingsIcons } from "assets/settings"
@@ -14,6 +13,7 @@ import { Career } from "api/collections/user"
 import { HttpClient } from "api/HttpClient"
 import { useTranslation } from "react-i18next"
 import { Linking } from "react-native"
+import { ScrollPage } from "components/PageLayout"
 import { ModalPicker } from "components/ModalPicker"
 
 const client = HttpClient.getInstance()
@@ -58,8 +58,8 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
   const { navigate } = useNavigation()
 
   return (
-    <View style={{ flex: 1 }}>
-      <ContentWrapperScroll title={"" + t("settings_title")}>
+    <>
+      <ScrollPage upperTitle={"" + t("settings_title")}>
         {loggedIn ? (
           <UserDetailsTile user={userInfo} />
         ) : (
@@ -120,7 +120,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
             />
           </>
         )}
-      </ContentWrapperScroll>
+      </ScrollPage>
       <ModalPicker
         title={t("settings_chooseTheme")}
         centerText
@@ -160,6 +160,6 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
           setModalCareerVisible(false)
         }}
       />
-    </View>
+    </>
   )
 }

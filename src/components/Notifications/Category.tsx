@@ -1,12 +1,12 @@
 import { FC } from "react"
 import { Pressable, StyleSheet, View } from "react-native"
 import { Text } from "components/Text"
-import { Switch } from "react-native-switch"
 import { usePalette } from "utils/colors"
 
 import { Icon } from "components/Icon"
 import { ValidChannelId } from "notifications/NotificationTypes"
 import { useNotificationBadge } from "notifications/useNotificationBadge"
+import { ToggleSwitch } from "components/ToggleSwitch"
 
 export interface CategoryProps {
   title: string
@@ -23,7 +23,7 @@ export interface CategoryProps {
 }
 
 export const Category: FC<CategoryProps> = props => {
-  const { backgroundSecondary, palette, isLight } = usePalette()
+  const { palette } = usePalette()
 
   const badgeCount = useNotificationBadge(props.channelId)
 
@@ -43,36 +43,13 @@ export const Category: FC<CategoryProps> = props => {
       ) : undefined}
 
       <View style={styles.switch}>
-        <Switch
-          value={props.switchControl?.toggled}
+        <ToggleSwitch
+          value={props.switchControl?.toggled ?? false}
           onValueChange={value => {
             props.switchControl?.onToggle(value)
           }}
-          changeValueImmediately={true}
-          renderActiveText={false}
-          renderInActiveText={false}
-          barHeight={27}
-          switchWidthMultiplier={3}
-          circleSize={18}
-          circleActiveColor={backgroundSecondary}
-          circleInActiveColor={palette.accent}
-          circleBorderWidth={0}
-          innerCircleStyle={{
-            borderWidth: 1,
-            borderColor: !props.switchControl?.toggled
-              ? palette.accent
-              : isLight
-              ? "#EBEBEB"
-              : "#3A4257",
-          }}
-          backgroundActive={palette.accent}
-          backgroundInactive={"#FFF"}
-          containerStyle={{
-            borderWidth: 1,
-            borderColor: palette.accent,
-          }}
-          switchLeftPx={1.5}
-          switchRightPx={1.3}
+          color={palette.accent}
+          overrideUnselectedBackground={palette.primary}
         />
       </View>
       <View style={{ marginBottom: 12 }}>

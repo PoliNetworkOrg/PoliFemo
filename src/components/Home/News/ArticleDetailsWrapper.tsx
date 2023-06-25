@@ -112,7 +112,7 @@ export const ArticleDetailsWrapper: FC<{
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 110 }}
+          contentContainerStyle={{ paddingBottom: 120 }}
           refreshControl={
             props.refreshControl ? (
               <RefreshControl

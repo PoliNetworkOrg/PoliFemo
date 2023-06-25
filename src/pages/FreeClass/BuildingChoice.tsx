@@ -1,9 +1,7 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { useState, useEffect, useContext } from "react"
-import { ActivityIndicator, View } from "react-native"
-import { Title } from "components/Text"
+import { ActivityIndicator } from "react-native"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
-import { PageWrapper } from "components/Groups/PageWrapper"
 import { ConstructionType } from "api/collections/rooms"
 import { BuildingItem, DefaultList } from "components/FreeClass/DefaultList"
 import { formatBuildingName, isCampusCorrect, isRoomFree } from "utils/rooms"
@@ -11,6 +9,7 @@ import { formatBuildingName, isCampusCorrect, isRoomFree } from "utils/rooms"
 import { RoomsSearchDataContext } from "contexts/rooms"
 import { EmptyListMessage } from "components/EmptyListMessage"
 import { useTranslation } from "react-i18next"
+import { PageWrap } from "components/PageLayout"
 
 /**
  * In this page the user can select the building.
@@ -73,24 +72,14 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
   const { t } = useTranslation("freeClass")
 
   return (
-    <PageWrapper>
-      <View style={{ paddingTop: 28 }}>
-        {campus.name.length > 1 ? (
-          <Title
-            style={{
-              paddingLeft: 28,
-              fontWeight: "300",
-              fontFamily: "Roboto_300Light",
-            }}
-          >
-            {campus.name[0]}
-            <Title>{" " + campus.name[1]}</Title>
-          </Title>
-        ) : (
-          <Title style={{ paddingLeft: 28 }}>{campus.name}</Title>
-        )}
-        <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
-      </View>
+    <PageWrap
+      title={
+        campus.name.length > 1
+          ? [campus.name[0], campus.name[1]]
+          : campus.name[0]
+      }
+    >
+      <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       {error || (!isRoomsSearching && buildingList.length === 0) ? (
         <EmptyListMessage message={t("buildingChoiceEmptyList")} />
       ) : !isRoomsSearching && buildingList ? (
@@ -98,6 +87,6 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
       ) : (
         <ActivityIndicator size={"large"} style={{ marginTop: 100 }} />
       )}
-    </PageWrapper>
+    </PageWrap>
   )
 }
