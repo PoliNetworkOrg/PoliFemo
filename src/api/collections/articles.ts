@@ -88,7 +88,6 @@ export const articles = {
         limit: params.limit,
         pageOffset: params.offset,
         tag: params.tag,
-        platform: 1,
         sort: "date",
       },
       ...options,
