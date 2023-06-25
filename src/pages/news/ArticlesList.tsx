@@ -9,6 +9,7 @@ import { capitalize } from "utils/functions"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 import { ListPage } from "components/PageLayout"
 import { ToggleSwitch } from "components/ToggleSwitch"
+import { useCurrentLanguage } from "utils/articles"
 
 const MAX_ARTICLES_PER_REQUEST = 8
 
@@ -62,6 +63,8 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
     })
   }, [])
 
+  const currentLanguage = useCurrentLanguage()
+
   return (
     <ListPage
       title={capitalize(tagName, 3)}
@@ -70,8 +73,13 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
         <View style={{ paddingHorizontal: 28 }}>
           <CardWithGradient
             key={article.id}
-            title={article.title}
+            title={
+              currentLanguage === "it"
+                ? article.content.it.title
+                : article.content.en.title
+            }
             imageURL={article.image}
+            blurhash={article.blurhash}
             onClick={() =>
               navigation.navigate("Article", {
                 article: article,

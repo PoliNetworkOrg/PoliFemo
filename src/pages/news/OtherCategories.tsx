@@ -27,6 +27,7 @@ export const OtherCategories: MainStackScreen<"OtherCategories"> = props => {
         key={"__other_categories_tag__" + tag.name}
         title={capitalize(tag.name, 3)}
         imageURL={tag.image}
+        blurhash={tag.blurhash}
         onClick={() =>
           navigation.navigate("ArticlesList", {
             tagName: tag.name,

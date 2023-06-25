@@ -129,13 +129,8 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
         {showHighlighted && (
           <CardWithGradient
             title={"In Evidenza"}
-            imageURL={
-              props.highlightedArticle?.image &&
-              props.highlightedArticle.image.length > 0
-                ? props.highlightedArticle.image
-                : ""
-              // : "http://rl.airlab.deib.polimi.it/wp-content/uploads/2022/06/1-PolimiCampus_2.jpg"
-            }
+            imageURL={props.highlightedArticle?.image}
+            blurhash={props.highlightedArticle?.blurhash}
             onClick={() =>
               navigation.navigate("Article", {
                 article: props.highlightedArticle as Article,
