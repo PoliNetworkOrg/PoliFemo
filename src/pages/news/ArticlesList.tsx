@@ -78,6 +78,7 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
                 : article.content.en.title
             }
             imageURL={article.image}
+            blurhash={article.blurhash}
             onClick={() =>
               navigation.navigate("Article", {
                 article: article,

@@ -10,6 +10,7 @@ export interface Tags {
 export interface Tag {
   name: string
   image: string
+  blurhash: string
 }
 
 export interface Articles {

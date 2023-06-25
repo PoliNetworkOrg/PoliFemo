@@ -1,10 +1,10 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { Image } from "react-native"
 import { ArticleDetailsWrapper } from "components/Home/News/ArticleDetailsWrapper"
 import React, { useCallback, useRef, useState } from "react"
 import { extractImageLinks, useCurrentLanguage } from "utils/articles"
 import { ModalSlider } from "components/Home/News/ModalSlider/ModalSlider"
 import { MemoizedMarkdown } from "components/Home/News/ModalSlider/MemoizedMarkdown"
+import { Image } from "expo-image"
 
 declare module "react-native-markdown-display" {
   // https://www.typescriptlang.org/docs/handbook/declaration-merging.html#merging-interfaces
@@ -56,6 +56,7 @@ export const Article: MainStackScreen<"Article"> = props => {
             source={{
               uri: article.image,
             }}
+            placeholder={article.blurhash}
             style={{
               width: "100%",
               height: "100%",
