@@ -69,14 +69,13 @@ export const TimeTableGrid: FC = () => {
 
   const deducer = useRef<TimetableDeducer | undefined>()
 
-  // ? Maybe this can be improved and made without using event emitters?
   useEffect(() => {
     const handleTimeTableEvent = () => {
       if (matricola && loggedIn && !deducer.current) {
         deducer.current = new TimetableDeducer(matricola)
         deducer.current.addListener("timetable_retrieved", () => {
-          if (deducer?.current?.timetable?.table) {
-            setFormattedTimetable({ ...deducer?.current?.timetable?.table })
+          if (deducer?.current?.formattedTable) {
+            setFormattedTimetable({ ...deducer?.current?.formattedTable })
           }
           if (deducer?.current?.subjects) {
             setSubjects(deducer?.current?.subjects)
@@ -191,7 +190,6 @@ export const TimeTableGrid: FC = () => {
                       <TimetableRow
                         animatedValue={clipped}
                         onEventPress={(event: Event) => {
-                          /* setTimeTableOpen(!timeTableOpen) */
                           if (timeTableOpen) {
                             //set lecture and open bottom sheet
                             setTimeTableOpen(!timeTableOpen)
@@ -213,7 +211,6 @@ export const TimeTableGrid: FC = () => {
                         row={formattedTable[_day]}
                         selectedLectureId={selectedLectureId}
                         key={day}
-                        subjects={subjects}
                       />
                     )
                   })}
@@ -275,10 +272,18 @@ export const TimeTableGrid: FC = () => {
             >
               <CheckBox
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                value={subjects[subject]}
+                value={subjects[subject].isShowing}
                 onValueChange={newValue => {
-                  const newSubjects = { ...subjects, [subject]: newValue }
+                  const newSubjects = {
+                    ...subjects,
+                    [subject]: {
+                      isShowing: newValue,
+                      color: subjects[subject].color,
+                    },
+                  }
                   setSubjects(newSubjects)
+
+                  //update storage
                   updateSubjects(newSubjects)
                 }}
               />

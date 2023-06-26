@@ -1,6 +1,6 @@
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet"
 import { BodyText, Title } from "components/Text"
-import { FC, useContext, useMemo } from "react"
+import { FC, useContext, useMemo, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { Event } from "api/collections/event"
 import { usePalette } from "utils/colors"
@@ -40,6 +40,10 @@ export const LectureInfo: FC<LectureInfoProps> = props => {
     [props.lectureEvent.event_id, matricola, loggedIn]
   )
 
+  const [updatedColor, setUpdatedColor] = useState(
+    props.lectureEvent.lectureColor
+  )
+
   const styles = useMemo(
     () =>
       StyleSheet.create({
@@ -75,9 +79,13 @@ export const LectureInfo: FC<LectureInfoProps> = props => {
           </BodyText>
         </View>
         <ColorPickerLecture
-          color={props.lectureEvent.lectureColor}
+          color={updatedColor}
           onPress={() => {
-            props.deducer?.changeColor(props.lectureEvent.event_id)
+            const color = props.deducer?.changeColor(
+              props.lectureEvent.title.it
+            )
+
+            setUpdatedColor(color ?? props.lectureEvent.lectureColor)
           }}
         />
       </View>

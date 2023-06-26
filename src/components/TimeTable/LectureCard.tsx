@@ -69,7 +69,7 @@ export const LectureCard: FC<LectureCardProps> = props => {
     const collapsedColor = interpolateColor(
       selectedAnim.value,
       [0, 1],
-      [palette.variant1, props.lecture.lectureColor ?? ""]
+      [palette.variant1, props.lecture.lectureColor ?? "black"]
     )
     // the height of a previous card
     const prevHeight =

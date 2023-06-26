@@ -134,7 +134,7 @@ export const getFormattedTable = (events: Event[]): FormattedTable => {
     },
   }
 
-  const usedColorsCourse: Record<string, string> = {}
+  /* const usedColorsCourse: Record<string, string> = {} */
 
   for (let i = 0; i < orderedEvents.length; i++) {
     const dayOfTheWeek: ValidDayTimeTable = getDayFromEvent(orderedEvents[i])
@@ -184,7 +184,7 @@ export const getFormattedTable = (events: Event[]): FormattedTable => {
     for (let k = 0; k < relevantMultiRow.singleRows.length && !found; k++) {
       if (relevantMultiRow.singleRows[k].overlapNumber === overlapNumber) {
         found = true
-
+        /* 
         let color: string | undefined
         if (usedColorsCourse[orderedEvents[i].title.it]) {
           color = usedColorsCourse[orderedEvents[i].title.it]
@@ -192,11 +192,11 @@ export const getFormattedTable = (events: Event[]): FormattedTable => {
           color = getRandomLectureColor(usedColorsCourse)
           usedColorsCourse[orderedEvents[i].title.it] = color
         }
-
+ */
         //push event in row
         relevantMultiRow.singleRows[k].events.push({
           ...orderedEvents[i],
-          lectureColor: color,
+          /*  lectureColor: color, */
         })
 
         if (relevantMultiRow.maxOverlapNumber < overlapNumber) {
@@ -205,16 +205,16 @@ export const getFormattedTable = (events: Event[]): FormattedTable => {
       }
     }
     if (!found) {
-      let color: string | undefined
+      /* let color: string | undefined
       if (usedColorsCourse[orderedEvents[i].title.it]) {
         color = usedColorsCourse[orderedEvents[i].title.it]
       } else {
         color = getRandomLectureColor(usedColorsCourse)
         usedColorsCourse[orderedEvents[i].title.it] = color
-      }
+      } */
       //add new row in multiRow with correct overlapNumber
       relevantMultiRow.singleRows.push({
-        events: [{ ...orderedEvents[i], lectureColor: color }],
+        events: [{ ...orderedEvents[i] /* , lectureColor: color  */ }],
         overlapNumber: overlapNumber,
       })
       if (relevantMultiRow.maxOverlapNumber < overlapNumber) {
@@ -349,13 +349,16 @@ const colorList = [
   "#DC46F5",
 ]
 
-const getRandomLectureColor = (ban: Record<string, string>) => {
+const getRandomLectureColor = (subjects: Subjects) => {
   const newColorArray: string[] = [...colorList]
 
   //remove colors already used
-  Object.keys(ban).forEach(key =>
-    newColorArray.splice(newColorArray.indexOf(ban[key]), 1)
-  )
+  Object.keys(subjects).forEach(key => {
+    const color = subjects[key].color
+    if (color) {
+      newColorArray.splice(newColorArray.indexOf(color), 1)
+    }
+  })
 
   //if there are still colors available
   if (newColorArray.length !== 0) {
@@ -376,14 +379,17 @@ const shiftColor = (color?: string) => {
   return colorList[(colorPos + 1) % colorList.length]
 }
 
+/**
+ * By storing the busiest week of the semester we can reconstruct the entire timetable.
+ */
 interface Timetable {
-  table: FormattedTable
+  busiestWeek: Event[]
   //the date it was calculated
   date: Date
   matricola: string
 }
 
-export type Subjects = Record<string, boolean>
+export type Subjects = Record<string, { isShowing: boolean; color?: string }>
 
 //hardcoding day and month of semester start date
 
@@ -405,8 +411,24 @@ export declare interface TimetableDeducer {
   on(event: "timetable_retrieved", listener: (loggedIn: boolean) => void): this
 }
 
+/**
+ * Timetable Deducer, a singleton class for managing the timetable.
+ *
+ *  - It can be used to retrieve the timetable from the events and store it in the local storage.
+ *
+ *  Information stored include:
+ *  - the busiest week of the semester from which the entire timetable can be reconstructed
+ *  - the date it was calculated
+ *  - the matricola of the user
+ *  - the subjects, their respective colors and if they are visible or not
+ *
+ *  - The formatted table is calculated every time the page is opened or when a subject change color or visibility.
+ *
+ */
 export class TimetableDeducer extends EventEmitter {
-  public timetable: Timetable | undefined
+  private timetable: Timetable | undefined
+
+  public formattedTable: FormattedTable | undefined
 
   public subjects: Subjects = {}
 
@@ -473,6 +495,13 @@ export class TimetableDeducer extends EventEmitter {
       if (!this._checkNeedCalculating(timetable.date)) {
         this.timetable = timetable
         this.subjects = subjects
+
+        //Initialize formatted table by calculating margins
+        this.formattedTable = getFormattedTable(timetable.busiestWeek)
+
+        //apply visibility and colors
+        this._applyFiltersFormattedTimetable()
+
         this.emit("timetable_retrieved")
       } else {
         void this._deduceTimetableFromEvents()
@@ -520,7 +549,26 @@ export class TimetableDeducer extends EventEmitter {
 
   public updateSubjects = (subjects: Subjects) => {
     this.subjects = subjects
+
+    void this._applyFiltersFormattedTimetable()
+
     void this._writeSubjectsToStorage(subjects)
+  }
+
+  private _applyFiltersFormattedTimetable = () => {
+    if (this.timetable) {
+      //filter by visibility
+      const filteredEvents = this.timetable.busiestWeek.filter(event => {
+        return this.subjects[event.title.it].isShowing == true
+      })
+
+      this.formattedTable = getFormattedTable(filteredEvents)
+
+      //colorize table
+      this._colorizeFormattedTable()
+
+      this.emit("timetable_retrieved")
+    }
   }
 
   private _checkNeedCalculating = (date: Date): boolean => {
@@ -549,6 +597,14 @@ export class TimetableDeducer extends EventEmitter {
     }
     return false
   }
+  /**
+   *
+   * This function is responsible for requesting events,
+   * calculating the busiest week in the current semester and storing the timetable in the local storage.
+   *
+   * It is called the first time the timetable page is opened and when semester changes.
+   *
+   */
 
   private _deduceTimetableFromEvents = async () => {
     try {
@@ -582,26 +638,30 @@ export class TimetableDeducer extends EventEmitter {
 
       const busiestWeek: Event[] = this._calculateBusiestWeek(filteredEvents)
 
-      const formattedTable = getFormattedTable(busiestWeek)
-
-      //update instance member
-      this.timetable = {
-        table: formattedTable,
-        date: new Date(),
-        matricola: this._matricola,
-      }
+      //calculate all margins
+      this.formattedTable = getFormattedTable(busiestWeek)
 
       const subjects: Subjects = {}
 
       busiestWeek.forEach(event => {
         if (!subjects[event.title.it]) {
-          subjects[event.title.it] = true
+          subjects[event.title.it] = { isShowing: true }
         }
       })
 
       this.subjects = subjects
 
+      //apply just colors
+      this._colorizeFormattedTable()
+
       this.emit("timetable_retrieved")
+
+      //update instance member
+      this.timetable = {
+        busiestWeek: busiestWeek,
+        date: new Date(),
+        matricola: this._matricola,
+      }
 
       //update storage
       void this._writeToStorage(this.timetable)
@@ -658,51 +718,72 @@ export class TimetableDeducer extends EventEmitter {
     return newArray
   }
 
-  public changeColor = (id?: number) => {
-    if (!id || !this.timetable) {
+  private _colorizeFormattedTable = () => {
+    if (!this.formattedTable) {
       return
     }
-    let found = false
+
+    let changed = false
+
     for (const key of formattedTableKeys) {
-      for (let i = 0; i < this.timetable.table[key].singleRows.length; i++) {
+      for (let i = 0; i < this.formattedTable[key].singleRows.length; i++) {
         for (
           let j = 0;
-          j < this.timetable.table[key].singleRows[i].events.length;
+          j < this.formattedTable[key].singleRows[i].events.length;
           j++
         ) {
-          if (
-            this.timetable.table[key].singleRows[i].events[j].event_id === id
-          ) {
-            this.timetable.table[key].singleRows[i].events[j].lectureColor =
-              shiftColor(
-                this.timetable.table[key].singleRows[i].events[j].lectureColor
-              )
-            found = true
-          }
-          if (found) break
-        }
+          let color: string | undefined
 
-        if (found) {
-          break
+          //if subject already has a color, use it
+          if (
+            this.subjects[
+              this.formattedTable[key].singleRows[i].events[j].title.it
+            ].color
+          ) {
+            color =
+              this.subjects[
+                this.formattedTable[key].singleRows[i].events[j].title.it
+              ].color
+          } else {
+            changed = true
+
+            //get new color
+            color = getRandomLectureColor(this.subjects)
+
+            this.subjects[
+              this.formattedTable[key].singleRows[i].events[j].title.it
+            ].color = color
+          }
+
+          this.formattedTable[key].singleRows[i].events[j].lectureColor = color
         }
       }
-      if (found) {
-        this.emit("timetable_retrieved")
-        void this._writeToStorage(this.timetable)
-        break
-      }
+    }
+
+    if (changed) {
+      void this._writeSubjectsToStorage(this.subjects)
     }
   }
 
-  /* private _clearStorage = async () => {
-    try {
-      await FileSystem.deleteAsync(
-        FileSystem.documentDirectory + "timetable.json"
-      )
-    } catch (err) {
-      console.log(err)
+  public changeColor = (subject?: string): string | undefined => {
+    if (!subject) {
+      return
     }
-  } */
+
+    const oldColor = this.subjects[subject].color
+
+    const newColor = oldColor
+      ? shiftColor(oldColor)
+      : getRandomLectureColor(this.subjects)
+
+    this.subjects[subject].color = newColor
+
+    this._applyFiltersFormattedTimetable()
+
+    void this._writeSubjectsToStorage(this.subjects)
+
+    return newColor
+  }
 
   public refresh = () => {
     void this._deduceTimetableFromEvents()
