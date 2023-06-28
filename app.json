@@ -24,8 +24,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/foreground.svg",
+        "backgroundColor": "#424966"
       },
       "googleServicesFile": "./config/google-services.json",
       "package": "org.polinetwork.polifemo",
