@@ -30,7 +30,6 @@ import { usePalette } from "utils/colors"
 import { useFocusEffect } from "@react-navigation/native"
 import { TimetableBottomSheetHandle } from "components/TimeTable/TimetableBottomSheetHandle"
 import { Modal } from "components/Modal"
-import CheckBox from "expo-checkbox"
 import { Icon } from "components/Icon"
 import list_timetable from "assets/timetable/list_timetable.svg"
 import {
@@ -42,6 +41,8 @@ import {
 import { LectureInfo } from "components/TimeTable/LectureInfo"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { PageWrap } from "components/PageLayout"
+import { capitalize } from "utils/functions"
+import { ToggleSwitch } from "components/ToggleSwitch"
 
 // distance of the bottom sheet from the top of the screen, when opened or closed
 const distanceFromTop = {
@@ -255,43 +256,58 @@ export const TimeTable: MainStackScreen<"TimeTable"> = () => {
         title={"Mostra lezioni"}
         onClose={() => setIsModalShowing(false)}
         contentContainerStyle={{ paddingBottom: 16 }}
-        centerText={true}
+        centerText
       >
-        {Object.keys(subjects).map((subject, index) => {
-          return (
-            <View
-              key={index}
-              style={{
-                marginHorizontal: 28,
-                marginVertical: 8,
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-              }}
-            >
-              <CheckBox
-                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                value={subjects[subject].isShowing}
-                onValueChange={newValue => {
-                  const newSubjects = {
-                    ...subjects,
-                    [subject]: {
-                      isShowing: newValue,
-                      color: subjects[subject].color,
-                    },
-                  }
-                  setSubjects(newSubjects)
-
-                  //update storage
-                  updateSubjects(newSubjects)
+        <ScrollView
+          style={{
+            height: "100%",
+            marginTop: 24,
+          }}
+          contentContainerStyle={{ paddingBottom: 8 }}
+        >
+          {Object.keys(subjects).map(subject => {
+            return (
+              <Pressable
+                key={`__subject-selector-${subject}`}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  paddingHorizontal: 24,
+                  paddingVertical: 6,
                 }}
-              />
-              <BodyText style={{ paddingLeft: 16, paddingRight: 16 }}>
-                {subject}
-              </BodyText>
-            </View>
-          )
-        })}
+              >
+                <BodyText
+                  style={{
+                    flexShrink: 1,
+                    fontSize: 16,
+                    fontWeight: "400",
+                    marginRight: 8,
+                  }}
+                >
+                  {capitalize(subject, 3)}
+                </BodyText>
+                <ToggleSwitch
+                  value={subjects[subject].isShowing}
+                  color={subjects[subject].color}
+                  onValueChange={newValue => {
+                    const newSubjects = {
+                      ...subjects,
+                      [subject]: {
+                        isShowing: newValue,
+                        color: subjects[subject].color,
+                      },
+                    }
+                    setSubjects(newSubjects)
+
+                    //update storage
+                    updateSubjects(newSubjects)
+                  }}
+                />
+              </Pressable>
+            )
+          })}
+        </ScrollView>
       </Modal>
     </PageWrap>
   )
