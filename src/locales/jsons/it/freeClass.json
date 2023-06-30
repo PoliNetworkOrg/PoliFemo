@@ -1,0 +1,45 @@
+{
+  "freeClass_title": "Aule libere",
+
+  "freeClass_search": "Cerca aula",
+  "freeClass_position": "In base alla tua-posizione",
+  "freeClass_headquarter": "Scegli la tua-sede",
+  "freeClass_exactPosition": "Posizione attuale",
+
+  "freeClass_HQ": "Sede",
+
+  "freeClass_map": "Mappa",
+  "freeClass_list": "Lista",
+
+  "freeClass_timeLeft": "Libera fino alle",
+  "freeClass_freeCrowding": "Poco",
+  "freeClass_medCrowding": "Mediamente",
+  "freeClass_fullCrowding": "Molto",
+  "freeClass_crowdingStatus": "affollato",
+
+  "freeClass_address": "Indirizzo",
+  "freeClass_capacity": "Capienza",
+  "freeClass_openMap": "consulta la-mappa",
+  "freeClass_free": "Libera",
+  "freeClass_timeRemaining": "Mancano",
+  "freeClass_from": "Da",
+  "freeClass_to": "A",
+  "freeClass_crowding": "Affollamento",
+  "freeClass_low": "Basso",
+  "freeClass_med": "Medio",
+  "freeClass_high": "Alto",
+  "freeClass_crowdingOpinion": "Se il dato sull’affollamento non è corretto-esprimi opinione",
+  "freeClass_modalTitle": "Esprimi opinione",
+  "freeClass_modalSubtitle": "Indica il livello di affollamento\ndell'aula",
+  "freeClass_confirm": "Conferma",
+  "freeClass_info": "Info utili",
+  "freeClass_smallDesk": "ribaltine / banco piccolo",
+  "freeClass_current": "prese per ogni postazione",
+  "freeClass_computer": "aula informatizzata",
+
+  "mapError": "Mappa non disponibile",
+
+  "positionModalityEmptyList": "Non ci sono aule libere nelle vicinanze",
+  "buildingChoiceEmptyList": "Non ci sono edifici disponibili",
+  "classChoiceEmptyList": "Non ci sono aule disponibili"
+}

@@ -2,49 +2,30 @@ import { FC, useState } from "react"
 import { View } from "react-native"
 import { OutlinedButton } from "./OutlinedButton"
 import { StyleSheet } from "react-native"
-import { SelectTile } from "components/Settings"
 import { getNameFromMode, ValidModalType } from "utils/groups"
 import { Filters } from "utils/groups"
-import { Modal } from "components/Modal"
+import { useTranslation } from "react-i18next"
+import { ModalPicker } from "components/ModalPicker"
 export interface FiltersProps {
   filters: Filters
   onFilterChange: (filters: Filters) => void
 }
 
 interface ModalItemList {
-  itemsToShow: string[]
+  itemsToShow: { value: string; label: string }[]
   itemsToSave: string[]
 }
 
+const year = new Date().getFullYear()
+const years = Array.from(
+  new Array(5),
+  (_, index) => year - index - 1 + "/" + (year - index)
+)
 const yearsList: ModalItemList = {
-  itemsToShow: [
-    "2022/2023",
-    "2021/2022",
-    "2020/2021",
-    "2019/2020",
-    "2018/2019",
-  ],
-  itemsToSave: [
-    "2022/2023",
-    "2021/2022",
-    "2020/2021",
-    "2019/2020",
-    "2018/2019",
-  ],
-}
-const coursesList: ModalItemList = {
-  itemsToShow: ["Triennale", "Magistrale", "Ciclo unico"],
-  itemsToSave: ["LT", "LM", "LU"],
-}
-
-const typesList: ModalItemList = {
-  itemsToShow: ["Scuola", "Corso", "Extra"],
-  itemsToSave: ["S", "C", "E"],
-}
-
-const platformsList: ModalItemList = {
-  itemsToShow: ["Whatsapp", "Facebook", "Telegram"],
-  itemsToSave: ["WA", "FB", "TG"],
+  itemsToShow: years.map(value => {
+    return { value: value, label: value }
+  }),
+  itemsToSave: years,
 }
 
 export const FiltersList: FC<FiltersProps> = props => {
@@ -64,6 +45,35 @@ export const FiltersList: FC<FiltersProps> = props => {
     props.onFilterChange({})
   }
 
+  const { t } = useTranslation() //i18n hook
+
+  const coursesList: ModalItemList = {
+    itemsToShow: [
+      { value: "bachelor", label: t("bachelor") },
+      { value: "master", label: t("master") },
+      { value: "single_cycle", label: t("single_cycle") },
+    ],
+    itemsToSave: ["LT", "LM", "LU"],
+  }
+
+  const typesList: ModalItemList = {
+    itemsToShow: [
+      { value: "school", label: t("school") },
+      { value: "group_course", label: t("group_course") },
+      { value: "Extra", label: t("Extra") },
+    ],
+    itemsToSave: ["S", "C", "E"],
+  }
+
+  const platformsList: ModalItemList = {
+    itemsToShow: [
+      { value: "Whatsapp", label: t("Whatsapp") },
+      { value: "Facebook", label: t("Facebook") },
+      { value: "Telegram", label: t("Telegram") },
+    ],
+    itemsToSave: ["WA", "FB", "TG"],
+  }
+
   return (
     <View>
       <View
@@ -73,7 +83,7 @@ export const FiltersList: FC<FiltersProps> = props => {
         }}
       >
         <OutlinedButton
-          text="Anno"
+          text={"" + t("group_year")}
           buttonStyle={styles.buttonCustomMargin}
           isSelected={props.filters.year ? true : false}
           onPress={() => {
@@ -84,7 +94,7 @@ export const FiltersList: FC<FiltersProps> = props => {
           }}
         />
         <OutlinedButton
-          text="Corso"
+          text={"" + t("group_course")}
           buttonStyle={styles.buttonCustomMargin}
           isSelected={props.filters.course ? true : false}
           onPress={() => {
@@ -95,7 +105,7 @@ export const FiltersList: FC<FiltersProps> = props => {
           }}
         />
         <OutlinedButton
-          text="Tipo"
+          text={"" + t("group_type")}
           buttonStyle={styles.buttonCustomMargin}
           isSelected={props.filters.type ? true : false}
           onPress={() => {
@@ -106,7 +116,7 @@ export const FiltersList: FC<FiltersProps> = props => {
           }}
         />
         <OutlinedButton
-          text="Piattaforma"
+          text={"" + t("group_platform")}
           buttonStyle={styles.buttonCustomMargin}
           isSelected={props.filters.platform ? true : false}
           onPress={() => {
@@ -123,66 +133,39 @@ export const FiltersList: FC<FiltersProps> = props => {
           onPress={reset}
         />
       </View>
-      <Modal
-        title={getNameFromMode(modalMode)}
+      <ModalPicker
+        title={"" + t(getNameFromMode(modalMode))}
         centerText
         isShowing={isModalShowing}
-        buttons={[
-          {
-            text: "Annulla",
-            onPress: () => {
-              setIsModalShowing(false)
-            },
-          },
-          {
-            text: "Conferma",
-            onPress: () => {
-              if (modalMode === "course") {
-                props.onFilterChange({
-                  ...props.filters,
-                  course: selectedItem,
-                })
-              } else if (modalMode === "platform") {
-                props.onFilterChange({
-                  ...props.filters,
-                  platform: selectedItem,
-                })
-              } else if (modalMode === "year") {
-                props.onFilterChange({
-                  ...props.filters,
-                  year: selectedItem,
-                })
-              } else if (modalMode === "type") {
-                props.onFilterChange({
-                  ...props.filters,
-                  type: selectedItem,
-                })
-              }
-              setIsModalShowing(false)
-            },
-          },
-        ]}
-      >
-        <SelectTile
-          value={"Tutti"}
-          selected={selectedItem === undefined}
-          onPress={() => {
-            setSelectedItem(undefined)
-          }}
-        />
-        {modalItems?.itemsToShow.map((itemName, index) => {
-          return (
-            <SelectTile
-              key={index}
-              value={itemName}
-              selected={selectedItem === modalItems.itemsToSave[index]}
-              onPress={() => {
-                setSelectedItem(modalItems.itemsToSave[index])
-              }}
-            />
-          )
-        })}
-      </Modal>
+        elements={modalItems?.itemsToShow}
+        selectedValue={selectedItem}
+        onClose={() => setIsModalShowing(false)}
+        onSelect={value => {
+          if (modalMode === "course") {
+            props.onFilterChange({
+              ...props.filters,
+              course: value,
+            })
+          } else if (modalMode === "platform") {
+            props.onFilterChange({
+              ...props.filters,
+              platform: value,
+            })
+          } else if (modalMode === "year") {
+            props.onFilterChange({
+              ...props.filters,
+              year: value,
+            })
+          } else if (modalMode === "type") {
+            props.onFilterChange({
+              ...props.filters,
+              type: value,
+            })
+          }
+          setSelectedItem(value)
+          setIsModalShowing(false)
+        }}
+      />
     </View>
   )
 }

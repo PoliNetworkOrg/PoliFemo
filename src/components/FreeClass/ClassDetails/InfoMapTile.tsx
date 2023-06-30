@@ -7,6 +7,7 @@ import MapView from "react-native-maps"
 import expand from "assets/freeClassrooms/expand.svg"
 import { Icon } from "components/Icon"
 import { AdaptiveShadowView } from "components/BoxShadow"
+import { useTranslation } from "react-i18next"
 
 interface InfoMapTileProps {
   roomName: string
@@ -26,6 +27,8 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
   const latitude = props.latitude
   const longitude = props.longitude
 
+  const { t } = useTranslation("freeClass")
+
   /*from  https://stackoverflow.com/questions/73653813/how-to-open-google-map-with-latitude-and-longitude*/
   const openAddressOnMap = (label: string, lat: string, lng: string) => {
     const scheme = Platform.select({
@@ -43,6 +46,9 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
       }
     }
   }
+
+  const openMapMessage = t("freeClass_openMap").split("-")
+
   return (
     <View
       style={{
@@ -88,7 +94,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
               color: labelsHighContrast,
             }}
           >
-            Indirizzo :
+            {t("freeClass_address")}:
           </BodyText>
           <BodyText
             style={{
@@ -109,7 +115,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
               flex: 1,
             }}
           >
-            Capienza:{" "}
+            {t("freeClass_capacity")}:{" "}
           </BodyText>
           <BodyText
             style={{
@@ -218,7 +224,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
                   color: labelsHighContrast,
                 }}
               >
-                consulta la{" "}
+                {openMapMessage[0]}{" "}
               </BodyText>
               <BodyText
                 style={{
@@ -227,7 +233,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
                   color: labelsHighContrast,
                 }}
               >
-                mappa
+                {openMapMessage[1]}
               </BodyText>
             </View>
           </Pressable>

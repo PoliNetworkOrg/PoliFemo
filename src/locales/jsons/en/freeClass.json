@@ -1,0 +1,45 @@
+{
+  "freeClass_title": "Free classrooms",
+
+  "freeClass_search": "Search classroom",
+  "freeClass_position": "Based on your-location",
+  "freeClass_headquarter": "Choose your-headquarter",
+  "freeClass_exactPosition": "Current position",
+
+  "freeClass_HQ": "Headquarter",
+
+  "freeClass_map": "Map",
+  "freeClass_list": "List",
+
+  "freeClass_timeLeft": "Free until",
+  "freeClass_freeCrowding": "Low",
+  "freeClass_medCrowding": "Medium",
+  "freeClass_fullCrowding": "Very",
+  "freeClass_crowdingStatus": "crowded",
+
+  "freeClass_address": "Address",
+  "freeClass_capacity": "Capacity",
+  "freeClass_openMap": "open the-map",
+  "freeClass_free": "Free",
+  "freeClass_timeRemaining": "Time left",
+  "freeClass_from": "From",
+  "freeClass_to": "To",
+  "freeClass_crowding": "Crowding",
+  "freeClass_low": "Low",
+  "freeClass_med": "Medium",
+  "freeClass_high": "High",
+  "freeClass_crowdingOpinion": "If the data on crowding is not correct-express an opinion",
+  "freeClass_modalTitle": "Express opinion",
+  "freeClass_modalSubtitle": "Indicate the level of crowding\nin the classroom",
+  "freeClass_confirm": "Confirm",
+  "freeClass_info": "Useful info",
+  "freeClass_smallDesk": "small desk",
+  "freeClass_current": "seats with electric socket",
+  "freeClass_computer": "computerized classroom",
+
+  "mapError": "Map not available",
+
+  "positionModalityEmptyList": "There are no free classrooms nearby",
+  "buildingChoiceEmptyList": "There are no buildings available",
+  "classChoiceEmptyList": "There are no free classrooms"
+}

@@ -2,7 +2,6 @@ import { useContext } from "react"
 import { Alert, Linking, View } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { BodyText, HyperLink, Text, Title } from "components/Text"
-import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import { SettingTile } from "components/Settings/SettingTile"
 import { MainTitle } from "components/Home"
 import Constants from "expo-constants"
@@ -12,8 +11,12 @@ import * as Clipboard from "expo-clipboard"
 import { usePalette } from "utils/colors"
 import { LoginContext } from "contexts/login"
 import { Canvas, Group, ImageSVG, useSVG } from "@shopify/react-native-skia"
-import polifemoIcon from "assets/highlights/polifemo.svg"
+import polifemoIcon from "assets/polifemo/happy.svg"
 import { Divider } from "components/Divider"
+import { useTranslation } from "react-i18next"
+
+import { getGMSStatus } from "utils/hasGMS"
+import { ScrollPage } from "components/PageLayout"
 
 /**
  * Notifications Settings Page
@@ -24,133 +27,122 @@ export const About: SettingsStackScreen<"About"> = () => {
   const { loggedIn, userInfo } = useContext(LoginContext)
   const polifemoSVG = useSVG(polifemoIcon)
 
+  const { t } = useTranslation("settings")
+
   return (
-    <ContentWrapperScroll title="Su quest'app">
-      <View style={{ paddingTop: 32, paddingBottom: 80 }}>
-        <MainTitle />
-        <View
+    <ScrollPage
+      upperTitle={"" + t("settings_infoAppTitle")}
+      contentContainerStyle={{
+        paddingTop: 32,
+      }}
+    >
+      <MainTitle />
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingHorizontal: 40,
+        }}
+      >
+        <Canvas
           style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingHorizontal: 40,
+            height: 128,
+            width: 65,
           }}
         >
-          <Canvas
+          {polifemoSVG && (
+            <Group transform={[{ scale: 1.82 }]}>
+              <ImageSVG
+                svg={polifemoSVG}
+                x={-9.2}
+                y={-29.5}
+                width={63}
+                height={128}
+              />
+            </Group>
+          )}
+        </Canvas>
+        <View>
+          <Text
             style={{
-              height: 128,
-              width: 65,
+              color: articleTitle,
+              textAlign: "center",
+              fontSize: 24,
             }}
           >
-            {polifemoSVG && (
-              <Group transform={[{ scale: 1.82 }]}>
-                <ImageSVG
-                  svg={polifemoSVG}
-                  x={-9.2}
-                  y={-29.5}
-                  width={63}
-                  height={128}
-                />
-              </Group>
-            )}
-          </Canvas>
-          <View>
-            <Text
-              style={{
-                color: articleTitle,
-                textAlign: "center",
-                fontSize: 24,
-              }}
-            >
-              by{"\n"}PoliNetwork
-            </Text>
-            <BodyText
-              style={{
-                textAlign: "center",
-                fontSize: 14,
-                color: articleSubtitle,
-                marginVertical: 24,
-              }}
-            >
-              Versione {Constants.manifest2?.extra?.expoClient?.version}
-              {__DEV__ ? " (dev mode)" : ""}
-              {"\n"}
-              Build {Application.nativeBuildVersion}
-              {"\n"}
-              OS: {Device.osName} {Device.osVersion}
-              {" - "}
-              {Device.modelName} {Device.isDevice ? "" : "(emulator)"}
-              {"\n"}
-              env: {Constants.appOwnership} - {Constants.executionEnvironment}
-            </BodyText>
-          </View>
-        </View>
-        <BodyText style={{ paddingHorizontal: 32, paddingBottom: 16 }}>
-          <Title style={{ fontSize: 24 }}>
-            Informazioni sull&quot;app{"\n"}
-          </Title>
-          Un&apos;app pensata per semplificare la vita di tutti gli studenti del
-          Politecnico permettendo a loro di potersi concentrare al massimo sullo
-          studio e lasciare il resto a PoliFemo{"\n"}
-          Svilluppata con ❤️ da PoliNetwork{"\n"}
-          {"\n"}
-          <Title style={{ fontSize: 24 }}>Source code{"\n"}</Title>
-          Polifemo è un progetto open source, puoi contribuire al suo sviluppo
-          su GitHub!{"\n"}
-          Client:{" "}
-          <HyperLink href="https://github.com/polinetworkorg/polifemo">
-            PoliNetworkOrg/PoliFemo
-          </HyperLink>
-          {"\n"}
-          Server:{" "}
-          <HyperLink href="https://github.com/polinetworkorg/polifemobackend">
-            PoliNetworkOrg/PoliFemoBackend
-          </HyperLink>
-        </BodyText>
-        <Divider />
-        <SettingTile
-          setting={{
-            title: "Riporta un problema",
-            subtitle: "Segnala un bug o suggerisci una nuova funzionalità",
-            callback: () =>
-              Linking.openURL(
-                "https://github.com/PoliNetworkOrg/PoliFemo/issues/new/choose"
-              ),
-          }}
-        />
-        <SettingTile
-          setting={{
-            title: "Contattaci",
-            subtitle: "Link di contatto per qualsiasi domanda",
-            callback: () =>
-              Linking.openURL("https://polinetwork.org/learnmore/contacts/"),
-          }}
-        />
-        {loggedIn ? (
-          <SettingTile
-            setting={{
-              title: "Copia ID utente",
-              subtitle: "Copia il tuo ID utente PoliNetwork negli appunti",
-              callback: async () => {
-                await Clipboard.setStringAsync(userInfo.userID)
-                Alert.alert(
-                  "Copiato!",
-                  "Il tuo ID utente è stato copiato negli appunti."
-                )
-              },
+            by{"\n"}PoliNetwork
+          </Text>
+          <BodyText
+            style={{
+              textAlign: "center",
+              fontSize: 14,
+              color: articleSubtitle,
+              marginVertical: 24,
             }}
-          />
-        ) : null}
+          >
+            Versione {Constants.manifest2?.extra?.expoClient?.version}
+            {__DEV__ ? " (dev mode)" : ""}
+            {"\n"}
+            Build {Application.nativeBuildVersion}
+            {"\n"}
+            OS: {Device.osName} {Device.osVersion}
+            {" - "}
+            {Device.modelName} {Device.isDevice ? "" : "(emulator)"}
+            {"\n"}
+            env: {Constants.appOwnership} - {Constants.executionEnvironment}
+            {"\n"}
+            GMS: {getGMSStatus()}
+          </BodyText>
+        </View>
+      </View>
+      <BodyText style={{ paddingHorizontal: 32, paddingBottom: 16 }}>
+        <Title style={{ fontSize: 24 }}>{t("settings_info") + "\n"}</Title>
+        {t("settings_info_message")}
+        <Title style={{ fontSize: 24 }}>Source code{"\n"}</Title>
+        {t("settings_sourceCode_message")}
+        Client:{" "}
+        <HyperLink href="https://github.com/polinetworkorg/polifemo">
+          PoliNetworkOrg/PoliFemo
+        </HyperLink>
+        {"\n"}
+        Server:{" "}
+        <HyperLink href="https://github.com/polinetworkorg/polifemobackend">
+          PoliNetworkOrg/PoliFemoBackend
+        </HyperLink>
+      </BodyText>
+      <Divider />
+      <SettingTile
+        title={t("settings_report")}
+        subtitle={"" + t("settings_reportSubTitle")}
+        callback={() =>
+          Linking.openURL(
+            "https://github.com/PoliNetworkOrg/PoliFemo/issues/new/choose"
+          )
+        }
+      />
+      <SettingTile
+        title={t("settings_contacts")}
+        subtitle={"" + t("settings_contactsSubTitile")}
+        callback={() =>
+          Linking.openURL("https://polinetwork.org/learnmore/contacts/")
+        }
+      />
+      {loggedIn ? (
         <SettingTile
-          setting={{
-            title: "Licenze",
-            subtitle: "Visualizza le licenze dei pacchetti utilizzati",
-            callback: () => {
-              navigate("Licenses")
-            },
+          title={t("settings_userId")}
+          subtitle={"" + t("settings_userIdSubTitle")}
+          callback={async () => {
+            await Clipboard.setStringAsync(userInfo.userID)
+            Alert.alert(t("settings_copied"), "" + t("settings_alert_message"))
           }}
         />
-      </View>
-    </ContentWrapperScroll>
+      ) : null}
+      <SettingTile
+        title={t("settings_licenses")}
+        subtitle={"" + t("settings_licensesSubTitle")}
+        callback={() => navigate("Licenses")}
+      />
+    </ScrollPage>
   )
 }

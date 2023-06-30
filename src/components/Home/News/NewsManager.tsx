@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 
 import { api } from "api"
-import { Article, Tag } from "api/articles"
+import { Article, Tag } from "api/collections/articles"
 import {
   TagWithData,
   NewsPreferencesContext,
@@ -34,7 +34,7 @@ export const NewsManager = () => {
     for (const tag of tags) {
       promises.push(
         api.articles
-          .getLastArticleByTag(tag.name)
+          .getLastArticleByTag({ tag: tag.name })
           .then(article => {
             tempArticles[tag.name] = article
           })
@@ -50,7 +50,7 @@ export const NewsManager = () => {
   useEffect(() => {
     // Load tags (news categories) and their last article (one for each tag)
     const fetchData = async () => {
-      const responseTags = await api.tags.getTags()
+      const responseTags = await api.articles.getTags()
       const responseArticles = await getLastArticles(responseTags)
       setTags(responseTags)
       setLastArticles(responseArticles)
@@ -108,6 +108,7 @@ export const NewsManager = () => {
     const favouriteTags = tags.filter(
       tag => preferences[tag.name] !== Preference.UNFAVOURITE
     )
+
     // If there are no favourite tags, choose the highlighted article from all the other tags
     const tagsToAnalyze = favouriteTags.length > 0 ? favouriteTags : tags
     let tempHighlighted: Article | undefined = undefined
@@ -124,6 +125,7 @@ export const NewsManager = () => {
         }
       }
     }
+
     return tempHighlighted
   }
 

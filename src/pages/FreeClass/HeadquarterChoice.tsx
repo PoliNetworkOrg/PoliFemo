@@ -1,12 +1,11 @@
 import { useContext, useEffect } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { View } from "react-native"
-import { Title } from "components/Text"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
-import { PageWrapper } from "components/Groups/PageWrapper"
 import { DefaultList, HeadquarterItem } from "components/FreeClass/DefaultList"
-import { ConstructionType } from "api/rooms"
+import { ConstructionType } from "api/collections/rooms"
 import { RoomsSearchDataContext } from "contexts/rooms"
+import { useTranslation } from "react-i18next"
+import { PageWrap } from "components/PageLayout"
 
 const headquarterList: HeadquarterItem[] = [
   {
@@ -31,17 +30,16 @@ const headquarterList: HeadquarterItem[] = [
 export const HeadquarterChoice: MainStackScreen<"HeadquarterChoice"> = () => {
   const { date, setDate } = useContext(RoomsSearchDataContext)
 
+  const { t } = useTranslation("freeClass")
+
   useEffect(() => {
     setDate(new Date())
   }, [])
 
   return (
-    <PageWrapper>
-      <View style={{ paddingTop: 28 }}>
-        <Title style={{ paddingLeft: 28 }}>Sede</Title>
-        <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
-      </View>
+    <PageWrap title={t("freeClass_HQ") + ""}>
+      <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       <DefaultList dataToShow={headquarterList} />
-    </PageWrapper>
+    </PageWrap>
   )
 }

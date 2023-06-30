@@ -4,6 +4,7 @@ import { Dimensions, View } from "react-native"
 import { newsSheetEventEmitter } from "utils/events"
 import { LittleTitle } from "./LittleTitle"
 import { TrayButton } from "./TrayButton"
+import { useNotificationBadge } from "notifications/useNotificationBadge"
 
 /**
  * Top bar menu present in every page of the application, containing the
@@ -32,6 +33,8 @@ export const Tray: FC<{
     }
   }, [])
 
+  const badge = useNotificationBadge()
+
   return (
     <View
       style={{
@@ -50,6 +53,7 @@ export const Tray: FC<{
         label="notifications"
         onClick={() => props.onNotifications()}
         style={{ marginTop: 1 }}
+        badgeCount={badge}
       />
       <TrayButton label="settings" onClick={() => props.onSettings()} />
     </View>

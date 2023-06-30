@@ -2,6 +2,7 @@ import { EventEmitter } from "events"
 import axios, {
   AxiosError,
   AxiosInstance,
+  AxiosRequestConfig,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios"
@@ -17,6 +18,25 @@ https://levelup.gitconnected.com/use-case-of-singleton-with-axios-and-typescript
 Error retrying:
 https://stackblitz.com/edit/retry-api-call-axios-interceptor?file=index.ts
 */
+
+/**
+ * Cancellable API request interface
+ * @template T type of the cached response
+ * @template D type of the awaited response, by default `AxiosResponse<T, unknown>`
+ * @extends Promise<D> the promise resolves to the response
+ */
+export interface CancellableApiRequest<T, D = AxiosResponse<T, unknown>>
+  extends Promise<D> {
+  /**
+   * Aborts the request
+   * @param reason optional abort reason
+   */
+  cancel: (reason?: unknown) => void
+  /**
+   * Cached response, if any
+   */
+  cachedResponse: T | null
+}
 
 export enum AuthType {
   NONE,
@@ -265,6 +285,44 @@ export class HttpClient extends EventEmitter {
       throw error
     }
     throw error
+  }
+
+  callPolimi<T = void>(options: AxiosRequestConfig): CancellableApiRequest<T> {
+    const controller = new AbortController()
+    const request = this.polimiInstance.request<T>({
+      ...options,
+      signal: controller.signal,
+    }) as CancellableApiRequest<T>
+    request.cancel = r => controller.abort(r)
+    // TODO: handle cache ?
+    request.cachedResponse = null
+    return request
+  }
+
+  callPoliNetwork<T = void>(
+    options: AxiosRequestConfig
+  ): CancellableApiRequest<T> {
+    const controller = new AbortController()
+    const request = this.poliNetworkInstance.request<T>({
+      ...options,
+      signal: controller.signal,
+    }) as CancellableApiRequest<T>
+    request.cancel = r => controller.abort(r)
+    // TODO: handle cache ?
+    request.cachedResponse = null
+    return request
+  }
+
+  callGeneral<T = void>(options: AxiosRequestConfig): CancellableApiRequest<T> {
+    const controller = new AbortController()
+    const request = this.generalInstance.request<T>({
+      ...options,
+      signal: controller.signal,
+    }) as CancellableApiRequest<T>
+    request.cancel = r => controller.abort(r)
+    // TODO: handle cache ?
+    request.cachedResponse = null
+    return request
   }
 
   /**

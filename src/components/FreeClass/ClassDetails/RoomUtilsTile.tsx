@@ -4,6 +4,7 @@ import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
 
 import tick from "assets/freeClassrooms/tick.svg"
+import cross from "assets/freeClassrooms/cross.svg"
 import { Icon } from "components/Icon"
 
 interface RoomUtilsTileProps {
@@ -29,18 +30,17 @@ export const RoomUtilsTile: FC<RoomUtilsTileProps> = props => {
           marginRight: 8,
         }}
       >
-        <Icon
-          source={tick}
-          color={
-            props.status
-              ? isLight
-                ? palette.primary
-                : palette.lighter
-              : isLight
-              ? palette.lighter
-              : palette.primary
-          }
-        />
+        {props.status ? (
+          <Icon
+            source={tick}
+            color={isLight ? palette.primary : palette.lighter}
+          />
+        ) : (
+          <Icon
+            source={cross}
+            color={isLight ? palette.lighter : palette.primary}
+          />
+        )}
       </View>
 
       <BodyText

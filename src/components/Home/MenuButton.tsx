@@ -5,6 +5,7 @@ import { BodyText } from "components/Text"
 import { usePalette } from "utils/colors"
 import deleteIcon from "assets/menu/delete.svg"
 import { Icon } from "components/Icon"
+import { useTranslation } from "react-i18next"
 
 export enum ButtonType {
   CALENDAR,
@@ -41,6 +42,8 @@ export const MenuButton: FC<{
   const color = isDark && inMenu ? palette.lighter : palette.primary
 
   const animatedValue = new Animated.Value(0)
+
+  const { t } = useTranslation("home") //i18m hook
 
   //function to call to perform the shake of the button
   const handleAnimation = () => {
@@ -106,7 +109,7 @@ export const MenuButton: FC<{
                 color: "white",
               }}
             >
-              {buttonIcon.title}
+              {t(buttonIcon.title)}
             </BodyText>
           </View>
         </Pressable>
