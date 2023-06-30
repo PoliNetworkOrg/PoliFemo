@@ -56,7 +56,7 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
           style={{
             paddingVertical: 10,
             paddingHorizontal: 28,
-            backgroundColor: "#fff",
+            backgroundColor: isLight ? "#fff" : palette.darker,
           }}
         >
           <View
