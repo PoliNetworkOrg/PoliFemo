@@ -137,7 +137,7 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
               })
             }
             style={{ height: 220, marginBottom: 34 }}
-            articleTitle={props.highlightedArticle?.title}
+            articleTitle={props.highlightedArticle?.content?.it.title}
           />
         )}
 
