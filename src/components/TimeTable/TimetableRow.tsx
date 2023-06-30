@@ -32,7 +32,7 @@ export const TimetableRow: FC<TimetableRowProps> = props => {
         },
       ],
     }
-  }, [props.animatedValue])
+  }, [props.animatedValue, props.row])
 
   return (
     <Animated.View style={[{ zIndex: 1 }, topAnim]}>

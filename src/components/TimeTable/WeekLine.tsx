@@ -27,7 +27,11 @@ export const WeekLine: FC<WeekLineProps> = props => {
         [props.overlapsNumberList[6], props.overlapsNumberListCollapsed[6]]
       ),
     }
-  }, [props.animatedValue])
+  }, [
+    props.animatedValue,
+    props.overlapsNumberList,
+    props.overlapsNumberListCollapsed,
+  ])
 
   const animatedStyles = new Array(7).fill(0).map((_, index) => {
     return useAnimatedStyle(() => {
@@ -41,7 +45,11 @@ export const WeekLine: FC<WeekLineProps> = props => {
       )
 
       return { top }
-    }, [props.animatedValue])
+    }, [
+      props.animatedValue,
+      props.overlapsNumberList,
+      props.overlapsNumberListCollapsed,
+    ])
   })
 
   return (

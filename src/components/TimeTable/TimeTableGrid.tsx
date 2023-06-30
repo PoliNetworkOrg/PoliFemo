@@ -1,4 +1,12 @@
-import { FC, useCallback, useContext, useEffect, useRef, useState } from "react"
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import { Dimensions, Pressable, View } from "react-native"
 import { TimeLine } from "./TimeLine"
 import { WeekLine } from "./WeekLine"
@@ -125,6 +133,14 @@ export const TimeTableGrid: FC = () => {
     }
   }
 
+  const margins: [number[], number[]] = useMemo(
+    () => [
+      getMarginDays(formattedTable),
+      getMarginDaysCollapsed(formattedTable),
+    ],
+    [formattedTable]
+  )
+
   return (
     <>
       <View
@@ -169,10 +185,8 @@ export const TimeTableGrid: FC = () => {
           <View style={{ flexDirection: "row" }}>
             <WeekLine
               animatedValue={clipped}
-              overlapsNumberList={getMarginDays(formattedTable)}
-              overlapsNumberListCollapsed={getMarginDaysCollapsed(
-                formattedTable
-              )}
+              overlapsNumberList={margins[0]}
+              overlapsNumberListCollapsed={margins[1]}
             />
             <ScrollView
               horizontal
