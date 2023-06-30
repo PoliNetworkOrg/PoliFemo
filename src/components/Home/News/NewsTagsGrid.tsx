@@ -27,6 +27,7 @@ export const NewsTagsGrid: FC<NewsTagsGridProps> = props => {
         key={tag.name}
         title={capitalize(tag.name, 3)}
         imageURL={tag.image}
+        blurhash={tag.blurhash}
         onClick={() =>
           navigation.navigate("ArticlesList", {
             tagName: tag.name,

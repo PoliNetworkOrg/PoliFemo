@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { Platform, View } from "react-native"
-import { Title } from "components/Text"
 import * as Location from "expo-location"
 import { LocationGeocodedAddress, PermissionStatus } from "expo-location"
 import { AddressText } from "components/FreeClass/AddressText"
-import { PageWrapper } from "components/Groups/PageWrapper"
 import { PositionModality } from "components/FreeClass/PositionModality"
 import { useTranslation } from "react-i18next"
+import { PageWrap } from "components/PageLayout"
 
 /**
  * In this page the user can find a room according to his current position.
@@ -99,20 +98,17 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
   }, [currentCoords])
 
   return (
-    <PageWrapper>
-      <View style={{ paddingTop: 28 }}>
-        <View style={{ paddingLeft: 28 }}>
-          <Title>{t("freeClass_exactPosition")}</Title>
-          <AddressText
-            currentLocation={currentLocation}
-            locationStatus={locationStatus}
-          />
-        </View>
+    <PageWrap title={t("freeClass_exactPosition") + ""}>
+      <View style={{ paddingHorizontal: 28 }}>
+        <AddressText
+          currentLocation={currentLocation}
+          locationStatus={locationStatus}
+        />
       </View>
       <PositionModality
         currentCoords={currentCoords ?? [0, 0]}
         locationStatus={locationStatus}
       />
-    </PageWrapper>
+    </PageWrap>
   )
 }

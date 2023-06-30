@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { Alert, Linking } from "react-native"
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
-import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import { Divider } from "components/Divider"
 import { SettingTile } from "components/Settings/SettingTile"
 import { BodyText, HyperLink } from "components/Text"
@@ -10,9 +9,10 @@ import * as Sharing from "expo-sharing"
 import * as FileSystem from "expo-file-system"
 import { HttpClient } from "api/HttpClient"
 import { LoginContext } from "contexts/login"
-import { ModalPicker } from "components/Settings/ModalPicker"
 import { Description } from "components/Settings/Description"
 import { useTranslation } from "react-i18next"
+import { ScrollPage } from "components/PageLayout"
+import { ModalPicker } from "components/ModalPicker"
 
 const client = HttpClient.getInstance()
 
@@ -30,7 +30,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
 
   const { t } = useTranslation("settings")
 
-  const autodeleteTimes: { value: number; label: string }[] = [
+  const autodeleteTimes: { value: number | string; label: string }[] = [
     //non so per quale dannato motivo non mi funzionino i plurali, devo per forza mettere one e other!
     { value: 30, label: t("day.dayCount_other", { ns: "common", count: 30 }) },
     { value: 60, label: t("day.dayCount_other", { ns: "common", count: 60 }) },
@@ -72,7 +72,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
   }, [loggedIn])
 
   return (
-    <ContentWrapperScroll title="Privacy">
+    <ScrollPage upperTitle="Privacy">
       <BodyText
         style={{
           paddingTop: 36,
@@ -163,7 +163,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
           Linking.openURL("https://polinetwork.org/learnmore/privacy/")
         }
       />
-      <Description last>
+      <Description>
         {t("settings_privacyDisclaimer_message")}{" "}
         <HyperLink href="mailto:privacy@polinetwork.org">
           privacy@polinetwork.org
@@ -173,6 +173,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
       <ModalPicker
         title={t("settings_autoDelete_modalTitle")}
         subTitle={"" + t("settings_autoDelete_modalSubTitle")}
+        centerText
         isShowing={showingAutodeleteModal}
         onClose={() => setShowingAutodeleteModal(false)}
         elements={autodeleteTimes}
@@ -182,10 +183,10 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
             await api.user.updatePoliNetworkSettings({
               settings: {
                 // eslint-disable-next-line @typescript-eslint/naming-convention
-                expire_in_days: value,
+                expire_in_days: value as number,
               },
             })
-            setAutodeleteTime(value)
+            setAutodeleteTime(value as number)
             setShowingAutodeleteModal(false)
             Alert.alert(
               "Impostazioni aggiornate",
@@ -197,6 +198,6 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
           }
         }}
       />
-    </ContentWrapperScroll>
+    </ScrollPage>
   )
 }

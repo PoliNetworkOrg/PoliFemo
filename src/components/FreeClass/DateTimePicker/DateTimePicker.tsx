@@ -49,7 +49,6 @@ export const DateTimePicker: FC<DateTimePickerProps> = props => {
     <View>
       <View
         style={{
-          marginTop: 46,
           width: "100%",
           height: 27,
           flexDirection: "row",

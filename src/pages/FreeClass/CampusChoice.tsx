@@ -1,14 +1,12 @@
 import { useContext, useEffect, useState } from "react"
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { View } from "react-native"
-import { Title } from "components/Text"
 import { DateTimePicker } from "components/FreeClass/DateTimePicker/DateTimePicker"
-import { PageWrapper } from "components/Groups/PageWrapper"
 import buildingCoords from "components/FreeClass/buildingCoords.json"
 import { ConstructionType } from "api/collections/rooms"
 import { CampusItem, DefaultList } from "components/FreeClass/DefaultList"
 import { ValidAcronym } from "utils/rooms"
 import { RoomsSearchDataContext } from "contexts/rooms"
+import { PageWrap } from "components/PageLayout"
 
 /**
  * In this page the user can select the campus.
@@ -43,25 +41,15 @@ export const CampusChoice: MainStackScreen<"CampusChoice"> = props => {
   useEffect(() => getCampusList(headquarter.acronym), [])
 
   return (
-    <PageWrapper>
-      <View style={{ paddingTop: 28 }}>
-        {headquarter.name.length > 1 ? (
-          <Title
-            style={{
-              paddingLeft: 28,
-              fontWeight: "300",
-              fontFamily: "Roboto_300Light",
-            }}
-          >
-            {headquarter.name[0]}
-            <Title>{" " + headquarter.name[1]}</Title>
-          </Title>
-        ) : (
-          <Title style={{ paddingLeft: 28 }}>{headquarter.name}</Title>
-        )}
-        <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
-      </View>
+    <PageWrap
+      title={
+        headquarter.name.length > 1
+          ? [headquarter.name[0], headquarter.name[1]]
+          : headquarter.name[0]
+      }
+    >
+      <DateTimePicker date={date} setDate={(date: Date) => setDate(date)} />
       <DefaultList dataToShow={campusList} />
-    </PageWrapper>
+    </PageWrap>
   )
 }
