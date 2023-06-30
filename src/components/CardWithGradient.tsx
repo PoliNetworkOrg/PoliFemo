@@ -106,8 +106,7 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
               <CardTitle
                 style={{
                   lineHeight: 19,
-                  fontFamily: undefined, //otherwise it's bold
-                  fontWeight: "600",
+                  fontWeight: "500",
                 }}
               >
                 {props.articleTitle}
