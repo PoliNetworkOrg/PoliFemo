@@ -26,6 +26,7 @@ export const WeekLine: FC<WeekLineProps> = props => {
         [-1, 0],
         [props.overlapsNumberList[6], props.overlapsNumberListCollapsed[6]]
       ),
+      marginBottom: interpolate(props.animatedValue.value, [-1, 0], [0, 250]),
     }
   }, [
     props.animatedValue,
