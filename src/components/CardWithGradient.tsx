@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react"
 import { Pressable, View, ViewStyle } from "react-native"
 import { ImageBackground } from "expo-image"
 import { LinearGradient } from "expo-linear-gradient"
-import { BodyText, CardTitle } from "components/Text"
+import { CardTitle } from "components/Text"
 
 export interface CardWithGradientProps {
   /**
@@ -98,21 +98,20 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
             style={{
               flex: 1,
               margin: closerToCorner ? 9 : 17,
-              justifyContent: "space-between",
+              justifyContent: "flex-start",
             }}
           >
             <CardTitle style={{ lineHeight: 19 }}>{props.title}</CardTitle>
             {props.articleTitle && (
-              <BodyText
+              <CardTitle
                 style={{
                   lineHeight: 19,
-                  color: "#fff",
-                  fontSize: 16,
-                  fontWeight: "900",
+                  fontFamily: undefined, //otherwise it's bold
+                  fontWeight: "600",
                 }}
               >
                 {props.articleTitle}
-              </BodyText>
+              </CardTitle>
             )}
           </View>
         </LinearGradient>
