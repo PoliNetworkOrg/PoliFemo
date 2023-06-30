@@ -19,6 +19,7 @@ import { useNavigation } from "navigation/NavigationTypes"
 import { getUsableScreenHeight } from "utils/layout"
 import { newsSheetEventEmitter } from "utils/events"
 import { NewsBottomSheetHandle } from "./NewsBottomSheetHandle"
+import { useCurrentLanguage } from "utils/articles"
 
 interface NewsBottomSheetProps {
   /**
@@ -42,6 +43,8 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
   const { background } = usePalette()
 
   const { preferences } = useContext(NewsPreferencesContext)
+
+  const [lan] = useCurrentLanguage()
 
   // modal state
   const [isNewsClosed, setIsNewsClosed] = useState(true)
@@ -137,7 +140,11 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
               })
             }
             style={{ height: 220, marginBottom: 34 }}
-            articleTitle={props.highlightedArticle?.content?.it.title}
+            articleTitle={
+              lan == "it"
+                ? props.highlightedArticle?.content?.it.title
+                : props.highlightedArticle?.content?.en.title
+            }
           />
         )}
 
