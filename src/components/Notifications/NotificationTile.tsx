@@ -66,9 +66,8 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
             }}
           >
             <Image
-              source={{
-                uri: "https://images.unsplash.com/photo-1560174038-da43ac74f01b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2057&q=80",
-              }}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              source={require("../../../assets/polimi_placeholder.jpg")}
               style={{
                 width: 48,
                 height: 48,
