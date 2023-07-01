@@ -43,14 +43,14 @@ const dayMappingObject: Record<number, ValidDayTimeTable> = {
   0: "dom",
 }
 
-const dayStringMappingObject: Record<number, string> = {
-  1: "Lunedì",
-  2: "Martedì",
-  3: "Mercoledì",
-  4: "Giovedì",
-  5: "Venerdì",
-  6: "Sabato",
-  0: "Domenica",
+const dayStringMappingObject: Record<number, { it: string; en: string }> = {
+  1: { it: "Lunedì", en: "Monday" },
+  2: { it: "Martedì", en: "Tuesday" },
+  3: { it: "Mercoledì", en: "Wednesday" },
+  4: { it: "Giovedì", en: "Thursday" },
+  5: { it: "Venerdì", en: "Friday" },
+  6: { it: "Sabato", en: "Saturday" },
+  0: { it: "Domenica", en: "Sunday" },
 }
 
 export type ValidDayTimeTable =
@@ -311,7 +311,8 @@ export const getMarginDaysCollapsed = (table: FormattedTable): number[] => {
  */
 export const getTimeIntervalFormattedString = (
   dateStartISO?: string,
-  dateEndISO?: string
+  dateEndISO?: string,
+  lan?: string
 ) => {
   if (!dateStartISO || !dateEndISO) {
     return undefined
@@ -319,22 +320,28 @@ export const getTimeIntervalFormattedString = (
   const dateStart = new Date(dateStartISO)
   const dateEnd = new Date(dateEndISO)
 
-  const dayName = dayStringMappingObject[dateStart.getDay()]
+  const dayNameObj = dayStringMappingObject[dateStart.getDay()]
+
+  const dayName = lan === "it" ? dayNameObj.it : dayNameObj.en
 
   const timeStartHours = dateStart.getHours().toString().padStart(2, "0")
   const timeStartMinutes = dateStart.getMinutes().toString().padStart(2, "0")
   const timeEndHours = dateEnd.getHours().toString().padStart(2, "0")
   const timeEndMinutes = dateEnd.getMinutes().toString().padStart(2, "0")
 
-  return `${dayName} dalle ${timeStartHours}:${timeStartMinutes} alle ${timeEndHours}:${timeEndMinutes}`
+  return `${dayName} ${
+    lan === "it" ? "dalle" : "from"
+  } ${timeStartHours}:${timeStartMinutes} ${
+    lan === "it" ? "alle" : "to"
+  } ${timeEndHours}:${timeEndMinutes}`
 }
 
-export const getLectureRoomFormattedString = (room?: string) => {
+export const getLectureRoomFormattedString = (room?: string, lan?: string) => {
   if (!room) {
     return undefined
   }
 
-  return `lezione in aula: ${room}`
+  return `${lan === "it" ? "lezione in aula" : "lecture in room"}: ${room}`
 }
 
 export const randomInteger = (min: number, max: number) => {
@@ -389,7 +396,10 @@ interface Timetable {
   matricola: string
 }
 
-export type Subjects = Record<string, { isShowing: boolean; color?: string }>
+export type Subjects = Record<
+  string,
+  { isShowing: boolean; color?: string; en?: string }
+>
 
 //hardcoding day and month of semester start date
 
@@ -645,7 +655,7 @@ export class TimetableDeducer extends EventEmitter {
 
       busiestWeek.forEach(event => {
         if (!subjects[event.title.it]) {
-          subjects[event.title.it] = { isShowing: true }
+          subjects[event.title.it] = { isShowing: true, en: event.title.en }
         }
       })
 

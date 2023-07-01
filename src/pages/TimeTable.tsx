@@ -43,6 +43,8 @@ import { MainStackScreen } from "navigation/NavigationTypes"
 import { PageWrap } from "components/PageLayout"
 import { capitalize } from "utils/functions"
 import { ToggleSwitch } from "components/ToggleSwitch"
+import { useTranslation } from "react-i18next"
+import { useCurrentLanguage } from "utils/articles"
 
 // distance of the bottom sheet from the top of the screen, when opened or closed
 const distanceFromTop = {
@@ -51,6 +53,10 @@ const distanceFromTop = {
 }
 
 export const TimeTable: MainStackScreen<"TimeTable"> = () => {
+  const { t } = useTranslation("timetable")
+
+  const lan = useCurrentLanguage()
+
   const { timeTableOpen, setTimeTableOpen } = useContext(TimeTableContext)
 
   const bottomSheetRef = useRef<BottomSheet>(null)
@@ -143,7 +149,7 @@ export const TimeTable: MainStackScreen<"TimeTable"> = () => {
 
   return (
     <PageWrap
-      title="Orario"
+      title={t("title")}
       sideTitleElement={
         <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
           <Pressable onPress={() => deducer.current?.refresh()}>
@@ -253,7 +259,7 @@ export const TimeTable: MainStackScreen<"TimeTable"> = () => {
 
       <Modal
         isShowing={isModalShowing}
-        title={"Mostra lezioni"}
+        title={t("modalTitle")}
         onClose={() => setIsModalShowing(false)}
         contentContainerStyle={{ paddingBottom: 16 }}
         centerText
@@ -266,6 +272,10 @@ export const TimeTable: MainStackScreen<"TimeTable"> = () => {
           contentContainerStyle={{ paddingBottom: 8 }}
         >
           {Object.keys(subjects).map(subject => {
+            const lectureName =
+              lan === "it"
+                ? capitalize(subject, 3)
+                : capitalize(subjects[subject].en ?? subject, 3)
             return (
               <Pressable
                 key={`__subject-selector-${subject}`}
@@ -285,7 +295,7 @@ export const TimeTable: MainStackScreen<"TimeTable"> = () => {
                     marginRight: 8,
                   }}
                 >
-                  {capitalize(subject, 3)}
+                  {lectureName}
                 </BodyText>
                 <ToggleSwitch
                   value={subjects[subject].isShowing}
@@ -296,6 +306,7 @@ export const TimeTable: MainStackScreen<"TimeTable"> = () => {
                       [subject]: {
                         isShowing: newValue,
                         color: subjects[subject].color,
+                        en: subjects[subject].en,
                       },
                     }
                     setSubjects(newSubjects)

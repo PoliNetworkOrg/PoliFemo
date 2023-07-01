@@ -15,6 +15,8 @@ import { api } from "api"
 import { LoginContext } from "contexts/login"
 import { capitalize } from "utils/functions"
 import { RemoteLinkButton } from "./RemoteLinkButton"
+import { useCurrentLanguage } from "utils/articles"
+import { useTranslation } from "react-i18next"
 
 interface LectureInfoProps {
   lectureEvent: Event
@@ -25,6 +27,10 @@ interface LectureInfoProps {
  * Layout component for the lecture info description inside bottom sheet.
  */
 export const LectureInfo: FC<LectureInfoProps> = props => {
+  const { t } = useTranslation("timetable")
+
+  const lan = useCurrentLanguage()
+
   const { iconHighContrast } = usePalette()
 
   const { loggedIn, userInfo } = useContext(LoginContext)
@@ -54,10 +60,16 @@ export const LectureInfo: FC<LectureInfoProps> = props => {
         lighter: {
           fontSize: 12,
           color: iconHighContrast,
+          paddingBottom: 16,
         },
       }),
     [iconHighContrast]
   )
+
+  const lectureName =
+    lan === "it"
+      ? props.lectureEvent.title.it
+      : props.lectureEvent.title.en ?? props.lectureEvent.title.it
 
   return (
     <BottomSheetScrollView
@@ -73,9 +85,11 @@ export const LectureInfo: FC<LectureInfoProps> = props => {
         }}
       >
         <View style={{ flex: 1 }}>
-          <Title style={{ fontSize: 20 }}>{props.lectureEvent.title.it}</Title>
+          <Title style={{ fontSize: 20 }}>{lectureName}</Title>
           <BodyText style={styles.bolder}>
-            {`(Docente: ${capitalize(lecture?.lecturer ?? "") || "..."})`}
+            {`(${t("lecturer")}: ${
+              capitalize(lecture?.lecturer ?? "") || "..."
+            })`}
           </BodyText>
         </View>
         <ColorPickerLecture
@@ -97,11 +111,15 @@ export const LectureInfo: FC<LectureInfoProps> = props => {
         <BodyText style={styles.bolder}>
           {getTimeIntervalFormattedString(
             props.lectureEvent.date_start,
-            props.lectureEvent.date_end
+            props.lectureEvent.date_end,
+            lan
           )}
         </BodyText>
         <BodyText style={styles.bolder}>
-          {getLectureRoomFormattedString(props.lectureEvent.room?.acronym_dn)}
+          {getLectureRoomFormattedString(
+            props.lectureEvent.room?.acronym_dn,
+            lan
+          )}
         </BodyText>
         <BodyText style={styles.lighter}>
           {`(${
@@ -115,6 +133,7 @@ export const LectureInfo: FC<LectureInfoProps> = props => {
           <RemoteLinkButton
             key={`__remote_link_btn${index}`}
             remoteLink={link}
+            lan={lan}
           />
         ))}
       </View>

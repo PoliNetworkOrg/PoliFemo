@@ -8,13 +8,23 @@ import { BodyText } from "components/Text"
 
 interface RemoteLinkButtonProps {
   remoteLink: RemoteLink
+  lan?: string
 }
 
 /**
  * Component that represents the button that opens the remote link.
  */
-export const RemoteLinkButton: FC<RemoteLinkButtonProps> = ({ remoteLink }) => {
+export const RemoteLinkButton: FC<RemoteLinkButtonProps> = ({
+  remoteLink,
+  lan,
+}) => {
   const { iconHighContrast } = usePalette()
+
+  const linkDescription =
+    lan === "it"
+      ? remoteLink.link_description.it
+      : remoteLink.link_description.en
+
   return (
     <Pressable
       onPress={() => {
@@ -39,7 +49,7 @@ export const RemoteLinkButton: FC<RemoteLinkButtonProps> = ({ remoteLink }) => {
           color: iconHighContrast,
         }}
       >
-        {remoteLink.link_description.it.split(" - ").join("\n")}
+        {linkDescription.split(" - ").join("\n")}
       </BodyText>
     </Pressable>
   )

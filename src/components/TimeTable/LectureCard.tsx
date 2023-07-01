@@ -20,6 +20,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated"
+import { useCurrentLanguage } from "utils/articles"
 
 export interface LectureCardProps {
   lecture: Event
@@ -37,6 +38,8 @@ const minHour = 8
  */
 export const LectureCard: FC<LectureCardProps> = props => {
   const { palette } = usePalette()
+
+  const lan = useCurrentLanguage()
 
   const timeRange =
     Math.abs(
@@ -126,6 +129,11 @@ export const LectureCard: FC<LectureCardProps> = props => {
     [props.animatedValue, selectedAnim]
   )
 
+  const lectureName =
+    lan === "it"
+      ? props.lecture.title.it
+      : props.lecture.title.en ?? props.lecture.title.it
+
   return (
     <Animated.View
       style={[
@@ -142,7 +150,7 @@ export const LectureCard: FC<LectureCardProps> = props => {
           style={[{ padding: 8 }, styles.cardTextContainer, fullOpacity]}
         >
           <BodyText style={styles.cardText}>
-            {props.lecture.room?.acronym_dn + " - " + props.lecture.title.it}
+            {props.lecture.room?.acronym_dn + " - " + lectureName}
           </BodyText>
         </Animated.View>
         <Animated.View
