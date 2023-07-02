@@ -117,7 +117,7 @@ export const TimeTable: MainStackScreen<"TimeTable"> = () => {
     }, [])
   )
 
-  const animValue = useSharedValue(0)
+  const animValue = useSharedValue(-1)
   const clipped = useDerivedValue(
     () =>
       interpolate(animValue.value, [-1, 0], [-1, 0], {
