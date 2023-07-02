@@ -22,6 +22,7 @@ import { NotificationsCategory } from "pages/notifications/NotificationsCategory
 import { NotificationDetails } from "pages/notifications/NotificationDetails"
 import { createSharedElementStackNavigator } from "react-navigation-shared-element"
 import { HeadquarterChoice } from "pages/FreeClass/HeadquarterChoice"
+import { Career } from "pages/Career"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const MainStackNavigator =
@@ -106,6 +107,7 @@ export const MainStack: FC = () => {
           }
         }}
       />
+      <MainStackNavigator.Screen name="Career" component={Career} />
     </MainStackNavigator.Navigator>
   )
 }
