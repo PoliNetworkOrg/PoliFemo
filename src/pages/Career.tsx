@@ -1,6 +1,7 @@
 import { api } from "api"
 import { useApiCall } from "api/useApiCall"
 import { CareerStatsCircle } from "components/Career/CareerStatsCircle"
+import { CareerStatsInfo } from "components/Career/CareerStatsInfo"
 import { PageWrap } from "components/PageLayout"
 import { Text } from "components/Text"
 import { LoginContext } from "contexts/login"
@@ -39,13 +40,21 @@ export const Career: MainStackScreen<"Career"> = () => {
     <PageWrap title="Career">
       <Text style={styles.careerSubtitle}>Andamento Carriera</Text>
       {careerStats && (
-        <CareerStatsCircle
-          mean={careerStats.mean}
-          innerProgress={
-            careerStats.exam_stats.given / careerStats.exam_stats.planned
-          }
-          outerProgress={careerStats.given_cfu / careerStats.planned_cfu}
-        />
+        <>
+          <CareerStatsCircle
+            mean={careerStats.mean}
+            innerProgress={
+              careerStats.exam_stats.given / careerStats.exam_stats.planned
+            }
+            outerProgress={careerStats.given_cfu / careerStats.planned_cfu}
+          />
+          <CareerStatsInfo
+            cfusGiven={careerStats.given_cfu}
+            cfusPlanned={careerStats.planned_cfu}
+            examsGiven={careerStats.exam_stats.given}
+            examsPlanned={careerStats.exam_stats.planned}
+          />
+        </>
       )}
     </PageWrap>
   )
