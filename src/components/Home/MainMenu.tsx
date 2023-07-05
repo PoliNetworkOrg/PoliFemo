@@ -39,7 +39,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
       type: ButtonType.TIMETABLE,
       title: "menu_timetable",
       icon: clock,
-      onClick: () => navigate("Error404"),
+      onClick: () => navigate("TimeTable"),
     },
     {
       type: ButtonType.ASSOCIATIONS,

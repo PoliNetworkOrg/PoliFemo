@@ -22,6 +22,7 @@ import { NotificationsCategory } from "pages/notifications/NotificationsCategory
 import { NotificationDetails } from "pages/notifications/NotificationDetails"
 import { createSharedElementStackNavigator } from "react-navigation-shared-element"
 import { HeadquarterChoice } from "pages/FreeClass/HeadquarterChoice"
+import { TimeTable } from "pages/TimeTable"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const MainStackNavigator =
@@ -68,6 +69,7 @@ export const MainStack: FC = () => {
       />
       <MainStackNavigator.Screen name="Error404" component={Error404} />
       <MainStackNavigator.Screen name="Groups" component={Groups} />
+      <MainStackNavigator.Screen name="TimeTable" component={TimeTable} />
       <MainStackNavigator.Screen
         name="Notifications"
         component={Notifications}

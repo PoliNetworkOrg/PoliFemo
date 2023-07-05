@@ -1,5 +1,6 @@
 import { NotificationTriggerInput } from "expo-notifications"
-import { WidgetType, checkEventType, createWidget } from "./carousel"
+import { checkEventType, createWidget } from "./carousel"
+import { EventType } from "./events"
 import {
   NotificationsChannels,
   ValidChannelId,
@@ -16,14 +17,14 @@ const DELTA_MILLISECONDS = MINUTES_BEFORE_EVENT * 60 * 1000
 
 export const getMinutesBeforeInMilliseconds = (
   minutesOption?: MinutesBeforeOptions,
-  type?: WidgetType
+  type?: EventType
 ) => {
   let minutes
-  if (type === WidgetType.DEADLINE) {
+  if (type === EventType.DEADLINE) {
     minutes = minutesOption?.deadline
-  } else if (type === WidgetType.EXAMS) {
+  } else if (type === EventType.EXAMS) {
     minutes = minutesOption?.exam
-  } else if (type === WidgetType.LECTURES) {
+  } else if (type === EventType.LECTURES) {
     minutes = minutesOption?.lecture
   }
   if (minutes) {
@@ -178,22 +179,22 @@ export const getNewChannelsStatuses = (
 }
 
 export const getContentMessageFromType = (
-  type: WidgetType,
+  type: EventType,
   date: string,
   time: string
 ) => {
-  if (type === WidgetType.DEADLINE) {
+  if (type === EventType.DEADLINE) {
     return `la deadline scadrà ${date} alle ${time}`
-  } else if (type === WidgetType.EXAMS) {
+  } else if (type === EventType.EXAMS) {
     return `l'esame si svolgerà ${date} alle ${time}`
   }
   return `l'evento si svolgerà ${date} alle ${time}`
 }
 
-export const getObjectMessageFromType = (type: WidgetType) => {
-  if (type === WidgetType.DEADLINE) {
+export const getObjectMessageFromType = (type: EventType) => {
+  if (type === EventType.DEADLINE) {
     return "è arrivata una notifica riguardo una deadline"
-  } else if (type === WidgetType.EXAMS) {
+  } else if (type === EventType.EXAMS) {
     return "è arrivata una notifica riguardo un esame"
   }
   return "hai una nuova notifica di un evento"

@@ -81,6 +81,7 @@ export type MainStackNavigatorParams = {
   }
   Groups: undefined
   Notifications: undefined
+  TimeTable: undefined
   NotificationsCategory: {
     category: string
     channelId: ValidChannelId
