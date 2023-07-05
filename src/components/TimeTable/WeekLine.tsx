@@ -6,6 +6,7 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated"
+import { useCurrentLanguage } from "utils/articles"
 import { usePalette } from "utils/colors"
 
 interface WeekLineProps {
@@ -17,7 +18,11 @@ interface WeekLineProps {
 export const WeekLine: FC<WeekLineProps> = props => {
   const { isLight, primary } = usePalette()
 
-  const days = ["L", "M", "M", "G", "V", "S"]
+  const language = useCurrentLanguage()
+  const days =
+    language == "it"
+      ? ["L", "M", "M", "G", "V", "S"]
+      : ["M", "T", "W", "T", "F", "S"]
 
   const heightStyle = useAnimatedStyle(() => {
     return {

@@ -152,17 +152,6 @@ export const TimeTable: MainStackScreen<"TimeTable"> = () => {
       title={t("title")}
       sideTitleElement={
         <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
-          <Pressable onPress={() => deducer.current?.refresh()}>
-            <BodyText
-              style={{
-                color: isLight ? palette.variant1 : "#fff",
-                fontSize: 14,
-                fontWeight: "900",
-              }}
-            >
-              Refresh
-            </BodyText>
-          </Pressable>
           <Pressable onPress={() => setIsModalShowing(true)}>
             <Icon
               source={list_timetable}
