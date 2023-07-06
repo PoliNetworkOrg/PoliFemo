@@ -67,7 +67,7 @@ export const Licenses: SettingsStackScreen<"Licenses"> = () => {
           ListHeaderComponent={() => (
             <Text style={{ marginBottom: 12, color: articleTitle }}>
               The following sets forth attribution notices for third party
-              software that may be contained in portions of the Polifemo by
+              software that may be contained in portions of the PoliFemo by
               PoliNetwork app
             </Text>
           )}
