@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { useTranslation } from "react-i18next"
 import { BoxShadowView } from "components/BoxShadow"
@@ -10,16 +9,15 @@ import { Calendar } from "react-native-calendars"
 import { useEffect, useRef, useState } from "react"
 import {
   CalendarPeriod,
-  CalendarSingletonWrapper,
+  CalendarSingletonWrapper as CalendarManager,
   dayComponentCustom,
   dotColorGold,
   months,
+  daysOfWeekLetters,
 } from "utils/calendar"
 import { MarkedDates } from "react-native-calendars/src/types"
 import { Text } from "components/Text"
 import { ToggleSwitch } from "components/ToggleSwitch"
-
-/* import { Markings } from "react-native-calendars/src/calendar/day/marking" */
 
 export const CalendarPage: MainStackScreen<"Calendar"> = () => {
   const { homeBackground, background, isLight, palette } = usePalette()
@@ -43,27 +41,29 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
     console.log(selectedDay)
   }, [selectedDay])
 
-  const calendarObj = useRef<CalendarSingletonWrapper | undefined>()
+  const calendarObj = useRef<CalendarManager | undefined>()
 
   useEffect(() => {
     const initCalendar = () => {
       if (!calendarObj.current) {
-        calendarObj.current = CalendarSingletonWrapper.getInstance()
+        calendarObj.current = new CalendarManager()
         calendarObj.current.addListener("markedDatesSet", () => {
           if (calendarObj.current?.markedDatesPeriods) {
-            console.log("updating marked dates")
             setMarkedDates(calendarObj.current?.markedDatesPeriods)
             setCalendarPeriods(calendarObj.current?.calendarPeriods)
           }
         })
 
         calendarObj.current.addListener("calendarPeriodsChanged", () => {
-          console.log("updating periods")
           if (calendarObj.current?.calendarPeriods) {
-            console.log("inside if")
             setCalendarPeriods(calendarObj.current?.calendarPeriods)
           }
         })
+      } else {
+        if (calendarObj.current?.markedDatesPeriods) {
+          setMarkedDates(calendarObj.current?.markedDatesPeriods)
+          setCalendarPeriods(calendarObj.current?.calendarPeriods)
+        }
       }
     }
 
@@ -77,7 +77,35 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
 
   return (
     <View style={[{ backgroundColor: homeBackground }, styles.container]}>
-      {/* <View style={{ height: 440 }}> */}
+      <View
+        style={{
+          position: "absolute",
+          top: 120,
+          height: 24,
+          width: "100%",
+          zIndex: 2,
+          paddingHorizontal: 28,
+        }}
+      >
+        <View
+          style={{
+            height: 24,
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          {daysOfWeekLetters.map(day => (
+            <Text
+              key={day}
+              style={{ fontSize: 12, fontWeight: "900", color: "#fff" }}
+            >
+              {day}
+            </Text>
+          ))}
+        </View>
+        <View style={{ width: "100%", height: 1, backgroundColor: "#fff" }} />
+      </View>
       <Calendar
         theme={{
           calendarBackground: homeBackground,
@@ -91,11 +119,20 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           console.log(day)
         }}
         style={{
-          marginTop: 106,
-          height: 340,
+          marginTop: 130,
+          height: 290,
           backgroundColor: homeBackground,
         }}
-        markedDates={{ ...markedDates, "2023-07-15": { marked: true } }}
+        markedDates={{
+          ...markedDates,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          "2023-07-15": {
+            marked: true,
+            startingDay: true,
+            endingDay: true,
+            color: "orange",
+          },
+        }}
         customHeaderTitle={undefined}
         hideExtraDays={true}
         renderHeader={() => null}
@@ -132,8 +169,9 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           <ScrollView
             contentContainerStyle={{
               paddingHorizontal: 24,
-              paddingVertical: 24,
+              paddingTop: 24,
             }}
+            style={{ marginBottom: 90 }}
           >
             <Text
               style={[
@@ -166,6 +204,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
                     </Text>
                   </View>
                   <ToggleSwitch
+                    color={period.color}
                     value={period.shown}
                     onValueChange={value =>
                       calendarObj.current?.updatePeriods(period.title, value)
@@ -174,6 +213,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
                 </View>
               )
             })}
+            {/* <View style={{ height: 200, backgroundColor: "red", width: 20 }} /> */}
           </ScrollView>
         )}
       </BoxShadowView>

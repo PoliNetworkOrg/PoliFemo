@@ -2,7 +2,7 @@ import { DateData, MarkedDates } from "react-native-calendars/src/types"
 import * as FileSystem from "expo-file-system"
 import { EventEmitter } from "events"
 import { ComponentType, useMemo } from "react"
-import { TouchableOpacity, View } from "react-native"
+import { TouchableOpacity, View, ViewStyle } from "react-native"
 import { DayProps } from "react-native-calendars/src/calendar/day"
 import { Text } from "components/Text"
 import { Canvas, Path, Skia } from "@shopify/react-native-skia"
@@ -50,17 +50,36 @@ export enum CalendarEventStatus {
 
 const calendarPeriods: CalendarPeriod[] = [
   {
-    dates: [{ start: "2023-08-01", end: "2023-08-22" }],
+    dates: [{ start: "2023-08-01", end: "2023-08-24" }],
     title: "Vacanze",
-    subtitle: "1/08 - 22/08",
+    subtitle: "1/08 - 24/08",
     color: dotColorGold,
     shown: true,
   },
   {
-    dates: [{ start: "2023-08-23", end: "2023-08-31" }],
+    dates: [{ start: "2023-08-25", end: "2023-09-09" }],
     title: "Esami di profitto",
     subtitle: "23/08 - 31/08",
     color: purpleBerry,
+    shown: true,
+  },
+  {
+    dates: [
+      { start: "2023-11-04", end: "2023-11-08" },
+      { start: "2023-04-19", end: "2023-04-22" },
+    ],
+    title: "Prove in Itinere",
+    color: "#F29999",
+    shown: true,
+  },
+  {
+    dates: [
+      { start: "2023-09-28", end: "2023-09-30" },
+      { start: "2023-03-08", end: "2023-03-09" },
+      { start: "2023-09-19", end: "2023-09-21" },
+    ],
+    title: "Lauree 1° Livello",
+    color: "#F28C52",
     shown: true,
   },
 ]
@@ -72,9 +91,7 @@ export declare interface CalendarSingletonWrapper {
 }
 
 export class CalendarSingletonWrapper extends EventEmitter {
-  private static classInstance?: CalendarSingletonWrapper
-
-  private _markedDatesPeriods: MarkedDates | undefined
+  private _markedDatesPeriods: MarkedDates = {}
 
   public get markedDatesPeriods(): MarkedDates | undefined {
     return this._markedDatesPeriods
@@ -87,15 +104,7 @@ export class CalendarSingletonWrapper extends EventEmitter {
 
   private _calendarEvents: CalendarEvent[] = []
 
-  public static getInstance() {
-    if (!this.classInstance) {
-      this.classInstance = new CalendarSingletonWrapper()
-    }
-
-    return this.classInstance
-  }
-
-  private constructor() {
+  public constructor() {
     super()
     void this._initializeCalendar()
   }
@@ -222,9 +231,6 @@ export class CalendarSingletonWrapper extends EventEmitter {
         }
 
         this._markedDatesPeriods = { ...this._markedDatesPeriods, ...periodTmp }
-
-        this.emit("markedDatesSet")
-        return
       })
     })
     this.emit("markedDatesSet")
@@ -246,6 +252,24 @@ export class CalendarSingletonWrapper extends EventEmitter {
     void this._writeCalendarPeriods(periods)
     this._applyPeriods()
   }
+
+  // ! non testata
+  public addEvent = (event: CalendarEvent) => {
+    this._calendarEvents.push(event)
+
+    void this._writeEvents(this._calendarEvents)
+  }
+
+  // ! non testata
+  public applyMarkers = () => {
+    for (let i = 0; i < this._calendarEvents.length; i++) {
+      const dateString = this._calendarEvents[i].start.substring(0, 10)
+
+      this._markedDatesPeriods[dateString].marked = true
+    }
+    this._calendarEvents
+  }
+
   /* private _markedDatesMerging() {
     throw new Error("Method not implemented.")
   } */
@@ -276,7 +300,7 @@ export const months = [
   "Dicembre",
 ]
 
-const FILLER_HEIGHT = 34
+const FILLER_HEIGHT = 26
 
 export const dayComponentCustom: ComponentType<
   DayProps & {
@@ -297,46 +321,34 @@ export const dayComponentCustom: ComponentType<
 
   const dateData = dateToDateData(date)
 
-  /* const containerStyle = useMemo(() => {
-    const containerStyle = []
+  const fillerStyles = useMemo(() => {
+    const leftFillerStyle: ViewStyle = { flex: 1 }
+    const rightFillerStyle: ViewStyle = { flex: 1 }
+    let globalfiller: ViewStyle = {}
 
-    containerStyle.push({
-      width: 38,
-      height: FILLER_HEIGHT,
-      alignItems: "center",
-      justifyContent: "center",
-    })
+    const start = marking?.startingDay
+    const end = marking?.endingDay
 
-    if (state === "today") {
-      containerStyle.push({
-        backgroundColor: "000",
-      })
-    }
-
-    if (marking) {
-      containerStyle.push({
-        borderRadius: 17,
-        overflow: "hidden",
-      })
-
-      if (markingStyle.containerStyle) {
-        containerStyle.push(markingStyle.containerStyle)
-      }
-
-      const start = markingStyle.startingDay
-      const end = markingStyle.endingDay
-      if (start && !end) {
-        containerStyle.push({
-          backgroundColor: markingStyle.startingDay?.backgroundColor,
-        })
-      } else if ((end && !start) || (end && start)) {
-        containerStyle.push({
-          backgroundColor: markingStyle.endingDay?.backgroundColor,
-        })
+    if (start && !end) {
+      rightFillerStyle.borderBottomColor = marking?.color
+      rightFillerStyle.borderBottomWidth = 2
+      rightFillerStyle.borderTopColor = marking?.color
+      rightFillerStyle.borderTopWidth = 2
+    } else if (end && !start) {
+      leftFillerStyle.borderBottomColor = marking?.color
+      leftFillerStyle.borderBottomWidth = 2
+      leftFillerStyle.borderTopColor = marking?.color
+      leftFillerStyle.borderTopWidth = 2
+    } else if (marking?.color && !start && !end) {
+      globalfiller = {
+        borderBottomColor: marking?.color,
+        borderBottomWidth: 2,
+        borderTopColor: marking?.color,
+        borderTopWidth: 2,
       }
     }
-    return containerStyle
-  }, [marking, state]) */
+    return { leftFillerStyle, rightFillerStyle, globalfiller }
+  }, [marking])
 
   const path = useMemo(() => {
     let startAngle
@@ -356,14 +368,23 @@ export const dayComponentCustom: ComponentType<
     }
 
     const path = Skia.Path.Make()
-    path.moveTo(19, 0)
-    path.addArc({ height: 32, width: 36, y: 1, x: 1 }, startAngle, sweepAngle)
+    path.moveTo(19, 1)
+    //this looks kinda random
+    path.addArc(
+      { height: FILLER_HEIGHT - 2, width: 30, y: 1, x: 4 },
+      startAngle,
+      sweepAngle
+    )
 
     return path
   }, [marking])
 
   return (
-    <TouchableOpacity style={{ alignSelf: "stretch" }}>
+    <TouchableOpacity
+      style={{ alignSelf: "stretch" }}
+      onPress={onPress ? () => onPress(dateData) : undefined}
+      onLongPress={onLongPress ? () => onLongPress(dateData) : undefined}
+    >
       <View
         style={{
           alignItems: "center",
@@ -372,16 +393,20 @@ export const dayComponentCustom: ComponentType<
         }}
       >
         <View
-          style={{
-            position: "absolute",
-            height: FILLER_HEIGHT,
-            flexDirection: "row",
-            left: 0,
-            right: 0,
-          }}
+          style={[
+            {
+              position: "absolute",
+              height: FILLER_HEIGHT,
+              flexDirection: "row",
+              left: 0,
+              right: 0,
+            },
+            fillerStyles.globalfiller,
+          ]}
         >
-          <View style={{ flex: 1 /* backgroundColor: "purple" */ }} />
-          <View style={{ flex: 1 /*  backgroundColor: "yellow" */ }} />
+          <View style={fillerStyles.leftFillerStyle} />
+
+          <View style={fillerStyles.rightFillerStyle} />
         </View>
         {path && (
           <Canvas
@@ -394,7 +419,7 @@ export const dayComponentCustom: ComponentType<
           >
             <Path
               path={path}
-              color="orange"
+              color={marking?.color}
               strokeWidth={2}
               fillType={undefined}
               style="stroke"
@@ -403,7 +428,6 @@ export const dayComponentCustom: ComponentType<
         )}
         <View
           style={{
-            /* backgroundColor: "red", */
             borderRadius: 17,
             width: 38,
             height: FILLER_HEIGHT,
@@ -417,7 +441,7 @@ export const dayComponentCustom: ComponentType<
           >
             {String(children)}
           </Text>
-          <View style={{ position: "absolute", top: 4, right: 4 }}>
+          <View style={{ position: "absolute", top: 7, right: 7 }}>
             {marking?.marked && (
               <View
                 style={{
@@ -453,3 +477,5 @@ const dateToDateData = (
   }
   return undefined
 }
+
+export const daysOfWeekLetters = ["L", "M", "M", "G", "V", "S", "D"]
