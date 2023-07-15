@@ -1,6 +1,11 @@
-import { MarkedDates } from "react-native-calendars/src/types"
+import { DateData, MarkedDates } from "react-native-calendars/src/types"
 import * as FileSystem from "expo-file-system"
 import { EventEmitter } from "events"
+import { ComponentType, useMemo } from "react"
+import { TouchableOpacity, View } from "react-native"
+import { DayProps } from "react-native-calendars/src/calendar/day"
+import { Text } from "components/Text"
+import { Canvas, Path, Skia } from "@shopify/react-native-skia"
 
 export const dotColorGold = "rgba(242, 186, 82, 1)"
 export const purpleBerry = "rgba(98, 96, 166, 1)"
@@ -270,3 +275,181 @@ export const months = [
   "Novembre",
   "Dicembre",
 ]
+
+const FILLER_HEIGHT = 34
+
+export const dayComponentCustom: ComponentType<
+  DayProps & {
+    date?: DateData | undefined
+  }
+> = props => {
+  const {
+    theme,
+    marking,
+    date,
+    onPress,
+    onLongPress,
+    state,
+    accessibilityLabel,
+    testID,
+    children,
+  } = props
+
+  const dateData = dateToDateData(date)
+
+  /* const containerStyle = useMemo(() => {
+    const containerStyle = []
+
+    containerStyle.push({
+      width: 38,
+      height: FILLER_HEIGHT,
+      alignItems: "center",
+      justifyContent: "center",
+    })
+
+    if (state === "today") {
+      containerStyle.push({
+        backgroundColor: "000",
+      })
+    }
+
+    if (marking) {
+      containerStyle.push({
+        borderRadius: 17,
+        overflow: "hidden",
+      })
+
+      if (markingStyle.containerStyle) {
+        containerStyle.push(markingStyle.containerStyle)
+      }
+
+      const start = markingStyle.startingDay
+      const end = markingStyle.endingDay
+      if (start && !end) {
+        containerStyle.push({
+          backgroundColor: markingStyle.startingDay?.backgroundColor,
+        })
+      } else if ((end && !start) || (end && start)) {
+        containerStyle.push({
+          backgroundColor: markingStyle.endingDay?.backgroundColor,
+        })
+      }
+    }
+    return containerStyle
+  }, [marking, state]) */
+
+  const path = useMemo(() => {
+    let startAngle
+    let sweepAngle
+
+    if (marking?.startingDay && marking.endingDay) {
+      startAngle = 90
+      sweepAngle = 360
+    } else if (marking?.startingDay) {
+      startAngle = 90
+      sweepAngle = 180
+    } else if (marking?.endingDay) {
+      startAngle = 270
+      sweepAngle = 180
+    } else {
+      return undefined
+    }
+
+    const path = Skia.Path.Make()
+    path.moveTo(19, 0)
+    path.addArc({ height: 32, width: 36, y: 1, x: 1 }, startAngle, sweepAngle)
+
+    return path
+  }, [marking])
+
+  return (
+    <TouchableOpacity style={{ alignSelf: "stretch" }}>
+      <View
+        style={{
+          alignItems: "center",
+          alignSelf: "stretch",
+          marginLeft: -1,
+        }}
+      >
+        <View
+          style={{
+            position: "absolute",
+            height: FILLER_HEIGHT,
+            flexDirection: "row",
+            left: 0,
+            right: 0,
+          }}
+        >
+          <View style={{ flex: 1 /* backgroundColor: "purple" */ }} />
+          <View style={{ flex: 1 /*  backgroundColor: "yellow" */ }} />
+        </View>
+        {path && (
+          <Canvas
+            style={{
+              width: 38,
+              height: FILLER_HEIGHT,
+              position: "absolute",
+              zIndex: 10,
+            }}
+          >
+            <Path
+              path={path}
+              color="orange"
+              strokeWidth={2}
+              fillType={undefined}
+              style="stroke"
+            />
+          </Canvas>
+        )}
+        <View
+          style={{
+            /* backgroundColor: "red", */
+            borderRadius: 17,
+            width: 38,
+            height: FILLER_HEIGHT,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text
+            style={{ fontSize: 12, fontWeight: "900" }}
+            allowFontScaling={false}
+          >
+            {String(children)}
+          </Text>
+          <View style={{ position: "absolute", top: 4, right: 4 }}>
+            {marking?.marked && (
+              <View
+                style={{
+                  backgroundColor: theme?.dotColor,
+                  width: 6,
+                  height: 6,
+                  borderRadius: 3,
+                }}
+              />
+            )}
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
+  )
+}
+
+const dateToDateData = (
+  date: (string & DateData) | undefined
+): DateData | undefined => {
+  if (date) {
+    if (typeof date === "string") {
+      const d = new Date(date)
+
+      return {
+        day: d.getDate(),
+        month: d.getMonth() + 1,
+        year: d.getFullYear(),
+        dateString: d.toISOString().substring(0, 10),
+        timestamp: d.getTime(),
+      }
+    }
+  }
+  return undefined
+}

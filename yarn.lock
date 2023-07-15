@@ -8965,9 +8965,10 @@ react-native-app-intro-slider@^4.0.4:
   resolved "https://registry.yarnpkg.com/react-native-app-intro-slider/-/react-native-app-intro-slider-4.0.4.tgz#fa5cda7057db62c448ac975ffd2ba0cff94cc8d8"
   integrity sha512-Zkjaol6X3BbZkHUpVDj2LjdidpS6rCgKi0fx80xgGKa0pHxBRd4swWTv2bHnnvu5k1/HXwYk0mY2TbK+2jHl5w==
 
-"react-native-calendars@https://github.com/DiegoZaff/react-native-calendars":
-  version "1.22.0"
-  resolved "https://github.com/DiegoZaff/react-native-calendars#7cb31fc24624d82e49045fea9de80fabfbd7f685"
+react-native-calendars@^1.1299.0:
+  version "1.1299.0"
+  resolved "https://registry.yarnpkg.com/react-native-calendars/-/react-native-calendars-1.1299.0.tgz#aef65562046c5dc44bedcae9bd4577dba5d74249"
+  integrity sha512-b59svUAIDMPy5mYpwdyBFkyv3Fne897O7TB99AjALKs5s3ciR3cuH5GGMbD6e+M79r4cY78xiauZH3eCS2u1uw==
   dependencies:
     hoist-non-react-statics "^3.3.1"
     lodash "^4.17.15"

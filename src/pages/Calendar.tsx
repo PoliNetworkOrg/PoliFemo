@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react"
 import {
   CalendarPeriod,
   CalendarSingletonWrapper,
+  dayComponentCustom,
   dotColorGold,
   months,
 } from "utils/calendar"
@@ -84,9 +85,6 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           todayTextColor: "yellow",
           dayTextColor: "#fff",
           dotStyle: { width: 6, height: 6, borderRadius: 3 },
-          dotRightPos: -2,
-          dotTopPos: 2,
-          blockerColor: palette.primary,
           dotColor: dotColorGold,
         }}
         onDayPress={day => {
@@ -97,7 +95,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           height: 340,
           backgroundColor: homeBackground,
         }}
-        markedDates={markedDates}
+        markedDates={{ ...markedDates, "2023-07-15": { marked: true } }}
         customHeaderTitle={undefined}
         hideExtraDays={true}
         renderHeader={() => null}
@@ -113,6 +111,8 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
           setYear(month.year)
         }}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        dayComponent={dayComponentCustom}
       />
       {/* </View> */}
       <BoxShadowView
