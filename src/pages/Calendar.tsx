@@ -18,6 +18,10 @@ import {
 import { MarkedDates } from "react-native-calendars/src/types"
 import { Text } from "components/Text"
 import { ToggleSwitch } from "components/ToggleSwitch"
+import { Icon } from "components/Icon"
+import calendarIcon from "assets/calendar/calendar.svg"
+import capeIcon from "assets/calendar/cape_calendar.svg"
+import userIcon from "assets/calendar/user_calendar.svg"
 
 export const CalendarPage: MainStackScreen<"Calendar"> = () => {
   const { homeBackground, background, isLight, palette } = usePalette()
@@ -81,12 +85,25 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
         style={{
           position: "absolute",
           top: 120,
-          height: 24,
+          height: 40,
           width: "100%",
           zIndex: 2,
           paddingHorizontal: 28,
         }}
       >
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginBottom: 8,
+          }}
+        >
+          <Icon source={calendarIcon} />
+          <View style={{ flexDirection: "row" }}>
+            <Icon source={userIcon} style={{ marginRight: 8 }} />
+            <Icon source={capeIcon} />
+          </View>
+        </View>
         <View
           style={{
             height: 24,
@@ -95,9 +112,9 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
             justifyContent: "space-between",
           }}
         >
-          {daysOfWeekLetters.map(day => (
+          {daysOfWeekLetters.map((day, index) => (
             <Text
-              key={day}
+              key={index}
               style={{ fontSize: 12, fontWeight: "900", color: "#fff" }}
             >
               {day}
@@ -119,7 +136,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           console.log(day)
         }}
         style={{
-          marginTop: 130,
+          marginTop: 150,
           height: 290,
           backgroundColor: homeBackground,
         }}
