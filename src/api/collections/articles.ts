@@ -2,54 +2,7 @@
 import { mapAxiosRequest } from "api/mapAxiosRequest"
 import { ApiCollection } from "api/useApiCall"
 import { HttpClient, RequestOptions } from "../HttpClient"
-
-export interface Tags {
-  tags: Tag[]
-}
-
-export interface Tag {
-  name: string
-  image: string
-  blurhash: string
-}
-
-export interface Articles {
-  articles: Article[]
-  start: string | null
-  end: string | null
-  tag: string | null
-  author_id: number | null
-  title: string | null
-}
-interface ArticleAuthor {
-  name?: string
-  link?: string
-  image?: string
-}
-
-export interface Article {
-  id: number
-  tag_id: string
-  latitude?: number
-  longitude?: number
-  publish_time: string
-  target_time?: string
-  hidden_until?: string
-  content: {
-    it: ArticlesParams
-    en: ArticlesParams
-  }
-  image?: string
-  blurhash?: string
-  author?: ArticleAuthor
-}
-
-interface ArticlesParams {
-  content: string
-  title: string
-  subtitle: string
-  url: string
-}
+import { articlesSchema, tagsSchema } from "api/schemas"
 
 const client = HttpClient.getInstance()
 
@@ -86,7 +39,7 @@ export const articles = {
     params: { tag: string; limit: number; offset: number },
     options?: RequestOptions
   ) {
-    const request = client.callPoliNetwork<Articles>({
+    const request = client.callPoliNetwork({
       url: "/v1/articles",
       method: "GET",
       params: {
@@ -96,6 +49,7 @@ export const articles = {
         tag: params.tag,
         sort: "date",
       },
+      zodSchema: articlesSchema,
       ...options,
     })
     return mapAxiosRequest(request, res => res.articles)
@@ -109,10 +63,11 @@ export const articles = {
    * @param options see {@link RequestOptions}
    */
   getLastArticleByTag(params: { tag: string }, options?: RequestOptions) {
-    const request = client.callPoliNetwork<Articles>({
+    const request = client.callPoliNetwork({
       url: "/v1/articles",
       method: "GET",
       params: { tag: params.tag, limit: 1, sort: "date", platform: 1 },
+      zodSchema: articlesSchema,
       ...options,
     })
     return mapAxiosRequest(request, res => res.articles[0])
@@ -122,9 +77,10 @@ export const articles = {
    * Retrieves Tags (news categories) from PoliNetwork server.
    */
   getTags(_params?: Record<string, unknown>, options?: RequestOptions) {
-    const request = client.callPoliNetwork<Tags>({
+    const request = client.callPoliNetwork({
       url: "/v1/tags",
       method: "GET",
+      zodSchema: tagsSchema,
       ...options,
     })
 

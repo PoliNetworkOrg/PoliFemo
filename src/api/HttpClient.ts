@@ -6,10 +6,11 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios"
-import { PolimiToken, PoliNetworkToken, Tokens } from "contexts/login"
+import { PolimiToken, PoliNetworkToken, Tokens } from "./schemas"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { wait } from "utils/functions"
 import { Alert } from "react-native"
+import { z } from "zod"
 
 /*Docs used to make this:
 Singleton:
@@ -76,7 +77,12 @@ declare module "axios" {
     waitingTime?: number //seconds
     readonly retryCount?: number
     authType?: AuthType
+    zodSchema?: z.ZodSchema
   }
+}
+
+type InferrableAxiosRequestConfig<T> = AxiosRequestConfig & {
+  zodSchema?: z.ZodSchema<T>
 }
 
 /**
@@ -186,6 +192,9 @@ export class HttpClient extends EventEmitter {
    * does (or will do) something before `.then` is called
    * */
   private _handleResponse = (res: AxiosResponse): AxiosResponse => {
+    if (res.config.zodSchema) {
+      res.config.zodSchema.parse(res.data)
+    }
     return res
   }
 
@@ -287,7 +296,9 @@ export class HttpClient extends EventEmitter {
     throw error
   }
 
-  callPolimi<T = void>(options: AxiosRequestConfig): CancellableApiRequest<T> {
+  callPolimi<T = void>(
+    options: InferrableAxiosRequestConfig<T>
+  ): CancellableApiRequest<T> {
     const controller = new AbortController()
     const request = this.polimiInstance.request<T>({
       ...options,
@@ -300,7 +311,7 @@ export class HttpClient extends EventEmitter {
   }
 
   callPoliNetwork<T = void>(
-    options: AxiosRequestConfig
+    options: InferrableAxiosRequestConfig<T>
   ): CancellableApiRequest<T> {
     const controller = new AbortController()
     const request = this.poliNetworkInstance.request<T>({
@@ -313,7 +324,9 @@ export class HttpClient extends EventEmitter {
     return request
   }
 
-  callGeneral<T = void>(options: AxiosRequestConfig): CancellableApiRequest<T> {
+  callGeneral<T = void>(
+    options: InferrableAxiosRequestConfig<T>
+  ): CancellableApiRequest<T> {
     const controller = new AbortController()
     const request = this.generalInstance.request<T>({
       ...options,
