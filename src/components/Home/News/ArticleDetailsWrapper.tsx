@@ -53,7 +53,7 @@ export const ArticleDetailsWrapper: FC<{
         backgroundColor: isLight ? primary : background,
       }}
     >
-      {isLight && (
+      {(
         <LinearGradient
           colors={[
             "#424967",
@@ -69,19 +69,6 @@ export const ArticleDetailsWrapper: FC<{
             position: "absolute",
           }}
           locations={[0.04, 0.19, 0.55, 0.96]}
-        />
-      )}
-      {!isLight && (
-        <View
-          style={{
-            zIndex: 1,
-            backgroundColor: "rgba(27, 33, 50, 0.63)",
-            flex: 1,
-            position: "absolute",
-            top: 0,
-            width: width,
-            height: 230,
-          }}
         />
       )}
       {props.backdropElement && (
