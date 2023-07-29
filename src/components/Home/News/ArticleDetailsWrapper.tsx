@@ -53,7 +53,7 @@ export const ArticleDetailsWrapper: FC<{
         backgroundColor: isLight ? primary : background,
       }}
     >
-      {(
+      {
         <LinearGradient
           colors={[
             "#424967",
@@ -70,7 +70,7 @@ export const ArticleDetailsWrapper: FC<{
           }}
           locations={[0.04, 0.19, 0.55, 0.96]}
         />
-      )}
+      }
       {props.backdropElement && (
         <View
           style={{
