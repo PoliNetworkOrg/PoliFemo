@@ -88,12 +88,12 @@
     "react-native-webview": "11.26.0",
     "react-navigation-shared-element": "^3.1.3",
     "rn-slick-bottom-tabs": "^1.1.1",
-    "styled-components": "^5.3.6",
-    "yarn": "^1.22.19"
+    "styled-components": "^5.3.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/color-string": "^1.5.2",
+    "@types/node": "^20.4.7",
     "@types/npm-license-crawler": "^0.2.1",
     "@types/react": "~18.0.27",
     "@types/react-dom": "~18.0.10",

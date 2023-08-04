@@ -16,12 +16,13 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: "pnpm"
 
       - name: Log remote branches
         run: git branch -r
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: pnpm install --frozen-lockfile
 
       - name: Setup Expo
         uses: expo/expo-github-action@v7
@@ -31,4 +32,4 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Prune EAS branches
-        run: yarn run prune-branches
+        run: pnpm run prune-branches
