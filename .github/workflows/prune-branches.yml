@@ -17,12 +17,13 @@ jobs:
         with:
           node-version: 16
           cache: "pnpm"
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: true
 
       - name: Log remote branches
         run: git branch -r
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: Setup Expo
         uses: expo/expo-github-action@v7
