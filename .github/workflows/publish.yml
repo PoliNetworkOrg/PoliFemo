@@ -6,6 +6,9 @@ jobs:
   publish:
     name: Publish via EAS updates
     runs-on: ubuntu-20.04
+    # only run if expo token is set
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -18,8 +21,10 @@ jobs:
         with:
           expo-version: latest
           eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
+          token: ${{ env.EXPO_TOKEN }}
 
       - run: yarn install --immutable
       - name: Publish via EAS updates
+        # only if token is set
+        if: ${{ env.EXPO_TOKEN != '' }}
         run: eas update --auto
