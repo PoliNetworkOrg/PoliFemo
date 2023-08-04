@@ -13,6 +13,7 @@ export const palette = {
   accent: "#FFB544",
   widgetBgLighter: "#F6F7FC",
   widgetBgDarker: "#343E5A",
+  goldish: "rgba(242, 186, 82, 1)",
 } as const
 
 export type Palette = typeof palette
@@ -114,6 +115,11 @@ export interface ColorTheme {
    * purple/blueish in light mode, white in dark mode, used in TimeLeftTile
    */
   iconHighContrast: string
+
+  /**
+   * color used for dots inside calendar Page
+   */
+  dotColor: string
 }
 
 /**
@@ -202,6 +208,7 @@ export const usePalette: () => ColorTheme &
     sliderBorderColor: palette.variant3,
     labelsHighContrast: palette.variant1, // "#414867",
     iconHighContrast: palette.variant3, // "#454773",
+    dotColor: palette.goldish,
   }
 
   const darkTheme: ColorTheme = {
@@ -221,6 +228,7 @@ export const usePalette: () => ColorTheme &
     sliderBorderColor: "#FFFFFF",
     labelsHighContrast: "#FFFFFF",
     iconHighContrast: "#FFFFFF",
+    dotColor: palette.goldish,
   }
 
   const colors = isLight ? lightTheme : darkTheme

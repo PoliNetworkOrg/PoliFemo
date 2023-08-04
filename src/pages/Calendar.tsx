@@ -2,7 +2,7 @@ import { MainStackScreen } from "navigation/NavigationTypes"
 import { useTranslation } from "react-i18next"
 import { BoxShadowView } from "components/BoxShadow"
 import { NavBar } from "components/NavBar"
-import { ScrollView, View } from "react-native"
+import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { StyleSheet } from "react-native"
 import { Calendar } from "react-native-calendars"
@@ -11,25 +11,34 @@ import {
   CalendarPeriod,
   CalendarSingletonWrapper as CalendarManager,
   dayComponentCustom,
-  dotColorGold,
   months,
   daysOfWeekLetters,
+  CalendarBottomSheetStatus,
+  CalendarEvent,
 } from "utils/calendar"
 import { MarkedDates } from "react-native-calendars/src/types"
 import { Text } from "components/Text"
-import { ToggleSwitch } from "components/ToggleSwitch"
 import { Icon } from "components/Icon"
 import calendarIcon from "assets/calendar/calendar.svg"
 import capeIcon from "assets/calendar/cape_calendar.svg"
 import userIcon from "assets/calendar/user_calendar.svg"
+import { CalendarPeriodsSwitches } from "components/Calendar/CalendarPeriodsSwitches"
+import { CalendarMonthlyEvents } from "components/Calendar/CalendarMonthlyEvents"
+import { useCurrentLanguage } from "utils/articles"
+import { CalendarAddEvent } from "components/Calendar/CalendarAddEvent"
 
 export const CalendarPage: MainStackScreen<"Calendar"> = () => {
-  const { homeBackground, background, isLight, palette } = usePalette()
+  const { homeBackground, background, dotColor } = usePalette()
   const { t } = useTranslation()
+
+  const lan = useCurrentLanguage()
 
   const [selectedDay, setSelectedDay] = useState(
     new Date().toISOString().slice(0, 10)
   )
+
+  const [bottomSheetStatus, setBottomSheetStatus] =
+    useState<CalendarBottomSheetStatus>(CalendarBottomSheetStatus.PERIODS)
 
   const [month, setMonth] = useState<number>(new Date().getMonth())
 
@@ -40,6 +49,12 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
   const [calendarPeriods, setCalendarPeriods] = useState<
     CalendarPeriod[] | undefined
   >()
+
+  const [calendarEvents, setCalendarEvents] = useState<CalendarEvent[]>([])
+
+  const [calendarEventsMonth, setCalendarEventsMonth] = useState<
+    CalendarEvent[]
+  >([])
 
   useEffect(() => {
     console.log(selectedDay)
@@ -63,6 +78,14 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
             setCalendarPeriods(calendarObj.current?.calendarPeriods)
           }
         })
+
+        calendarObj.current.addListener("calendarEventsChanged", () => {
+          console.log("calendarEventsChanged")
+          if (calendarObj.current?.calendarEvents) {
+            /* console.log(calendarObj.current?.calendarEvents) */
+            setCalendarEvents(calendarObj.current?.calendarEvents)
+          }
+        })
       } else {
         if (calendarObj.current?.markedDatesPeriods) {
           setMarkedDates(calendarObj.current?.markedDatesPeriods)
@@ -76,8 +99,21 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
     return () => {
       calendarObj?.current?.removeAllListeners("markedDatesSet")
       calendarObj?.current?.removeAllListeners("calendarPeriodsChanged")
+      calendarObj?.current?.removeAllListeners("calendarEventsChanged")
     }
   }, [])
+
+  useEffect(() => {
+    if (calendarEvents.length > 0) {
+      const filteredEvents = calendarEvents.filter(
+        event =>
+          new Date(event.start).getMonth() === month &&
+          new Date(event.start).getFullYear() === year
+      )
+      /* console.log(filteredEvents) */
+      setCalendarEventsMonth(filteredEvents)
+    }
+  }, [calendarEvents, month, year])
 
   return (
     <View style={[{ backgroundColor: homeBackground }, styles.container]}>
@@ -98,7 +134,18 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
             marginBottom: 8,
           }}
         >
-          <Icon source={calendarIcon} />
+          <Pressable
+            onPress={() => {
+              if (bottomSheetStatus === CalendarBottomSheetStatus.PERIODS) {
+                setBottomSheetStatus(CalendarBottomSheetStatus.MONTHLY_EVENTS)
+              } else {
+                setBottomSheetStatus(CalendarBottomSheetStatus.PERIODS)
+              }
+            }}
+          >
+            <Icon source={calendarIcon} />
+          </Pressable>
+
           <View style={{ flexDirection: "row" }}>
             <Icon source={userIcon} style={{ marginRight: 8 }} />
             <Icon source={capeIcon} />
@@ -130,10 +177,12 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           todayTextColor: "yellow",
           dayTextColor: "#fff",
           dotStyle: { width: 6, height: 6, borderRadius: 3 },
-          dotColor: dotColorGold,
+          dotColor: dotColor,
         }}
         onDayPress={day => {
-          console.log(day)
+          setSelectedDay(day.dateString)
+
+          setBottomSheetStatus(CalendarBottomSheetStatus.ADD_EVENT)
         }}
         style={{
           marginTop: 150,
@@ -168,7 +217,6 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         dayComponent={dayComponentCustom}
       />
-      {/* </View> */}
       <BoxShadowView
         shadow={{
           color: "#000",
@@ -182,56 +230,31 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           styles.boxShadowContainer,
         ]}
       >
-        {calendarPeriods && (
-          <ScrollView
-            contentContainerStyle={{
-              paddingHorizontal: 24,
-              paddingTop: 24,
+        {bottomSheetStatus === CalendarBottomSheetStatus.PERIODS && (
+          <CalendarPeriodsSwitches
+            calendarPeriods={calendarPeriods}
+            month={months[month]}
+            year={year}
+            onSwitchChange={(value: boolean, title: string) =>
+              calendarObj.current?.updatePeriods(title, value)
+            }
+          />
+        )}
+        {bottomSheetStatus === CalendarBottomSheetStatus.MONTHLY_EVENTS && (
+          <CalendarMonthlyEvents
+            events={calendarEventsMonth}
+            month={months[month]}
+            year={year}
+            lan={lan}
+          />
+        )}
+        {bottomSheetStatus === CalendarBottomSheetStatus.ADD_EVENT && (
+          <CalendarAddEvent
+            addEvent={(event: CalendarEvent) => {
+              return
             }}
-            style={{ marginBottom: 90 }}
-          >
-            <Text
-              style={[
-                styles.monthTitle,
-                { color: homeBackground, paddingBottom: 16 },
-              ]}
-            >
-              {months[month] + " " + year}
-            </Text>
-            {calendarPeriods.map(period => {
-              return (
-                <View
-                  key={period.title}
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    paddingBottom: 32,
-                  }}
-                >
-                  <View>
-                    <Text
-                      style={[styles.periodTitle, { color: homeBackground }]}
-                    >
-                      {period.title}
-                    </Text>
-                    <Text
-                      style={[styles.periodSubTitle, { color: homeBackground }]}
-                    >
-                      {period.subtitle}
-                    </Text>
-                  </View>
-                  <ToggleSwitch
-                    color={period.color}
-                    value={period.shown}
-                    onValueChange={value =>
-                      calendarObj.current?.updatePeriods(period.title, value)
-                    }
-                  />
-                </View>
-              )
-            })}
-            {/* <View style={{ height: 200, backgroundColor: "red", width: 20 }} /> */}
-          </ScrollView>
+            date={selectedDay}
+          />
         )}
       </BoxShadowView>
       <NavBar />
@@ -252,17 +275,5 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     overflow: "visible",
-  },
-  periodTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  periodSubTitle: {
-    fontSize: 12,
-    fontWeight: "400",
-  },
-  monthTitle: {
-    fontSize: 20,
-    fontWeight: "900",
   },
 })

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { DateData, MarkedDates } from "react-native-calendars/src/types"
 import * as FileSystem from "expo-file-system"
 import { EventEmitter } from "events"
@@ -6,9 +7,35 @@ import { TouchableOpacity, View, ViewStyle } from "react-native"
 import { DayProps } from "react-native-calendars/src/calendar/day"
 import { Text } from "components/Text"
 import { Canvas, Path, Skia } from "@shopify/react-native-skia"
+import { palette } from "./colors"
+import boomSvg from "assets/calendar/emoticons/boom.svg"
+import brokenHeartSvg from "assets/calendar/emoticons/broken_heart.svg"
+import cryFaceSvg from "assets/calendar/emoticons/cry_face.svg"
+import desperateSvg from "assets/calendar/emoticons/desperate.svg"
+import fallInLoveSvg from "assets/calendar/emoticons/fall_in_love.svg"
+import grinningSvg from "assets/calendar/emoticons/grinning.svg"
+import heartSvg from "assets/calendar/emoticons/heart.svg"
+import laughingSvg from "assets/calendar/emoticons/laughing.svg"
+import lookAsideSvg from "assets/calendar/emoticons/look_aside.svg"
+import normalSmileSvg from "assets/calendar/emoticons/normal_smile.svg"
+import oneHundredSvg from "assets/calendar/emoticons/one_hundred.svg"
+import sickFaceSvg from "assets/calendar/emoticons/sick_face.svg"
+import smileEyesClosedSvg from "assets/calendar/emoticons/smile_eyes_closed.svg"
+import smileEyesOpenSvg from "assets/calendar/emoticons/smile_eyes_open.svg"
+import smileEyesTriangleSvg from "assets/calendar/emoticons/smile_eyes_triangle.svg"
+import smileWaterDropSvg from "assets/calendar/emoticons/smile_water_drop.svg"
+import smileSvg from "assets/calendar/emoticons/smile.svg"
+import starEyesSvg from "assets/calendar/emoticons/star_eyes.svg"
 
-export const dotColorGold = "rgba(242, 186, 82, 1)"
 export const purpleBerry = "rgba(98, 96, 166, 1)"
+
+export enum CalendarBottomSheetStatus {
+  PERIODS,
+  MONTHLY_EVENTS,
+  DAILY_EVENTS,
+  ADD_EVENT,
+  EVENT_DETAILS,
+}
 
 export interface Period {
   start?: string
@@ -37,9 +64,11 @@ export interface CalendarEvent {
   repeats?: boolean
 
   //this is weird
-  mood?: string
+  mood?: ValidEmoticonName
 
   status: CalendarEventStatus
+
+  id: string
 }
 
 export enum CalendarEventStatus {
@@ -53,7 +82,7 @@ const calendarPeriods: CalendarPeriod[] = [
     dates: [{ start: "2023-08-01", end: "2023-08-24" }],
     title: "Vacanze",
     subtitle: "1/08 - 24/08",
-    color: dotColorGold,
+    color: palette.goldish,
     shown: true,
   },
   {
@@ -88,6 +117,8 @@ export declare interface CalendarSingletonWrapper {
   on(event: "calendarPeriodsChanged", listener: () => void): this
 
   on(event: "markedDatesSet", listener: () => void): this
+
+  on(event: "calendarEventsChanged", listener: () => void): this
 }
 
 export class CalendarSingletonWrapper extends EventEmitter {
@@ -104,11 +135,48 @@ export class CalendarSingletonWrapper extends EventEmitter {
 
   private _calendarEvents: CalendarEvent[] = []
 
+  public get calendarEvents(): CalendarEvent[] {
+    return this._calendarEvents
+  }
+
   public constructor() {
     super()
     void this._initializeCalendar()
   }
   private async _initializeCalendar() {
+    await this._writeEvents([])
+    await this._writeEvents([
+      {
+        id: "1",
+        title: "prova",
+        start: "2023-08-01T14:00:00.000Z",
+        end: "2023-08-01T15:00:00.000Z",
+        status: CalendarEventStatus.INITIAL,
+        mood: "boom",
+        reminder: "2021-08-01T13:00:00.000Z",
+        repeats: false,
+      },
+      {
+        id: "2",
+        title: "prova2",
+        start: "2023-08-02T14:00:00.000Z",
+        end: "2021-08-02T15:00:00.000Z",
+        status: CalendarEventStatus.INITIAL,
+        mood: "cry_face",
+        reminder: "2021-08-02T13:00:00.000Z",
+        repeats: false,
+      },
+      {
+        id: "3",
+        title: "prova3",
+        start: "2023-08-03T14:00:00.000Z",
+        end: "2021-08-03T15:00:00.000Z",
+        status: CalendarEventStatus.INITIAL,
+        mood: "look_aside",
+        reminder: "2021-08-03T13:00:00.000Z",
+        repeats: false,
+      },
+    ])
     await this._readEvents()
     await this._readCalendarPeriods()
     this._applyPeriods()
@@ -121,6 +189,8 @@ export class CalendarSingletonWrapper extends EventEmitter {
       )
       const calendarEvents = JSON.parse(calendarEventsJSON) as CalendarEvent[]
       this._calendarEvents = calendarEvents
+
+      this.emit("calendarEventsChanged")
     } catch (err) {
       console.log(err)
       console.log("Error reading calendarEvents")
@@ -136,6 +206,7 @@ export class CalendarSingletonWrapper extends EventEmitter {
         calendarEventsJSON
       )
 
+      this.emit("calendarEventsChanged")
       return true
     } catch (err) {
       console.log(err)
@@ -382,7 +453,15 @@ export const dayComponentCustom: ComponentType<
   return (
     <TouchableOpacity
       style={{ alignSelf: "stretch" }}
-      onPress={onPress ? () => onPress(dateData) : undefined}
+      onPress={
+        onPress
+          ? () => {
+              console.log("pressing!!")
+              console.log(dateData)
+              onPress(dateData)
+            }
+          : undefined
+      }
       onLongPress={onLongPress ? () => onLongPress(dateData) : undefined}
     >
       <View
@@ -473,9 +552,102 @@ const dateToDateData = (
         dateString: d.toISOString().substring(0, 10),
         timestamp: d.getTime(),
       }
+    } else {
+      return date
     }
   }
   return undefined
 }
 
 export const daysOfWeekLetters = ["L", "M", "M", "G", "V", "S", "D"]
+
+const daysOfWeekIt = [
+  "Lunedì",
+  "Martedì",
+  "Mercoledì",
+  "Giovedì",
+  "Venerdì",
+  "Sabato",
+  "Domenica",
+]
+
+const daysOfWeekEn = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+]
+
+export const formatCalendarEventDay = (event: CalendarEvent, lan: string) => {
+  const date = new Date(event.start)
+
+  const day = date.getDate()
+
+  const month = date.getMonth() + 1
+
+  const dayNumber = date.getDay()
+
+  let dayOfTheWeek
+
+  if (lan === "it") {
+    dayOfTheWeek = daysOfWeekIt[dayNumber]
+  } else {
+    dayOfTheWeek = daysOfWeekEn[dayNumber]
+  }
+
+  return `${day.toString().padStart(2, "0")}/${month
+    .toString()
+    .padStart(2, "0")} | ${dayOfTheWeek}`
+}
+
+type ValidEmoticonName =
+  | "boom"
+  | "broken_heart"
+  | "cry_face"
+  | "desperate"
+  | "fall_in_love"
+  | "grinning"
+  | "heart"
+  | "laughing"
+  | "look_aside"
+  | "normal_smile"
+  | "one_hundred"
+  | "sick_face"
+  | "smile_eyes_closed"
+  | "smile_eyes_open"
+  | "smile_eyes_triangle"
+  | "smile_water_drop"
+  | "smile"
+  | "star_eyes"
+
+const emoticons: Record<ValidEmoticonName, number> = {
+  boom: boomSvg,
+  broken_heart: brokenHeartSvg,
+  cry_face: cryFaceSvg,
+  desperate: desperateSvg,
+  fall_in_love: fallInLoveSvg,
+  grinning: grinningSvg,
+  heart: heartSvg,
+  laughing: laughingSvg,
+  look_aside: lookAsideSvg,
+  normal_smile: normalSmileSvg,
+  one_hundred: oneHundredSvg,
+  sick_face: sickFaceSvg,
+  smile_eyes_closed: smileEyesClosedSvg,
+  smile_eyes_open: smileEyesOpenSvg,
+  smile_eyes_triangle: smileEyesTriangleSvg,
+  smile_water_drop: smileWaterDropSvg,
+  smile: smileSvg,
+  star_eyes: starEyesSvg,
+}
+
+export const getSourceEmoticon = (emoticon: ValidEmoticonName | undefined) => {
+  if (emoticon) {
+    return emoticons[emoticon]
+  } else {
+    return smileSvg
+  }
+}
