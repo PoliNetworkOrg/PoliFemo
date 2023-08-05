@@ -1,5 +1,5 @@
 import { FC } from "react"
-import { View, ScrollView, StyleSheet } from "react-native"
+import { View, ScrollView, StyleSheet, Pressable } from "react-native"
 import {
   CalendarEvent,
   formatCalendarEventDay,
@@ -9,12 +9,14 @@ import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import { Icon } from "components/Icon"
 import { Divider } from "components/Divider"
+import deleteSvg from "assets/modal/delete.svg"
 
 interface CalendarMonthlyEventsProps {
   events: CalendarEvent[]
   month: string
   year: number
   lan: string
+  onDeleteEvent: (id: string) => void
 }
 
 export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
@@ -86,9 +88,22 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
                 justifyContent: "center",
               }}
             >
-              <Text style={[styles.mediumSizeText, { color: homeBackground }]}>
-                {event.title}
-              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text
+                  style={[styles.mediumSizeText, { color: homeBackground }]}
+                >
+                  {event.title}
+                </Text>
+                <Pressable onPress={() => props.onDeleteEvent(event.id)}>
+                  <Icon source={deleteSvg} scale={0.8} />
+                </Pressable>
+              </View>
+
               <Text
                 style={[
                   styles.smallSizeText,

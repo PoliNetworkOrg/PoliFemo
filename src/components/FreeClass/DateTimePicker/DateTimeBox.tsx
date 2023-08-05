@@ -5,6 +5,7 @@ import { usePalette } from "utils/colors"
 
 export interface DateTimeBoxProps {
   value?: string
+  width?: number
 }
 /**
  * custom box which contains a 2 digit number, used
@@ -15,7 +16,7 @@ export const DateTimeBox: FC<DateTimeBoxProps> = props => {
   return (
     <View
       style={{
-        width: 38,
+        width: props.width ?? 38,
         height: 27,
         borderColor: isLight ? palette.variant3 : "#fff",
         borderWidth: 0.5,

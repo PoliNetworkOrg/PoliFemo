@@ -2,7 +2,7 @@
 import { DateData, MarkedDates } from "react-native-calendars/src/types"
 import * as FileSystem from "expo-file-system"
 import { EventEmitter } from "events"
-import { ComponentType, useMemo } from "react"
+import { ComponentType, useEffect, useMemo, useState } from "react"
 import { TouchableOpacity, View, ViewStyle } from "react-native"
 import { DayProps } from "react-native-calendars/src/calendar/day"
 import { Text } from "components/Text"
@@ -144,43 +144,9 @@ export class CalendarSingletonWrapper extends EventEmitter {
     void this._initializeCalendar()
   }
   private async _initializeCalendar() {
-    await this._writeEvents([])
-    await this._writeEvents([
-      {
-        id: "1",
-        title: "prova",
-        start: "2023-08-01T14:00:00.000Z",
-        end: "2023-08-01T15:00:00.000Z",
-        status: CalendarEventStatus.INITIAL,
-        mood: "boom",
-        reminder: "2021-08-01T13:00:00.000Z",
-        repeats: false,
-      },
-      {
-        id: "2",
-        title: "prova2",
-        start: "2023-08-02T14:00:00.000Z",
-        end: "2021-08-02T15:00:00.000Z",
-        status: CalendarEventStatus.INITIAL,
-        mood: "cry_face",
-        reminder: "2021-08-02T13:00:00.000Z",
-        repeats: false,
-      },
-      {
-        id: "3",
-        title: "prova3",
-        start: "2023-08-03T14:00:00.000Z",
-        end: "2021-08-03T15:00:00.000Z",
-        status: CalendarEventStatus.INITIAL,
-        mood: "look_aside",
-        reminder: "2021-08-03T13:00:00.000Z",
-        repeats: false,
-      },
-    ])
     await this._readEvents()
     await this._readCalendarPeriods()
     this._applyPeriods()
-    /* this._markedDatesMerging() */
   }
   private _readEvents = async () => {
     try {
@@ -205,8 +171,6 @@ export class CalendarSingletonWrapper extends EventEmitter {
         FileSystem.documentDirectory + "calendar_events.json",
         calendarEventsJSON
       )
-
-      this.emit("calendarEventsChanged")
       return true
     } catch (err) {
       console.log(err)
@@ -304,11 +268,10 @@ export class CalendarSingletonWrapper extends EventEmitter {
         this._markedDatesPeriods = { ...this._markedDatesPeriods, ...periodTmp }
       })
     })
-    this.emit("markedDatesSet")
+    this._applyMarkers()
   }
 
   public updatePeriods = (title: string, val: boolean) => {
-    console.log(val)
     const periods = this._calendarPeriods ?? []
     for (let i = 0; i < periods.length; i++) {
       if (periods[i].title === title) {
@@ -324,26 +287,56 @@ export class CalendarSingletonWrapper extends EventEmitter {
     this._applyPeriods()
   }
 
-  // ! non testata
   public addEvent = (event: CalendarEvent) => {
     this._calendarEvents.push(event)
 
+    this.emit("calendarEventsChanged")
+
     void this._writeEvents(this._calendarEvents)
+
+    void this._applyMarkers()
   }
 
-  // ! non testata
-  public applyMarkers = () => {
+  private _applyMarkers = () => {
     for (let i = 0; i < this._calendarEvents.length; i++) {
       const dateString = this._calendarEvents[i].start.substring(0, 10)
 
-      this._markedDatesPeriods[dateString].marked = true
+      this._markedDatesPeriods[dateString] = {
+        ...this._markedDatesPeriods[dateString],
+        marked: true,
+      }
     }
-    this._calendarEvents
+
+    this.emit("markedDatesSet")
   }
 
-  /* private _markedDatesMerging() {
-    throw new Error("Method not implemented.")
-  } */
+  private _removeMarkers = (dateString: string) => {
+    const isAtLeastOneEvent = this.calendarEvents.find(
+      event => event.start.substring(0, 10) === dateString
+    )
+    if (isAtLeastOneEvent) return
+
+    this._markedDatesPeriods[dateString] = {
+      ...this._markedDatesPeriods[dateString],
+      marked: false,
+    }
+
+    this.emit("markedDatesSet")
+  }
+
+  public removeEvent = (id: string) => {
+    const index = this._calendarEvents.findIndex(event => event.id === id)
+
+    if (index === -1) return
+
+    const removedElement = this._calendarEvents.splice(index, 1)[0]
+
+    this.emit("calendarEventsChanged")
+
+    void this._writeEvents(this._calendarEvents)
+
+    void this._removeMarkers(removedElement.start.substring(0, 10))
+  }
 }
 
 const getNextDayFormattedDate = (
@@ -356,7 +349,7 @@ const getNextDayFormattedDate = (
   return { dateString, dateObj }
 }
 
-export const months = [
+export const monthsIt = [
   "Gennaio",
   "Febbraio",
   "Marzo",
@@ -369,6 +362,51 @@ export const months = [
   "Ottobre",
   "Novembre",
   "Dicembre",
+]
+
+export const monthsEn = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "Augost",
+  "September",
+  "October",
+  "November",
+  "December",
+]
+
+export const monthsAcronymsIt = [
+  "Gen",
+  "Feb",
+  "Mar",
+  "Apr",
+  "Mag",
+  "Giu",
+  "Lug",
+  "Ago",
+  "Set",
+  "Ott",
+  "Nov",
+  "Dic",
+]
+
+export const monthsAcronymsEn = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Augost",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ]
 
 const FILLER_HEIGHT = 26
@@ -384,13 +422,19 @@ export const dayComponentCustom: ComponentType<
     date,
     onPress,
     onLongPress,
-    state,
+    /*  state,
     accessibilityLabel,
-    testID,
+    testID, */
     children,
   } = props
 
   const dateData = dateToDateData(date)
+
+  const [isMarked, setIsMarked] = useState(marking?.marked ?? false)
+
+  useEffect(() => {
+    setIsMarked(marking?.marked ?? false)
+  }, [marking])
 
   const fillerStyles = useMemo(() => {
     const leftFillerStyle: ViewStyle = { flex: 1 }
@@ -456,8 +500,6 @@ export const dayComponentCustom: ComponentType<
       onPress={
         onPress
           ? () => {
-              console.log("pressing!!")
-              console.log(dateData)
               onPress(dateData)
             }
           : undefined
@@ -521,7 +563,7 @@ export const dayComponentCustom: ComponentType<
             {String(children)}
           </Text>
           <View style={{ position: "absolute", top: 7, right: 7 }}>
-            {marking?.marked && (
+            {isMarked && (
               <View
                 style={{
                   backgroundColor: theme?.dotColor,
@@ -560,6 +602,26 @@ const dateToDateData = (
 }
 
 export const daysOfWeekLetters = ["L", "M", "M", "G", "V", "S", "D"]
+
+export const daysOfWeekAcronymsIt = [
+  "Lun",
+  "Mar",
+  "Mer",
+  "Gio",
+  "Ven",
+  "Sab",
+  "Dom",
+]
+
+export const daysOfWeekAcronymsEn = [
+  "Mon",
+  "Tue",
+  "Wed",
+  "Thu",
+  "Fri",
+  "Sat",
+  "Sun",
+]
 
 const daysOfWeekIt = [
   "Lunedì",
@@ -603,7 +665,7 @@ export const formatCalendarEventDay = (event: CalendarEvent, lan: string) => {
     .padStart(2, "0")} | ${dayOfTheWeek}`
 }
 
-type ValidEmoticonName =
+export type ValidEmoticonName =
   | "boom"
   | "broken_heart"
   | "cry_face"
@@ -623,7 +685,31 @@ type ValidEmoticonName =
   | "smile"
   | "star_eyes"
 
-const emoticons: Record<ValidEmoticonName, number> = {
+// Type guard function to check if the string is a ValidEmoticonName
+export function isValidEmoticonName(name: string): name is ValidEmoticonName {
+  return [
+    "boom",
+    "broken_heart",
+    "cry_face",
+    "desperate",
+    "fall_in_love",
+    "grinning",
+    "heart",
+    "laughing",
+    "look_aside",
+    "normal_smile",
+    "one_hundred",
+    "sick_face",
+    "smile_eyes_closed",
+    "smile_eyes_open",
+    "smile_eyes_triangle",
+    "smile_water_drop",
+    "smile",
+    "star_eyes",
+  ].includes(name)
+}
+
+export const emoticons: Record<ValidEmoticonName, number> = {
   boom: boomSvg,
   broken_heart: brokenHeartSvg,
   cry_face: cryFaceSvg,
@@ -650,4 +736,59 @@ export const getSourceEmoticon = (emoticon: ValidEmoticonName | undefined) => {
   } else {
     return smileSvg
   }
+}
+
+export const fromatAddEventDate = (date: Date, lan: string) => {
+  const day = date.getDay()
+
+  let acronymDay
+  let monthAcronym
+  const dayNumber = date.getDate()
+  const year = date.getFullYear()
+
+  if (lan === "it") {
+    acronymDay = daysOfWeekAcronymsIt[day]
+    monthAcronym = monthsAcronymsIt[date.getMonth()]
+  } else {
+    acronymDay = daysOfWeekAcronymsEn[day]
+    monthAcronym = monthsAcronymsEn[date.getMonth()]
+  }
+
+  return `${acronymDay} ${dayNumber} ${monthAcronym} ${year}`
+}
+
+export const get1HourBeforeAfterSameDay = (
+  date: Date,
+  after: boolean
+): Date => {
+  let newDate = date
+  if (after) {
+    newDate = new Date(date.getTime() + 60 * 60 * 1000)
+
+    //if the new end date is not the same day as the start date set to midnight
+    if (newDate.getDate() !== date.getDate()) {
+      newDate = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        23,
+        59
+      )
+    }
+  } else {
+    newDate = new Date(date.getTime() - 60 * 60 * 1000)
+
+    //if the new start date is not the same day as the end date set to midnight
+    if (newDate.getDate() !== date.getDate()) {
+      newDate = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        0,
+        0
+      )
+    }
+  }
+
+  return newDate
 }

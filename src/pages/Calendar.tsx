@@ -1,5 +1,5 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { useTranslation } from "react-i18next"
+/* import { useTranslation } from "react-i18next" */
 import { BoxShadowView } from "components/BoxShadow"
 import { NavBar } from "components/NavBar"
 import { Pressable, View } from "react-native"
@@ -11,10 +11,11 @@ import {
   CalendarPeriod,
   CalendarSingletonWrapper as CalendarManager,
   dayComponentCustom,
-  months,
   daysOfWeekLetters,
   CalendarBottomSheetStatus,
   CalendarEvent,
+  monthsIt,
+  monthsEn,
 } from "utils/calendar"
 import { MarkedDates } from "react-native-calendars/src/types"
 import { Text } from "components/Text"
@@ -29,13 +30,13 @@ import { CalendarAddEvent } from "components/Calendar/CalendarAddEvent"
 
 export const CalendarPage: MainStackScreen<"Calendar"> = () => {
   const { homeBackground, background, dotColor } = usePalette()
-  const { t } = useTranslation()
+
+  // todo : implement translation :(
+  /* const { t } = useTranslation() */
 
   const lan = useCurrentLanguage()
 
-  const [selectedDay, setSelectedDay] = useState(
-    new Date().toISOString().slice(0, 10)
-  )
+  const [selectedDay, setSelectedDay] = useState(new Date().toISOString())
 
   const [bottomSheetStatus, setBottomSheetStatus] =
     useState<CalendarBottomSheetStatus>(CalendarBottomSheetStatus.PERIODS)
@@ -68,6 +69,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
         calendarObj.current = new CalendarManager()
         calendarObj.current.addListener("markedDatesSet", () => {
           if (calendarObj.current?.markedDatesPeriods) {
+            console.log("marked dates sets")
             setMarkedDates(calendarObj.current?.markedDatesPeriods)
             setCalendarPeriods(calendarObj.current?.calendarPeriods)
           }
@@ -75,15 +77,15 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
 
         calendarObj.current.addListener("calendarPeriodsChanged", () => {
           if (calendarObj.current?.calendarPeriods) {
+            console.log("calendarPeriodsChanged")
             setCalendarPeriods(calendarObj.current?.calendarPeriods)
           }
         })
 
         calendarObj.current.addListener("calendarEventsChanged", () => {
-          console.log("calendarEventsChanged")
           if (calendarObj.current?.calendarEvents) {
-            /* console.log(calendarObj.current?.calendarEvents) */
-            setCalendarEvents(calendarObj.current?.calendarEvents)
+            console.log("calendarEventsChanged")
+            setCalendarEvents([...(calendarObj.current?.calendarEvents ?? [])])
           }
         })
       } else {
@@ -110,7 +112,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           new Date(event.start).getMonth() === month &&
           new Date(event.start).getFullYear() === year
       )
-      /* console.log(filteredEvents) */
+
       setCalendarEventsMonth(filteredEvents)
     }
   }, [calendarEvents, month, year])
@@ -180,7 +182,14 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           dotColor: dotColor,
         }}
         onDayPress={day => {
-          setSelectedDay(day.dateString)
+          const date = new Date(day.dateString)
+          const now = new Date()
+
+          //set hours and minutes of date to now
+          date.setHours(now.getHours())
+          date.setMinutes(now.getMinutes())
+
+          setSelectedDay(date.toISOString())
 
           setBottomSheetStatus(CalendarBottomSheetStatus.ADD_EVENT)
         }}
@@ -233,7 +242,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
         {bottomSheetStatus === CalendarBottomSheetStatus.PERIODS && (
           <CalendarPeriodsSwitches
             calendarPeriods={calendarPeriods}
-            month={months[month]}
+            month={lan === "it" ? monthsIt[month] : monthsEn[month]}
             year={year}
             onSwitchChange={(value: boolean, title: string) =>
               calendarObj.current?.updatePeriods(title, value)
@@ -243,15 +252,19 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
         {bottomSheetStatus === CalendarBottomSheetStatus.MONTHLY_EVENTS && (
           <CalendarMonthlyEvents
             events={calendarEventsMonth}
-            month={months[month]}
+            month={lan === "it" ? monthsIt[month] : monthsEn[month]}
             year={year}
             lan={lan}
+            onDeleteEvent={(id: string) => {
+              calendarObj.current?.removeEvent(id)
+            }}
           />
         )}
         {bottomSheetStatus === CalendarBottomSheetStatus.ADD_EVENT && (
           <CalendarAddEvent
             addEvent={(event: CalendarEvent) => {
-              return
+              calendarObj.current?.addEvent(event)
+              setBottomSheetStatus(CalendarBottomSheetStatus.MONTHLY_EVENTS)
             }}
             date={selectedDay}
           />
