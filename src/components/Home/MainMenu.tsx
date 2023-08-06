@@ -3,22 +3,22 @@ import { ScrollView, View } from "react-native"
 
 import { useNavigation } from "navigation/NavigationTypes"
 
-import { MenuButton, ButtonInterface, ButtonType } from "./MenuButton"
+import { ButtonInterface, ButtonType, MenuButton } from "./MenuButton"
 
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import add from "assets/menu/add.svg"
+import association from "assets/menu/association.svg"
 import calendar from "assets/menu/calendar.svg"
 import clock from "assets/menu/clock.svg"
-import association from "assets/menu/association.svg"
 import free_classrooms from "assets/menu/free_classrooms.svg"
-import materials from "assets/menu/materials.svg"
-import groups from "assets/menu/whatsapp.svg"
-import marks from "assets/menu/marks.svg"
 import grading_book from "assets/menu/grading_book.svg"
+import marks from "assets/menu/marks.svg"
+import materials from "assets/menu/materials.svg"
 import tests from "assets/menu/tests.svg"
-import add from "assets/menu/add.svg"
+import groups from "assets/menu/whatsapp.svg"
 import { Modal } from "components/Modal"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useOutsideClick } from "utils/outsideClick"
 import { useTranslation } from "react-i18next"
+import { useOutsideClick } from "utils/outsideClick"
 
 type ButtonState = ButtonInterface & { shown: boolean }
 
@@ -75,7 +75,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
       type: ButtonType.GRADING_BOOK,
       title: "menu_gradingBook",
       icon: grading_book,
-      onClick: () => navigate("Career"),
+      onClick: () => navigate("GradingBook"),
     },
     {
       type: ButtonType.TEST,

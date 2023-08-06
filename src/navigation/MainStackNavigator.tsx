@@ -4,7 +4,6 @@
  */
 
 import { MainStackNavigatorParams } from "navigation/NavigationTypes"
-import { Career } from "pages/Career"
 import { Error404 } from "pages/Error404"
 import { BuildingChoice } from "pages/FreeClass/BuildingChoice"
 import { CampusChoice } from "pages/FreeClass/CampusChoice"
@@ -13,6 +12,7 @@ import { FreeClassrooms } from "pages/FreeClass/FreeClassrooms"
 import { HeadquarterChoice } from "pages/FreeClass/HeadquarterChoice"
 import { PositionChoice } from "pages/FreeClass/PositionChoice"
 import { RoomDetailsPage } from "pages/FreeClass/RoomDetailsPage"
+import { GradingBook } from "pages/GradingBook"
 import { Groups } from "pages/Groups"
 import { Home } from "pages/Home"
 import { TimeTable } from "pages/TimeTable"
@@ -109,7 +109,7 @@ export const MainStack: FC = () => {
           }
         }}
       />
-      <MainStackNavigator.Screen name="Career" component={Career} />
+      <MainStackNavigator.Screen name="GradingBook" component={GradingBook} />
     </MainStackNavigator.Navigator>
   )
 }

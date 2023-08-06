@@ -1,6 +1,6 @@
-import { useContext } from "react"
-import { useColorScheme, ColorSchemeName } from "react-native"
 import { SettingsContext } from "contexts/settings"
+import { useContext } from "react"
+import { ColorSchemeName, useColorScheme } from "react-native"
 
 export const palette = {
   primary: "#424967",
@@ -10,6 +10,8 @@ export const palette = {
   variant1: "#414867",
   variant2: "#010B40",
   variant3: "#454773",
+  examsCirle: "#1ad67b",
+  cfuCirle: "#8791bd",
   accent: "#FFB544",
   widgetBgLighter: "#F6F7FC",
   widgetBgDarker: "#343E5A",
