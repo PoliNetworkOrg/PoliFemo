@@ -3,26 +3,27 @@
  * Component encapsulating the pages of the Main Navigator.
  */
 
-import { FC } from "react"
 import { MainStackNavigatorParams } from "navigation/NavigationTypes"
+import { Career } from "pages/Career"
+import { Error404 } from "pages/Error404"
+import { BuildingChoice } from "pages/FreeClass/BuildingChoice"
+import { CampusChoice } from "pages/FreeClass/CampusChoice"
+import { ClassChoice } from "pages/FreeClass/ClassChoice"
+import { FreeClassrooms } from "pages/FreeClass/FreeClassrooms"
+import { HeadquarterChoice } from "pages/FreeClass/HeadquarterChoice"
+import { PositionChoice } from "pages/FreeClass/PositionChoice"
+import { RoomDetailsPage } from "pages/FreeClass/RoomDetailsPage"
+import { Groups } from "pages/Groups"
 import { Home } from "pages/Home"
+import { TimeTable } from "pages/TimeTable"
 import { Article } from "pages/news/ArticleDetails"
 import { ArticlesList } from "pages/news/ArticlesList"
-import { Error404 } from "pages/Error404"
-import { FreeClassrooms } from "pages/FreeClass/FreeClassrooms"
-import { CampusChoice } from "pages/FreeClass/CampusChoice"
-import { PositionChoice } from "pages/FreeClass/PositionChoice"
-import { BuildingChoice } from "pages/FreeClass/BuildingChoice"
-import { ClassChoice } from "pages/FreeClass/ClassChoice"
-import { RoomDetailsPage } from "pages/FreeClass/RoomDetailsPage"
 import { OtherCategories } from "pages/news/OtherCategories"
-import { Groups } from "pages/Groups"
+import { NotificationDetails } from "pages/notifications/NotificationDetails"
 import { Notifications } from "pages/notifications/Notifications"
 import { NotificationsCategory } from "pages/notifications/NotificationsCategory"
-import { NotificationDetails } from "pages/notifications/NotificationDetails"
+import { FC } from "react"
 import { createSharedElementStackNavigator } from "react-navigation-shared-element"
-import { HeadquarterChoice } from "pages/FreeClass/HeadquarterChoice"
-import { TimeTable } from "pages/TimeTable"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const MainStackNavigator =
@@ -108,6 +109,7 @@ export const MainStack: FC = () => {
           }
         }}
       />
+      <MainStackNavigator.Screen name="Career" component={Career} />
     </MainStackNavigator.Navigator>
   )
 }

@@ -5,6 +5,7 @@ import { groups } from "./collections/groups"
 import { user } from "./collections/user"
 import { rooms } from "./collections/rooms"
 import { ApiCollection } from "./useApiCall"
+import { career } from "./collections/career"
 export { RetryType, AuthType, RequestOptions } from "./HttpClient"
 
 /**
@@ -31,4 +32,5 @@ export const api = {
   groups,
   rooms,
   user,
+  career,
 } satisfies Record<string, ApiCollection>

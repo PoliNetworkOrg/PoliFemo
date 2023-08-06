@@ -75,7 +75,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
       type: ButtonType.GRADING_BOOK,
       title: "menu_gradingBook",
       icon: grading_book,
-      onClick: () => navigate("Error404"),
+      onClick: () => navigate("Career"),
     },
     {
       type: ButtonType.TEST,

@@ -87,6 +87,7 @@ export type MainStackNavigatorParams = {
     channelId: ValidChannelId
   }
   NotificationDetails: { notification: NotificationStorage; category?: string }
+  Career: undefined
 }
 
 export type SettingsStackNavigatorParams = {
