@@ -35,8 +35,8 @@ export const Map: FC<MapProps> = props => {
   const map = useRef<MapView>(null)
 
   useEffect(() => {
-    if (props.userLatitude === undefined && props.userLongitude === undefined) {
-      setTimeout(() => setTimer(true), 20000) //20 sec
+    if (props.userLatitude === 0 && props.userLongitude === 0) {
+      setTimeout(() => setTimer(true), 10000) //after 10 sec I set the timer to true and I display an error.
     }
   }, [])
 
@@ -61,7 +61,7 @@ export const Map: FC<MapProps> = props => {
         paddingBottom: 130,
       }}
     >
-      {props.userLatitude === undefined || props.userLongitude === undefined ? (
+      {props.userLatitude === 0 || props.userLongitude === 0 ? (
         props.locationStatus !== PermissionStatus.GRANTED || timer === true ? (
           <ErrorMessage message={t("mapError")} />
         ) : (
