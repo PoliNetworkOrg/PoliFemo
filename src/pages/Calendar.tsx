@@ -6,7 +6,7 @@ import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { StyleSheet } from "react-native"
 import { Calendar } from "react-native-calendars"
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import {
   CalendarPeriod,
   CalendarSingletonWrapper as CalendarManager,
@@ -27,12 +27,17 @@ import { CalendarPeriodsSwitches } from "components/Calendar/CalendarPeriodsSwit
 import { CalendarMonthlyEvents } from "components/Calendar/CalendarMonthlyEvents"
 import { useCurrentLanguage } from "utils/articles"
 import { CalendarAddEvent } from "components/Calendar/CalendarAddEvent"
+import { LoginContext } from "contexts/login"
 
 export const CalendarPage: MainStackScreen<"Calendar"> = () => {
   const { homeBackground, background, dotColor } = usePalette()
 
   // todo : implement translation :(
   /* const { t } = useTranslation() */
+
+  const { userInfo } = useContext(LoginContext)
+
+  const { matricola } = userInfo?.careers?.[0] ?? {}
 
   const lan = useCurrentLanguage()
 
@@ -66,7 +71,10 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
   useEffect(() => {
     const initCalendar = () => {
       if (!calendarObj.current) {
-        calendarObj.current = new CalendarManager()
+        calendarObj.current = new CalendarManager({
+          hidePeriods: false,
+          matricola: matricola,
+        })
         calendarObj.current.addListener("markedDatesSet", () => {
           if (calendarObj.current?.markedDatesPeriods) {
             console.log("marked dates sets")
@@ -116,6 +124,28 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
       setCalendarEventsMonth(filteredEvents)
     }
   }, [calendarEvents, month, year])
+
+  // hide or show peridos based on bottom sheet status
+  useEffect(() => {
+    if (bottomSheetStatus !== CalendarBottomSheetStatus.PERIODS) {
+      if (calendarObj.current?.hidePeriods == false) {
+        calendarObj.current?.hideAllPerdiods()
+      }
+    } else if (bottomSheetStatus === CalendarBottomSheetStatus.PERIODS) {
+      calendarObj.current?.showSwitchedOnPeriods()
+    }
+  }, [bottomSheetStatus])
+
+  // change matricola
+  useEffect(() => {
+    if (
+      calendarObj.current &&
+      matricola &&
+      calendarObj.current.matricola !== matricola
+    ) {
+      calendarObj.current?.changeMatricola(matricola)
+    }
+  }, [matricola])
 
   return (
     <View style={[{ backgroundColor: homeBackground }, styles.container]}>

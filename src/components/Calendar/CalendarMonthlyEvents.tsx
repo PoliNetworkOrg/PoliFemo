@@ -95,13 +95,20 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
                 }}
               >
                 <Text
-                  style={[styles.mediumSizeText, { color: homeBackground }]}
+                  style={[
+                    styles.mediumSizeText,
+                    { color: homeBackground, marginRight: 2 },
+                  ]}
+                  numberOfLines={1}
                 >
                   {event.title}
                 </Text>
-                <Pressable onPress={() => props.onDeleteEvent(event.id)}>
-                  <Icon source={deleteSvg} scale={0.8} />
-                </Pressable>
+                {(event.isPolimiEvent == undefined ||
+                  event.isPolimiEvent == false) && (
+                  <Pressable onPress={() => props.onDeleteEvent(event.id)}>
+                    <Icon source={deleteSvg} scale={0.8} />
+                  </Pressable>
+                )}
               </View>
 
               <Text

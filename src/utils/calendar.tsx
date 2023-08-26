@@ -26,6 +26,8 @@ import smileEyesTriangleSvg from "assets/calendar/emoticons/smile_eyes_triangle.
 import smileWaterDropSvg from "assets/calendar/emoticons/smile_water_drop.svg"
 import smileSvg from "assets/calendar/emoticons/smile.svg"
 import starEyesSvg from "assets/calendar/emoticons/star_eyes.svg"
+import { api } from "api"
+import { Event } from "api/collections/event"
 
 export const purpleBerry = "rgba(98, 96, 166, 1)"
 
@@ -69,12 +71,23 @@ export interface CalendarEvent {
   status: CalendarEventStatus
 
   id: string
+
+  isPolimiEvent?: boolean
+
+  titleEn?: string
+
+  polimiEventFields?: Partial<Event>
 }
 
 export enum CalendarEventStatus {
   INITIAL,
   PROGRESS,
   COMPLETED,
+}
+
+export interface CalendarPolimiSyncObj {
+  matricola?: string
+  lastSync?: string
 }
 
 const calendarPeriods: CalendarPeriod[] = [
@@ -129,6 +142,13 @@ export class CalendarSingletonWrapper extends EventEmitter {
   }
   private _calendarPeriods?: CalendarPeriod[]
 
+  // if true all periods wont be shown even though they are switched on
+  private _hidePeriods = false
+
+  public get hidePeriods(): boolean {
+    return this._hidePeriods
+  }
+
   public get calendarPeriods(): CalendarPeriod[] | undefined {
     return this._calendarPeriods
   }
@@ -139,15 +159,185 @@ export class CalendarSingletonWrapper extends EventEmitter {
     return this._calendarEvents
   }
 
-  public constructor() {
+  private _matricola?: string
+
+  public get matricola(): string | undefined {
+    return this._matricola
+  }
+
+  //matricola and last sync date with polimi events
+  private _calendarPolimiSync?: CalendarPolimiSyncObj
+
+  public constructor({
+    hidePeriods = false,
+    matricola,
+  }: {
+    hidePeriods?: boolean
+    matricola?: string
+  }) {
     super()
+    //weather or not I want to hide the periods as soon as the object is created
+    this._hidePeriods = hidePeriods
+    this._matricola = matricola
     void this._initializeCalendar()
   }
   private async _initializeCalendar() {
     await this._readEvents()
+    await this._readCaledarPolimiSync()
     await this._readCalendarPeriods()
     this._applyPeriods()
+    this._checkNeedSyncingPolimiEvents()
   }
+
+  public changeMatricola = (matricola?: string) => {
+    this._matricola = matricola
+
+    this._checkNeedSyncingPolimiEvents()
+  }
+
+  private _checkNeedSyncingPolimiEvents = () => {
+    if (this._matricola == null) {
+      //oldMatricola set && newMatricola undefined
+      if (this._calendarPolimiSync?.matricola) {
+        this._cleanCalendarEventsFromPolimiEvents({ calledBeforeSync: false })
+
+        this._calendarPolimiSync = {}
+        void this._writeCalendarPolimiSync({})
+      } else {
+        //oldMatricola undefined && newMatricola undefined
+        return
+      }
+    } else {
+      //oldMatricola undefined && newMatricola set
+      if (this._calendarPolimiSync?.matricola == null) {
+        //sync
+        void this._syncPolimiEvents()
+
+        //sync events with new matricola
+      } else if (this._calendarPolimiSync?.matricola !== this._matricola) {
+        //oldMatricola set && newMatricola set but they are different => clean and sync
+        this._cleanCalendarEventsFromPolimiEvents({ calledBeforeSync: true })
+
+        void this._syncPolimiEvents()
+      } else {
+        //oldMatricola set && newMatricola set && they are equal => sync if last sync is older than 7 days
+        if (this._calendarPolimiSync.lastSync) {
+          const lastSyncDate = new Date(this._calendarPolimiSync.lastSync)
+
+          const now = new Date()
+
+          const diff = now.getTime() - lastSyncDate.getTime()
+
+          const days = diff / (1000 * 3600 * 24)
+
+          if (days > 7) {
+            void this._syncPolimiEvents()
+          }
+        } else {
+          void this._syncPolimiEvents()
+        }
+      }
+    }
+  }
+
+  private _cleanCalendarEventsFromPolimiEvents = ({
+    calledBeforeSync = false,
+  }) => {
+    const newArray = this._calendarEvents.filter(event => !event.isPolimiEvent)
+
+    const hasChanged = newArray.length !== this._calendarEvents.length
+
+    this._calendarEvents = newArray
+
+    // dont write events and apply markers if called before sync
+    if (!calledBeforeSync && hasChanged) {
+      void this._writeEvents(this._calendarEvents)
+
+      void this._applyMarkers()
+
+      this.emit("calendarEventsChanged")
+    }
+  }
+
+  private _syncPolimiEvents = async () => {
+    if (this._matricola == null) {
+      return
+    }
+
+    const events: Event[] = await api.events.getEvents({
+      matricola: this._matricola,
+      startDate: new Date().toISOString().substring(0, 10),
+      nEvents: 20,
+    })
+
+    events.forEach(event => {
+      if (
+        !this._calendarEvents.find(
+          calendarEvent => calendarEvent.id === event.event_id.toString()
+        )
+      ) {
+        this._calendarEvents.push({
+          id: event.event_id.toString(),
+          end: event.date_end,
+          start: event.date_start,
+          title: event.title.it,
+          titleEn: event.title.en,
+          status: CalendarEventStatus.INITIAL,
+          isPolimiEvent: true,
+          polimiEventFields: event,
+        })
+      }
+    })
+
+    void this._writeEvents(this._calendarEvents)
+
+    this.emit("calendarEventsChanged")
+
+    void this._applyMarkers()
+
+    //write latest sync date
+    this._calendarPolimiSync = {
+      matricola: this._matricola,
+      lastSync: new Date().toISOString(),
+    }
+    void this._writeCalendarPolimiSync(this._calendarPolimiSync)
+  }
+
+  private _readCaledarPolimiSync = async () => {
+    try {
+      const calendarPolimiSyncJSON = await FileSystem.readAsStringAsync(
+        FileSystem.documentDirectory + "calendar_polimi_sync.json"
+      )
+      const calendarPolimiSync = JSON.parse(
+        calendarPolimiSyncJSON
+      ) as CalendarPolimiSyncObj
+      this._calendarPolimiSync = calendarPolimiSync
+    } catch (err) {
+      console.log(err)
+      console.log("Error reading calendarPolimiSync")
+      this._calendarPolimiSync = undefined
+    }
+  }
+
+  private _writeCalendarPolimiSync = async (
+    calendarPolimiSync: CalendarPolimiSyncObj
+  ): Promise<boolean> => {
+    const calendarPolimiSyncJSON = JSON.stringify(calendarPolimiSync)
+    try {
+      this._calendarPolimiSync = calendarPolimiSync
+      await FileSystem.writeAsStringAsync(
+        FileSystem.documentDirectory + "calendar_polimi_sync.json",
+        calendarPolimiSyncJSON
+      )
+
+      return true
+    } catch (err) {
+      console.log(err)
+      console.log("Error storing calendarPolimiSync ")
+      return false
+    }
+  }
+
   private _readEvents = async () => {
     try {
       const calendarEventsJSON = await FileSystem.readAsStringAsync(
@@ -217,7 +407,10 @@ export class CalendarSingletonWrapper extends EventEmitter {
 
   private _applyPeriods() {
     this._markedDatesPeriods = {}
-    this._calendarPeriods?.forEach(period => {
+
+    const periods = this._hidePeriods ? [] : this._calendarPeriods
+
+    periods?.forEach(period => {
       if (!period.shown) return
       period.dates.forEach(date => {
         const periodTmp: MarkedDates = {}
@@ -280,10 +473,21 @@ export class CalendarSingletonWrapper extends EventEmitter {
       }
     }
 
+    // create a new array to trigger the change
     this._calendarPeriods = periods.slice()
 
     this.emit("calendarPeriodsChanged")
     void this._writeCalendarPeriods(periods)
+    this._applyPeriods()
+  }
+
+  public hideAllPerdiods = () => {
+    this._hidePeriods = true
+    this._applyPeriods()
+  }
+
+  public showSwitchedOnPeriods = () => {
+    this._hidePeriods = false
     this._applyPeriods()
   }
 
@@ -422,7 +626,8 @@ export const dayComponentCustom: ComponentType<
     date,
     onPress,
     onLongPress,
-    /*  state,
+    state,
+    /*  
     accessibilityLabel,
     testID, */
     children,
@@ -469,7 +674,7 @@ export const dayComponentCustom: ComponentType<
     let startAngle
     let sweepAngle
 
-    if (marking?.startingDay && marking.endingDay) {
+    if ((marking?.startingDay && marking.endingDay) || state == "today") {
       startAngle = 90
       sweepAngle = 360
     } else if (marking?.startingDay) {
@@ -492,7 +697,7 @@ export const dayComponentCustom: ComponentType<
     )
 
     return path
-  }, [marking])
+  }, [marking, state])
 
   return (
     <TouchableOpacity
@@ -540,7 +745,7 @@ export const dayComponentCustom: ComponentType<
           >
             <Path
               path={path}
-              color={marking?.color}
+              color={state !== "today" ? marking?.color : "#fff"}
               strokeWidth={2}
               fillType={undefined}
               style="stroke"
@@ -557,7 +762,11 @@ export const dayComponentCustom: ComponentType<
           }}
         >
           <Text
-            style={{ fontSize: 12, fontWeight: "900" }}
+            style={{
+              fontSize: 12,
+              fontWeight: "900",
+              color: "#fff",
+            }}
             allowFontScaling={false}
           >
             {String(children)}
