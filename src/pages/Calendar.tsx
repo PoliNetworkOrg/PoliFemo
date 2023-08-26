@@ -1,4 +1,4 @@
-import { MainStackScreen } from "navigation/NavigationTypes"
+import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 /* import { useTranslation } from "react-i18next" */
 import { BoxShadowView } from "components/BoxShadow"
 import { NavBar } from "components/NavBar"
@@ -28,6 +28,7 @@ import { CalendarMonthlyEvents } from "components/Calendar/CalendarMonthlyEvents
 import { useCurrentLanguage } from "utils/articles"
 import { CalendarAddEvent } from "components/Calendar/CalendarAddEvent"
 import { LoginContext } from "contexts/login"
+import { CalendarEventDetails } from "components/Calendar/CalendarEventDetails"
 
 export const CalendarPage: MainStackScreen<"Calendar"> = () => {
   const { homeBackground, background, dotColor } = usePalette()
@@ -61,6 +62,12 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
   const [calendarEventsMonth, setCalendarEventsMonth] = useState<
     CalendarEvent[]
   >([])
+
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | undefined>(
+    undefined
+  )
+
+  const navigation = useNavigation()
 
   useEffect(() => {
     console.log(selectedDay)
@@ -288,6 +295,10 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
             onDeleteEvent={(id: string) => {
               calendarObj.current?.removeEvent(id)
             }}
+            onSelectedEvent={(event: CalendarEvent) => {
+              setSelectedEvent(event)
+              setBottomSheetStatus(CalendarBottomSheetStatus.EVENT_DETAILS)
+            }}
           />
         )}
         {bottomSheetStatus === CalendarBottomSheetStatus.ADD_EVENT && (
@@ -299,8 +310,32 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
             date={selectedDay}
           />
         )}
+        {bottomSheetStatus == CalendarBottomSheetStatus.EVENT_DETAILS && (
+          <CalendarEventDetails
+            event={selectedEvent}
+            updateNotes={(id: string, notes: string) => {
+              calendarObj.current?.updateNotes(id, notes)
+            }}
+          />
+        )}
       </BoxShadowView>
-      <NavBar />
+      <NavBar
+        overrideBackBehavior={() => {
+          if (bottomSheetStatus === CalendarBottomSheetStatus.EVENT_DETAILS) {
+            setBottomSheetStatus(CalendarBottomSheetStatus.MONTHLY_EVENTS)
+          } else if (
+            bottomSheetStatus === CalendarBottomSheetStatus.MONTHLY_EVENTS
+          ) {
+            setBottomSheetStatus(CalendarBottomSheetStatus.PERIODS)
+          } else if (
+            bottomSheetStatus === CalendarBottomSheetStatus.ADD_EVENT
+          ) {
+            setBottomSheetStatus(CalendarBottomSheetStatus.MONTHLY_EVENTS)
+          } else {
+            navigation.goBack()
+          }
+        }}
+      />
     </View>
   )
 }

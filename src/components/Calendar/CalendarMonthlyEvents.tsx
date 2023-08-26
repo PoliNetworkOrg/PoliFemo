@@ -17,6 +17,7 @@ interface CalendarMonthlyEventsProps {
   year: number
   lan: string
   onDeleteEvent: (id: string) => void
+  onSelectedEvent: (event: CalendarEvent) => void
 }
 
 export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
@@ -63,73 +64,78 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
       </View>
       {events.map(event => {
         return (
-          <View
+          <Pressable
             key={event.id}
-            style={{
-              height: 80,
-              width: "100%",
-              backgroundColor: "rgba(242, 242, 242, 0.4",
-              borderColor: "rgba(69, 71, 115, 1)",
-              borderWidth: 0.5,
-              borderRadius: 5,
-              flexDirection: "row",
-              marginBottom: 12,
-              paddingRight: 16,
-            }}
+            onPress={() => props.onSelectedEvent(event)}
           >
-            <View style={{ marginHorizontal: 12, marginTop: 12 }}>
-              <Icon source={getSourceEmoticon(event.mood)} />
-            </View>
-
             <View
               style={{
-                flex: 1,
-                flexDirection: "column",
-                justifyContent: "center",
+                height: 80,
+                width: "100%",
+                backgroundColor: "rgba(242, 242, 242, 0.4",
+                borderColor: "rgba(69, 71, 115, 1)",
+                borderWidth: 0.5,
+                borderRadius: 5,
+                flexDirection: "row",
+                marginBottom: 12,
+                paddingRight: 16,
               }}
             >
+              <View style={{ marginHorizontal: 12, marginTop: 12 }}>
+                <Icon source={getSourceEmoticon(event.mood)} />
+              </View>
+
               <View
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
+                  flex: 1,
+                  flexDirection: "column",
+                  justifyContent: "center",
                 }}
               >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.mediumSizeText,
+                      { color: homeBackground, marginRight: 2 },
+                    ]}
+                    numberOfLines={1}
+                  >
+                    {event.title}
+                  </Text>
+                  {(event.isPolimiEvent == undefined ||
+                    event.isPolimiEvent == false) && (
+                    <Pressable onPress={() => props.onDeleteEvent(event.id)}>
+                      <Icon source={deleteSvg} scale={0.8} />
+                    </Pressable>
+                  )}
+                </View>
+
                 <Text
                   style={[
-                    styles.mediumSizeText,
-                    { color: homeBackground, marginRight: 2 },
+                    styles.smallSizeText,
+                    { color: homeBackground, paddingBottom: 4 },
+                  ]}
+                >
+                  {formatCalendarEventDay(event, lan)}
+                </Text>
+                <Divider />
+                <Text
+                  style={[
+                    styles.smallSizeText,
+                    { color: homeBackground, paddingTop: 4 },
                   ]}
                   numberOfLines={1}
                 >
-                  {event.title}
+                  {event.notes ?? "aggiungi una nota"}
                 </Text>
-                {(event.isPolimiEvent == undefined ||
-                  event.isPolimiEvent == false) && (
-                  <Pressable onPress={() => props.onDeleteEvent(event.id)}>
-                    <Icon source={deleteSvg} scale={0.8} />
-                  </Pressable>
-                )}
               </View>
-
-              <Text
-                style={[
-                  styles.smallSizeText,
-                  { color: homeBackground, paddingBottom: 4 },
-                ]}
-              >
-                {formatCalendarEventDay(event, lan)}
-              </Text>
-              <Divider />
-              <Text
-                style={[
-                  styles.smallSizeText,
-                  { color: homeBackground, paddingTop: 4 },
-                ]}
-              >
-                Note
-              </Text>
             </View>
-          </View>
+          </Pressable>
         )
       })}
     </ScrollView>

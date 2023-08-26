@@ -77,6 +77,8 @@ export interface CalendarEvent {
   titleEn?: string
 
   polimiEventFields?: Partial<Event>
+
+  notes?: string
 }
 
 export enum CalendarEventStatus {
@@ -187,6 +189,18 @@ export class CalendarSingletonWrapper extends EventEmitter {
     await this._readCalendarPeriods()
     this._applyPeriods()
     this._checkNeedSyncingPolimiEvents()
+  }
+
+  public updateNotes = (id: string, notes: string) => {
+    const index = this._calendarEvents.findIndex(event => event.id === id)
+
+    if (index === -1) return
+
+    this._calendarEvents[index].notes = notes
+
+    void this._writeEvents(this._calendarEvents)
+
+    this.emit("calendarEventsChanged")
   }
 
   public changeMatricola = (matricola?: string) => {
@@ -872,6 +886,32 @@ export const formatCalendarEventDay = (event: CalendarEvent, lan: string) => {
   return `${day.toString().padStart(2, "0")}/${month
     .toString()
     .padStart(2, "0")} | ${dayOfTheWeek}`
+}
+
+export const formatDateCalendarDetails = (event?: CalendarEvent) => {
+  if (!event) return ""
+  const date = new Date(event.start)
+
+  const day = date.getDate()
+
+  const month = date.getMonth() + 1
+
+  const year = date.getFullYear()
+
+  return `${day}/${month}/${year}`
+}
+
+export const formatHoursFromDate = (dateString?: string) => {
+  if (!dateString) return ""
+  const date = new Date(dateString)
+
+  const hour = date.getHours()
+
+  const minutes = date.getMinutes()
+
+  return `${hour.toString().padStart(2, "0")}:${minutes
+    .toString()
+    .padStart(2, "0")}`
 }
 
 export type ValidEmoticonName =
