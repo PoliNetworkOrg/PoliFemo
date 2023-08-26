@@ -1,16 +1,6 @@
 import { i18n } from "../locales/i18n"
 import { Event } from "api/collections/event"
-/**
- * enum to differentiate the different types of widget we could have
- * different widget types have different background images
- */
-export enum WidgetType {
-  LECTURES = 1,
-  EXAMS = 2,
-  NEWS = 3,
-  DEADLINE = 4,
-  CUSTOM = 5,
-}
+import { EventType } from "./events"
 
 export interface CarouselItem {
   /**
@@ -20,7 +10,7 @@ export interface CarouselItem {
   /**
    * enum field to identify the type of the widget
    */
-  type: WidgetType
+  type: EventType
   /**
    * string to identify the date of the event(or deadline) contained in the widget
    */
@@ -67,7 +57,7 @@ export const extractNextEvents = (events: Event[]) => {
   return events
     .filter(x => checkEventType(x.event_type.typeId))
     .filter(x => {
-      if (x.event_type.typeId === WidgetType.LECTURES) {
+      if (x.event_type.typeId === EventType.LECTURES) {
         if (firstLecture) {
           firstLecture = false
           return true
@@ -85,9 +75,9 @@ export const extractNextEvents = (events: Event[]) => {
  */
 export function checkEventType(typeId: number) {
   return (
-    typeId === WidgetType.LECTURES ||
-    typeId === WidgetType.EXAMS ||
-    typeId === WidgetType.DEADLINE
+    typeId === EventType.LECTURES ||
+    typeId === EventType.EXAMS ||
+    typeId === EventType.DEADLINE
   )
 }
 

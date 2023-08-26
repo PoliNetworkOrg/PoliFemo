@@ -14,7 +14,8 @@ import notificationsIT from "./jsons/it/notifications.json"
 import notificationsEN from "./jsons/en/notifications.json"
 import calendarIT from "./jsons/it/calendar.json"
 import calendarEN from "./jsons/en/calendar.json"
-
+import timetableIT from "./jsons/it/timetable.json"
+import timetableEN from "./jsons/en/timetable.json"
 import { getLocales } from "expo-localization"
 
 async function initializeI18n() {
@@ -27,6 +28,7 @@ async function initializeI18n() {
         settings: settingsIT,
         notifications: notificationsIT,
         calendar: calendarIT,
+        timetable: timetableIT,
       },
       en: {
         common: commonEN,
@@ -35,6 +37,7 @@ async function initializeI18n() {
         settings: settingsEN,
         notifications: notificationsEN,
         calendar: calendarEN,
+        timetable: timetableEN,
       },
     },
     lng: getLocales()[0].languageCode,
@@ -48,6 +51,7 @@ async function initializeI18n() {
       "settings",
       "notifications",
       "calendar",
+      "timetable",
     ],
     interpolation: {
       escapeValue: false,
