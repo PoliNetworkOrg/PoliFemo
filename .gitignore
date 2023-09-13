@@ -20,5 +20,6 @@ build/
 .vscode/settings.json
 .vs/
 
-# please, please use yarn instead of npm
+# please, please use pnpm instead of npm
 package-lock.json
+yarn.lock
