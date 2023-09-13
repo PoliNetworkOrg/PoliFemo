@@ -24,7 +24,14 @@ jobs:
           token: ${{ env.EXPO_TOKEN }}
 
       - run: yarn install --immutable
+
+      - name: Check if Dependabot triggered this action
+        run: |
+          if [ "${{ github.actor }}" = "dependabot[bot]" ]; then
+            echo "Dependabot triggered this action. Skipping..."
+            exit 0
+          fi
+        shell: bash
+      
       - name: Publish via EAS updates
-        # only if token is set
-        if: ${{ env.EXPO_TOKEN != '' }}
         run: eas update --auto
