@@ -28,6 +28,7 @@ import smileSvg from "assets/calendar/emoticons/smile.svg"
 import starEyesSvg from "assets/calendar/emoticons/star_eyes.svg"
 import { api } from "api"
 import { Event } from "api/collections/event"
+import { NotificationCenter } from "notifications/NotificationCenter"
 
 export const purpleBerry = "rgba(98, 96, 166, 1)"
 
@@ -169,6 +170,8 @@ export class CalendarSingletonWrapper extends EventEmitter {
 
   //matricola and last sync date with polimi events
   private _calendarPolimiSync?: CalendarPolimiSyncObj
+
+  private _notificationCentre = NotificationCenter.getInstance()
 
   public constructor({
     hidePeriods = false,
@@ -514,6 +517,12 @@ export class CalendarSingletonWrapper extends EventEmitter {
     void this._writeEvents(this._calendarEvents)
 
     void this._applyMarkers()
+
+    if (event.reminder) {
+      void this._notificationCentre.scheduledNotificationFromCalendarEvent(
+        event
+      )
+    }
   }
 
   private _applyMarkers = () => {

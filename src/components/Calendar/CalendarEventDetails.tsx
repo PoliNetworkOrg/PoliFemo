@@ -105,31 +105,30 @@ export const CalendarEventDetails: FC<CalendarEventDetailsProps> = props => {
           <View style={{ width: 100 }} />
         )}
       </View>
-      {event?.reminder ??
-        (true && (
-          <View
-            style={{
-              marginTop: 16,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
+      {event?.reminder && (
+        <View
+          style={{
+            marginTop: 16,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={[styles.text16w700, { color: homeBackground }]}>
+            {t("reminder")}
+          </Text>
+          <Text
+            style={[
+              styles.text16w700,
+              {
+                color: homeBackground,
+              },
+            ]}
           >
-            <Text style={[styles.text16w700, { color: homeBackground }]}>
-              {t("reminder")}
-            </Text>
-            <Text
-              style={[
-                styles.text16w700,
-                {
-                  color: homeBackground,
-                },
-              ]}
-            >
-              {formatHoursFromDate(new Date().toISOString())}
-            </Text>
-          </View>
-        ))}
+            {formatHoursFromDate(new Date().toISOString())}
+          </Text>
+        </View>
+      )}
 
       <Text
         style={[styles.text16w700, { color: homeBackground, marginTop: 16 }]}
