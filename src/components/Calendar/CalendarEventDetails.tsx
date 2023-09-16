@@ -57,7 +57,10 @@ export const CalendarEventDetails: FC<CalendarEventDetailsProps> = props => {
           />
         )}
         <Text
-          style={[styles.text20w700, { color: homeBackground, marginLeft: 8 }]}
+          style={[
+            styles.text20w700,
+            { color: homeBackground, marginLeft: event?.mood ? 8 : 0 },
+          ]}
         >
           {event?.title}
         </Text>

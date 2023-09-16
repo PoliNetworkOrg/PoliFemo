@@ -215,6 +215,7 @@ export class CalendarSingletonWrapper extends EventEmitter {
       if (this._calendarPolimiSync?.matricola) {
         this._cleanCalendarEventsFromPolimiEvents({ calledBeforeSync: false })
 
+        //update sync obj
         this._calendarPolimiSync = {}
         void this._writeCalendarPolimiSync({})
       } else {
@@ -554,6 +555,17 @@ export class CalendarSingletonWrapper extends EventEmitter {
     void this._writeEvents(this._calendarEvents)
 
     void this._removeMarkers(removedElement.start.substring(0, 10))
+  }
+
+  public changeEventStatus = (id: string, status: CalendarEventStatus) => {
+    const index = this._calendarEvents.findIndex(event => event.id === id)
+
+    if (index === -1) return
+
+    this._calendarEvents[index].status = status
+
+    this.emit("calendarEventsChanged")
+    void this._writeEvents(this._calendarEvents)
   }
 }
 
@@ -1040,4 +1052,44 @@ export const get1HourBeforeAfterSameDay = (
   }
 
   return newDate
+}
+
+export const getBackColorFromEventStatus = (
+  status: CalendarEventStatus
+): string => {
+  switch (status) {
+    case CalendarEventStatus.INITIAL:
+      return "#F2F2F2"
+    case CalendarEventStatus.PROGRESS:
+      return "#F29999"
+    case CalendarEventStatus.COMPLETED:
+      return palette.primary
+  }
+}
+
+export const getTextFromEventStatus = (
+  status: CalendarEventStatus,
+  lan: string
+): string => {
+  switch (status) {
+    case CalendarEventStatus.INITIAL:
+      return lan === "it" ? "Prossimo" : "Next"
+    case CalendarEventStatus.PROGRESS:
+      return lan === "it" ? "In corso" : "In progress"
+    case CalendarEventStatus.COMPLETED:
+      return lan === "it" ? "Completato" : "Completed"
+  }
+}
+
+export const shiftedEventStatus = (
+  status: CalendarEventStatus
+): CalendarEventStatus => {
+  switch (status) {
+    case CalendarEventStatus.INITIAL:
+      return CalendarEventStatus.PROGRESS
+    case CalendarEventStatus.PROGRESS:
+      return CalendarEventStatus.COMPLETED
+    case CalendarEventStatus.COMPLETED:
+      return CalendarEventStatus.INITIAL
+  }
 }

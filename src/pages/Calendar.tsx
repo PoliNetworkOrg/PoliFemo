@@ -16,6 +16,7 @@ import {
   CalendarEvent,
   monthsIt,
   monthsEn,
+  CalendarEventStatus,
 } from "utils/calendar"
 import { MarkedDates } from "react-native-calendars/src/types"
 import { Text } from "components/Text"
@@ -29,6 +30,7 @@ import { useCurrentLanguage } from "utils/articles"
 import { CalendarAddEvent } from "components/Calendar/CalendarAddEvent"
 import { LoginContext } from "contexts/login"
 import { CalendarEventDetails } from "components/Calendar/CalendarEventDetails"
+import { CalendarDailyEvents } from "components/Calendar/CalendarDailyEvents"
 
 export const CalendarPage: MainStackScreen<"Calendar"> = () => {
   const { homeBackground, background, dotColor } = usePalette()
@@ -63,15 +65,19 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
     CalendarEvent[]
   >([])
 
+  const [calendarEventsDaily, setCalendarEventsDaily] = useState<
+    CalendarEvent[]
+  >([])
+
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | undefined>(
     undefined
   )
 
   const navigation = useNavigation()
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log(selectedDay)
-  }, [selectedDay])
+  }, [selectedDay]) */
 
   const calendarObj = useRef<CalendarManager | undefined>()
 
@@ -131,6 +137,19 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
       setCalendarEventsMonth(filteredEvents)
     }
   }, [calendarEvents, month, year])
+
+  useEffect(() => {
+    if (calendarEvents.length > 0) {
+      const filteredEvents = calendarEvents.filter(
+        event =>
+          new Date(event.start).getDate() === new Date(selectedDay).getDate() &&
+          new Date(event.start).getMonth() === month &&
+          new Date(event.start).getFullYear() === year
+      )
+
+      setCalendarEventsDaily(filteredEvents)
+    }
+  }, [calendarEvents, selectedDay])
 
   // hide or show peridos based on bottom sheet status
   useEffect(() => {
@@ -228,7 +247,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
 
           setSelectedDay(date.toISOString())
 
-          setBottomSheetStatus(CalendarBottomSheetStatus.ADD_EVENT)
+          setBottomSheetStatus(CalendarBottomSheetStatus.DAILY_EVENTS)
         }}
         style={{
           marginTop: 150,
@@ -310,6 +329,21 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
             date={selectedDay}
           />
         )}
+        {bottomSheetStatus == CalendarBottomSheetStatus.DAILY_EVENTS && (
+          <CalendarDailyEvents
+            events={calendarEventsDaily}
+            month={lan === "it" ? monthsIt[month] : monthsEn[month]}
+            year={year}
+            lan={lan}
+            day={new Date(selectedDay).getDate()}
+            onChangeStatusEvent={(id: string, status: CalendarEventStatus) => {
+              calendarObj.current?.changeEventStatus(id, status)
+            }}
+            goToAddEvent={() => {
+              setBottomSheetStatus(CalendarBottomSheetStatus.ADD_EVENT)
+            }}
+          />
+        )}
         {bottomSheetStatus == CalendarBottomSheetStatus.EVENT_DETAILS && (
           <CalendarEventDetails
             event={selectedEvent}
@@ -329,6 +363,10 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
             setBottomSheetStatus(CalendarBottomSheetStatus.PERIODS)
           } else if (
             bottomSheetStatus === CalendarBottomSheetStatus.ADD_EVENT
+          ) {
+            setBottomSheetStatus(CalendarBottomSheetStatus.DAILY_EVENTS)
+          } else if (
+            bottomSheetStatus === CalendarBottomSheetStatus.DAILY_EVENTS
           ) {
             setBottomSheetStatus(CalendarBottomSheetStatus.MONTHLY_EVENTS)
           } else {
