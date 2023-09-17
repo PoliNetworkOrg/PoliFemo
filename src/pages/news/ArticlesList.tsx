@@ -9,7 +9,11 @@ import { capitalize } from "utils/functions"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 import { ListPage } from "components/PageLayout"
 import { ToggleSwitch } from "components/ToggleSwitch"
-import { useCurrentLanguage, getArticleParams } from "utils/articles"
+import {
+  useCurrentLanguage,
+  getArticleParams,
+  getDifferentLanguageNotice,
+} from "utils/articles"
 
 const MAX_ARTICLES_PER_REQUEST = 8
 
@@ -82,6 +86,7 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
               })
             }
             style={{ height: 220, marginBottom: 13 }}
+            footer={getDifferentLanguageNotice(article, currentLanguage)}
           />
         </View>
       )}

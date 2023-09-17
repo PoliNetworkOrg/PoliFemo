@@ -36,6 +36,16 @@ export const getArticleParams = (article: Article, language: string) => {
   return articleLanguage ? article.content[articleLanguage] : undefined
 }
 
+export const getDifferentLanguageNotice = (
+  article: Article,
+  language: string
+) => {
+  if (language === "it") {
+    return article.content.it ? "" : "Non disponibile in italiano"
+  }
+  return article.content.en ? "" : "Not available in English"
+}
+
 export const extractImageLinks = (markdown: string): string[] => {
   const regex = /!\[.*?\]\((.*?)\)/g
   const imageLinks: string[] = []

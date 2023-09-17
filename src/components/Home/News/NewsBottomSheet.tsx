@@ -19,7 +19,11 @@ import { useNavigation } from "navigation/NavigationTypes"
 import { getUsableScreenHeight } from "utils/layout"
 import { newsSheetEventEmitter } from "utils/events"
 import { NewsBottomSheetHandle } from "./NewsBottomSheetHandle"
-import { useCurrentLanguage, getArticleParams } from "utils/articles"
+import {
+  useCurrentLanguage,
+  getArticleParams,
+  getDifferentLanguageNotice,
+} from "utils/articles"
 
 interface NewsBottomSheetProps {
   /**
@@ -142,6 +146,10 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
             articleTitle={
               getArticleParams(props.highlightedArticle, language)?.title
             }
+            footer={getDifferentLanguageNotice(
+              props.highlightedArticle,
+              language
+            )}
           />
         )}
 
