@@ -19,11 +19,8 @@ import { useNavigation } from "navigation/NavigationTypes"
 import { getUsableScreenHeight } from "utils/layout"
 import { newsSheetEventEmitter } from "utils/events"
 import { NewsBottomSheetHandle } from "./NewsBottomSheetHandle"
-import {
-  useCurrentLanguage,
-  getArticleParams,
-  getDifferentLanguageNotice,
-} from "utils/articles"
+import { getArticleParams, getDifferentLanguageNotice } from "utils/articles"
+import { useCurrentLanguage } from "utils/language"
 
 interface NewsBottomSheetProps {
   /**

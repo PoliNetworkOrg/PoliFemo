@@ -44,7 +44,7 @@ import { PageWrap } from "components/PageLayout"
 import { capitalize } from "utils/functions"
 import { ToggleSwitch } from "components/ToggleSwitch"
 import { useTranslation } from "react-i18next"
-import { useCurrentLanguage } from "utils/articles"
+import { useCurrentLanguage } from "utils/language"
 
 // distance of the bottom sheet from the top of the screen, when opened or closed
 const distanceFromTop = {

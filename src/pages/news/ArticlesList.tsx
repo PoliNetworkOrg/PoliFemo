@@ -9,11 +9,8 @@ import { capitalize } from "utils/functions"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 import { ListPage } from "components/PageLayout"
 import { ToggleSwitch } from "components/ToggleSwitch"
-import {
-  useCurrentLanguage,
-  getArticleParams,
-  getDifferentLanguageNotice,
-} from "utils/articles"
+import { getArticleParams, getDifferentLanguageNotice } from "utils/articles"
+import { useCurrentLanguage } from "utils/language"
 
 const MAX_ARTICLES_PER_REQUEST = 8
 
