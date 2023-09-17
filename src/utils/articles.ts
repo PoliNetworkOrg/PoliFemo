@@ -1,3 +1,4 @@
+import { Article } from "api/collections/articles"
 import i18n from "i18next"
 import { useEffect, useState } from "react"
 
@@ -21,6 +22,18 @@ export const useCurrentLanguage = () => {
   }, [])
 
   return currentLanguage
+}
+
+const getArticleLanguage = (article: Article, language: string) => {
+  if (language === "it") {
+    return article.content.it ? "it" : article.content.en ? "en" : undefined
+  }
+  return article.content.en ? "en" : article.content.it ? "it" : undefined
+}
+
+export const getArticleParams = (article: Article, language: string) => {
+  const articleLanguage = getArticleLanguage(article, language)
+  return articleLanguage ? article.content[articleLanguage] : undefined
 }
 
 export const extractImageLinks = (markdown: string): string[] => {
