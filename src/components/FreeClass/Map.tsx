@@ -4,7 +4,6 @@ import MapView, { Callout, Marker, Region } from "react-native-maps"
 import { PermissionStatus } from "expo-location"
 import { BodyText } from "components/Text"
 import { BuildingItem } from "./DefaultList"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Icon } from "components/Icon"
 import iconMaps from "assets/freeClassrooms/iconMaps.svg"
 import { ErrorMessage } from "components/ErrorMessage"
@@ -120,10 +119,6 @@ export const Map: FC<MapProps> = props => {
                   longitudeDelta: 0.002,
                 }
                 setRegion(region)
-                AsyncStorage.setItem(
-                  "lastRegionVisited",
-                  JSON.stringify(region)
-                ).catch(err => console.log(err))
               }}
             >
               <Icon source={iconMaps} scale={0.5} />
