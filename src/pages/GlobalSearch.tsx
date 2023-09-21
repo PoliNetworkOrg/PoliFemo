@@ -95,6 +95,7 @@ export const GlobalSearch: MainStackScreen<"GlobalSearch"> = () => {
           <PoliSearchBar
             style={styles.searchBar}
             onChange={input => setInput(input)}
+            autoFocus
           />
           <View style={styles.tagsContainer}>
             {SEARCH_TAGS.map(tag => (
