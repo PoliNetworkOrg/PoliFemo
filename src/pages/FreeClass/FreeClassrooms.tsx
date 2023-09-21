@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { View, Alert, ActivityIndicator, StyleSheet } from "react-native"
-import { PoliSearchBar } from "components/Home"
+import { PoliSearchBar } from "components/PoliSearchBar"
 import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
 import campusIcon from "assets/freeClassrooms/campus.svg"

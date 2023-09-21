@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native"
 
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { ListPage } from "components/PageLayout"
-import { PoliSearchBar } from "components/Home"
+import { PoliSearchBar } from "components/PoliSearchBar"
 import { SearchTagFilter } from "components/GlobalSearch/SearchTagFilter"
 import { SearchTile } from "components/GlobalSearch/SearchTile"
 import { SearchTag, SEARCH_TAGS, SEARCH_TAG_TO_LABEL } from "utils/search"
