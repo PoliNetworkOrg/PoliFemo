@@ -332,10 +332,8 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
         {bottomSheetStatus == CalendarBottomSheetStatus.DAILY_EVENTS && (
           <CalendarDailyEvents
             events={calendarEventsDaily}
-            month={lan === "it" ? monthsIt[month] : monthsEn[month]}
-            year={year}
             lan={lan}
-            day={new Date(selectedDay).getDate()}
+            dayString={selectedDay}
             onChangeStatusEvent={(id: string, status: CalendarEventStatus) => {
               calendarObj.current?.changeEventStatus(id, status)
             }}

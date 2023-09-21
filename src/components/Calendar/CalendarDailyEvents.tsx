@@ -7,6 +7,8 @@ import {
   getBackColorFromEventStatus,
   getSourceEmoticon,
   getTextFromEventStatus,
+  monthsEn,
+  monthsIt,
   shiftedEventStatus,
 } from "utils/calendar"
 import { Text } from "components/Text"
@@ -19,16 +21,25 @@ import { CalendarButton } from "./Button"
 
 interface CalendarDailyEventsProps {
   events: CalendarEvent[]
-  month: string
-  year: number
-  day: number
+
+  dayString: string
   lan: string
   onChangeStatusEvent: (id: string, status: CalendarEventStatus) => void
   goToAddEvent: () => void
 }
 
 export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
-  const { events, month, year, lan, day } = props
+  const { events, lan, dayString } = props
+
+  const date = new Date(dayString)
+
+  const day = date.getDate()
+
+  const monthNumber = date.getMonth()
+
+  const month = lan === "it" ? monthsIt[monthNumber] : monthsEn[monthNumber]
+
+  const year = date.getFullYear()
 
   const { homeBackground, palette } = usePalette()
 
