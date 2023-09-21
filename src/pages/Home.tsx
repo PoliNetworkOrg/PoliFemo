@@ -3,7 +3,7 @@ import { View } from "react-native"
 
 import { NewsManager } from "components/Home/News"
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { MainMenu, MainTitle, PoliSearchBar } from "components/Home"
+import { MainMenu, MainTitle, SearchButton } from "components/Home"
 import { HighlightsManager } from "components/Home/Highlights/HighlightsManager"
 import { usePalette } from "utils/colors"
 import { BoxShadowView } from "components/BoxShadow"
@@ -49,7 +49,7 @@ export const Home: MainStackScreen<"Home"> = () => {
             borderTopRightRadius: 30,
           }}
         >
-          <PoliSearchBar onChange={searchKey => setSearch(searchKey)} />
+          <SearchButton />
           <MainMenu filter={search} />
           <HighlightsManager />
         </BoxShadowView>

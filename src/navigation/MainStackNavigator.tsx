@@ -6,6 +6,7 @@
 import { FC } from "react"
 import { MainStackNavigatorParams } from "navigation/NavigationTypes"
 import { Home } from "pages/Home"
+import { GlobalSearch } from "pages/GlobalSearch"
 import { Article } from "pages/news/ArticleDetails"
 import { ArticlesList } from "pages/news/ArticlesList"
 import { Error404 } from "pages/Error404"
@@ -38,6 +39,7 @@ export const MainStack: FC = () => {
       initialRouteName="Home"
     >
       <MainStackNavigator.Screen name="Home" component={Home} />
+      <MainStackNavigator.Screen name="GlobalSearch" component={GlobalSearch} />
       <MainStackNavigator.Screen name="Article" component={Article} />
       <MainStackNavigator.Screen name="ArticlesList" component={ArticlesList} />
       <MainStackNavigator.Screen
