@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { View } from "react-native"
 
 import { NewsManager } from "components/Home/News"
@@ -14,8 +13,6 @@ import { BoxShadowView } from "components/BoxShadow"
  */
 export const Home: MainStackScreen<"Home"> = () => {
   const { homeBackground, background } = usePalette()
-
-  const [search, setSearch] = useState("")
 
   return (
     <View
@@ -50,7 +47,7 @@ export const Home: MainStackScreen<"Home"> = () => {
           }}
         >
           <SearchButton />
-          <MainMenu filter={search} />
+          <MainMenu />
           <HighlightsManager />
         </BoxShadowView>
       </View>
