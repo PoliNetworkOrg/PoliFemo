@@ -98,9 +98,8 @@ export const GlobalSearch: MainStackScreen<"GlobalSearch"> = () => {
           />
           <View style={styles.tagsContainer}>
             {SEARCH_TAGS.map(tag => (
-              <View style={styles.tag}>
+              <View style={styles.tag} key={tag}>
                 <SearchTagFilter
-                  key={tag}
                   tag={tag}
                   title={SEARCH_TAG_TO_LABEL[tag]}
                   onClick={() =>
