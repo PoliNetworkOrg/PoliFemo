@@ -36,15 +36,15 @@ export interface Article {
   target_time?: string
   hidden_until?: string
   content: {
-    it: ArticlesParams
-    en: ArticlesParams
+    it?: ArticleParams
+    en?: ArticleParams
   }
   image?: string
   blurhash?: string
   author?: ArticleAuthor
 }
 
-interface ArticlesParams {
+interface ArticleParams {
   content: string
   title: string
   subtitle: string
