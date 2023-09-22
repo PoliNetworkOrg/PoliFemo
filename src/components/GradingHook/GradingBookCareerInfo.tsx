@@ -30,8 +30,8 @@ export const GradingBookCareerInfo: FC<GradingBookCareerInfoProps> = ({
           alignSelf: "center",
         },
         circle: {
-          width: 15,
-          height: 15,
+          width: 20,
+          height: 20,
           borderRadius: 100 / 2,
           marginRight: 8,
           marginTop: 24,
@@ -45,7 +45,7 @@ export const GradingBookCareerInfo: FC<GradingBookCareerInfoProps> = ({
         legendTextContainer: {
           flexDirection: "row",
         },
-        separetor: {
+        separator: {
           marginTop: 20,
           marginLeft: 30,
           height: "90%",
@@ -80,16 +80,16 @@ export const GradingBookCareerInfo: FC<GradingBookCareerInfoProps> = ({
           <BodyText style={styles.text}>{t("gradingBook_exams")}</BodyText>
         </View>
       </View>
-      <View style={styles.separetor} />
+      <View style={styles.separator} />
       <View style={{ marginLeft: 30 }}>
         <BodyText style={styles.text}>{cfusObtained}</BodyText>
         <BodyText style={styles.text}>{cfusPlanned}</BodyText>
         <BodyText style={styles.text}>{examsGiven}</BodyText>
       </View>
-      <View style={{ marginLeft: 13 }}>
-        <BodyText style={styles.text}>{`/    ${cfusPlanned}`}</BodyText>
-        <BodyText style={styles.text}>{`/    ${maxCfu}`}</BodyText>
-        <BodyText style={styles.text}>{`/    ${examsPlanned}`}</BodyText>
+      <View style={{ marginLeft: 5 }}>
+        <BodyText style={styles.text}>{`/ ${cfusPlanned}`}</BodyText>
+        <BodyText style={styles.text}>{`/ ${maxCfu}`}</BodyText>
+        <BodyText style={styles.text}>{`/ ${examsPlanned}`}</BodyText>
       </View>
     </View>
   )

@@ -5,5 +5,6 @@
   "gradingBook_average": "Average",
   "gradingBook_degree_grade": "Degree Grade",
   "gradingBook_career": "Career",
-  "gradingBook_exams": "Exams"
+  "gradingBook_exams": "Exams",
+  "gradingBook_error_message": "We were unable to access your grading book.\nPlease try again later."
 }

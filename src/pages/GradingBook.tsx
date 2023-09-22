@@ -1,7 +1,9 @@
 import { api } from "api"
 import { useApiCall } from "api/useApiCall"
+import { ErrorMessage } from "components/ErrorMessage"
 import { GradingBookCareerInfo } from "components/GradingHook/GradingBookCareerInfo"
 import { ProgressCircleCareer } from "components/GradingHook/ProgressCircleCareer"
+import { LoadingIndicator } from "components/LoadingIndicator"
 import { PageWrap } from "components/PageLayout"
 import { Text } from "components/Text"
 import { LoginContext } from "contexts/login"
@@ -31,7 +33,7 @@ export const GradingBook: MainStackScreen<"GradingBook"> = () => {
 
   const { matricola } = userInfo?.careers?.[0] ?? {}
 
-  const [careerStats] = useApiCall(
+  const [careerStats, loading] = useApiCall(
     api.gradingbook.getGradingBook,
     { matricola: matricola ?? "" },
     [loggedIn],
@@ -39,26 +41,32 @@ export const GradingBook: MainStackScreen<"GradingBook"> = () => {
     !loggedIn
   )
 
-  if (!careerStats) return null
-
   return (
     <PageWrap title={t("gradingBook_title")}>
-      <Text style={styles.careerSubtitle}>{t("gradingBook_career")}</Text>
+      {loading ? (
+        <LoadingIndicator />
+      ) : !careerStats ? (
+        <ErrorMessage message={t("gradingBook_error_message")} />
+      ) : (
+        <>
+          <Text style={styles.careerSubtitle}>{t("gradingBook_career")}</Text>
 
-      <ProgressCircleCareer
-        cfusGiven={careerStats.given_cfu}
-        cfusPlanned={careerStats.planned_cfu}
-        examsGiven={careerStats.exam_stats.given}
-        examsPlanned={careerStats.exam_stats.planned}
-        average={careerStats.mean}
-      />
+          <ProgressCircleCareer
+            cfusGiven={careerStats.given_cfu}
+            cfusPlanned={careerStats.planned_cfu}
+            examsGiven={careerStats.exam_stats.given}
+            examsPlanned={careerStats.exam_stats.planned}
+            average={careerStats.mean}
+          />
 
-      <GradingBookCareerInfo
-        cfusGiven={careerStats.given_cfu}
-        cfusPlanned={careerStats.planned_cfu}
-        examsGiven={careerStats.exam_stats.given}
-        examsPlanned={careerStats.exam_stats.planned}
-      />
+          <GradingBookCareerInfo
+            cfusGiven={careerStats.given_cfu}
+            cfusPlanned={careerStats.planned_cfu}
+            examsGiven={careerStats.exam_stats.given}
+            examsPlanned={careerStats.exam_stats.planned}
+          />
+        </>
+      )}
     </PageWrap>
   )
 }

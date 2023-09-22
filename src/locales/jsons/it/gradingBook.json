@@ -5,5 +5,6 @@
   "gradingBook_average": "Media",
   "gradingBook_degree_grade": "Voto di Laurea",
   "gradingBook_career": "Andamento Carriera",
-  "gradingBook_exams": "Esami Dati"
+  "gradingBook_exams": "Esami Dati",
+  "gradingBook_error_message": "Non siamo riusciti ad accedere al tuo libretto.\nRiprova tra un po'."
 }

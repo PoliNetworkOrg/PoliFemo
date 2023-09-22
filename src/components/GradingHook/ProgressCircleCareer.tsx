@@ -48,7 +48,7 @@ export const ProgressCircleCareer: FC<ProgressCircleCareerProps> = ({
       <CircularProgressBase
         activeStrokeWidth={30}
         inActiveStrokeWidth={30}
-        inActiveStrokeOpacity={0.4}
+        inActiveStrokeOpacity={0.3}
         value={examsPercentual}
         radius={154}
         activeStrokeColor={"#1ad67b"}
@@ -61,7 +61,7 @@ export const ProgressCircleCareer: FC<ProgressCircleCareerProps> = ({
           value={totalCfuPercentual}
           radius={122}
           activeStrokeColor={"#f2ba52"}
-          inActiveStrokeColor={"#e8da83"}
+          inActiveStrokeColor={"#f2ba52"}
         >
           <CircularProgressBase
             activeStrokeWidth={25}
@@ -70,7 +70,7 @@ export const ProgressCircleCareer: FC<ProgressCircleCareerProps> = ({
             value={cfuPercentual}
             radius={90}
             activeStrokeColor={"#8791bd"}
-            inActiveStrokeColor={"#1ad67b"}
+            inActiveStrokeColor={"#8791bd"}
           >
             <Text onPress={() => setSwitchMark(!switchMark)}>
               <View style={styles.container}>
