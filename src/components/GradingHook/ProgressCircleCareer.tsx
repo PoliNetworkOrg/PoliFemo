@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next"
 import { StyleSheet, View } from "react-native"
 import { CircularProgressBase } from "react-native-circular-progress-indicator"
 import { GradingBookCareerInfoProps } from "./GradingBookCareerInfo"
+import { AdaptiveShadowView } from "components/BoxShadow"
+import { palette, usePalette } from "utils/colors"
 
 const maxCfu = 180
 
@@ -20,6 +22,7 @@ export const ProgressCircleCareer: FC<ProgressCircleCareerProps> = ({
 }) => {
   const { t } = useTranslation("gradingBook")
   const [switchMark, setSwitchMark] = useState(true)
+  const { isLight, background } = usePalette()
   const cfuPercentual = useMemo(
     () => (cfusGiven * 100) / cfusPlanned,
     [cfusGiven, cfusPlanned]
@@ -39,6 +42,14 @@ export const ProgressCircleCareer: FC<ProgressCircleCareerProps> = ({
 
   const styles = StyleSheet.create({
     container: {
+      alignItems: "center",
+    },
+    meanCircle: {
+      width: 120,
+      height: 120,
+      borderRadius: 120 / 2,
+      backgroundColor: background,
+      justifyContent: "center",
       alignItems: "center",
     },
   })
@@ -72,22 +83,36 @@ export const ProgressCircleCareer: FC<ProgressCircleCareerProps> = ({
             activeStrokeColor={"#8791bd"}
             inActiveStrokeColor={"#8791bd"}
           >
-            <Text onPress={() => setSwitchMark(!switchMark)}>
-              <View style={styles.container}>
-                <Text
-                  style={{
-                    fontSize: 15,
-                  }}
-                >
-                  {switchMark
-                    ? t("gradingBook_average")
-                    : t("gradingBook_degree_grade")}
-                </Text>
-                <Text style={{ fontSize: 30 }}>
-                  {switchMark ? average : degreeGrade}
-                </Text>
-              </View>
-            </Text>
+            <AdaptiveShadowView
+              onPress={() => setSwitchMark(!switchMark)}
+              shadow={{
+                blur: 4,
+                spread: 2,
+                color: isLight ? palette.primary : "#000",
+                opacity: 0.25,
+                offset: { y: 4 },
+              }}
+              contentContainerStyle={styles.meanCircle}
+            >
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: isLight ? palette.primary : "#fff",
+                }}
+              >
+                {switchMark
+                  ? t("gradingBook_average")
+                  : t("gradingBook_degree_grade")}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 30,
+                  color: isLight ? palette.primary : "#fff",
+                }}
+              >
+                {switchMark ? average : degreeGrade}
+              </Text>
+            </AdaptiveShadowView>
           </CircularProgressBase>
         </CircularProgressBase>
       </CircularProgressBase>
