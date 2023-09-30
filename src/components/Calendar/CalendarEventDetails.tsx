@@ -19,7 +19,7 @@ interface CalendarEventDetailsProps {
 export const CalendarEventDetails: FC<CalendarEventDetailsProps> = props => {
   const { event } = props
 
-  const { homeBackground } = usePalette()
+  const { homeBackground, isLight } = usePalette()
 
   //i18n
   const { t } = useTranslation("calendar")
@@ -59,7 +59,10 @@ export const CalendarEventDetails: FC<CalendarEventDetailsProps> = props => {
         <Text
           style={[
             styles.text20w700,
-            { color: homeBackground, marginLeft: event?.mood ? 8 : 0 },
+            {
+              color: isLight ? homeBackground : "#fff",
+              marginLeft: event?.mood ? 8 : 0,
+            },
           ]}
         >
           {event?.title}
@@ -73,18 +76,28 @@ export const CalendarEventDetails: FC<CalendarEventDetailsProps> = props => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={[styles.text16w700, { color: homeBackground }]}>
+        <Text
+          style={[
+            styles.text16w700,
+            { color: isLight ? homeBackground : "#fff" },
+          ]}
+        >
           {formatDateCalendarDetails(event)}
         </Text>
         <View
           style={{
             width: 2,
-            backgroundColor: homeBackground,
+            backgroundColor: isLight ? homeBackground : "#fff",
             height: 30,
             marginHorizontal: 8,
           }}
         />
-        <Text style={[styles.text16w700, { color: homeBackground }]}>
+        <Text
+          style={[
+            styles.text16w700,
+            { color: isLight ? homeBackground : "#fff" },
+          ]}
+        >
           {formatHoursFromDate(event?.start)}
         </Text>
         {event?.isPolimiEvent && event.polimiEventFields?.room?.acronym_dn ? (
@@ -92,12 +105,17 @@ export const CalendarEventDetails: FC<CalendarEventDetailsProps> = props => {
             <View
               style={{
                 width: 2,
-                backgroundColor: homeBackground,
+                backgroundColor: isLight ? homeBackground : "#fff",
                 height: 30,
                 marginHorizontal: 8,
               }}
             />
-            <Text style={[styles.text16w700, { color: homeBackground }]}>
+            <Text
+              style={[
+                styles.text16w700,
+                { color: isLight ? homeBackground : "#fff" },
+              ]}
+            >
               {event.polimiEventFields.room.acronym_dn}
             </Text>
           </>
@@ -114,14 +132,19 @@ export const CalendarEventDetails: FC<CalendarEventDetailsProps> = props => {
             justifyContent: "space-between",
           }}
         >
-          <Text style={[styles.text16w700, { color: homeBackground }]}>
+          <Text
+            style={[
+              styles.text16w700,
+              { color: isLight ? homeBackground : "#fff" },
+            ]}
+          >
             {t("reminder")}
           </Text>
           <Text
             style={[
               styles.text16w700,
               {
-                color: homeBackground,
+                color: isLight ? homeBackground : "#fff",
               },
             ]}
           >
@@ -131,7 +154,10 @@ export const CalendarEventDetails: FC<CalendarEventDetailsProps> = props => {
       )}
 
       <Text
-        style={[styles.text16w700, { color: homeBackground, marginTop: 16 }]}
+        style={[
+          styles.text16w700,
+          { color: isLight ? homeBackground : "#fff", marginTop: 16 },
+        ]}
       >
         {t("notes")}
       </Text>

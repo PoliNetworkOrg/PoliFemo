@@ -5,7 +5,7 @@ import { usePalette } from "utils/colors"
 interface CalendarButton {
   children: React.ReactNode
   onPress?: () => void
-
+  backgroundColor?: string
   style?: ViewStyle
 }
 
@@ -16,7 +16,7 @@ export const CalendarButton: FC<CalendarButton> = props => {
     <Pressable
       style={[
         {
-          backgroundColor: palette.primary,
+          backgroundColor: props.backgroundColor ?? palette.primary,
           borderRadius: 4,
           height: 28,
           justifyContent: "center",

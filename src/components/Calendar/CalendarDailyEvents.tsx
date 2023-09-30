@@ -41,7 +41,7 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
 
   const year = date.getFullYear()
 
-  const { homeBackground, palette } = usePalette()
+  const { isLight, homeBackground, palette } = usePalette()
 
   return (
     <ScrollView
@@ -61,7 +61,11 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
         <Text
           style={[
             styles.monthTitle,
-            { color: homeBackground, paddingBottom: 16, marginLeft: 8 },
+            {
+              color: isLight ? homeBackground : "#fff",
+              paddingBottom: 16,
+              marginLeft: 8,
+            },
           ]}
         >
           {day + " " + month + " " + year}
@@ -120,12 +124,18 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
                   >
                     <Text
                       numberOfLines={2}
-                      style={[styles.mediumSizeText, { color: homeBackground }]}
+                      style={[
+                        styles.mediumSizeText,
+                        { color: isLight ? homeBackground : "#fff" },
+                      ]}
                     >
                       {event.title}
                     </Text>
                     <Text
-                      style={[styles.smallSizeText, { color: homeBackground }]}
+                      style={[
+                        styles.smallSizeText,
+                        { color: isLight ? homeBackground : "#fff" },
+                      ]}
                     >
                       {formatHoursFromDate(event.start)}
                       {event.polimiEventFields?.room?.acronym_dn
@@ -144,11 +154,17 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
                       alignItems: "center",
                       flexDirection: "row",
                       backgroundColor: getBackColorFromEventStatus(
-                        event.status
+                        event.status,
+                        isLight
                       ),
                     }}
                   >
-                    <Text style={[styles.mediumSizeText, { color: "#fff" }]}>
+                    <Text
+                      style={[
+                        styles.mediumSizeText,
+                        { color: isLight ? "#fff" : palette.darker },
+                      ]}
+                    >
                       {getTextFromEventStatus(event.status, lan)}
                     </Text>
                   </View>
@@ -159,7 +175,7 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
                         width: 40,
                         height: 40,
                         borderRadius: 20,
-                        backgroundColor: "#F2F2F2",
+                        backgroundColor: isLight ? "#F2F2F2" : "#D7D9E2",
                       }}
                     />
                   ) : event.status === CalendarEventStatus.PROGRESS ? (
@@ -176,7 +192,7 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
                     <View style={{ height: 40, width: 40 }}>
                       <Icon
                         source={tickSvg}
-                        color={palette.primary}
+                        color={isLight ? palette.primary : "#9BC0D8"}
                         scale={2.6}
                       />
                     </View>

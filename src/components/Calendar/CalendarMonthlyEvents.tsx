@@ -23,7 +23,7 @@ interface CalendarMonthlyEventsProps {
 export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
   const { events, month, year, lan } = props
 
-  const { homeBackground, dotColor } = usePalette()
+  const { homeBackground, dotColor, isLight } = usePalette()
 
   return (
     <ScrollView
@@ -36,7 +36,7 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
       <Text
         style={[
           styles.monthTitle,
-          { color: homeBackground, paddingBottom: 16 },
+          { color: isLight ? homeBackground : "#fff", paddingBottom: 16 },
         ]}
       >
         {month + " " + year}
@@ -56,7 +56,12 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
             }}
           />
         )}
-        <Text style={[styles.mediumSizeText, { color: homeBackground }]}>
+        <Text
+          style={[
+            styles.mediumSizeText,
+            { color: isLight ? homeBackground : "#fff" },
+          ]}
+        >
           {events.length > 0
             ? events.length + " eventi in programma"
             : "Nessun evento in programma"}
@@ -72,7 +77,9 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
               style={{
                 height: 80,
                 width: "100%",
-                backgroundColor: "rgba(242, 242, 242, 0.4",
+                backgroundColor: isLight
+                  ? "rgba(242, 242, 242, 0.4"
+                  : "#343A55",
                 borderColor: "rgba(69, 71, 115, 1)",
                 borderWidth: 0.5,
                 borderRadius: 5,
@@ -101,7 +108,10 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
                   <Text
                     style={[
                       styles.mediumSizeText,
-                      { color: homeBackground, marginRight: 2 },
+                      {
+                        color: isLight ? homeBackground : "#fff",
+                        marginRight: 2,
+                      },
                     ]}
                     numberOfLines={1}
                   >
@@ -110,7 +120,11 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
                   {(event.isPolimiEvent == undefined ||
                     event.isPolimiEvent == false) && (
                     <Pressable onPress={() => props.onDeleteEvent(event.id)}>
-                      <Icon source={deleteSvg} scale={0.8} />
+                      <Icon
+                        source={deleteSvg}
+                        scale={0.8}
+                        color={isLight ? undefined : "#fff"}
+                      />
                     </Pressable>
                   )}
                 </View>
@@ -118,16 +132,19 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
                 <Text
                   style={[
                     styles.smallSizeText,
-                    { color: homeBackground, paddingBottom: 4 },
+                    {
+                      color: isLight ? homeBackground : "#fff",
+                      paddingBottom: 4,
+                    },
                   ]}
                 >
                   {formatCalendarEventDay(event, lan)}
                 </Text>
-                <Divider />
+                <Divider color={isLight ? undefined : "#fff"} height={0.5} />
                 <Text
                   style={[
                     styles.smallSizeText,
-                    { color: homeBackground, paddingTop: 4 },
+                    { color: isLight ? homeBackground : "#fff", paddingTop: 4 },
                   ]}
                   numberOfLines={1}
                 >

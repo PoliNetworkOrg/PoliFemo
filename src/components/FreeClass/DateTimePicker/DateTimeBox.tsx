@@ -6,6 +6,7 @@ import { usePalette } from "utils/colors"
 export interface DateTimeBoxProps {
   value?: string
   width?: number
+  fullOpacity?: boolean
 }
 /**
  * custom box which contains a 2 digit number, used
@@ -30,7 +31,7 @@ export const DateTimeBox: FC<DateTimeBoxProps> = props => {
           fontSize: 20,
           fontWeight: "400",
           color: isLight ? palette.variant3 : "#fff",
-          opacity: 0.4,
+          opacity: props.fullOpacity ? undefined : 0.4,
         }}
       >
         {props.value}

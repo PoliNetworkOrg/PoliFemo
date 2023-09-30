@@ -17,7 +17,7 @@ export const CalendarPeriodsSwitches: FC<
 > = props => {
   const { calendarPeriods, month, year } = props
 
-  const { homeBackground } = usePalette()
+  const { homeBackground, isLight } = usePalette()
 
   if (!calendarPeriods) return null
 
@@ -32,7 +32,7 @@ export const CalendarPeriodsSwitches: FC<
       <Text
         style={[
           styles.monthTitle,
-          { color: homeBackground, paddingBottom: 16 },
+          { color: isLight ? homeBackground : "#fff", paddingBottom: 16 },
         ]}
       >
         {month + " " + year}
@@ -48,10 +48,20 @@ export const CalendarPeriodsSwitches: FC<
             }}
           >
             <View>
-              <Text style={[styles.periodTitle, { color: homeBackground }]}>
+              <Text
+                style={[
+                  styles.periodTitle,
+                  { color: isLight ? homeBackground : "#fff" },
+                ]}
+              >
                 {period.title}
               </Text>
-              <Text style={[styles.periodSubTitle, { color: homeBackground }]}>
+              <Text
+                style={[
+                  styles.periodSubTitle,
+                  { color: isLight ? homeBackground : "#fff" },
+                ]}
+              >
                 {period.subtitle}
               </Text>
             </View>

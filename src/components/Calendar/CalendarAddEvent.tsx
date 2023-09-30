@@ -18,7 +18,7 @@ import {
   isValidEmoticonName,
 } from "utils/calendar"
 import { BodyText, Text } from "components/Text"
-import { usePalette } from "utils/colors"
+import { palette, usePalette } from "utils/colors"
 import { CalendarButton } from "./Button"
 import { useCurrentLanguage } from "utils/articles"
 import { DateTimeBox } from "components/FreeClass/DateTimePicker/DateTimeBox"
@@ -129,7 +129,6 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
     setEndDate(get1HourBeforeAfterSameDay(new Date(props.date), true))
   }, [props.date])
 
-  // ! WIP
   return (
     <ScrollView
       contentContainerStyle={{
@@ -140,12 +139,16 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
     >
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <Text
-          style={[styles.title, { color: homeBackground, paddingBottom: 0 }]}
+          style={[
+            styles.title,
+            { color: isLight ? homeBackground : "#fff", paddingBottom: 0 },
+          ]}
         >
           Nuovo Evento
         </Text>
         <View style={{ flexDirection: "row" }}>
           <CalendarButton
+            backgroundColor={isLight ? primary : palette.lighter}
             onPress={() => {
               if (
                 title.length > 0 &&
@@ -168,6 +171,7 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
             <Text style={{ fontSize: 14, fontWeight: "700" }}>Ok</Text>
           </CalendarButton>
           <CalendarButton
+            backgroundColor={isLight ? primary : palette.lighter}
             style={{ width: 80, marginLeft: 16 }}
             onPress={() => {
               resetNewEvent()
@@ -177,24 +181,30 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
           </CalendarButton>
         </View>
       </View>
-      <Text style={{ color: homeBackground, fontWeight: "400", fontSize: 14 }}>
+      <Text
+        style={{
+          color: isLight ? homeBackground : "#fff",
+          fontWeight: "400",
+          fontSize: 14,
+        }}
+      >
         {fromatAddEventDate(dateObj, lan)}
       </Text>
       <TextInput
         style={{
           borderBottomWidth: 1,
-          borderBottomColor: homeBackground,
+          borderBottomColor: isLight ? homeBackground : "#fff",
           marginTop: 16,
           fontWeight: "700",
           fontSize: 16,
           paddingBottom: 2,
-          color: homeBackground,
+          color: isLight ? homeBackground : "#fff",
         }}
         onChangeText={text => {
           setTitle(text)
         }}
         ref={inputText}
-        placeholderTextColor={homeBackground}
+        placeholderTextColor={isLight ? homeBackground : "#fff"}
         placeholder="Aggiungi Titolo"
       />
       <View
@@ -224,6 +234,7 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
             <DateTimeBox
               value={startDate.getHours().toString().padStart(2, "0")}
               width={54}
+              fullOpacity={true}
             />
             <BodyText
               style={[{ color: isLight ? primary : "#fff" }, styles.colon]}
@@ -233,6 +244,7 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
             <DateTimeBox
               value={startDate.getMinutes().toString().padStart(2, "0")}
               width={54}
+              fullOpacity={true}
             />
           </Pressable>
         </View>
@@ -255,6 +267,7 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
             <DateTimeBox
               value={endDate.getHours().toString().padStart(2, "0")}
               width={54}
+              fullOpacity={true}
             />
             <BodyText
               style={[{ color: isLight ? primary : "#fff" }, styles.colon]}
@@ -264,13 +277,19 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
             <DateTimeBox
               value={endDate.getMinutes().toString().padStart(2, "0")}
               width={54}
+              fullOpacity={true}
             />
           </Pressable>
         </View>
       </View>
       <View style={{ flexDirection: "row", marginTop: 24 }}>
         <View style={{ flex: 1, alignItems: "center" }}>
-          <Text style={[styles.mediumSizeText, { color: homeBackground }]}>
+          <Text
+            style={[
+              styles.mediumSizeText,
+              { color: isLight ? homeBackground : "#fff" },
+            ]}
+          >
             Imposta Promemoria
           </Text>
           <View
@@ -292,6 +311,7 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
                     : "00"
                 }
                 width={54}
+                fullOpacity={true}
               />
               <BodyText
                 style={[{ color: isLight ? primary : "#fff" }, styles.colon]}
@@ -305,12 +325,14 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
                     : "00"
                 }
                 width={54}
+                fullOpacity={true}
               />
             </Pressable>
           </View>
         </View>
         <View style={{ flex: 1, alignItems: "center" }}>
           <CalendarButton
+            backgroundColor={isLight ? primary : palette.lighter}
             style={{ width: "80%" }}
             onPress={() => setIsMoodModalShowing(true)}
           >
@@ -328,6 +350,7 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
             </View>
           </CalendarButton>
           <CalendarButton
+            backgroundColor={isLight ? primary : palette.lighter}
             style={{ width: "80%", marginTop: 8 }}
             onPress={() => {
               setIsRepeating(!isRepeating)

@@ -6,7 +6,7 @@ import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { StyleSheet } from "react-native"
 import { Calendar } from "react-native-calendars"
-import { useContext, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useMemo, useRef, useState } from "react"
 import {
   CalendarPeriod,
   CalendarSingletonWrapper as CalendarManager,
@@ -31,9 +31,19 @@ import { CalendarAddEvent } from "components/Calendar/CalendarAddEvent"
 import { LoginContext } from "contexts/login"
 import { CalendarEventDetails } from "components/Calendar/CalendarEventDetails"
 import { CalendarDailyEvents } from "components/Calendar/CalendarDailyEvents"
+import { SingleMonth } from "components/Calendar/SingleMonth"
+import { ScrollView } from "react-native-gesture-handler"
 
 export const CalendarPage: MainStackScreen<"Calendar"> = () => {
-  const { homeBackground, background, dotColor } = usePalette()
+  const { homeBackground, background, dotColor, isLight, palette } =
+    usePalette()
+
+  const [counter, setCounter] = useState(0)
+
+  useEffect(() => {
+    console.log(counter)
+    setCounter(counter + 1)
+  }, [isLight])
 
   // todo : implement translation :(
   /* const { t } = useTranslation() */
@@ -75,11 +85,61 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
 
   const navigation = useNavigation()
 
-  /* useEffect(() => {
-    console.log(selectedDay)
-  }, [selectedDay]) */
-
   const calendarObj = useRef<CalendarManager | undefined>()
+
+  // I thought memoizing would improve performance, but it appears to be still very slow!!
+  const scrollMonths = useMemo<JSX.Element>(() => {
+    return (
+      <View style={{ marginTop: 150, overflow: "hidden" }}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 110 }}>
+          {[0, 2, 4, 6, 8, 10].map(monthX => {
+            return (
+              <View
+                key={monthX}
+                style={{
+                  flexDirection: "row",
+                  marginTop: 16,
+                  marginHorizontal: 32,
+                }}
+              >
+                <Pressable
+                  style={{ flex: 1 }}
+                  onPress={() => {
+                    setMonth(monthX)
+                    setBottomSheetStatus(
+                      CalendarBottomSheetStatus.MONTHLY_EVENTS
+                    )
+                  }}
+                >
+                  <SingleMonth
+                    markedDates={markedDates}
+                    month={monthX}
+                    year={year}
+                  />
+                </Pressable>
+                <View style={{ width: 16 }} />
+                <Pressable
+                  style={{ flex: 1 }}
+                  onPress={() => {
+                    setMonth(monthX + 1)
+                    setBottomSheetStatus(
+                      CalendarBottomSheetStatus.MONTHLY_EVENTS
+                    )
+                  }}
+                >
+                  <SingleMonth
+                    markedDates={markedDates}
+                    month={monthX + 1}
+                    year={year}
+                  />
+                </Pressable>
+              </View>
+            )
+          })}
+        </ScrollView>
+      </View>
+    )
+  }, [markedDates])
 
   useEffect(() => {
     const initCalendar = () => {
@@ -89,9 +149,9 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           matricola: matricola,
         })
         calendarObj.current.addListener("markedDatesSet", () => {
-          if (calendarObj.current?.markedDatesPeriods) {
+          if (calendarObj.current?.datesMarkedAndPeriods) {
             console.log("marked dates sets")
-            setMarkedDates(calendarObj.current?.markedDatesPeriods)
+            setMarkedDates(calendarObj.current?.datesMarkedAndPeriods)
             setCalendarPeriods(calendarObj.current?.calendarPeriods)
           }
         })
@@ -110,8 +170,8 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           }
         })
       } else {
-        if (calendarObj.current?.markedDatesPeriods) {
-          setMarkedDates(calendarObj.current?.markedDatesPeriods)
+        if (calendarObj.current?.datesMarkedAndPeriods) {
+          setMarkedDates(calendarObj.current?.datesMarkedAndPeriods)
           setCalendarPeriods(calendarObj.current?.calendarPeriods)
         }
       }
@@ -153,7 +213,10 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
 
   // hide or show peridos based on bottom sheet status
   useEffect(() => {
-    if (bottomSheetStatus !== CalendarBottomSheetStatus.PERIODS) {
+    if (
+      bottomSheetStatus !== CalendarBottomSheetStatus.PERIODS &&
+      bottomSheetStatus !== CalendarBottomSheetStatus.ALL_MONTHS
+    ) {
       if (calendarObj.current?.hidePeriods == false) {
         calendarObj.current?.hideAllPerdiods()
       }
@@ -193,164 +256,195 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           }}
         >
           <Pressable
-            onPress={() => {
-              if (bottomSheetStatus === CalendarBottomSheetStatus.PERIODS) {
-                setBottomSheetStatus(CalendarBottomSheetStatus.MONTHLY_EVENTS)
-              } else {
-                setBottomSheetStatus(CalendarBottomSheetStatus.PERIODS)
-              }
-            }}
+            onPress={() =>
+              bottomSheetStatus === CalendarBottomSheetStatus.ALL_MONTHS
+                ? setBottomSheetStatus(CalendarBottomSheetStatus.PERIODS)
+                : setBottomSheetStatus(CalendarBottomSheetStatus.ALL_MONTHS)
+            }
           >
             <Icon source={calendarIcon} />
           </Pressable>
 
           <View style={{ flexDirection: "row" }}>
-            <Icon source={userIcon} style={{ marginRight: 8 }} />
+            <Pressable
+              onPress={() => {
+                if (bottomSheetStatus === CalendarBottomSheetStatus.PERIODS) {
+                  setBottomSheetStatus(CalendarBottomSheetStatus.MONTHLY_EVENTS)
+                } else {
+                  setBottomSheetStatus(CalendarBottomSheetStatus.PERIODS)
+                }
+              }}
+            >
+              <Icon source={userIcon} style={{ marginRight: 8 }} />
+            </Pressable>
             <Icon source={capeIcon} />
           </View>
         </View>
-        <View
-          style={{
-            height: 24,
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          {daysOfWeekLetters.map((day, index) => (
-            <Text
-              key={index}
-              style={{ fontSize: 12, fontWeight: "900", color: "#fff" }}
+        {bottomSheetStatus != CalendarBottomSheetStatus.ALL_MONTHS && (
+          <>
+            <View
+              style={{
+                height: 24,
+                width: "100%",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
             >
-              {day}
-            </Text>
-          ))}
-        </View>
-        <View style={{ width: "100%", height: 1, backgroundColor: "#fff" }} />
+              {daysOfWeekLetters.map((day, index) => (
+                <Text
+                  key={index}
+                  style={{ fontSize: 12, fontWeight: "900", color: "#fff" }}
+                >
+                  {day}
+                </Text>
+              ))}
+            </View>
+            <View
+              style={{ width: "100%", height: 1, backgroundColor: "#fff" }}
+            />
+          </>
+        )}
       </View>
-      <Calendar
-        theme={{
-          calendarBackground: homeBackground,
-          selectedDayTextColor: "orange",
-          todayTextColor: "yellow",
-          dayTextColor: "#fff",
-          dotStyle: { width: 6, height: 6, borderRadius: 3 },
-          dotColor: dotColor,
-        }}
-        onDayPress={day => {
-          const date = new Date(day.dateString)
-          const now = new Date()
+      {bottomSheetStatus != CalendarBottomSheetStatus.ALL_MONTHS && (
+        <>
+          <Calendar
+            theme={{
+              calendarBackground: isLight ? palette.primary : palette.darker,
+              selectedDayTextColor: "orange",
+              todayTextColor: "yellow",
+              dayTextColor: "#fff",
+              dotStyle: { width: 6, height: 6, borderRadius: 3 },
+              dotColor: dotColor,
+              stylesheet: {
+                day: {
+                  period: { isLight: isLight },
+                },
+              },
+            }}
+            onDayPress={day => {
+              const date = new Date(day.dateString)
+              const now = new Date()
 
-          //set hours and minutes of date to now
-          date.setHours(now.getHours())
-          date.setMinutes(now.getMinutes())
+              //set hours and minutes of date to now
+              date.setHours(now.getHours())
+              date.setMinutes(now.getMinutes())
 
-          setSelectedDay(date.toISOString())
+              setSelectedDay(date.toISOString())
 
-          setBottomSheetStatus(CalendarBottomSheetStatus.DAILY_EVENTS)
-        }}
-        style={{
-          marginTop: 150,
-          height: 290,
-          backgroundColor: homeBackground,
-        }}
-        markedDates={{
-          ...markedDates,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          "2023-07-15": {
-            marked: true,
-            startingDay: true,
-            endingDay: true,
-            color: "orange",
-          },
-        }}
-        customHeaderTitle={undefined}
-        hideExtraDays={true}
-        renderHeader={() => null}
-        renderArrow={() => null}
-        enableSwipeMonths={true}
-        showSixWeeks={true}
-        hideDayNames={true}
-        markingType="period"
-        current={selectedDay}
-        onMonthChange={month => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          setMonth(month.month - 1)
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-          setYear(month.year)
-        }}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        dayComponent={dayComponentCustom}
-      />
-      <BoxShadowView
-        shadow={{
-          color: "#000",
-          offset: { y: -8 },
-          opacity: 0.45,
-          blur: 32,
-        }}
-        style={styles.boxShadow}
-        contentContainerStyle={[
-          { backgroundColor: background },
-          styles.boxShadowContainer,
-        ]}
-      >
-        {bottomSheetStatus === CalendarBottomSheetStatus.PERIODS && (
-          <CalendarPeriodsSwitches
-            calendarPeriods={calendarPeriods}
-            month={lan === "it" ? monthsIt[month] : monthsEn[month]}
-            year={year}
-            onSwitchChange={(value: boolean, title: string) =>
-              calendarObj.current?.updatePeriods(title, value)
-            }
+              setBottomSheetStatus(CalendarBottomSheetStatus.DAILY_EVENTS)
+            }}
+            style={{
+              marginTop: 150,
+              height: 290,
+              backgroundColor: homeBackground,
+            }}
+            markedDates={{
+              ...markedDates,
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              "2023-07-15": {
+                marked: true,
+                startingDay: true,
+                endingDay: true,
+                color: "orange",
+              },
+            }}
+            customHeaderTitle={undefined}
+            hideExtraDays={true}
+            renderHeader={() => null}
+            renderArrow={() => null}
+            enableSwipeMonths={true}
+            showSixWeeks={true}
+            hideDayNames={true}
+            markingType="period"
+            current={selectedDay}
+            onMonthChange={month => {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              setMonth(month.month - 1)
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+              setYear(month.year)
+            }}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            dayComponent={dayComponentCustom}
           />
-        )}
-        {bottomSheetStatus === CalendarBottomSheetStatus.MONTHLY_EVENTS && (
-          <CalendarMonthlyEvents
-            events={calendarEventsMonth}
-            month={lan === "it" ? monthsIt[month] : monthsEn[month]}
-            year={year}
-            lan={lan}
-            onDeleteEvent={(id: string) => {
-              calendarObj.current?.removeEvent(id)
+          <BoxShadowView
+            shadow={{
+              color: "#000",
+              offset: { y: -8 },
+              opacity: 0.45,
+              blur: 32,
             }}
-            onSelectedEvent={(event: CalendarEvent) => {
-              setSelectedEvent(event)
-              setBottomSheetStatus(CalendarBottomSheetStatus.EVENT_DETAILS)
-            }}
-          />
-        )}
-        {bottomSheetStatus === CalendarBottomSheetStatus.ADD_EVENT && (
-          <CalendarAddEvent
-            addEvent={(event: CalendarEvent) => {
-              calendarObj.current?.addEvent(event)
-              setBottomSheetStatus(CalendarBottomSheetStatus.MONTHLY_EVENTS)
-            }}
-            date={selectedDay}
-          />
-        )}
-        {bottomSheetStatus == CalendarBottomSheetStatus.DAILY_EVENTS && (
-          <CalendarDailyEvents
-            events={calendarEventsDaily}
-            lan={lan}
-            dayString={selectedDay}
-            onChangeStatusEvent={(id: string, status: CalendarEventStatus) => {
-              calendarObj.current?.changeEventStatus(id, status)
-            }}
-            goToAddEvent={() => {
-              setBottomSheetStatus(CalendarBottomSheetStatus.ADD_EVENT)
-            }}
-          />
-        )}
-        {bottomSheetStatus == CalendarBottomSheetStatus.EVENT_DETAILS && (
-          <CalendarEventDetails
-            event={selectedEvent}
-            updateNotes={(id: string, notes: string) => {
-              calendarObj.current?.updateNotes(id, notes)
-            }}
-          />
-        )}
-      </BoxShadowView>
+            style={styles.boxShadow}
+            contentContainerStyle={[
+              { backgroundColor: background },
+              styles.boxShadowContainer,
+            ]}
+          >
+            {bottomSheetStatus === CalendarBottomSheetStatus.PERIODS && (
+              <CalendarPeriodsSwitches
+                calendarPeriods={calendarPeriods}
+                month={lan === "it" ? monthsIt[month] : monthsEn[month]}
+                year={year}
+                onSwitchChange={(value: boolean, title: string) =>
+                  calendarObj.current?.updatePeriods(title, value)
+                }
+              />
+            )}
+            {bottomSheetStatus === CalendarBottomSheetStatus.MONTHLY_EVENTS && (
+              <CalendarMonthlyEvents
+                events={calendarEventsMonth}
+                month={lan === "it" ? monthsIt[month] : monthsEn[month]}
+                year={year}
+                lan={lan}
+                onDeleteEvent={(id: string) => {
+                  calendarObj.current?.removeEvent(id)
+                }}
+                onSelectedEvent={(event: CalendarEvent) => {
+                  setSelectedEvent(event)
+                  setBottomSheetStatus(CalendarBottomSheetStatus.EVENT_DETAILS)
+                }}
+              />
+            )}
+            {bottomSheetStatus === CalendarBottomSheetStatus.ADD_EVENT && (
+              <CalendarAddEvent
+                addEvent={(event: CalendarEvent) => {
+                  calendarObj.current?.addEvent(event)
+                  setBottomSheetStatus(CalendarBottomSheetStatus.MONTHLY_EVENTS)
+                }}
+                date={selectedDay}
+              />
+            )}
+            {bottomSheetStatus == CalendarBottomSheetStatus.DAILY_EVENTS && (
+              <CalendarDailyEvents
+                events={calendarEventsDaily}
+                lan={lan}
+                dayString={selectedDay}
+                onChangeStatusEvent={(
+                  id: string,
+                  status: CalendarEventStatus
+                ) => {
+                  calendarObj.current?.changeEventStatus(id, status)
+                }}
+                goToAddEvent={() => {
+                  setBottomSheetStatus(CalendarBottomSheetStatus.ADD_EVENT)
+                }}
+              />
+            )}
+            {bottomSheetStatus == CalendarBottomSheetStatus.EVENT_DETAILS && (
+              <CalendarEventDetails
+                event={selectedEvent}
+                updateNotes={(id: string, notes: string) => {
+                  calendarObj.current?.updateNotes(id, notes)
+                }}
+              />
+            )}
+          </BoxShadowView>
+        </>
+      )}
+
+      {bottomSheetStatus == CalendarBottomSheetStatus.ALL_MONTHS && (
+        <View style={{ marginTop: 0, overflow: "hidden" }}>{scrollMonths}</View>
+      )}
+
       <NavBar
         overrideBackBehavior={() => {
           if (bottomSheetStatus === CalendarBottomSheetStatus.EVENT_DETAILS) {
@@ -367,6 +461,10 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
             bottomSheetStatus === CalendarBottomSheetStatus.DAILY_EVENTS
           ) {
             setBottomSheetStatus(CalendarBottomSheetStatus.MONTHLY_EVENTS)
+          } else if (
+            bottomSheetStatus === CalendarBottomSheetStatus.ALL_MONTHS
+          ) {
+            setBottomSheetStatus(CalendarBottomSheetStatus.PERIODS)
           } else {
             navigation.goBack()
           }

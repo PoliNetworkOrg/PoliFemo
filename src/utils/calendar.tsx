@@ -38,6 +38,7 @@ export enum CalendarBottomSheetStatus {
   DAILY_EVENTS,
   ADD_EVENT,
   EVENT_DETAILS,
+  ALL_MONTHS,
 }
 
 export interface Period {
@@ -138,10 +139,12 @@ export declare interface CalendarSingletonWrapper {
 }
 
 export class CalendarSingletonWrapper extends EventEmitter {
-  private _markedDatesPeriods: MarkedDates = {}
+  private _datesOnlyPeriods: MarkedDates = {}
 
-  public get markedDatesPeriods(): MarkedDates | undefined {
-    return this._markedDatesPeriods
+  private _datesMarkedAndPeriods: MarkedDates = {}
+
+  public get datesMarkedAndPeriods(): MarkedDates | undefined {
+    return this._datesMarkedAndPeriods
   }
   private _calendarPeriods?: CalendarPeriod[]
 
@@ -424,7 +427,15 @@ export class CalendarSingletonWrapper extends EventEmitter {
   }
 
   private _applyPeriods() {
-    this._markedDatesPeriods = {}
+    //if datesOnlyPeriods has been already calculated
+    if (Object.keys(this._datesOnlyPeriods).length > 0) {
+      this._datesMarkedAndPeriods = this._hidePeriods
+        ? {}
+        : { ...this._datesOnlyPeriods }
+      this._applyMarkers()
+      return
+    }
+    this._datesMarkedAndPeriods = {}
 
     const periods = this._hidePeriods ? [] : this._calendarPeriods
 
@@ -476,7 +487,16 @@ export class CalendarSingletonWrapper extends EventEmitter {
           }
         }
 
-        this._markedDatesPeriods = { ...this._markedDatesPeriods, ...periodTmp }
+        this._datesMarkedAndPeriods = {
+          ...this._datesMarkedAndPeriods,
+          ...periodTmp,
+        }
+
+        //save dates with periods for later use
+        this._datesOnlyPeriods = {
+          ...this._datesMarkedAndPeriods,
+          ...periodTmp,
+        }
       })
     })
     this._applyMarkers()
@@ -529,8 +549,8 @@ export class CalendarSingletonWrapper extends EventEmitter {
     for (let i = 0; i < this._calendarEvents.length; i++) {
       const dateString = this._calendarEvents[i].start.substring(0, 10)
 
-      this._markedDatesPeriods[dateString] = {
-        ...this._markedDatesPeriods[dateString],
+      this._datesMarkedAndPeriods[dateString] = {
+        ...this._datesMarkedAndPeriods[dateString],
         marked: true,
       }
     }
@@ -544,8 +564,8 @@ export class CalendarSingletonWrapper extends EventEmitter {
     )
     if (isAtLeastOneEvent) return
 
-    this._markedDatesPeriods[dateString] = {
-      ...this._markedDatesPeriods[dateString],
+    this._datesMarkedAndPeriods[dateString] = {
+      ...this._datesMarkedAndPeriods[dateString],
       marked: false,
     }
 
@@ -649,6 +669,7 @@ export const monthsAcronymsEn = [
 ]
 
 const FILLER_HEIGHT = 26
+const FILLER_HEIGHT_ALL_MONTHS = 22
 
 export const dayComponentCustom: ComponentType<
   DayProps & {
@@ -821,6 +842,137 @@ export const dayComponentCustom: ComponentType<
         </View>
       </View>
     </TouchableOpacity>
+  )
+}
+
+export const dayComponentAllMonthPage: ComponentType<
+  DayProps & {
+    date?: DateData | undefined
+  }
+> = props => {
+  const { marking, state, children } = props
+
+  const fillerStyles = useMemo(() => {
+    const leftFillerStyle: ViewStyle = { flex: 1 }
+    const rightFillerStyle: ViewStyle = { flex: 1 }
+    let globalfiller: ViewStyle = {}
+
+    const start = marking?.startingDay
+    const end = marking?.endingDay
+
+    if (start && !end) {
+      rightFillerStyle.borderBottomColor = marking?.color
+      rightFillerStyle.borderBottomWidth = 2
+      rightFillerStyle.borderTopColor = marking?.color
+      rightFillerStyle.borderTopWidth = 2
+    } else if (end && !start) {
+      leftFillerStyle.borderBottomColor = marking?.color
+      leftFillerStyle.borderBottomWidth = 2
+      leftFillerStyle.borderTopColor = marking?.color
+      leftFillerStyle.borderTopWidth = 2
+    } else if (marking?.color && !start && !end) {
+      globalfiller = {
+        borderBottomColor: marking?.color,
+        borderBottomWidth: 2,
+        borderTopColor: marking?.color,
+        borderTopWidth: 2,
+      }
+    }
+    return { leftFillerStyle, rightFillerStyle, globalfiller }
+  }, [marking])
+
+  const path = useMemo(() => {
+    let startAngle
+    let sweepAngle
+
+    if (marking?.startingDay && marking.endingDay) {
+      startAngle = 90
+      sweepAngle = 360
+    } else if (marking?.startingDay) {
+      startAngle = 90
+      sweepAngle = 180
+    } else if (marking?.endingDay) {
+      startAngle = 270
+      sweepAngle = 180
+    } else {
+      return undefined
+    }
+
+    const path = Skia.Path.Make()
+    path.moveTo(19, 1)
+    //this looks kinda random
+    path.addArc(
+      { height: FILLER_HEIGHT_ALL_MONTHS - 2, width: 19, y: 1, x: 4 },
+      startAngle,
+      sweepAngle
+    )
+
+    return path
+  }, [marking, state])
+
+  return (
+    <View
+      style={{
+        alignItems: "center",
+        alignSelf: "stretch",
+        marginLeft: -1,
+      }}
+    >
+      <View
+        style={[
+          {
+            position: "absolute",
+            height: FILLER_HEIGHT_ALL_MONTHS,
+            flexDirection: "row",
+            left: 0,
+            right: 0,
+          },
+          fillerStyles.globalfiller,
+        ]}
+      >
+        <View style={fillerStyles.leftFillerStyle} />
+
+        <View style={fillerStyles.rightFillerStyle} />
+      </View>
+      {path && (
+        <Canvas
+          style={{
+            width: 28,
+            height: FILLER_HEIGHT_ALL_MONTHS,
+            position: "absolute",
+            zIndex: 10,
+          }}
+        >
+          <Path
+            path={path}
+            color={marking?.color}
+            strokeWidth={2}
+            fillType={undefined}
+            style="stroke"
+          />
+        </Canvas>
+      )}
+      <View
+        style={{
+          borderRadius: 17,
+          width: 38,
+          height: FILLER_HEIGHT_ALL_MONTHS,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 12,
+            fontWeight: "900",
+            color: palette.primary,
+          }}
+          allowFontScaling={false}
+        >
+          {String(children)}
+        </Text>
+      </View>
+    </View>
   )
 }
 
@@ -1064,15 +1216,16 @@ export const get1HourBeforeAfterSameDay = (
 }
 
 export const getBackColorFromEventStatus = (
-  status: CalendarEventStatus
+  status: CalendarEventStatus,
+  isLight: boolean
 ): string => {
   switch (status) {
     case CalendarEventStatus.INITIAL:
-      return "#F2F2F2"
+      return isLight ? "#F2F2F2" : "#D7D9E2"
     case CalendarEventStatus.PROGRESS:
       return "#F29999"
     case CalendarEventStatus.COMPLETED:
-      return palette.primary
+      return isLight ? palette.primary : "#9BC0D8"
   }
 }
 
