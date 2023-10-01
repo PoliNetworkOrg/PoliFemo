@@ -2,7 +2,7 @@
   "name": "polifemo",
   "version": "0.2.0",
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --go",
     "dev": "expo start --dev-client",
     "build": "eas build --profile preview --local",
     "build:prod": "eas build --profile production --local",
