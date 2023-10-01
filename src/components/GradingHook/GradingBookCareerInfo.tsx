@@ -26,31 +26,37 @@ export const GradingBookCareerInfo: FC<GradingBookCareerInfoProps> = ({
     () =>
       StyleSheet.create({
         container: {
+          width: 300,
           flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "stretch",
           alignSelf: "center",
+          padding: 4,
         },
         circle: {
           width: 20,
           height: 20,
-          borderRadius: 100 / 2,
-          marginRight: 8,
-          marginTop: 24,
+          borderRadius: 10,
         },
         text: {
           fontSize: 14,
           fontWeight: "500",
+          verticalAlign: "middle",
+          lineHeight: 20,
           color: isLight ? palette.primary : "#ffffff",
-          marginTop: 20,
         },
         legendTextContainer: {
           flexDirection: "row",
+          gap: 12,
+          marginVertical: 8,
         },
-        separator: {
-          marginTop: 20,
-          marginLeft: 30,
-          height: "90%",
-          width: 2,
-          backgroundColor: "#909090",
+        numberContainer: {
+          borderLeftWidth: 1.5,
+          borderLeftColor: isLight ? palette.primary : "#fff",
+          paddingLeft: 28,
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+          marginVertical: 8,
         },
       }),
     [isLight]
@@ -60,36 +66,30 @@ export const GradingBookCareerInfo: FC<GradingBookCareerInfoProps> = ({
     <View style={styles.container}>
       <View>
         <View style={styles.legendTextContainer}>
-          <View
-            style={{ ...styles.circle, backgroundColor: palette.cfuCirle }}
-          />
+          <View style={[styles.circle, { backgroundColor: palette.accent }]} />
           <BodyText style={styles.text}>
             {t("gradingBook_obtained_cfu")}
           </BodyText>
         </View>
         <View style={styles.legendTextContainer}>
-          <View style={{ ...styles.circle, backgroundColor: palette.accent }} />
+          <View style={[styles.circle, { backgroundColor: palette.color2 }]} />
           <BodyText style={styles.text}>
             {t("gradingBook_frequented_cfu")}
           </BodyText>
         </View>
         <View style={styles.legendTextContainer}>
-          <View
-            style={{ ...styles.circle, backgroundColor: palette.examsCirle }}
-          />
+          <View style={[styles.circle, { backgroundColor: palette.primary }]} />
           <BodyText style={styles.text}>{t("gradingBook_exams")}</BodyText>
         </View>
       </View>
-      <View style={styles.separator} />
-      <View style={{ marginLeft: 30 }}>
-        <BodyText style={styles.text}>{cfusObtained}</BodyText>
-        <BodyText style={styles.text}>{cfusPlanned}</BodyText>
-        <BodyText style={styles.text}>{examsGiven}</BodyText>
-      </View>
-      <View style={{ marginLeft: 5 }}>
-        <BodyText style={styles.text}>{`/ ${cfusPlanned}`}</BodyText>
-        <BodyText style={styles.text}>{`/ ${maxCfu}`}</BodyText>
-        <BodyText style={styles.text}>{`/ ${examsPlanned}`}</BodyText>
+      <View style={styles.numberContainer}>
+        <BodyText
+          style={styles.text}
+        >{`${cfusObtained} / ${cfusPlanned}`}</BodyText>
+        <BodyText style={styles.text}>{`${cfusPlanned} / ${maxCfu}`}</BodyText>
+        <BodyText
+          style={styles.text}
+        >{`${examsGiven} / ${examsPlanned}`}</BodyText>
       </View>
     </View>
   )

@@ -10,9 +10,9 @@ export const palette = {
   variant1: "#414867",
   variant2: "#010B40",
   variant3: "#454773",
-  examsCirle: "#1ad67b",
-  cfuCirle: "#8791bd",
   accent: "#FFB544",
+  color1: "#9BC0D8",
+  color2: "#F29999",
   widgetBgLighter: "#F6F7FC",
   widgetBgDarker: "#343E5A",
 } as const
