@@ -1,7 +1,16 @@
 import { BodyText } from "components/Text"
-import { FC, useState, useRef } from "react"
-import { View, Dimensions, Pressable, ImageBackground } from "react-native"
-import Animated from "react-native-reanimated"
+import { FC, useState, useCallback } from "react"
+import {
+  View,
+  Dimensions,
+  Pressable,
+  ImageBackground,
+  ViewToken,
+} from "react-native"
+import Animated, {
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from "react-native-reanimated"
 import { PaginationCarousel } from "./PaginationCarousel"
 import iseeImage from "assets/highlights/isee.png"
 import lecturesImage from "assets/highlights/lectures.png"
@@ -25,21 +34,20 @@ export const CustomFlatlist: FC<{ dataToShow: CarouselItem[] }> = ({
   dataToShow,
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0)
-  const scrollX = useRef(new Animated.Value(0)).current
+  const scrollX = useSharedValue(0)
 
-  //questa parte funziona ma non va bene scritta cosi
-  const handleViewableItemsChanged = useRef(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ({ changed }: { changed: any }) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      if (changed[0].isViewable) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    scrollX.value = event.contentOffset.x
+  })
+
+  const handleViewableItemsChanged = useCallback(
+    ({ changed }: { changed: ViewToken[] }) => {
+      if (changed[0].isViewable && changed[0].index) {
         setCurrentIndex(changed[0].index)
       }
-    }
-  ).current
-
-  const viewAbilityConfig = { viewAreaCoveragePercentThreshold: 50 }
+    },
+    []
+  )
 
   const { navigate } = useNavigation()
 
@@ -52,16 +60,7 @@ export const CustomFlatlist: FC<{ dataToShow: CarouselItem[] }> = ({
         pagingEnabled={true}
         horizontal
         showsHorizontalScrollIndicator={false}
-        onScroll={Animated.event(
-          [
-            {
-              nativeEvent: {
-                contentOffset: { x: scrollX },
-              },
-            },
-          ],
-          { useNativeDriver: false }
-        )}
+        onScroll={scrollHandler}
         renderItem={({ item }) => {
           return (
             <Pressable
@@ -151,7 +150,7 @@ export const CustomFlatlist: FC<{ dataToShow: CarouselItem[] }> = ({
             </Pressable>
           )
         }}
-        viewabilityConfig={viewAbilityConfig}
+        viewabilityConfig={{ viewAreaCoveragePercentThreshold: 50 }}
         onViewableItemsChanged={handleViewableItemsChanged}
       />
       <PaginationCarousel
