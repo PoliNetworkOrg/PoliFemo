@@ -94,7 +94,7 @@ export const CustomFlatlist: FC<{ dataToShow: CarouselItem[] }> = ({
                       left: 0,
                       right: 0,
                       bottom: 0,
-                      margin: 15,
+                      margin: 10,
                       justifyContent: "center",
                       alignItems: "center",
                     }}
@@ -140,8 +140,12 @@ export const CustomFlatlist: FC<{ dataToShow: CarouselItem[] }> = ({
                     style={{
                       fontWeight: "400",
                       marginRight: 2,
+                      marginLeft: 15,
                       fontSize: 12,
+                      maxWidth: 110,
                     }}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
                   >
                     {item.room}
                   </BodyText>
