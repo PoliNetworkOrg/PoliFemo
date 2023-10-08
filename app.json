@@ -3,7 +3,7 @@
     "name": "polifemo",
     "slug": "polifemo",
     "owner": "polinetwork-org",
-    "version": "1.0.0",
+    "version": "0.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -24,15 +24,13 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/foreground.png",
+        "backgroundColor": "#424966"
       },
       "googleServicesFile": "./config/google-services.json",
       "package": "org.polinetwork.polifemo",
-      "softwareKeyboardLayoutMode": "pan"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
+      "softwareKeyboardLayoutMode": "pan",
+      "useNextNotificationsApi": true
     },
     "extra": {
       "eas": {
@@ -44,7 +42,6 @@
     },
     "plugins": [
       "@react-native-firebase/app",
-      "./config/withSkia.js",
       [
         "expo-build-properties",
         {

@@ -10,6 +10,10 @@ import FreeClassIT from "./jsons/it/freeClass.json"
 import FreeClassEN from "./jsons/en/freeClass.json"
 import settingsIT from "./jsons/it/settings.json"
 import settingsEN from "./jsons/en/settings.json"
+import notificationsIT from "./jsons/it/notifications.json"
+import notificationsEN from "./jsons/en/notifications.json"
+import timetableIT from "./jsons/it/timetable.json"
+import timetableEN from "./jsons/en/timetable.json"
 import { getLocales } from "expo-localization"
 
 async function initializeI18n() {
@@ -20,19 +24,30 @@ async function initializeI18n() {
         home: homeIT,
         freeClass: FreeClassIT,
         settings: settingsIT,
+        notifications: notificationsIT,
+        timetable: timetableIT,
       },
       en: {
         common: commonEN,
         home: homeEN,
         freeClass: FreeClassEN,
         settings: settingsEN,
+        notifications: notificationsEN,
+        timetable: timetableEN,
       },
     },
     lng: getLocales()[0].languageCode,
     compatibilityJSON: "v3",
     fallbackLng: "en",
     defaultNS: "common",
-    ns: ["common", "home", "freeClass", "settings"],
+    ns: [
+      "common",
+      "home",
+      "freeClass",
+      "settings",
+      "notifications",
+      "timetable",
+    ],
     interpolation: {
       escapeValue: false,
     },

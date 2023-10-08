@@ -4,7 +4,7 @@ import { BodyText } from "components/Text"
 import { FC } from "react"
 import { View, Dimensions } from "react-native"
 import { usePalette } from "utils/colors"
-import polifemoIcon from "assets/highlights/polifemo.svg"
+import polifemoIcon from "assets/polifemo/happy.svg"
 import { useTranslation } from "react-i18next"
 
 const { width } = Dimensions.get("window")

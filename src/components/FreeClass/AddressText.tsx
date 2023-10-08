@@ -23,7 +23,7 @@ export const AddressText: FC<AddressTextProps> = props => {
   const positionArrowSVG = useSVG(PositionArrowIcon)
 
   return (
-    <View style={{ flexDirection: "row", marginTop: 19 }}>
+    <View style={{ flexDirection: "row" }}>
       <View
         style={{
           width: 25,

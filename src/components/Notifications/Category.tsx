@@ -1,71 +1,55 @@
 import { FC } from "react"
 import { Pressable, StyleSheet, View } from "react-native"
 import { Text } from "components/Text"
-import { Switch } from "react-native-switch"
 import { usePalette } from "utils/colors"
 
 import { Icon } from "components/Icon"
+import { ValidChannelId } from "notifications/NotificationTypes"
+import { useNotificationBadge } from "notifications/useNotificationBadge"
+import { ToggleSwitch } from "components/ToggleSwitch"
 
 export interface CategoryProps {
-  icon?: number
   title: string
+  channelId: ValidChannelId
+  icon?: number
   switchControl?: {
     /** State of the switch */
     toggled: boolean
     /** Function fired when the state of the switch changes */
     onToggle: (value: boolean) => void
   }
-  notifications?: number
+
   onClick?: () => void
 }
 
 export const Category: FC<CategoryProps> = props => {
-  const { backgroundSecondary, palette, isLight } = usePalette()
+  const { palette } = usePalette()
 
-  const notifications = props.notifications ?? 0
+  const badgeCount = useNotificationBadge(props.channelId)
 
   return (
     <Pressable
       style={[{ backgroundColor: palette.primary }, styles.container]}
       onPress={props.onClick}
     >
-      {notifications ? (
+      {badgeCount ? (
         <View style={[{ backgroundColor: palette.accent }, styles.circle]}>
-          <Text>{props.notifications}</Text>
+          <Text
+            style={{ color: palette.variant1, fontWeight: "900", fontSize: 20 }}
+          >
+            {badgeCount}
+          </Text>
         </View>
       ) : undefined}
 
       <View style={styles.switch}>
-        <Switch
-          value={props.switchControl?.toggled}
+        <ToggleSwitch
+          value={props.switchControl?.toggled ?? false}
           onValueChange={value => {
             props.switchControl?.onToggle(value)
           }}
-          changeValueImmediately={true}
-          renderActiveText={false}
-          renderInActiveText={false}
-          barHeight={27}
-          switchWidthMultiplier={3}
-          circleSize={18}
-          circleActiveColor={backgroundSecondary}
-          circleInActiveColor={palette.accent}
-          circleBorderWidth={0}
-          innerCircleStyle={{
-            borderWidth: 1,
-            borderColor: !props.switchControl?.toggled
-              ? palette.accent
-              : isLight
-              ? "#EBEBEB"
-              : "#3A4257",
-          }}
-          backgroundActive={palette.accent}
-          backgroundInactive={"#FFF"}
-          containerStyle={{
-            borderWidth: 1,
-            borderColor: palette.accent,
-          }}
-          switchLeftPx={1.5}
-          switchRightPx={1.3}
+          color={palette.accent}
+          overrideUnselectedBackground={palette.primary}
         />
       </View>
       <View style={{ marginBottom: 12 }}>
@@ -78,7 +62,7 @@ export const Category: FC<CategoryProps> = props => {
 
 const styles = StyleSheet.create({
   container: {
-    width: 354,
+    marginHorizontal: 18,
     marginTop: 35,
     height: 132,
     borderRadius: 12,

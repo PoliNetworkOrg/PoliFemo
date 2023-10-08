@@ -1,16 +1,6 @@
 import { i18n } from "../locales/i18n"
 import { Event } from "api/collections/event"
-/**
- * enum to differentiate the different types of widget we could have
- * different widget types have different background images
- */
-export enum WidgetType {
-  LECTURES = 1,
-  EXAMS = 2,
-  NEWS = 3,
-  DEADLINE = 4,
-  CUSTOM = 5,
-}
+import { EventType } from "./events"
 
 export interface CarouselItem {
   /**
@@ -20,7 +10,7 @@ export interface CarouselItem {
   /**
    * enum field to identify the type of the widget
    */
-  type: WidgetType
+  type: EventType
   /**
    * string to identify the date of the event(or deadline) contained in the widget
    */
@@ -33,6 +23,8 @@ export interface CarouselItem {
    * string to identify the title of the event contained in the widget
    */
   title: string
+
+  dateStart: Date
   /**
    * string to identify eventually the room when the event takes place
    */
@@ -65,7 +57,7 @@ export const extractNextEvents = (events: Event[]) => {
   return events
     .filter(x => checkEventType(x.event_type.typeId))
     .filter(x => {
-      if (x.event_type.typeId === WidgetType.LECTURES) {
+      if (x.event_type.typeId === EventType.LECTURES) {
         if (firstLecture) {
           firstLecture = false
           return true
@@ -83,9 +75,9 @@ export const extractNextEvents = (events: Event[]) => {
  */
 export function checkEventType(typeId: number) {
   return (
-    typeId === WidgetType.LECTURES ||
-    typeId === WidgetType.EXAMS ||
-    typeId === WidgetType.DEADLINE
+    typeId === EventType.LECTURES ||
+    typeId === EventType.EXAMS ||
+    typeId === EventType.DEADLINE
   )
 }
 
@@ -114,15 +106,15 @@ export function createWidget(event: Event) {
     "november",
     "december",
   ]
-  const dateObj = new Date(event.date_start)
+  const dateStart = new Date(event.date_start)
   const resultDate =
-    t(days[dateObj.getDay()]) +
+    t(days[dateStart.getDay()]) +
     " " +
-    dateObj.getDate().toString().padStart(2, "0") +
+    dateStart.getDate().toString().padStart(2, "0") +
     " " +
-    t(months[dateObj.getMonth()]) +
+    t(months[dateStart.getMonth()]) +
     " " +
-    dateObj.getFullYear()
+    dateStart.getFullYear()
   const nextEvent: CarouselItem = {
     id: event.event_id,
     type: event.event_type.typeId,
@@ -130,6 +122,7 @@ export function createWidget(event: Event) {
     time: event.date_start.toString().slice(11, 16),
     title: event.title.it,
     room: event.room?.acronym_dn,
+    dateStart: dateStart,
   }
   return nextEvent
 }

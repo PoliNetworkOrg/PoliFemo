@@ -15,6 +15,7 @@ module.exports = function (api) {
             utils: "./src/utils",
             contexts: "./src/contexts",
             api: "./src/api",
+            notifications: "./src/notifications"
           },
         },
       ],

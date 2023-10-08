@@ -19,6 +19,8 @@ import { useNavigation } from "navigation/NavigationTypes"
 import { getUsableScreenHeight } from "utils/layout"
 import { newsSheetEventEmitter } from "utils/events"
 import { NewsBottomSheetHandle } from "./NewsBottomSheetHandle"
+import { getArticleParams, getDifferentLanguageNotice } from "utils/articles"
+import { useCurrentLanguage } from "utils/language"
 
 interface NewsBottomSheetProps {
   /**
@@ -43,6 +45,8 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
 
   const { preferences } = useContext(NewsPreferencesContext)
 
+  const language = useCurrentLanguage()
+
   // modal state
   const [isNewsClosed, setIsNewsClosed] = useState(true)
   // the ref for the News bottom sheet, used to open and close it programmatically
@@ -56,7 +60,6 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
     opened: 106,
   }
 
-  const showHighlighted = props.highlightedArticle !== undefined
   const showButtonToOtherTags = Object.values(preferences).some(
     p => p === Preference.UNFAVOURITE
   )
@@ -126,22 +129,24 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
           paddingTop: 16,
         }}
       >
-        {showHighlighted && (
+        {props.highlightedArticle && (
           <CardWithGradient
             title={"In Evidenza"}
-            imageURL={
-              props.highlightedArticle?.image &&
-              props.highlightedArticle.image.length > 0
-                ? props.highlightedArticle.image
-                : ""
-              // : "http://rl.airlab.deib.polimi.it/wp-content/uploads/2022/06/1-PolimiCampus_2.jpg"
-            }
+            imageURL={props.highlightedArticle.image}
+            blurhash={props.highlightedArticle.blurhash}
             onClick={() =>
               navigation.navigate("Article", {
                 article: props.highlightedArticle as Article,
               })
             }
             style={{ height: 220, marginBottom: 34 }}
+            articleTitle={
+              getArticleParams(props.highlightedArticle, language)?.title
+            }
+            footer={getDifferentLanguageNotice(
+              props.highlightedArticle,
+              language
+            )}
           />
         )}
 

@@ -10,6 +10,7 @@ export interface Tags {
 export interface Tag {
   name: string
   image: string
+  blurhash: string
 }
 
 export interface Articles {
@@ -20,18 +21,34 @@ export interface Articles {
   author_id: number | null
   title: string | null
 }
+interface ArticleAuthor {
+  name?: string
+  link?: string
+  image?: string
+}
+
 export interface Article {
   id: number
   tag_id: string
-  title: string
-  subtitle?: string
   latitude?: number
   longitude?: number
   publish_time: string
   target_time?: string
-  content: string
+  hidden_until?: string
+  content: {
+    it?: ArticleParams
+    en?: ArticleParams
+  }
   image?: string
-  author?: { name?: string; link?: string; image?: string }
+  blurhash?: string
+  author?: ArticleAuthor
+}
+
+interface ArticleParams {
+  content: string
+  title: string
+  subtitle: string
+  url: string
 }
 
 const client = HttpClient.getInstance()
@@ -73,6 +90,7 @@ export const articles = {
       url: "/v1/articles",
       method: "GET",
       params: {
+        platform: 1,
         limit: params.limit,
         pageOffset: params.offset,
         tag: params.tag,
@@ -94,7 +112,7 @@ export const articles = {
     const request = client.callPoliNetwork<Articles>({
       url: "/v1/articles",
       method: "GET",
-      params: { tag: params.tag, limit: 1, sort: "date" },
+      params: { tag: params.tag, limit: 1, sort: "date", platform: 1 },
       ...options,
     })
     return mapAxiosRequest(request, res => res.articles[0])

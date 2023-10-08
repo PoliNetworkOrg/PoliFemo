@@ -1,28 +1,27 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useRef, useState } from "react"
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native"
+import { NavigationContainer } from "@react-navigation/native"
 import { hideAsync } from "expo-splash-screen"
 import { useFonts } from "@expo-google-fonts/roboto"
 import {
   Roboto_300Light,
   Roboto_400Regular,
+  Roboto_500Medium,
   Roboto_500Medium_Italic,
   Roboto_700Bold,
   Roboto_900Black,
 } from "@expo-google-fonts/roboto"
 import { AppContainer } from "./src/AppContainer"
-
 import { OutsideClickProvider } from "utils/outsideClick"
 import { api } from "api"
-
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { LoginContext, LoginState } from "contexts/login"
 import { SettingsContext, Settings } from "contexts/settings"
 import { useLoadTokens } from "utils/loadTokens"
 import { HttpClient } from "api/HttpClient"
-import { usePalette } from "utils/colors"
 import { StatusBar } from "react-native"
 import { Host } from "react-native-portalize"
+import { navigationRef } from "navigation/NavigationTypes"
 // eslint-disable-next-line unused-imports/no-unused-imports
 import "./src/locales/i18n"
 import { useLoadI18n } from "./src/locales/i18n"
@@ -30,7 +29,6 @@ import { useLoadI18n } from "./src/locales/i18n"
 const client = HttpClient.getInstance()
 
 export default function App() {
-  const { homeBackground } = usePalette()
   const [settingsReady, setSettingsReady] = useState(false)
   const [settings, setSettings] = useState<Settings>({
     theme: "predefined",
@@ -77,6 +75,7 @@ export default function App() {
   const [fontsLoaded] = useFonts({
     Roboto_300Light,
     Roboto_400Regular,
+    Roboto_500Medium,
     Roboto_500Medium_Italic,
     Roboto_700Bold,
     Roboto_900Black,
@@ -148,15 +147,7 @@ export default function App() {
       value={{ settings: settings, setSettings: setSettings }}
     >
       <Host>
-        <NavigationContainer
-          theme={{
-            ...DefaultTheme,
-            colors: {
-              ...DefaultTheme.colors,
-              background: homeBackground,
-            },
-          }}
-        >
+        <NavigationContainer ref={navigationRef}>
           <StatusBar
             barStyle={"light-content"}
             translucent={true}

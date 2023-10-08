@@ -1,38 +1,64 @@
 import { BodyText } from "components/Text"
 import { FC } from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
-import { Icon } from "./Icon"
+import { StyleProp, View, TextStyle, Dimensions } from "react-native"
+import { Canvas, ImageSVG, useSVG } from "@shopify/react-native-skia"
+import polifemoIcon from "assets/polifemo/error.svg" // <-- NON è quella giusta!!
+import { usePalette } from "utils/colors"
+import { useTranslation } from "react-i18next"
 
 interface ErrorMessageProps {
   message: string
-  styleView?: StyleProp<ViewStyle>
   styleMessage?: StyleProp<TextStyle>
-  image?: number
 }
 
 /**
  * This component displays a message if an error occurs.
  */
 export const ErrorMessage: FC<ErrorMessageProps> = props => {
+  const polifemoSVG = useSVG(polifemoIcon)
+
+  const { primary } = usePalette()
+
+  const { t } = useTranslation("common")
+
   return (
-    <View style={[{ flex: 1, marginHorizontal: 20 }, props.styleView]}>
-      {props.image ? (
-        <Icon style={{ alignSelf: "center" }} source={props.image} />
-      ) : undefined}
+    <View
+      style={{
+        justifyContent: "center",
+        marginVertical: 40,
+      }}
+    >
+      <Canvas
+        style={{
+          height: 200,
+          width: Dimensions.get("window").width,
+          alignSelf: "center",
+          marginBottom: 24,
+        }}
+      >
+        {polifemoSVG && (
+          <ImageSVG
+            svg={polifemoSVG}
+            x={0}
+            y={0}
+            width={Dimensions.get("window").width}
+            height={200}
+          />
+        )}
+      </Canvas>
       <BodyText
         style={[
           {
-            flex: 1,
-            color: "red", //TBC
-            fontWeight: "400", //TBC
-            fontSize: 30, //TBC
-            alignSelf: "center",
             textAlign: "center",
           },
           props.styleMessage,
         ]}
       >
-        {props.message}
+        <BodyText style={{ fontSize: 24, color: primary }}>Ops! </BodyText>
+        <BodyText style={{ fontWeight: "900", fontSize: 24, color: primary }}>
+          {t("error") + "\n"}
+        </BodyText>
+        <BodyText style={{ color: primary }}>{props.message}</BodyText>
       </BodyText>
     </View>
   )

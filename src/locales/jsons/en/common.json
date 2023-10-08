@@ -1,63 +1,68 @@
 {
-    "search": "Search",
+  "search": "Search",
 
-    "date": "Date",
-    "time": "Time",
+  "date": "Date",
+  "time": "Time",
 
-    "cancel": "Cancel",
+  "cancel": "Cancel",
 
-    "sunday": "Sunday",
-    "monday": "Monday",
-    "tuesday": "Tuesday",
-    "wednesday": "Wednesday",
-    "thursday": "Thursday",
-    "friday": "Friday",
-    "saturday": "Saturday",
+  "sunday": "Sunday",
+  "monday": "Monday",
+  "tuesday": "Tuesday",
+  "wednesday": "Wednesday",
+  "thursday": "Thursday",
+  "friday": "Friday",
+  "saturday": "Saturday",
 
-    "january": "January",
-    "february": "February",
-    "march": "March",
-    "april": "April",
-    "may": "May",
-    "june": "June",
-    "july": "July",
-    "august": "August",
-    "september": "September",
-    "october": "October",
-    "november": "November",
-    "december": "December",
+  "january": "January",
+  "february": "February",
+  "march": "March",
+  "april": "April",
+  "may": "May",
+  "june": "June",
+  "july": "July",
+  "august": "August",
+  "september": "September",
+  "october": "October",
+  "november": "November",
+  "december": "December",
 
-    "year": {
-        "year_one": "Anno",
-        "year_other": "Anni",
-        "yearCount_one": "{{count}} anno",
-        "yearCount_other": "{{count}} anni"
-    },
-    "month": {
-        "month_one": "Mese",
-        "month_other": "Mesi",
-        "monthCount_one": "{{count}} mese",
-        "monthCount_other": "{{count}} mesi"
-    },
-    "day": {
-        "day_one": "Giorno",
-        "day_other": "Giorni",
-        "dayCount_one": "{{count}} giorno",
-        "dayCount_other": "{{count}} giorni"
-    },
+  "year": {
+    "year_one": "Anno",
+    "year_other": "Anni",
+    "yearCount_one": "{{count}} anno",
+    "yearCount_other": "{{count}} anni"
+  },
+  "month": {
+    "month_one": "Mese",
+    "month_other": "Mesi",
+    "monthCount_one": "{{count}} mese",
+    "monthCount_other": "{{count}} mesi"
+  },
+  "day": {
+    "day_one": "Giorno",
+    "day_other": "Giorni",
+    "dayCount_one": "{{count}} giorno",
+    "dayCount_other": "{{count}} giorni"
+  },
 
-    "groups_title": "Course Groups",
-    "group_year": "Year",
-    "groups_all": "All",
-    "group_course": "Course",
-    "bachelor": "Bachelor",
-    "master": "Master",
-    "single_cycle": "Single cycle",
-    "group_type": "Type",
-    "school": "School",
-    "group_platform": "Platform",
+  "groups_title": "Course Groups",
+  "group_year": "Year",
+  "groups_all": "All",
+  "group_course": "Course",
+  "bachelor": "Bachelor",
+  "master": "Master",
+  "single_cycle": "Single cycle",
+  "group_type": "Type",
+  "school": "School",
+  "group_platform": "Platform",
+  "groups_empty": "No groups found",
 
-    "initial_title": "Welcome to PoliFemo",
-    "initial_message": "The app that allows you to have everything from Politecnico di Milano at your fingertips with just a tap",
-    "loading": "Please wait...loading is taking longer than expected"
+  "initial_title": "Welcome to PoliFemo",
+  "initial_message": "The app that allows you to have everything from Politecnico di Milano at your fingertips with just a tap",
+  "loading": "Please wait...loading is taking longer than expected",
+
+  "error": "ERROR",
+  "emptyDefault": "No data available",
+  "emptyList": ",\nPoliFemo is sad"
 }

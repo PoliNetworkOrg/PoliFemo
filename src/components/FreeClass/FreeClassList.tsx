@@ -12,6 +12,7 @@ import { getStartEndDate } from "utils/rooms"
 import { Icon } from "components/Icon"
 import { AdaptiveShadowView } from "components/BoxShadow"
 import { useTranslation } from "react-i18next"
+import { EmptyListMessage } from "components/EmptyListMessage"
 
 const { width } = Dimensions.get("window")
 
@@ -64,6 +65,9 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
       }}
       data={props.data}
       keyExtractor={(_, index) => index.toString()}
+      ListEmptyComponent={
+        <EmptyListMessage message={t("classChoiceEmptyList")} />
+      }
       renderItem={({ item }) => {
         const { endDate } = getStartEndDate(props.date, item.occupancies)
 
