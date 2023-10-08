@@ -1,8 +1,16 @@
-import { FC, useEffect } from "react"
-import { Pressable, View, Animated } from "react-native"
+import { FC, useCallback, useEffect } from "react"
+import { Pressable, View } from "react-native"
 
 import { BodyText } from "components/Text"
 import { usePalette } from "utils/colors"
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated"
 import deleteIcon from "assets/menu/delete.svg"
 import { Icon } from "components/Icon"
 import { useTranslation } from "react-i18next"
@@ -41,53 +49,40 @@ export const MenuButton: FC<{
   const { palette, isDark } = usePalette()
   const color = isDark && inMenu ? palette.lighter : palette.primary
 
-  const animatedValue = new Animated.Value(0)
+  const animatedValue = useSharedValue(0)
 
   const { t } = useTranslation("home") //i18m hook
 
   //function to call to perform the shake of the button
-  const handleAnimation = () => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(animatedValue, {
-          toValue: 1.0,
-          duration: 100 + (Math.random() * 40 - 20),
-          useNativeDriver: true,
-        }),
-        Animated.timing(animatedValue, {
-          toValue: -1.0,
-          duration: 100 + (Math.random() * 40 - 20),
-          useNativeDriver: true,
-        }),
-      ])
-    ).start()
-  }
+  const handleAnimation = useCallback(() => {
+    animatedValue.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: 100 + (Math.random() * 40 - 20) }),
+        withTiming(-1, { duration: 100 + (Math.random() * 40 - 20) })
+      ),
+      -1
+    )
+  }, [animatedValue])
 
   useEffect(() => {
     if (isDeleting) handleAnimation()
     else {
-      Animated.timing(animatedValue, {
-        toValue: 0,
-        duration: 100,
-        useNativeDriver: true,
-      }).start()
+      animatedValue.value = withTiming(0, { duration: 100 })
     }
   }, [isDeleting, animatedValue])
 
+  const animStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        rotate:
+          interpolate(animatedValue.value, [-1, 1], [-0.025, 0.025]) + "rad",
+      },
+    ],
+  }))
+
   return (
     <View>
-      <Animated.View
-        style={{
-          transform: [
-            {
-              rotate: animatedValue.interpolate({
-                inputRange: [-1, 1],
-                outputRange: ["-0.025rad", "0.025rad"],
-              }),
-            },
-          ],
-        }}
-      >
+      <Animated.View style={animStyle}>
         <Pressable onPress={onPress} onLongPress={onLongPress}>
           <View
             style={{
