@@ -1,0 +1,10 @@
+{
+  "gradingBook_title": "Grading Book",
+  "gradingBook_obtained_cfu": "CFU Obtained",
+  "gradingBook_frequented_cfu": "CFU Frequented",
+  "gradingBook_average": "Average",
+  "gradingBook_degree_grade": "Degree Grade",
+  "gradingBook_career": "Career",
+  "gradingBook_exams": "Exams",
+  "gradingBook_error_message": "We were unable to access your grading book.\nPlease try again later."
+}
