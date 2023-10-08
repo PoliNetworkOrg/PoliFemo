@@ -29,7 +29,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     const { status } = await Location.requestForegroundPermissionsAsync()
     setLocationStatus(status)
 
-    if (status !== "granted") setCurrentLocation(undefined)
+    if (status !== PermissionStatus.GRANTED) setCurrentLocation(undefined)
     else {
       const lastPosition = await Location.getLastKnownPositionAsync()
       if (lastPosition) {
@@ -62,7 +62,7 @@ export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
     if (Platform.OS === "ios") {
       // idk but hasServicesEnabledAsync does not work on IOS
       const { status } = await Location.requestForegroundPermissionsAsync()
-      if (status !== "granted") {
+      if (status !== PermissionStatus.GRANTED) {
         setLocationStatus(PermissionStatus.UNDETERMINED)
         setCurrentLocation(undefined)
       } else {
