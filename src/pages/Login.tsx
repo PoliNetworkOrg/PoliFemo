@@ -6,7 +6,7 @@ import WebView from "react-native-webview"
 import { usePalette } from "utils/colors"
 import { api } from "api"
 import { HttpClient } from "api/HttpClient"
-import { PolimiToken, PoliNetworkToken } from "contexts/login"
+import { PolimiToken, PoliNetworkToken } from "api/schemas"
 import { NavBar } from "components/NavBar"
 
 // TODO: HANDLE ERRORS, this will break as soon as something goes wrong

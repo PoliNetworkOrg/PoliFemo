@@ -1,7 +1,7 @@
 import { BodyText } from "components/Text"
 import { FC, useEffect } from "react"
 import { Pressable, StyleSheet } from "react-native"
-import { Event } from "api/collections/event"
+import { Event } from "api/schemas"
 import { usePalette } from "utils/colors"
 import {
   ATTACHED_LECTURES_MARGIN,
@@ -20,7 +20,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated"
-import { useCurrentLanguage } from "utils/articles"
+import { useCurrentLanguage } from "utils/language"
 
 export interface LectureCardProps {
   lecture: Event

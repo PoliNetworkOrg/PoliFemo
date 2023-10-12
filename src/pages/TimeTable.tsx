@@ -10,7 +10,7 @@ import { Pressable, View } from "react-native"
 import { TimeLine } from "components/TimeTable/TimeLine"
 import { WeekLine } from "components/TimeTable/WeekLine"
 import { ScrollView } from "react-native-gesture-handler"
-import { Event } from "api/collections/event"
+import { Event } from "api/schemas"
 import { BodyText } from "components/Text"
 import { getUsableScreenHeight } from "utils/layout"
 import BottomSheet from "@gorhom/bottom-sheet"
@@ -44,7 +44,7 @@ import { PageWrap } from "components/PageLayout"
 import { capitalize } from "utils/functions"
 import { ToggleSwitch } from "components/ToggleSwitch"
 import { useTranslation } from "react-i18next"
-import { useCurrentLanguage } from "utils/articles"
+import { useCurrentLanguage } from "utils/language"
 
 // distance of the bottom sheet from the top of the screen, when opened or closed
 const distanceFromTop = {

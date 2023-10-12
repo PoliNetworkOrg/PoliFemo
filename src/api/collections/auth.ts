@@ -1,7 +1,7 @@
 import { mapAxiosRequest } from "api/mapAxiosRequest"
 import { ApiCollection } from "api/useApiCall"
 import { HttpClient, RequestOptions } from "../HttpClient"
-import { polimiTokenSchema } from "api/schemas/auth"
+import { polimiTokenSchema } from "api/schemas"
 
 const client = HttpClient.getInstance()
 

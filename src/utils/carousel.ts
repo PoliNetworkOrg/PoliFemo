@@ -1,5 +1,5 @@
 import { i18n } from "../locales/i18n"
-import { Event } from "api/collections/event"
+import { Event } from "api/schemas"
 import { EventType } from "./events"
 
 export interface CarouselItem {
@@ -73,7 +73,7 @@ export const extractNextEvents = (events: Event[]) => {
  * @param typeId of the event
  * @returns true/false
  */
-export function checkEventType(typeId: number) {
+export function checkEventType(typeId: EventType) {
   return (
     typeId === EventType.LECTURES ||
     typeId === EventType.EXAMS ||

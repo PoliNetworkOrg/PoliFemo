@@ -50,36 +50,36 @@ export function getRadiiFromStyle(styleProp: StyleProp<ViewStyle>) {
   const style = StyleSheet.flatten(styleProp)
   const radii: [number, number, number, number] = [0, 0, 0, 0]
 
-  if (style.borderRadius) {
+  if (typeof style.borderRadius === "number") {
     radii[0] = style.borderRadius
     radii[1] = style.borderRadius
     radii[2] = style.borderRadius
     radii[3] = style.borderRadius
   }
 
-  if (style.borderTopStartRadius) {
+  if (typeof style.borderTopStartRadius === "number") {
     radii[0] = style.borderTopStartRadius
   }
-  if (style.borderTopEndRadius) {
+  if (typeof style.borderTopEndRadius === "number") {
     radii[1] = style.borderTopEndRadius
   }
-  if (style.borderBottomEndRadius) {
+  if (typeof style.borderBottomEndRadius === "number") {
     radii[2] = style.borderBottomEndRadius
   }
-  if (style.borderBottomStartRadius) {
+  if (typeof style.borderBottomStartRadius === "number") {
     radii[3] = style.borderBottomStartRadius
   }
 
-  if (style.borderTopLeftRadius) {
+  if (typeof style.borderTopLeftRadius === "number") {
     radii[0] = style.borderTopLeftRadius
   }
-  if (style.borderTopRightRadius) {
+  if (typeof style.borderTopRightRadius === "number") {
     radii[1] = style.borderTopRightRadius
   }
-  if (style.borderBottomRightRadius) {
+  if (typeof style.borderBottomRightRadius === "number") {
     radii[2] = style.borderBottomRightRadius
   }
-  if (style.borderBottomLeftRadius) {
+  if (typeof style.borderBottomLeftRadius === "number") {
     radii[3] = style.borderBottomLeftRadius
   }
   return radii

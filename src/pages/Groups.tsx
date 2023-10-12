@@ -3,7 +3,7 @@ import { MainStackScreen } from "navigation/NavigationTypes"
 import { Linking, View } from "react-native"
 import { FiltersList } from "components/Groups/FiltersList"
 import { api } from "api"
-import { Group } from "api/collections/groups"
+import { Group } from "api/schemas"
 import {
   applyFilters,
   choosePlatformIcon,

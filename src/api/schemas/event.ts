@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { z } from "zod"
 import { translatedStringSchema } from "./generals"
+import { EventType } from "utils/events"
 
 const eventTypeSchema = z.object({
-  typeId: z.number(),
+  typeId: z.nativeEnum(EventType),
   type_dn: translatedStringSchema,
 })
 

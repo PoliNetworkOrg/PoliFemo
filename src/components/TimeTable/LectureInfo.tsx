@@ -2,7 +2,7 @@ import { BottomSheetScrollView } from "@gorhom/bottom-sheet"
 import { BodyText, Title } from "components/Text"
 import { FC, useContext, useMemo, useState } from "react"
 import { StyleSheet, View } from "react-native"
-import { Event } from "api/collections/event"
+import { Event } from "api/schemas"
 import { usePalette } from "utils/colors"
 import {
   TimetableDeducer,
@@ -15,7 +15,7 @@ import { api } from "api"
 import { LoginContext } from "contexts/login"
 import { capitalize } from "utils/functions"
 import { RemoteLinkButton } from "./RemoteLinkButton"
-import { useCurrentLanguage } from "utils/articles"
+import { useCurrentLanguage } from "utils/language"
 import { useTranslation } from "react-i18next"
 
 interface LectureInfoProps {

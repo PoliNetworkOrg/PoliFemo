@@ -6,6 +6,7 @@ export const tagSchema = z.object({
   image: z.string(),
   blurhash: z.string(),
 })
+export type Tag = z.infer<typeof tagSchema>
 
 export const tagsSchema = z.object({
   tags: z.array(tagSchema),
@@ -13,9 +14,9 @@ export const tagsSchema = z.object({
 export type Tags = z.infer<typeof tagsSchema>
 
 const articleAuthorSchema = z.object({
-  name: z.string().nullable(),
-  link: z.string().nullable(),
-  image: z.string().nullable(),
+  name: z.string().optional(),
+  link: z.string().optional(),
+  image: z.string().optional(),
 })
 
 const articlesParamsSchema = z.object({
@@ -28,27 +29,27 @@ const articlesParamsSchema = z.object({
 export const articleSchema = z.object({
   id: z.number(),
   tag_id: z.string(),
-  latitude: z.number().nullable(),
-  longitude: z.number().nullable(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
   publish_time: z.string(),
-  target_time: z.string().nullable(),
-  hidden_until: z.string().nullable(),
+  target_time: z.string().optional(),
+  hidden_until: z.string().optional(),
   content: z.object({
     it: articlesParamsSchema,
     en: articlesParamsSchema,
   }),
-  image: z.string().nullable(),
-  blurhash: z.string().nullable(),
-  author: articleAuthorSchema.nullable(),
+  image: z.string().optional(),
+  blurhash: z.string().optional(),
+  author: articleAuthorSchema.optional(),
 })
 export type Article = z.infer<typeof articleSchema>
 
 export const articlesSchema = z.object({
   articles: z.array(articleSchema),
-  start: z.string().nullable(),
-  end: z.string().nullable(),
-  tag: z.string().nullable(),
-  author_id: z.number().nullable(),
-  title: z.string().nullable(),
+  start: z.string().optional(),
+  end: z.string().optional(),
+  tag: z.string().optional(),
+  author_id: z.number().optional(),
+  title: z.string().optional(),
 })
 export type Articles = z.infer<typeof articlesSchema>

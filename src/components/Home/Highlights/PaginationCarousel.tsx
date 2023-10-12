@@ -1,7 +1,9 @@
 import { FC } from "react"
 import Animated, {
   Extrapolate,
-  interpolateColors,
+  SharedValue,
+  interpolate,
+  interpolateColor,
 } from "react-native-reanimated"
 import { View, Dimensions } from "react-native"
 import { CarouselItem } from "utils/carousel"
@@ -14,7 +16,7 @@ const { width } = Dimensions.get("window")
  */
 export const PaginationCarousel: FC<{
   dataToShow: CarouselItem[]
-  scrollX: Animated.Value<number>
+  scrollX: SharedValue<number>
   currentIndex: number
 }> = ({ dataToShow, scrollX, currentIndex }) => {
   const { palette } = usePalette()
@@ -43,11 +45,12 @@ export const PaginationCarousel: FC<{
             palette.lighter,
           ]
 
-          const dotScale = scrollX.interpolate({
+          const dotScale = interpolate(
+            scrollX.value,
             inputRange,
-            outputRange: scaleOutputRange,
-            extrapolate: Extrapolate.CLAMP,
-          })
+            scaleOutputRange,
+            Extrapolate.CLAMP
+          )
 
           return (
             <View
@@ -62,14 +65,15 @@ export const PaginationCarousel: FC<{
                   borderRadius: 7,
                   backgroundColor:
                     index === currentIndex
-                      ? (interpolateColors(scrollX, {
-                          inputRange: [
+                      ? interpolateColor(
+                          scrollX.value,
+                          [
                             (index - 0.5) * width,
                             index * width,
                             (index + 0.5) * width,
                           ],
-                          outputColorRange: colorOutputRange,
-                        }) as never)
+                          colorOutputRange
+                        )
                       : colorOutputRange[0],
                   transform: [
                     {

@@ -20,7 +20,7 @@ export const TrayButton: FC<{
       onPress={props.onClick}
       style={[
         {
-          marginRight: 17,
+          marginRight: 24,
           marginLeft: 0,
         },
         props.style,
@@ -31,7 +31,7 @@ export const TrayButton: FC<{
         <View
           style={{
             position: "absolute",
-            right: -4,
+            right: -8,
             top: -10,
             width: 16,
             height: 16,
@@ -41,7 +41,14 @@ export const TrayButton: FC<{
             alignItems: "center",
           }}
         >
-          <Text style={{ fontSize: 9, color: palette.variant1 }}>
+          <Text
+            style={{
+              textAlign: "center",
+              verticalAlign: "middle",
+              fontSize: 9,
+              color: palette.variant1,
+            }}
+          >
             {badgeCount}
           </Text>
         </View>
