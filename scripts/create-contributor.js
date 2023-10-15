@@ -1,3 +1,6 @@
+// this script can be used to add a contributor that doesn't have a github profile (otherwise we can use the all-contributors CLI
+// ex. yarn add-contributor --name "ciao" --contributions "code,design"
+
 const fs = require("fs")
 const yargs = require("yargs")
 
