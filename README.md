@@ -1,7 +1,7 @@
 # PoliFemo
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-17-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-16-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ### Setup dell'ambiente
@@ -113,7 +113,6 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/frabazz"><img src="https://avatars.githubusercontent.com/u/35663791?v=4?s=100" width="100px;" alt="Francesco Bazzano"/><br /><sub><b>Francesco Bazzano</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=frabazz" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Bull0"><img src="https://avatars.githubusercontent.com/u/27016169?v=4?s=100" width="100px;" alt="Federico Bulloni"/><br /><sub><b>Federico Bulloni</b></sub></a><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=Bull0" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><img src="https://www.gravatar.com/avatar?s=100" width="100px;" alt="MATTEO"/><br /><sub><b>MATTEO</b></sub><br /><a href="https://github.com/PoliNetwork APS/PoliFemo/commits?author=" title="Code">💻</a> <a href="#design" title="Design">🎨</a></td>
     </tr>
   </tbody>
 </table>
