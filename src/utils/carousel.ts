@@ -73,7 +73,7 @@ export const extractNextEvents = (events: Event[]) => {
  * @param typeId of the event
  * @returns true/false
  */
-export function checkEventType(typeId: number) {
+export function checkEventType(typeId: EventType) {
   return (
     typeId === EventType.LECTURES ||
     typeId === EventType.EXAMS ||

@@ -57,7 +57,7 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
   }
 
   useEffect(() => {
-    fetchArticles(false).finally(() => {
+    void fetchArticles(false).finally(() => {
       // Increase the offset so that at the following fetch you get the next articles
       offset.current += 1
       setIsFetching(false)
@@ -92,7 +92,7 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
         onFetch: () => {
           if (!refresh && !isFetching) {
             setIsFetching(true)
-            fetchArticles(true).finally(() => {
+            void fetchArticles(true).finally(() => {
               offset.current += 1
               setIsFetching(false)
             })
@@ -105,7 +105,7 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
           if (!refresh && !isFetching) {
             setRefresh(true)
             offset.current = 0
-            fetchArticles(false).finally(() => {
+            void fetchArticles(false).finally(() => {
               offset.current += 1
               setRefresh(false)
             })
