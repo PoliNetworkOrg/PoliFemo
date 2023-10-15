@@ -3,6 +3,7 @@
 
 const fs = require("fs")
 const yargs = require("yargs")
+const { exec } = require("child_process")
 
 // Parse command line arguments using yargs
 const argv = yargs
@@ -54,8 +55,16 @@ jsonData["contributors"].push(newContributor)
 
 // Write the updated data back to the file
 try {
+  //JSON file updated
   fs.writeFileSync(jsonFileName, JSON.stringify(jsonData, null, 2))
-  console.log("Contributor added successfully.")
+  // Now, run the 'yarn' command to update README
+  exec("yarn all-contributors generate", error => {
+    if (error) {
+      console.error(`Error running 'yarn': ${error}`)
+      process.exit(1)
+    }
+    console.log("Contributor added successfully.")
+  })
 } catch (err) {
   console.error("Error writing JSON file:", err)
   process.exit(1)
