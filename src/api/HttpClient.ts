@@ -6,7 +6,7 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios"
-import { PolimiToken, PoliNetworkToken, Tokens } from "./schemas"
+import { PolimiToken, PoliNetworkToken, Tokens, tokensSchema } from "./schemas"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { wait } from "utils/functions"
 import { Alert } from "react-native"
@@ -432,8 +432,7 @@ export class HttpClient extends EventEmitter {
   async loadTokens() {
     const tokens = await AsyncStorage.getItem("api:tokens")
     if (tokens) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const parsedTokens: Tokens = JSON.parse(tokens)
+      const parsedTokens: Tokens = tokensSchema.parse(JSON.parse(tokens))
       console.log("Loaded tokens from local storage")
       this.polimiToken = parsedTokens.polimiToken
       this.poliNetworkToken = parsedTokens.poliNetworkToken
