@@ -136,10 +136,16 @@ export declare interface CalendarSingletonWrapper {
   on(event: "markedDatesSet", listener: () => void): this
 
   on(event: "calendarEventsChanged", listener: () => void): this
+
+  on(event: "datesOnlyPeriodsSet", listener: () => void): this
 }
 
 export class CalendarSingletonWrapper extends EventEmitter {
   private _datesOnlyPeriods: MarkedDates = {}
+
+  public get datesOnlyPeriods(): MarkedDates {
+    return this._datesOnlyPeriods
+  }
 
   private _datesMarkedAndPeriods: MarkedDates = {}
 
@@ -497,6 +503,8 @@ export class CalendarSingletonWrapper extends EventEmitter {
           ...this._datesMarkedAndPeriods,
           ...periodTmp,
         }
+
+        this.emit("datesOnlyPeriodsSet")
       })
     })
     this._applyMarkers()

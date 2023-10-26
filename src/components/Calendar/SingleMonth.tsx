@@ -84,6 +84,7 @@ export const SingleMonth: FC<SingleMonthProps> = props => {
         initialDate={new Date(props.year, props.month, 1)
           .toISOString()
           .slice(0, 10)}
+        disableMonthChange={true}
         customHeaderTitle={undefined}
         hideExtraDays={true}
         renderHeader={() => null}
