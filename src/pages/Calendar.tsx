@@ -173,17 +173,42 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
             [1, 2],
             [3, 4],
           ].map(monthOffsets => {
+            const todayYear = today.getFullYear()
+            const todayMonth = today.getMonth()
+
             const monthOffset1 = monthOffsets[0]
 
             const monthOffset2 = monthOffsets[1]
 
-            const nMonthsAgoOrFutureDate1 = new Date(
-              today.getTime() + monthOffset1 * 30 * 24 * 60 * 60 * 1000
-            )
+            let newYear1
+            let newMonth1 = todayMonth + monthOffset1
 
-            const nMonthsAgoOrFutureDate2 = new Date(
-              today.getTime() + monthOffset2 * 30 * 24 * 60 * 60 * 1000
-            )
+            if (newMonth1 === -1) {
+              newMonth1 = 11
+              newYear1 = todayYear - 1
+            } else if (newMonth1 === 12) {
+              newMonth1 = 0
+              newYear1 = todayYear + 1
+            } else {
+              newYear1 = todayYear
+            }
+
+            const nMonthsAgoOrFutureDate1 = new Date(newYear1, newMonth1, 1)
+
+            let newYear2
+            let newMonth2 = todayMonth + monthOffset2
+
+            if (newMonth2 === -1) {
+              newMonth2 = 11
+              newYear2 = todayYear - 1
+            } else if (newMonth2 === 12) {
+              newMonth2 = 0
+              newYear2 = todayYear + 1
+            } else {
+              newYear2 = todayYear
+            }
+
+            const nMonthsAgoOrFutureDate2 = new Date(newYear2, newMonth2, 1)
 
             return (
               <View
@@ -366,7 +391,9 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           <View style={{ flexDirection: "row" }}>
             <Pressable
               onPress={() => {
-                if (bottomSheetStatus === CalendarBottomSheetStatus.PERIODS) {
+                if (
+                  bottomSheetStatus !== CalendarBottomSheetStatus.MONTHLY_EVENTS
+                ) {
                   setBottomSheetStatus(CalendarBottomSheetStatus.MONTHLY_EVENTS)
                 } else {
                   setBottomSheetStatus(CalendarBottomSheetStatus.PERIODS)
@@ -375,7 +402,15 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
             >
               <Icon source={userIcon} style={{ marginRight: 8 }} />
             </Pressable>
-            <Icon source={capeIcon} />
+            <Pressable
+              onPress={() => {
+                if (bottomSheetStatus !== CalendarBottomSheetStatus.PERIODS) {
+                  setBottomSheetStatus(CalendarBottomSheetStatus.PERIODS)
+                }
+              }}
+            >
+              <Icon source={capeIcon} />
+            </Pressable>
           </View>
         </View>
         {bottomSheetStatus != CalendarBottomSheetStatus.ALL_MONTHS && (
