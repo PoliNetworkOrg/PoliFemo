@@ -10,6 +10,7 @@ import { usePalette } from "utils/colors"
 import { Icon } from "components/Icon"
 import { Divider } from "components/Divider"
 import deleteSvg from "assets/modal/delete.svg"
+import { useTranslation } from "react-i18next"
 
 interface CalendarMonthlyEventsProps {
   events: CalendarEvent[]
@@ -24,6 +25,8 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
   const { events, month, year, lan } = props
 
   const { homeBackground, dotColor, isLight } = usePalette()
+
+  const { t } = useTranslation("calendar")
 
   return (
     <ScrollView
@@ -63,8 +66,8 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
           ]}
         >
           {events.length > 0
-            ? events.length + " eventi in programma"
-            : "Nessun evento in programma"}
+            ? events.length + t("scheduledEvents")
+            : t("noScheduledEvents")}
         </Text>
       </View>
       {events.map(event => {
@@ -115,7 +118,7 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
                     ]}
                     numberOfLines={1}
                   >
-                    {event.title}
+                    {lan === "it" ? event.title : event.titleEn ?? event.title}
                   </Text>
                   {(event.isPolimiEvent == undefined ||
                     event.isPolimiEvent == false) && (
@@ -148,7 +151,7 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
                   ]}
                   numberOfLines={1}
                 >
-                  {event.notes ?? "aggiungi una nota"}
+                  {event.notes ?? t("addNotes")}
                 </Text>
               </View>
             </View>

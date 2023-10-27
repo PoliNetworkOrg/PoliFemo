@@ -1,4 +1,17 @@
 {
   "reminder": "Reminder",
-  "notes": "Notes"
+  "notes": "Notes",
+  "addNotes": "Add Notes",
+  "addTitle": "Add Title",
+  "add": "Add",
+  "from": "From",
+  "to": "To",
+  "setReminder": "Set Reminder",
+  "repeat": "Repeat",
+  "dontRepeat": "Don't Repeat",
+  "cancel": "Cancel",
+  "scheduledEvents": " scheduled events",
+  "noScheduledEvents": " No scheduled events",
+  "mood": "Choose emoji",
+  "newEvent": "New Event"
 }

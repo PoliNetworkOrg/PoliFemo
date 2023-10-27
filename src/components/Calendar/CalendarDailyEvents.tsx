@@ -18,6 +18,7 @@ import { Icon } from "components/Icon"
 import tickSvg from "assets/freeClassrooms/tick.svg"
 import { DottedLine } from "./DottedLine"
 import { CalendarButton } from "./Button"
+import { useTranslation } from "react-i18next"
 
 interface CalendarDailyEventsProps {
   events: CalendarEvent[]
@@ -42,6 +43,8 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
   const year = date.getFullYear()
 
   const { isLight, homeBackground, palette } = usePalette()
+
+  const { t } = useTranslation("calendar")
 
   return (
     <ScrollView
@@ -74,7 +77,7 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
           onPress={() => props?.goToAddEvent()}
           style={{ width: 100, height: 32 }}
         >
-          <Text>Aggiungi</Text>
+          <Text>{t("add")}</Text>
         </CalendarButton>
       </View>
 
@@ -129,7 +132,9 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
                         { color: isLight ? homeBackground : "#fff" },
                       ]}
                     >
-                      {event.title}
+                      {lan === "it"
+                        ? event.title
+                        : event.titleEn ?? event.title}
                     </Text>
                     <Text
                       style={[

@@ -49,6 +49,7 @@ export interface Period {
 export interface CalendarPeriod {
   dates: Period[]
   title: string
+  titleEn?: string
   subtitle?: string
   color: string
   shown: boolean
@@ -98,6 +99,7 @@ const calendarPeriods: CalendarPeriod[] = [
   {
     dates: [{ start: "2023-08-01", end: "2023-08-24" }],
     title: "Vacanze",
+    titleEn: "Holidays",
     subtitle: "1/08 - 24/08",
     color: palette.goldish,
     shown: true,
@@ -105,6 +107,7 @@ const calendarPeriods: CalendarPeriod[] = [
   {
     dates: [{ start: "2023-08-25", end: "2023-09-09" }],
     title: "Esami di profitto",
+    titleEn: "Profit exams",
     subtitle: "23/08 - 31/08",
     color: purpleBerry,
     shown: true,
@@ -115,6 +118,7 @@ const calendarPeriods: CalendarPeriod[] = [
       { start: "2023-04-19", end: "2023-04-22" },
     ],
     title: "Prove in Itinere",
+    titleEn: "Midterm exams",
     color: "#F29999",
     shown: true,
   },
@@ -125,6 +129,7 @@ const calendarPeriods: CalendarPeriod[] = [
       { start: "2023-09-19", end: "2023-09-21" },
     ],
     title: "Lauree 1° Livello",
+    titleEn: "Bachelor's degree",
     color: "#F28C52",
     shown: true,
   },

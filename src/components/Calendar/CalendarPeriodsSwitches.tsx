@@ -4,6 +4,7 @@ import { CalendarPeriod } from "utils/calendar"
 import { ToggleSwitch } from "components/ToggleSwitch"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
+import { useCurrentLanguage } from "utils/articles"
 
 interface CalendarPeriodsSwitchesProps {
   calendarPeriods?: CalendarPeriod[]
@@ -18,6 +19,8 @@ export const CalendarPeriodsSwitches: FC<
   const { calendarPeriods, month, year } = props
 
   const { homeBackground, isLight } = usePalette()
+
+  const lan = useCurrentLanguage()
 
   if (!calendarPeriods) return null
 
@@ -54,7 +57,7 @@ export const CalendarPeriodsSwitches: FC<
                   { color: isLight ? homeBackground : "#fff" },
                 ]}
               >
-                {period.title}
+                {lan === "it" ? period.title : period.titleEn ?? period.title}
               </Text>
               <Text
                 style={[

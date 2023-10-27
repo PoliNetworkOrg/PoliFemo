@@ -10,6 +10,7 @@ import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import { Icon } from "components/Icon"
 import { useTranslation } from "react-i18next"
+import { useCurrentLanguage } from "utils/articles"
 
 interface CalendarEventDetailsProps {
   event?: CalendarEvent
@@ -21,8 +22,9 @@ export const CalendarEventDetails: FC<CalendarEventDetailsProps> = props => {
 
   const { homeBackground, isLight } = usePalette()
 
-  //i18n
   const { t } = useTranslation("calendar")
+
+  const lan = useCurrentLanguage()
 
   const inputText = useRef<TextInput>(null)
 
@@ -65,7 +67,7 @@ export const CalendarEventDetails: FC<CalendarEventDetailsProps> = props => {
             },
           ]}
         >
-          {event?.title}
+          {lan === "it" ? event?.title : event?.titleEn ?? event?.title}
         </Text>
       </View>
       <View
@@ -189,9 +191,8 @@ export const CalendarEventDetails: FC<CalendarEventDetailsProps> = props => {
         maxLength={200}
         numberOfLines={4}
         placeholderTextColor={homeBackground}
-        placeholder="aggiungi delle note"
+        placeholder={t("addNotes") || "aggiungi delle note"}
       />
-      {/* <View style={{ height: 110 }} /> */}
     </ScrollView>
   )
 }

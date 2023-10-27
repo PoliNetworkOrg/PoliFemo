@@ -1,4 +1,17 @@
 {
   "reminder": "Promemoria",
-  "notes": "Note"
+  "notes": "Note",
+  "addNotes": "Aggiungi una nota",
+  "addTitle": "Aggiungi Titolo",
+  "add": "Aggiungi",
+  "from": "Da",
+  "to": "A",
+  "setReminder": "Imposta Promemoria",
+  "repeat": "Si ripete",
+  "dontRepeat": "Non si ripete",
+  "cancel": "Annulla",
+  "scheduledEvents": " eventi in programma",
+  "noScheduledEvents": "Nessun evento in programma",
+  "mood": "Scegli emoji",
+  "newEvent": "Nuovo evento"
 }

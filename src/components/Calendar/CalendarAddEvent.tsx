@@ -25,6 +25,7 @@ import { DateTimeBox } from "components/FreeClass/DateTimePicker/DateTimeBox"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import { Icon } from "components/Icon"
 import { Modal } from "components/Modal"
+import { useTranslation } from "react-i18next"
 
 interface CalendarAddEventProps {
   addEvent: (event: CalendarEvent) => void
@@ -64,6 +65,8 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
   const [reminderDate, setReminderDate] = useState<Date | undefined>(undefined)
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
+
+  const { t } = useTranslation("calendar")
 
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener(
@@ -108,6 +111,7 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
 
   const resetNewEvent = () => {
     setTitle("")
+    inputText.current?.clear()
     setMood(undefined)
     setIsRepeating(false)
     const now = new Date()
@@ -144,7 +148,7 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
             { color: isLight ? homeBackground : "#fff", paddingBottom: 0 },
           ]}
         >
-          Nuovo Evento
+          {t("newEvent")}
         </Text>
         <View style={{ flexDirection: "row" }}>
           <CalendarButton
@@ -177,7 +181,9 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
               resetNewEvent()
             }}
           >
-            <Text style={{ fontSize: 14, fontWeight: "700" }}>Annulla</Text>
+            <Text style={{ fontSize: 14, fontWeight: "700" }}>
+              {t("cancel")}
+            </Text>
           </CalendarButton>
         </View>
       </View>
@@ -205,7 +211,7 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
         }}
         ref={inputText}
         placeholderTextColor={isLight ? homeBackground : "#fff"}
-        placeholder="Aggiungi Titolo"
+        placeholder={t("addTitle") || "Aggiungi Titolo"}
       />
       <View
         style={{
@@ -223,7 +229,7 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
               marginRight: 12,
             }}
           >
-            Da
+            {t("from")}
           </BodyText>
           <Pressable
             onPress={_ => {
@@ -256,7 +262,7 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
               marginRight: 12,
             }}
           >
-            A
+            {t("to")}
           </BodyText>
           <Pressable
             onPress={_ => {
@@ -290,7 +296,7 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
               { color: isLight ? homeBackground : "#fff" },
             ]}
           >
-            Imposta Promemoria
+            {t("setReminder")}
           </Text>
           <View
             style={{
@@ -357,7 +363,7 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
             }}
           >
             <Text style={{ fontSize: 14, fontWeight: "700" }}>
-              {isRepeating ? "Si ripete" : "Non si ripete"}
+              {isRepeating ? t("repeat") : t("dontRepeat")}
             </Text>
           </CalendarButton>
         </View>
@@ -372,7 +378,7 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
         date={dateModeCalendar === "start" ? startDate : endDate}
       />
       <Modal
-        title="Scegli il mood"
+        title={t("mood")}
         isShowing={isMoodModalShowing}
         centerText={true}
         onClose={() => setIsMoodModalShowing(false)}
