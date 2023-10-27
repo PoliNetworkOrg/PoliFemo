@@ -38,13 +38,6 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
   const { homeBackground, background, dotColor, isLight, palette } =
     usePalette()
 
-  const [counter, setCounter] = useState(0)
-
-  useEffect(() => {
-    console.log(counter)
-    setCounter(counter + 1)
-  }, [isLight])
-
   // todo : implement translation :(
   /* const { t } = useTranslation() */
 
@@ -150,18 +143,14 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
         hideDayNames={true}
         markingType="period"
         current={visibleDay}
-        onMonthChange={month => {
-          console.log("month changed")
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          setMonth(month.month - 1)
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-          setYear(month.year)
+        onMonthChange={date => {
+          setMonth(date.month - 1)
+          setYear(date.year)
         }}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         dayComponent={dayComponentCustom}
       />
     )
-  }, [markedDates, visibleDay])
+  }, [markedDates, visibleDay, isLight])
 
   // I thought memoizing would improve performance, but it appears to be still very slow!!
   const scrollMonths = useMemo<JSX.Element>(() => {

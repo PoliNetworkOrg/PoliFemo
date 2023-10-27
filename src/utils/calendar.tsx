@@ -539,6 +539,8 @@ export class CalendarSingletonWrapper extends EventEmitter {
       }
     }
 
+    this._datesMarkedAndPeriods = { ...this._datesMarkedAndPeriods }
+
     this.emit("markedDatesSet")
   }
 
@@ -552,6 +554,8 @@ export class CalendarSingletonWrapper extends EventEmitter {
       ...this._datesMarkedAndPeriods[dateString],
       marked: false,
     }
+
+    this._datesMarkedAndPeriods = { ...this._datesMarkedAndPeriods }
 
     this.emit("markedDatesSet")
   }
