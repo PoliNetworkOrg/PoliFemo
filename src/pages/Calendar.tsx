@@ -69,8 +69,6 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
 
   const [markedDates, setMarkedDates] = useState<MarkedDates>({})
 
-  const [datesOnlyPeriods, setDatesOnlyPeriods] = useState<MarkedDates>({})
-
   const [calendarPeriods, setCalendarPeriods] = useState<
     CalendarPeriod[] | undefined
   >()
@@ -101,8 +99,8 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
         scrollEnabled={true}
         scrollsToTop={false}
         initialNumToRender={10}
-        pastScrollRange={6}
-        futureScrollRange={6}
+        pastScrollRange={12}
+        futureScrollRange={12}
         horizontal={true}
         theme={{
           calendarBackground: isLight ? palette.primary : palette.darker,
@@ -167,7 +165,6 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
 
   // I thought memoizing would improve performance, but it appears to be still very slow!!
   const scrollMonths = useMemo<JSX.Element>(() => {
-    console.log("rerendering")
     return (
       <View style={{ marginTop: 150, overflow: "hidden" }}>
         <ScrollView contentContainerStyle={{ paddingBottom: 110 }}>
@@ -210,7 +207,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
                   }}
                 >
                   <SingleMonth
-                    markedDates={datesOnlyPeriods}
+                    markedDates={markedDates}
                     month={nMonthsAgoOrFutureDate1.getMonth()}
                     year={nMonthsAgoOrFutureDate1.getFullYear()}
                   />
@@ -229,7 +226,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
                   }}
                 >
                   <SingleMonth
-                    markedDates={datesOnlyPeriods}
+                    markedDates={markedDates}
                     month={nMonthsAgoOrFutureDate2.getMonth()}
                     year={nMonthsAgoOrFutureDate2.getFullYear()}
                   />
@@ -240,7 +237,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
         </ScrollView>
       </View>
     )
-  }, [datesOnlyPeriods])
+  }, [markedDates])
 
   useEffect(() => {
     const initCalendar = () => {
@@ -268,12 +265,6 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           if (calendarObj.current?.calendarEvents) {
             console.log("calendarEventsChanged")
             setCalendarEvents([...(calendarObj.current?.calendarEvents ?? [])])
-          }
-        })
-        calendarObj.current.addListener("datesOnlyPeriodsSet", () => {
-          if (calendarObj.current?.datesOnlyPeriods) {
-            console.log("datesOnlyPeriodsSet")
-            setDatesOnlyPeriods(calendarObj.current?.datesOnlyPeriods)
           }
         })
       } else {
