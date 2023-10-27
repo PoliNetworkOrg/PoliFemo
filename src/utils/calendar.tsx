@@ -97,7 +97,14 @@ export interface CalendarPolimiSyncObj {
 
 const calendarPeriods: CalendarPeriod[] = [
   {
-    dates: [{ start: "2023-08-01", end: "2023-08-24" }],
+    dates: [
+      { start: "2023-08-01", end: "2023-08-24" },
+      { start: "2023-12-23", end: "2023-12-23" },
+      { start: "2023-12-27", end: "2023-12-30" },
+      { start: "2024-01-01", end: "2024-01-05" },
+      { start: "2024-03-29", end: "2024-03-30" },
+      { start: "2024-04-02", end: "2024-04-02" },
+    ],
     title: "Vacanze",
     titleEn: "Holidays",
     subtitle: "1/08 - 24/08",
@@ -105,7 +112,27 @@ const calendarPeriods: CalendarPeriod[] = [
     shown: true,
   },
   {
-    dates: [{ start: "2023-08-25", end: "2023-09-09" }],
+    dates: [
+      { start: "2023-08-28", end: "2023-09-02" },
+      { start: "2023-09-04", end: "2023-09-09" },
+      { start: "2023-09-11", end: "2023-09-12" },
+      { start: "2024-01-08", end: "2024-01-13" },
+      { start: "2024-01-15", end: "2024-01-20" },
+      { start: "2024-01-22", end: "2024-01-27" },
+      { start: "2024-01-29", end: "2024-02-03" },
+      { start: "2024-02-05", end: "2024-02-10" },
+      { start: "2024-02-12", end: "2024-02-17" },
+      { start: "2024-06-06", end: "2024-06-08" },
+      { start: "2024-06-10", end: "2024-06-15" },
+      { start: "2024-06-17", end: "2024-06-22" },
+      { start: "2024-06-24", end: "2024-06-29" },
+      { start: "2024-07-01", end: "2024-07-06" },
+      { start: "2024-07-08", end: "2024-07-13" },
+      { start: "2024-07-15", end: "2024-07-15" },
+      { start: "2024-07-20", end: "2024-07-20" },
+      { start: "2024-07-22", end: "2024-07-27" },
+      { start: "2024-08-26", end: "2024-08-31" },
+    ],
     title: "Esami di profitto",
     titleEn: "Profit exams",
     subtitle: "23/08 - 31/08",
@@ -114,8 +141,10 @@ const calendarPeriods: CalendarPeriod[] = [
   },
   {
     dates: [
-      { start: "2023-11-04", end: "2023-11-08" },
-      { start: "2023-04-19", end: "2023-04-22" },
+      { start: "2023-11-03", end: "2023-11-04" },
+      { start: "2023-11-06", end: "2023-11-07" },
+      { start: "2024-04-11", end: "2024-04-13" },
+      { start: "2024-04-15", end: "2024-04-15" },
     ],
     title: "Prove in Itinere",
     titleEn: "Midterm exams",
@@ -124,13 +153,53 @@ const calendarPeriods: CalendarPeriod[] = [
   },
   {
     dates: [
-      { start: "2023-09-28", end: "2023-09-30" },
-      { start: "2023-03-08", end: "2023-03-09" },
-      { start: "2023-09-19", end: "2023-09-21" },
+      { start: "2023-09-27", end: "2023-09-28" },
+      { start: "2024-03-06", end: "2024-03-07" },
+      { start: "2024-07-18", end: "2024-07-19" },
     ],
     title: "Lauree 1° Livello",
     titleEn: "Bachelor's degree",
     color: "#F28C52",
+    shown: true,
+  },
+  {
+    dates: [
+      {
+        start: "2023-10-04",
+        end: "2023-10-05",
+      },
+      {
+        start: "2023-12-19",
+        end: "2023-12-19",
+      },
+      {
+        start: "2023-12-21",
+        end: "2023-12-21",
+      },
+      {
+        start: "2024-04-09",
+        end: "2024-04-10",
+      },
+      {
+        start: "2024-07-16",
+        end: "2024-07-17",
+      },
+    ],
+    title: "Lauree Magistrali",
+    titleEn: "Master's degree",
+    color: "#96CEAD",
+    shown: true,
+  },
+  {
+    dates: [
+      { start: "2023-12-31", end: "2023-10-09" },
+      { start: "2023-12-24", end: "2023-12-26" },
+      { start: "2024-01-06", end: "2024-01-07" },
+      { start: "2024-03-31", end: "2024-04-01" },
+    ],
+    title: "Festività",
+    titleEn: "Festivities",
+    color: "#F29999",
     shown: true,
   },
 ]
@@ -195,7 +264,7 @@ export class CalendarSingletonWrapper extends EventEmitter {
   private async _initializeCalendar() {
     await this._readEvents()
     await this._readCaledarPolimiSync()
-    await this._readCalendarPeriods()
+    this._calendarPeriods = calendarPeriods
     this._applyPeriods()
     this._checkNeedSyncingPolimiEvents()
   }
@@ -393,42 +462,6 @@ export class CalendarSingletonWrapper extends EventEmitter {
     }
   }
 
-  private _readCalendarPeriods = async () => {
-    try {
-      const calendarPeriodsJSON = await FileSystem.readAsStringAsync(
-        FileSystem.documentDirectory + "calendar_periods.json"
-      )
-      const calendarPeriods = JSON.parse(
-        calendarPeriodsJSON
-      ) as CalendarPeriod[]
-      this._calendarPeriods = calendarPeriods
-    } catch (err) {
-      console.log(err)
-      console.log("Error reading calendarPeriods")
-      this._calendarPeriods = calendarPeriods
-      void this._writeCalendarPeriods(calendarPeriods)
-    }
-  }
-
-  private _writeCalendarPeriods = async (
-    periods: CalendarPeriod[]
-  ): Promise<boolean> => {
-    const calendarPeriodsJSON = JSON.stringify(periods)
-    try {
-      this._calendarPeriods = periods
-      await FileSystem.writeAsStringAsync(
-        FileSystem.documentDirectory + "calendar_periods.json",
-        calendarPeriodsJSON
-      )
-
-      return true
-    } catch (err) {
-      console.log(err)
-      console.log("Error storing periods ")
-      return false
-    }
-  }
-
   private _applyPeriods() {
     this._datesMarkedAndPeriods = {}
 
@@ -504,7 +537,7 @@ export class CalendarSingletonWrapper extends EventEmitter {
     this._calendarPeriods = periods.slice()
 
     this.emit("calendarPeriodsChanged")
-    void this._writeCalendarPeriods(periods)
+
     this._applyPeriods()
   }
 
@@ -624,7 +657,7 @@ export const monthsEn = [
   "May",
   "June",
   "July",
-  "Augost",
+  "August",
   "September",
   "October",
   "November",

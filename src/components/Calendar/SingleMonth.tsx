@@ -74,6 +74,7 @@ export const SingleMonth: FC<SingleMonthProps> = props => {
         />
       </View>
       <Calendar
+        firstDay={1}
         theme={{
           calendarBackground: "transparent",
           selectedDayTextColor: "orange",
@@ -81,7 +82,7 @@ export const SingleMonth: FC<SingleMonthProps> = props => {
           dayTextColor: "#fff",
           weekVerticalMargin: 2,
         }}
-        initialDate={new Date(props.year, props.month, 1)
+        initialDate={new Date(props.year, props.month, 2)
           .toISOString()
           .slice(0, 10)}
         disableMonthChange={true}

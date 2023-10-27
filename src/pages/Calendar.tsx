@@ -87,6 +87,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
   const calendarMemoized = useMemo<JSX.Element>(() => {
     return (
       <CalendarList
+        firstDay={1}
         pagingEnabled={true}
         staticHeader={true}
         scrollEnabled={true}
