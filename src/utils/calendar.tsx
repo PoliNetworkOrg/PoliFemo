@@ -204,7 +204,7 @@ const calendarPeriods: CalendarPeriod[] = [
   },
 ]
 
-export declare interface CalendarSingletonWrapper {
+export declare interface CalendarSingletonWrapperInterface {
   on(event: "calendarPeriodsChanged", listener: () => void): this
 
   on(event: "markedDatesSet", listener: () => void): this
@@ -212,7 +212,10 @@ export declare interface CalendarSingletonWrapper {
   on(event: "calendarEventsChanged", listener: () => void): this
 }
 
-export class CalendarSingletonWrapper extends EventEmitter {
+export class CalendarSingletonWrapper
+  extends EventEmitter
+  implements CalendarSingletonWrapperInterface
+{
   private _datesMarkedAndPeriods: MarkedDates = {}
 
   public get datesMarkedAndPeriods(): MarkedDates | undefined {

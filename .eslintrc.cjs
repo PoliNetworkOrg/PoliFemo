@@ -82,6 +82,10 @@ module.exports = {
         selector: "enumMember",
         format: ["UPPER_CASE"],
       },
+      {
+        selector: "import",
+        format: null,
+      },
     ],
 
     "@typescript-eslint/restrict-plus-operands": "off",
