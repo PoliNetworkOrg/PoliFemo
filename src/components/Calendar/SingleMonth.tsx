@@ -1,7 +1,7 @@
 import { FC } from "react"
 import { View, ViewStyle } from "react-native"
 import { Calendar } from "react-native-calendars"
-import { useCurrentLanguage } from "utils/articles"
+import { useCurrentLanguage } from "utils/language"
 import {
   monthsIt,
   monthsEn,

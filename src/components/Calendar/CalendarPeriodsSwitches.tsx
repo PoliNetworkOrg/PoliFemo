@@ -4,7 +4,7 @@ import { CalendarPeriod } from "utils/calendar"
 import { ToggleSwitch } from "components/ToggleSwitch"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
-import { useCurrentLanguage } from "utils/articles"
+import { useCurrentLanguage } from "utils/language"
 
 interface CalendarPeriodsSwitchesProps {
   calendarPeriods?: CalendarPeriod[]

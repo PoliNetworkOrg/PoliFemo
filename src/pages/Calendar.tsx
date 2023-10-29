@@ -26,20 +26,16 @@ import capeIcon from "assets/calendar/cape_calendar.svg"
 import userIcon from "assets/calendar/user_calendar.svg"
 import { CalendarPeriodsSwitches } from "components/Calendar/CalendarPeriodsSwitches"
 import { CalendarMonthlyEvents } from "components/Calendar/CalendarMonthlyEvents"
-import { useCurrentLanguage } from "utils/articles"
 import { CalendarAddEvent } from "components/Calendar/CalendarAddEvent"
 import { LoginContext } from "contexts/login"
 import { CalendarEventDetails } from "components/Calendar/CalendarEventDetails"
 import { CalendarDailyEvents } from "components/Calendar/CalendarDailyEvents"
 import { SingleMonth } from "components/Calendar/SingleMonth"
 import { ScrollView } from "react-native-gesture-handler"
+import { useCurrentLanguage } from "utils/language"
 
 export const CalendarPage: MainStackScreen<"Calendar"> = () => {
-  const { homeBackground, background, dotColor, isLight, palette } =
-    usePalette()
-
-  // todo : implement translation :(
-  /* const { t } = useTranslation() */
+  const { homeBackground, background, dotColor, isLight } = usePalette()
 
   const { userInfo } = useContext(LoginContext)
 
@@ -97,7 +93,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
         futureScrollRange={12}
         horizontal={true}
         theme={{
-          calendarBackground: isLight ? palette.primary : palette.darker,
+          calendarBackground: "transparent",
           selectedDayTextColor: "orange",
           todayTextColor: "yellow",
           dayTextColor: "#fff",
@@ -124,7 +120,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
         style={{
           marginTop: 176,
           height: 270,
-          backgroundColor: homeBackground,
+          backgroundColor: "transparent",
         }}
         markedDates={{
           ...markedDates,

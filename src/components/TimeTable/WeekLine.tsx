@@ -6,7 +6,7 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated"
-import { useCurrentLanguage } from "utils/articles"
+import { useCurrentLanguage } from "utils/language"
 import { usePalette } from "utils/colors"
 
 interface WeekLineProps {

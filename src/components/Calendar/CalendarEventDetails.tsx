@@ -10,7 +10,7 @@ import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import { Icon } from "components/Icon"
 import { useTranslation } from "react-i18next"
-import { useCurrentLanguage } from "utils/articles"
+import { useCurrentLanguage } from "utils/language"
 
 interface CalendarEventDetailsProps {
   event?: CalendarEvent

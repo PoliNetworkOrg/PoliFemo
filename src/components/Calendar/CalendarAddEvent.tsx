@@ -20,7 +20,7 @@ import {
 import { BodyText, Text } from "components/Text"
 import { palette, usePalette } from "utils/colors"
 import { CalendarButton } from "./Button"
-import { useCurrentLanguage } from "utils/articles"
+import { useCurrentLanguage } from "utils/language"
 import { DateTimeBox } from "components/FreeClass/DateTimePicker/DateTimeBox"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import { Icon } from "components/Icon"
