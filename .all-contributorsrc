@@ -216,6 +216,14 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "",
+      "name": "Luca Cerioli",
+      "avatar_url": "https://www.gravatar.com/avatar",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
