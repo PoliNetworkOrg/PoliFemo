@@ -95,6 +95,7 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
         return true
       }
     )
+
     return () => {
       listener.remove?.()
       backHandler.remove?.()
