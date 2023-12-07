@@ -92,7 +92,7 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
       "hardwareBackPress",
       () => {
         setIsNewsClosed(true)
-        return true
+        return !isNewsClosed
       }
     )
 
@@ -100,7 +100,7 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
       listener.remove?.()
       backHandler.remove?.()
     }
-  }, [])
+  }, [isNewsClosed])
 
   return (
     <BottomSheet
