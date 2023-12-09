@@ -21,8 +21,9 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Fix peer dependencies
-        run: yarn run lint --fix
+      - name: Fix
+        run: |
+          yarn run lint --fix
 
       - name: Git setup
         run: |
