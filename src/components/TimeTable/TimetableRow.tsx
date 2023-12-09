@@ -1,6 +1,6 @@
 import { FC } from "react"
 import { View } from "react-native"
-import { Event } from "api/collections/event"
+import { Event } from "api/schemas"
 import { ValidTableRow } from "utils/timetable"
 import { LectureCard } from "./LectureCard"
 import Animated, {

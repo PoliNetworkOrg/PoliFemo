@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useContext } from "react"
 import { View } from "react-native"
 
 import { api, RetryType } from "api"
-import { Article } from "api/collections/articles"
+import { Article } from "api/schemas"
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { CardWithGradient } from "components/CardWithGradient"
 import { capitalize } from "utils/functions"

@@ -1,4 +1,4 @@
-import { RemoteLink } from "api/collections/event"
+import { RemoteLink } from "api/schemas"
 import { Icon } from "components/Icon"
 import { FC } from "react"
 import { Linking, Pressable } from "react-native"

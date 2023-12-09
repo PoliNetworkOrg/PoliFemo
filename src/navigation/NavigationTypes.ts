@@ -22,7 +22,7 @@ import {
   useNavigation as nativeUseNav,
 } from "@react-navigation/native"
 import { StackScreenProps } from "@react-navigation/stack"
-import { Article } from "api/collections/articles"
+import { Article } from "api/schemas"
 import { Occupancies } from "api/collections/rooms"
 import {
   BuildingItem,
@@ -54,6 +54,7 @@ export type RootStackNavigatorParams = {
 
 export type MainStackNavigatorParams = {
   Home: undefined
+  GlobalSearch: undefined
   Article: { article: Article }
   ArticlesList: { tagName: string }
   OtherCategories: { tags: TagWithData[] }

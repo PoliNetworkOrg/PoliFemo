@@ -6,7 +6,11 @@ import WebView from "react-native-webview"
 import { usePalette } from "utils/colors"
 import { api } from "api"
 import { HttpClient } from "api/HttpClient"
-import { PolimiToken, PoliNetworkToken } from "contexts/login"
+import {
+  PolimiToken,
+  PoliNetworkToken,
+  poliNetworkTokenSchema,
+} from "api/schemas"
 import { NavBar } from "components/NavBar"
 
 // TODO: HANDLE ERRORS, this will break as soon as something goes wrong
@@ -132,8 +136,9 @@ export const Login: RootStackScreen<"Login"> = () => {
 
           if (url.startsWith(polinetworkTargetUrl)) {
             try {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-              setPoliNetworkToken(JSON.parse(data))
+              setPoliNetworkToken(
+                poliNetworkTokenSchema.parse(JSON.parse(data))
+              )
               setCurrentURL(magicTokenUrl)
             } catch (e) {
               console.log("error while parsing!!")

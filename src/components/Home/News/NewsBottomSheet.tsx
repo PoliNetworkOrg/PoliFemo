@@ -5,9 +5,13 @@ import BottomSheet, {
 import { FC, useContext, useEffect, useRef, useState } from "react"
 import { BackHandler, StyleSheet, View } from "react-native"
 
+
+import { Article } from "api/schemas"
+
 import { Article } from "api/collections/articles"
 import { CardWithGradient } from "components/CardWithGradient"
 import { NavBar } from "components/NavBar"
+
 import {
   NewsPreferencesContext,
   Preference,

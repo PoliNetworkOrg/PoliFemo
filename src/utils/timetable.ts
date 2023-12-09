@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { api } from "api"
-import { Event } from "api/collections/event"
+import { Event } from "api/schemas"
 import * as FileSystem from "expo-file-system"
 import { EventType } from "./events"
 import { EventEmitter } from "events"

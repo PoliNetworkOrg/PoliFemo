@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 
 import { api } from "api"
-import { Article, Tag } from "api/collections/articles"
+import { Article, Tag } from "api/schemas"
 import {
   TagWithData,
   NewsPreferencesContext,

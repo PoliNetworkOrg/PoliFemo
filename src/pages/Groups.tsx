@@ -3,7 +3,7 @@ import { MainStackScreen } from "navigation/NavigationTypes"
 import { Linking, View } from "react-native"
 import { FiltersList } from "components/Groups/FiltersList"
 import { api } from "api"
-import { Group } from "api/collections/groups"
+import { Group } from "api/schemas"
 import {
   applyFilters,
   choosePlatformIcon,
@@ -15,7 +15,7 @@ import {
 
 import { GroupTile } from "components/Groups/GroupTile"
 import { ModalGroup } from "components/Groups/ModalGroup"
-import { PoliSearchBar } from "components/Home/PoliSearchBar"
+import { PoliSearchBar } from "components/PoliSearchBar"
 import { useTranslation } from "react-i18next"
 import { useApiCall } from "api/useApiCall"
 import { ListPage } from "components/PageLayout"

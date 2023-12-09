@@ -1,36 +1,8 @@
 import { mapAxiosRequest } from "api/mapAxiosRequest"
 import { ApiCollection } from "api/useApiCall"
 import { HttpClient, RequestOptions } from "../HttpClient"
-
-/* eslint-disable @typescript-eslint/naming-convention */
-
-export interface GroupOptions {
-  name?: string
-  year?: string
-  degree?: string
-  type?: string
-  platform?: string
-  language?: string
-  office?: string
-}
-
-export interface Group {
-  class: string | null
-  office?: string
-  id: string
-  degree?: string
-  school?: string
-  id_link: string
-  language?: string
-  type?: string
-  year: string | null //probably I should use  | null everywhere?
-  platform: string
-  permanentId?: number
-  LastUpdateInviteLinkTime?: string
-  linkfunzionante?: string
-  LinkType?: string
-  members?: string
-}
+import { groupSchema } from "api/schemas"
+import { z } from "zod"
 
 const client = HttpClient.getInstance()
 
@@ -44,12 +16,14 @@ export const groups = {
    */
 
   getFromGithub(_params?: Record<string, unknown>, options?: RequestOptions) {
-    const request = client.callGeneral<{
-      index_data: Group[]
-    }>({
+    const request = client.callGeneral({
       url: "https://raw.githubusercontent.com/PoliNetworkOrg/polinetworkWebsiteData/main/groupsGenerated.json",
       method: "GET",
       ...options,
+      zodSchema: z.object({
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        index_data: groupSchema.array(),
+      }),
     })
     return mapAxiosRequest(request, response => response.index_data)
   },

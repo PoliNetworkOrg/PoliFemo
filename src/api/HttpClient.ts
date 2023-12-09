@@ -6,10 +6,15 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios"
-import { PolimiToken, PoliNetworkToken, Tokens } from "contexts/login"
+import { PolimiToken, PoliNetworkToken, Tokens, tokensSchema } from "./schemas"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { wait } from "utils/functions"
 import { Alert } from "react-native"
+
+import { z } from "zod"
+
+import { httpClientLog } from "utils/logger"
+
 
 /*Docs used to make this:
 Singleton:
@@ -76,7 +81,12 @@ declare module "axios" {
     waitingTime?: number //seconds
     readonly retryCount?: number
     authType?: AuthType
+    zodSchema?: z.ZodSchema
   }
+}
+
+type InferrableAxiosRequestConfig<T> = AxiosRequestConfig & {
+  zodSchema?: z.ZodSchema<T>
 }
 
 /**
@@ -132,7 +142,7 @@ export class HttpClient extends EventEmitter {
 
   private constructor(baseUrlPoliNetwork: string, baseUrlPolimi: string) {
     super()
-    console.log("HttpClient constructor called")
+    httpClientLog.debug("HttpClient constructor called")
     this.poliNetworkInstance = axios.create({
       baseURL: baseUrlPoliNetwork,
       timeout: 30000,
@@ -188,6 +198,9 @@ export class HttpClient extends EventEmitter {
    * does (or will do) something before `.then` is called
    * */
   private _handleResponse = (res: AxiosResponse): AxiosResponse => {
+    if (res.config.zodSchema) {
+      res.config.zodSchema.parse(res.data)
+    }
     return res
   }
 
@@ -228,11 +241,11 @@ export class HttpClient extends EventEmitter {
         if (success) {
           return instance(config)
         } else {
-          console.warn("Error: could not refresh Polimi token")
-          console.warn("Error:")
-          console.warn(error)
-          console.warn("Call config:")
-          console.warn(JSON.stringify(config))
+          httpClientLog.error("Error: could not refresh Polimi token")
+          httpClientLog.error("Error:")
+          httpClientLog.error(error)
+          httpClientLog.error("Call config:")
+          httpClientLog.error(JSON.stringify(config))
           Alert.alert(
             "An error has occurred while refreshing Polimi token",
             `The call to ${
@@ -289,7 +302,9 @@ export class HttpClient extends EventEmitter {
     throw error
   }
 
-  callPolimi<T = void>(options: AxiosRequestConfig): CancellableApiRequest<T> {
+  callPolimi<T = void>(
+    options: InferrableAxiosRequestConfig<T>
+  ): CancellableApiRequest<T> {
     const controller = new AbortController()
     const request = this.polimiInstance.request<T>({
       ...options,
@@ -302,7 +317,7 @@ export class HttpClient extends EventEmitter {
   }
 
   callPoliNetwork<T = void>(
-    options: AxiosRequestConfig
+    options: InferrableAxiosRequestConfig<T>
   ): CancellableApiRequest<T> {
     const controller = new AbortController()
     const request = this.poliNetworkInstance.request<T>({
@@ -315,7 +330,9 @@ export class HttpClient extends EventEmitter {
     return request
   }
 
-  callGeneral<T = void>(options: AxiosRequestConfig): CancellableApiRequest<T> {
+  callGeneral<T = void>(
+    options: InferrableAxiosRequestConfig<T>
+  ): CancellableApiRequest<T> {
     const controller = new AbortController()
     const request = this.generalInstance.request<T>({
       ...options,
@@ -419,15 +436,14 @@ export class HttpClient extends EventEmitter {
   async loadTokens() {
     const tokens = await AsyncStorage.getItem("api:tokens")
     if (tokens) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const parsedTokens: Tokens = JSON.parse(tokens)
+      const parsedTokens: Tokens = tokensSchema.parse(JSON.parse(tokens))
       console.log("Loaded tokens from local storage")
       this.polimiToken = parsedTokens.polimiToken
       this.poliNetworkToken = parsedTokens.poliNetworkToken
       this.emit("login")
       this.emit("login_event", true)
     } else {
-      console.log("No tokens found in local storage")
+      httpClientLog.info("No tokens found in local storage")
     }
   }
   /**

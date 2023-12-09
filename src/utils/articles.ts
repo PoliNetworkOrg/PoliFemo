@@ -1,4 +1,4 @@
-import { Article } from "api/collections/articles"
+import { Article } from "api/schemas"
 
 const getArticleLanguage = (article: Article, language: string) => {
   if (language === "it") {

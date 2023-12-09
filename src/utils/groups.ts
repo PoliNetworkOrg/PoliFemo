@@ -1,4 +1,4 @@
-import { Group } from "api/collections/groups"
+import { Group } from "api/schemas"
 import whatsapp from "assets/groups/whatsapp.svg"
 import facebook from "assets/groups/facebook.svg"
 import telegram from "assets/groups/telegram.svg"

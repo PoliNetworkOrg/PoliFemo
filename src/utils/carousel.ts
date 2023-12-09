@@ -1,5 +1,5 @@
 import { i18n } from "../locales/i18n"
-import { Event } from "api/collections/event"
+import { Event } from "api/schemas"
 import { EventType } from "./events"
 
 export interface CarouselItem {

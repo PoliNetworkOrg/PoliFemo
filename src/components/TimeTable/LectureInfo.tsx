@@ -2,7 +2,7 @@ import { BottomSheetScrollView } from "@gorhom/bottom-sheet"
 import { BodyText, Title } from "components/Text"
 import { FC, useContext, useMemo, useState } from "react"
 import { StyleSheet, View } from "react-native"
-import { Event } from "api/collections/event"
+import { Event } from "api/schemas"
 import { usePalette } from "utils/colors"
 import {
   TimetableDeducer,
