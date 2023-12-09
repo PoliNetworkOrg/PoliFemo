@@ -68,6 +68,7 @@
     "react-native-fit-image": "^1.5.5",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-imaged-card-view": "^0.0.11",
+    "react-native-logs": "^5.0.1",
     "react-native-maps": "1.7.1",
     "react-native-markdown-display": "^7.0.0-alpha.2",
     "react-native-modal": "^13.0.1",
