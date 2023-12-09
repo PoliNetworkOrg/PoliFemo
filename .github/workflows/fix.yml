@@ -1,4 +1,4 @@
-name: Fix Peer Dependencies
+name: Fix
 
 on:
   push:
