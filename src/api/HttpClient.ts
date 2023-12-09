@@ -10,6 +10,7 @@ import { PolimiToken, PoliNetworkToken, Tokens } from "contexts/login"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { wait } from "utils/functions"
 import { Alert } from "react-native"
+import { httpClientLog } from "utils/logger"
 
 /*Docs used to make this:
 Singleton:
@@ -132,7 +133,7 @@ export class HttpClient extends EventEmitter {
 
   private constructor(baseUrlPoliNetwork: string, baseUrlPolimi: string) {
     super()
-    console.log("HttpClient constructor called")
+    httpClientLog.debug("HttpClient constructor called")
     this.poliNetworkInstance = axios.create({
       baseURL: baseUrlPoliNetwork,
       timeout: 30000,
@@ -228,11 +229,11 @@ export class HttpClient extends EventEmitter {
         if (success) {
           return instance(config)
         } else {
-          console.warn("Error: could not refresh Polimi token")
-          console.warn("Error:")
-          console.warn(error)
-          console.warn("Call config:")
-          console.warn(JSON.stringify(config))
+          httpClientLog.error("Error: could not refresh Polimi token")
+          httpClientLog.error("Error:")
+          httpClientLog.error(error)
+          httpClientLog.error("Call config:")
+          httpClientLog.error(JSON.stringify(config))
           Alert.alert(
             "An error has occurred while refreshing Polimi token",
             `The call to ${
@@ -427,7 +428,7 @@ export class HttpClient extends EventEmitter {
       this.emit("login")
       this.emit("login_event", true)
     } else {
-      console.log("No tokens found in local storage")
+      httpClientLog.info("No tokens found in local storage")
     }
   }
   /**

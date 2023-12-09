@@ -1,6 +1,7 @@
-import { FC, useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef } from "react"
 import {
   TextInput,
+  TextInputProps,
   Animated,
   Pressable,
   StyleProp,
@@ -12,17 +13,23 @@ import searchDark from "assets/menu/searchDark.svg"
 import { Icon } from "components/Icon"
 import { useTranslation } from "react-i18next"
 
+interface PoliSearchBarProps extends Pick<TextInputProps, "autoFocus"> {
+  onChange: (searchKey: string) => void
+  style?: StyleProp<ViewStyle>
+}
+
 /**
  * the search bar, which requests a search everytime the input text changes
  */
-export const PoliSearchBar: FC<{
-  onChange: (searchKey: string) => void
-  style?: StyleProp<ViewStyle>
-}> = ({ onChange, style }) => {
+export const PoliSearchBar = ({
+  autoFocus = false,
+  onChange,
+  style,
+}: PoliSearchBarProps) => {
   const { fieldBackground, fieldText, bodyText, isLight, palette } =
     usePalette()
 
-  const [isFocused, setIsFocused] = useState(false)
+  const [isFocused, setIsFocused] = useState(autoFocus)
   const shadowAnim = useRef(new Animated.Value(0)).current
   const inputText = useRef<TextInput>(null)
 
@@ -98,6 +105,7 @@ export const PoliSearchBar: FC<{
         onChangeText={onChange}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        autoFocus={autoFocus}
       />
       <Pressable
         style={{
