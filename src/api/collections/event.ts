@@ -1,6 +1,7 @@
 import { mapAxiosRequest } from "api/mapAxiosRequest"
 import { ApiCollection } from "api/useApiCall"
 import { AuthType, HttpClient, RequestOptions } from "../HttpClient"
+import { EventType } from "utils/events"
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface Event {
@@ -14,7 +15,7 @@ export interface Event {
     en: string
   }
   event_type: {
-    typeId: number
+    typeId: EventType
     type_dn: {
       it: string
       en: string

@@ -9,7 +9,8 @@ import { capitalize } from "utils/functions"
 import { NewsPreferencesContext, Preference } from "contexts/newsPreferences"
 import { ListPage } from "components/PageLayout"
 import { ToggleSwitch } from "components/ToggleSwitch"
-import { useCurrentLanguage } from "utils/articles"
+import { getArticleParams, getDifferentLanguageNotice } from "utils/articles"
+import { useCurrentLanguage } from "utils/language"
 
 const MAX_ARTICLES_PER_REQUEST = 8
 
@@ -56,7 +57,7 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
   }
 
   useEffect(() => {
-    fetchArticles(false).finally(() => {
+    void fetchArticles(false).finally(() => {
       // Increase the offset so that at the following fetch you get the next articles
       offset.current += 1
       setIsFetching(false)
@@ -73,11 +74,7 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
         <View style={{ paddingHorizontal: 28 }}>
           <CardWithGradient
             key={article.id}
-            title={
-              currentLanguage === "it"
-                ? article.content.it.title
-                : article.content.en.title
-            }
+            title={getArticleParams(article, currentLanguage)?.title}
             imageURL={article.image}
             blurhash={article.blurhash}
             onClick={() =>
@@ -86,6 +83,7 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
               })
             }
             style={{ height: 220, marginBottom: 13 }}
+            footer={getDifferentLanguageNotice(article, currentLanguage)}
           />
         </View>
       )}
@@ -94,7 +92,7 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
         onFetch: () => {
           if (!refresh && !isFetching) {
             setIsFetching(true)
-            fetchArticles(true).finally(() => {
+            void fetchArticles(true).finally(() => {
               offset.current += 1
               setIsFetching(false)
             })
@@ -107,7 +105,7 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
           if (!refresh && !isFetching) {
             setRefresh(true)
             offset.current = 0
-            fetchArticles(false).finally(() => {
+            void fetchArticles(false).finally(() => {
               offset.current += 1
               setRefresh(false)
             })

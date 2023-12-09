@@ -15,7 +15,7 @@ import { api } from "api"
 import { LoginContext } from "contexts/login"
 import { capitalize } from "utils/functions"
 import { RemoteLinkButton } from "./RemoteLinkButton"
-import { useCurrentLanguage } from "utils/articles"
+import { useCurrentLanguage } from "utils/language"
 import { useTranslation } from "react-i18next"
 
 interface LectureInfoProps {
