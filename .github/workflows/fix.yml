@@ -22,7 +22,7 @@ jobs:
         run: yarn install
 
       - name: Fix peer dependencies
-        run: yarn run lint
+        run: yarn run lint --fix
 
       - name: Git setup
         run: |
