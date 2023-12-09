@@ -56,10 +56,13 @@
   "group_type": "Type",
   "school": "School",
   "group_platform": "Platform",
+  "groups_empty": "No groups found",
 
   "initial_title": "Welcome to PoliFemo",
   "initial_message": "The app that allows you to have everything from Politecnico di Milano at your fingertips with just a tap",
   "loading": "Please wait...loading is taking longer than expected",
 
-  "error": "ERROR"
+  "error": "ERROR",
+  "emptyDefault": "No data available",
+  "emptyList": ",\nPoliFemo is sad"
 }

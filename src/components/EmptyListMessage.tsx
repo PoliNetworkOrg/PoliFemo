@@ -7,7 +7,7 @@ import { usePalette } from "utils/colors"
 import { useTranslation } from "react-i18next"
 
 interface EmptyMessageProps {
-  message: string
+  message?: string | null
   styleMessage?: StyleProp<TextStyle>
 }
 
@@ -19,7 +19,7 @@ export const EmptyListMessage: FC<EmptyMessageProps> = props => {
 
   const { primary } = usePalette()
 
-  const { t } = useTranslation("freeClass")
+  const { t } = useTranslation()
 
   return (
     <View
@@ -57,7 +57,7 @@ export const EmptyListMessage: FC<EmptyMessageProps> = props => {
           props.styleMessage,
         ]}
       >
-        {props.message + t("freeClass_emptyList")}
+        {(props.message ?? t("emptyDefault")) + t("emptyList")}
       </BodyText>
     </View>
   )

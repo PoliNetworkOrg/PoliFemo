@@ -1,24 +1,26 @@
-import { FC, useEffect, useState, useRef, useContext } from "react"
-import { StyleSheet, View } from "react-native"
 import BottomSheet, {
   BottomSheetScrollView,
   BottomSheetScrollViewMethods,
 } from "@gorhom/bottom-sheet"
+import { FC, useContext, useEffect, useRef, useState } from "react"
+import { BackHandler, StyleSheet, View } from "react-native"
 
 import { Article } from "api/collections/articles"
+import { CardWithGradient } from "components/CardWithGradient"
+import { NavBar } from "components/NavBar"
 import {
   NewsPreferencesContext,
   Preference,
   TagWithData,
 } from "contexts/newsPreferences"
-import { NewsTagsGrid } from "./NewsTagsGrid"
-import { CardWithGradient } from "components/CardWithGradient"
-import { NavBar } from "components/NavBar"
-import { usePalette } from "utils/colors"
 import { useNavigation } from "navigation/NavigationTypes"
-import { getUsableScreenHeight } from "utils/layout"
+import { getArticleParams, getDifferentLanguageNotice } from "utils/articles"
+import { usePalette } from "utils/colors"
 import { newsSheetEventEmitter } from "utils/events"
+import { useCurrentLanguage } from "utils/language"
+import { getUsableScreenHeight } from "utils/layout"
 import { NewsBottomSheetHandle } from "./NewsBottomSheetHandle"
+import { NewsTagsGrid } from "./NewsTagsGrid"
 
 interface NewsBottomSheetProps {
   /**
@@ -43,6 +45,8 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
 
   const { preferences } = useContext(NewsPreferencesContext)
 
+  const language = useCurrentLanguage()
+
   // modal state
   const [isNewsClosed, setIsNewsClosed] = useState(true)
   // the ref for the News bottom sheet, used to open and close it programmatically
@@ -56,7 +60,6 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
     opened: 106,
   }
 
-  const showHighlighted = props.highlightedArticle !== undefined
   const showButtonToOtherTags = Object.values(preferences).some(
     p => p === Preference.UNFAVOURITE
   )
@@ -81,12 +84,23 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
 
   useEffect(() => {
     // Set up the event listener to close the NewsBottomSheet
-    // when the home button in the NavBar is clicked
+    // when the home button in the NavBar or hardware button are clicked
     const listener = newsSheetEventEmitter.addListener("should_close", () => {
       setIsNewsClosed(true)
     })
-    return () => listener.remove?.()
-  }, [])
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        setIsNewsClosed(true)
+        return !isNewsClosed
+      }
+    )
+
+    return () => {
+      listener.remove?.()
+      backHandler.remove?.()
+    }
+  }, [isNewsClosed])
 
   return (
     <BottomSheet
@@ -126,22 +140,24 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
           paddingTop: 16,
         }}
       >
-        {showHighlighted && (
+        {props.highlightedArticle && (
           <CardWithGradient
             title={"In Evidenza"}
-            imageURL={
-              props.highlightedArticle?.image &&
-              props.highlightedArticle.image.length > 0
-                ? props.highlightedArticle.image
-                : ""
-              // : "http://rl.airlab.deib.polimi.it/wp-content/uploads/2022/06/1-PolimiCampus_2.jpg"
-            }
+            imageURL={props.highlightedArticle.image}
+            blurhash={props.highlightedArticle.blurhash}
             onClick={() =>
               navigation.navigate("Article", {
                 article: props.highlightedArticle as Article,
               })
             }
             style={{ height: 220, marginBottom: 34 }}
+            articleTitle={
+              getArticleParams(props.highlightedArticle, language)?.title
+            }
+            footer={getDifferentLanguageNotice(
+              props.highlightedArticle,
+              language
+            )}
           />
         )}
 

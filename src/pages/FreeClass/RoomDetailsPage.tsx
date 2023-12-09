@@ -4,12 +4,12 @@ import { InfoMapTile } from "components/FreeClass/ClassDetails/InfoMapTile"
 import { TimeLeftTile } from "components/FreeClass/ClassDetails/TimeLeftTile"
 import { RoomUtilsSection } from "components/FreeClass/ClassDetails/RoomUtilsSection"
 import { CrowdingSection } from "components/FreeClass/ClassDetails/CrowdingSection"
-import { ContentWrapperScroll } from "components/ContentWrapperScroll"
 import { api } from "api"
-import { ActivityIndicator } from "react-native"
 import { useMounted } from "utils/useMounted"
 import { getBuildingCoordsWithoutCampus } from "utils/rooms"
 import { useApiCall } from "api/useApiCall"
+import { LoadingIndicator } from "components/LoadingIndicator"
+import { ScrollPage } from "components/PageLayout"
 
 export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
   const {
@@ -38,9 +38,7 @@ export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
   }, [room])
 
   return (
-    <ContentWrapperScroll
-      scrollViewStyle={{ paddingHorizontal: 28, paddingBottom: 60 }}
-    >
+    <ScrollPage padded>
       {room ? (
         <>
           <InfoMapTile
@@ -56,8 +54,8 @@ export const RoomDetailsPage: MainStackScreen<"RoomDetails"> = props => {
           <RoomUtilsSection power={room.power} />
         </>
       ) : (
-        <ActivityIndicator size={"large"} style={{ marginTop: 200 }} />
+        <LoadingIndicator style={{ marginTop: 200 }} />
       )}
-    </ContentWrapperScroll>
+    </ScrollPage>
   )
 }

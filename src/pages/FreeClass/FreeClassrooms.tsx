@@ -3,7 +3,7 @@ import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { View, Alert, ActivityIndicator, StyleSheet } from "react-native"
 import { PoliSearchBar } from "components/Home"
 import { usePalette } from "utils/colors"
-import { Title, BodyText } from "components/Text"
+import { BodyText } from "components/Text"
 import campusIcon from "assets/freeClassrooms/campus.svg"
 import positionIcon from "assets/freeClassrooms/position.svg"
 import * as Location from "expo-location"
@@ -12,10 +12,10 @@ import { RoomsSearchDataContext } from "contexts/rooms"
 import { Icon } from "components/Icon"
 import { Room } from "api/collections/rooms"
 import { FreeClassList } from "components/FreeClass/FreeClassList"
-import { PageWrapper } from "components/Groups/PageWrapper"
 import { ScrollView } from "react-native-gesture-handler"
 import { AdaptiveShadowView } from "components/BoxShadow"
 import { useTranslation } from "react-i18next"
+import { PageWrap } from "components/PageLayout"
 
 let searchTimeout: NodeJS.Timeout
 const deltaTime = 200 //ms
@@ -50,7 +50,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
       navigate("PositionChoice")
     } else {
       const { status } = await Location.requestForegroundPermissionsAsync()
-      if (status !== "granted") {
+      if (status !== Location.PermissionStatus.GRANTED) {
         Alert.alert(
           "Location Service not enabled",
           "Please enable your location services to unlock this feature",
@@ -103,13 +103,13 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
   }, [search, rooms])
 
   return (
-    <PageWrapper>
-      <View style={{ paddingTop: 28 }}>
-        <Title style={{ paddingLeft: 28, marginBottom: 17 }}>
-          {t("freeClass_title")}
-        </Title>
-        <PoliSearchBar onChange={searchKey => setSearch(searchKey)} />
-      </View>
+    <PageWrap title={t("freeClass_title") + ""}>
+      <PoliSearchBar
+        style={{
+          marginTop: 12,
+        }}
+        onChange={searchKey => setSearch(searchKey)}
+      />
       {isRoomsSearching && search.length > 1 ? (
         <ActivityIndicator size={"large"} style={{ marginTop: 100 }} />
       ) : search.length <= 1 ? (
@@ -163,7 +163,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
           <FreeClassList data={searchableRooms} date={new Date()} />
         </View>
       )}
-    </PageWrapper>
+    </PageWrap>
   )
 }
 

@@ -7,10 +7,9 @@ import { usePalette } from "utils/colors"
 import { LinearGradient } from "expo-linear-gradient"
 
 /**
- * General component useful for pages with a scrollable content.
- * It provides a navbar and a scrollview with margin and rounded corners.
+ * Wrapper for Article Details page
  */
-export const ScrollPage: FC<{
+export const ArticleDetailsWrapper: FC<{
   /**
    * Title in the sticky header.
    */
@@ -54,7 +53,7 @@ export const ScrollPage: FC<{
         backgroundColor: isLight ? primary : background,
       }}
     >
-      {isLight && (
+      {
         <LinearGradient
           colors={[
             "#424967",
@@ -71,20 +70,7 @@ export const ScrollPage: FC<{
           }}
           locations={[0.04, 0.19, 0.55, 0.96]}
         />
-      )}
-      {!isLight && (
-        <View
-          style={{
-            zIndex: 1,
-            backgroundColor: "rgba(27, 33, 50, 0.63)",
-            flex: 1,
-            position: "absolute",
-            top: 0,
-            width: width,
-            height: 230,
-          }}
-        />
-      )}
+      }
       {props.backdropElement && (
         <View
           style={{
@@ -101,17 +87,19 @@ export const ScrollPage: FC<{
 
       <View
         style={{
+          flex: 1,
           backgroundColor: background,
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
           marginTop: props.backdropElement ? 192 : 106,
           paddingHorizontal: 24,
-          paddingTop: 30,
+          paddingTop: 22,
           zIndex: 2,
         }}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 120 }}
           refreshControl={
             props.refreshControl ? (
               <RefreshControl
@@ -121,7 +109,7 @@ export const ScrollPage: FC<{
             ) : undefined
           }
         >
-          <View style={{ paddingHorizontal: 4, paddingBottom: 12 }}>
+          <View style={{ paddingBottom: 12 }}>
             <Title
               style={{
                 fontSize: 42,

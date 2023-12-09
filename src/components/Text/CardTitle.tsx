@@ -1,7 +1,8 @@
 import { FC } from "react"
-import { Text as _Text, TextProps } from "react-native"
+import { TextProps } from "react-native"
 
 import { usePalette } from "utils/colors"
+import { BodyText } from "./BodyText"
 
 /**
  * Title used in cards with a background image and a yellowish gradient,
@@ -11,11 +12,11 @@ export const CardTitle: FC<TextProps> = props => {
   const { cardTitle } = usePalette()
   const { style, children } = props
   return (
-    <_Text
+    <BodyText
       {...props}
       style={[
         {
-          fontFamily: "Roboto_900Black",
+          fontWeight: "900",
           fontSize: 16,
           color: cardTitle,
         },
@@ -23,6 +24,6 @@ export const CardTitle: FC<TextProps> = props => {
       ]}
     >
       {children}
-    </_Text>
+    </BodyText>
   )
 }

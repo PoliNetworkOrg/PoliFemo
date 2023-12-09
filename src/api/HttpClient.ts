@@ -89,6 +89,7 @@ declare module "axios" {
  *
  * This object also manages auth tokens.
  */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export declare interface HttpClient {
   /**
    * fired when login status changes, either because of a login or a logout
@@ -103,6 +104,7 @@ export declare interface HttpClient {
    */
   on(event: "logout", listener: () => void): this
 }
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class HttpClient extends EventEmitter {
   private static classInstance?: HttpClient
 

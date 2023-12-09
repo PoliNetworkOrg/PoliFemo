@@ -9,7 +9,8 @@ import {
 import * as FileSystem from "expo-file-system"
 import * as Notifications from "expo-notifications"
 import { AndroidImportance, NotificationTriggerInput } from "expo-notifications"
-import { CarouselItem, WidgetType } from "utils/carousel"
+import { CarouselItem } from "utils/carousel"
+import { EventType } from "utils/events"
 import {
   NotificationStorage,
   NotificationCustomContentInput,
@@ -406,9 +407,8 @@ export class NotificationCenter {
       ) {
         return true
       } else if (
-        settings.status === "undetermined" ||
         settings.ios?.status ===
-          Notifications.IosAuthorizationStatus.NOT_DETERMINED
+        Notifications.IosAuthorizationStatus.NOT_DETERMINED
       ) {
         const permission = await Notifications.requestPermissionsAsync({
           ios: {
@@ -521,8 +521,8 @@ export class NotificationCenter {
               item.type
             )
             if (
-              (item.type === WidgetType.DEADLINE ||
-                item.type === WidgetType.EXAMS) &&
+              (item.type === EventType.DEADLINE ||
+                item.type === EventType.EXAMS) &&
               item.dateStart.getTime() - deltaMilliseconds > Date.now()
             ) {
               const contentMessage = getContentMessageFromType(
