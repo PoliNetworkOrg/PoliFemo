@@ -4,6 +4,11 @@
  */
 
 import { MainStackNavigatorParams } from "navigation/NavigationTypes"
+
+import { Home } from "pages/Home"
+import { GlobalSearch } from "pages/GlobalSearch"
+import { Article } from "pages/news/ArticleDetails"
+import { ArticlesList } from "pages/news/ArticlesList"
 import { Error404 } from "pages/Error404"
 import { BuildingChoice } from "pages/FreeClass/BuildingChoice"
 import { CampusChoice } from "pages/FreeClass/CampusChoice"
@@ -14,10 +19,7 @@ import { PositionChoice } from "pages/FreeClass/PositionChoice"
 import { RoomDetailsPage } from "pages/FreeClass/RoomDetailsPage"
 import { GradingBook } from "pages/GradingBook"
 import { Groups } from "pages/Groups"
-import { Home } from "pages/Home"
 import { TimeTable } from "pages/TimeTable"
-import { Article } from "pages/news/ArticleDetails"
-import { ArticlesList } from "pages/news/ArticlesList"
 import { OtherCategories } from "pages/news/OtherCategories"
 import { NotificationDetails } from "pages/notifications/NotificationDetails"
 import { Notifications } from "pages/notifications/Notifications"
@@ -39,6 +41,7 @@ export const MainStack: FC = () => {
       initialRouteName="Home"
     >
       <MainStackNavigator.Screen name="Home" component={Home} />
+      <MainStackNavigator.Screen name="GlobalSearch" component={GlobalSearch} />
       <MainStackNavigator.Screen name="Article" component={Article} />
       <MainStackNavigator.Screen name="ArticlesList" component={ArticlesList} />
       <MainStackNavigator.Screen

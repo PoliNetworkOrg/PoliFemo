@@ -1,0 +1,46 @@
+name: Fix
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Fix
+        run: |
+          yarn run lint --fix
+
+      - name: Git setup
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "🔧 Fix" || true
+          git pull || true
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.PAT }}
+          commit-message: "🔧 Fix"
+          title: "🔧 Fix"
+          body: "This pull request contains fixes 🔧"
+          branch-suffix: timestamp

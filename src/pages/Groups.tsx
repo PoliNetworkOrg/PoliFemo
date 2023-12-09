@@ -15,7 +15,7 @@ import {
 
 import { GroupTile } from "components/Groups/GroupTile"
 import { ModalGroup } from "components/Groups/ModalGroup"
-import { PoliSearchBar } from "components/Home/PoliSearchBar"
+import { PoliSearchBar } from "components/PoliSearchBar"
 import { useTranslation } from "react-i18next"
 import { useApiCall } from "api/useApiCall"
 import { ListPage } from "components/PageLayout"

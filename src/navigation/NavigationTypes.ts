@@ -54,6 +54,7 @@ export type RootStackNavigatorParams = {
 
 export type MainStackNavigatorParams = {
   Home: undefined
+  GlobalSearch: undefined
   Article: { article: Article }
   ArticlesList: { tagName: string }
   OtherCategories: { tags: TagWithData[] }
