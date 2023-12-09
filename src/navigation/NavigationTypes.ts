@@ -14,28 +14,28 @@
  * component with the correct name
  */
 
-import { StackScreenProps } from "@react-navigation/stack"
-import { FC, createRef } from "react"
 import {
   CompositeScreenProps,
   NavigationContainerRef,
   NavigationProp,
+  NavigatorScreenParams,
   useNavigation as nativeUseNav,
 } from "@react-navigation/native"
+import { StackScreenProps } from "@react-navigation/stack"
 import { Article } from "api/collections/articles"
-import { NavigatorScreenParams } from "@react-navigation/native"
 import { Occupancies } from "api/collections/rooms"
-import { TagWithData } from "contexts/newsPreferences"
-import { ValidAcronym } from "utils/rooms"
 import {
-  HeadquarterItem,
-  CampusItem,
   BuildingItem,
+  CampusItem,
+  HeadquarterItem,
 } from "components/FreeClass/DefaultList"
+import { TagWithData } from "contexts/newsPreferences"
 import {
-  ValidChannelId,
   NotificationStorage,
+  ValidChannelId,
 } from "notifications/NotificationTypes"
+import { FC, createRef } from "react"
+import { ValidAcronym } from "utils/rooms"
 
 /**
  * interface containing the info about the params for each page of the stack navigator
@@ -88,6 +88,7 @@ export type MainStackNavigatorParams = {
     channelId: ValidChannelId
   }
   NotificationDetails: { notification: NotificationStorage; category?: string }
+  GradingBook: undefined
 }
 
 export type SettingsStackNavigatorParams = {

@@ -11,6 +11,7 @@ import { formatDate } from "utils/rooms"
 import { useApiCall } from "api/useApiCall"
 import { api } from "api"
 import { TimeTableContext } from "contexts/timeTable"
+import { Region } from "react-native-maps"
 
 /**
  * The Main Container.
@@ -32,6 +33,14 @@ export const MainContainer: FC = () => {
 
   //timetable
   const [timeTableOpen, setTimeTableOpen] = useState(true)
+
+  //current region map
+  const [currentRegionMap, setCurrentRegionMap] = useState<Region>({
+    latitude: 0,
+    longitude: 0,
+    latitudeDelta: 0.002,
+    longitudeDelta: 0.002,
+  })
 
   const [globRooms, isRoomsSearching] = useApiCall(
     api.rooms.getFreeRoomsDay,
@@ -88,6 +97,8 @@ export const MainContainer: FC = () => {
           date: date,
           setDate: (date: Date) => setDate(date),
           rooms: globalRoomList,
+          currentRegionMap,
+          setCurrentRegionMap: (region: Region) => setCurrentRegionMap(region),
         }}
       >
         <NewsPreferencesContext.Provider
