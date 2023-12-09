@@ -44,4 +44,3 @@ jobs:
           title: "🔧 Fix"
           body: "This pull request contains fixes 🔧"
           branch-suffix: timestamp
-          push-to-fork: angeousta/PoliFemo
