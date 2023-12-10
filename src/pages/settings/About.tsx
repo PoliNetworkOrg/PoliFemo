@@ -113,6 +113,11 @@ export const About: SettingsStackScreen<"About"> = () => {
       </BodyText>
       <Divider />
       <SettingTile
+        title={"Contributors"}
+        subtitle={"List of contributors"}
+        callback={() => navigate("Contributors")}
+      />
+      <SettingTile
         title={t("settings_report")}
         subtitle={"" + t("settings_reportSubTitle")}
         callback={() =>
