@@ -38,7 +38,7 @@ export const ContributorTile: FC<Contributor> = props => {
       >
         <BodyText
           style={{
-            fontWeight: "400",
+            fontWeight: "500",
             fontSize: 20,
             color: "white",
           }}

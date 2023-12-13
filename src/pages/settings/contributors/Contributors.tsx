@@ -29,11 +29,11 @@ export const Contributors: SettingsStackScreen<"Contributors"> = () => {
 
   const sections = [
     {
-      title: "Project Management",
+      title: "Management",
       data: managementContributors,
     },
     {
-      title: "Coding",
+      title: "Development",
       data: codingContributors,
     },
     {
@@ -88,6 +88,7 @@ export const Contributors: SettingsStackScreen<"Contributors"> = () => {
         <SectionList
           sections={sections}
           keyExtractor={(item, index) => `${item.name}-${index}`}
+          stickySectionHeadersEnabled={false}
           contentContainerStyle={{
             alignItems: "center",
             justifyContent: "center",
@@ -97,7 +98,7 @@ export const Contributors: SettingsStackScreen<"Contributors"> = () => {
           renderSectionHeader={({ section: { title } }) => (
             <BodyText
               style={{
-                marginBottom: 10,
+                marginBottom: 20,
                 fontSize: 30,
                 fontWeight: "500",
                 color: isLight ? palette.primary : palette.accent,
