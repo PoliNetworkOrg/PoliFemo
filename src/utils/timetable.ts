@@ -414,6 +414,7 @@ const SECOND_SEMESTER_START_DAY = 20
 
 const SECOND_SEMESTER_START_MONTH = 1
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export declare interface TimetableDeducer {
   /**
    * fired when timetable is set
@@ -435,6 +436,7 @@ export declare interface TimetableDeducer {
  *  - The formatted table is calculated every time the page is opened or when a subject change color or visibility.
  *
  */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class TimetableDeducer extends EventEmitter {
   private timetable: Timetable | undefined
 

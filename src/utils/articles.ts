@@ -1,26 +1,25 @@
-import i18n from "i18next"
-import { useEffect, useState } from "react"
+import { Article } from "api/collections/articles"
 
-/**
- * Custom hook to get the current language.
- * @returns the current language
- */
-export const useCurrentLanguage = () => {
-  const [currentLanguage, setCurrentLanguage] = useState(i18n.language)
-
-  const handleLanguageChange = (lng: string) => {
-    setCurrentLanguage(lng)
+const getArticleLanguage = (article: Article, language: string) => {
+  if (language === "it") {
+    return article.content.it ? "it" : article.content.en ? "en" : undefined
   }
+  return article.content.en ? "en" : article.content.it ? "it" : undefined
+}
 
-  useEffect(() => {
-    i18n.on("languageChanged", handleLanguageChange)
+export const getArticleParams = (article: Article, language: string) => {
+  const articleLanguage = getArticleLanguage(article, language)
+  return articleLanguage ? article.content[articleLanguage] : undefined
+}
 
-    return () => {
-      i18n.off("languageChanged", handleLanguageChange)
-    }
-  }, [])
-
-  return currentLanguage
+export const getDifferentLanguageNotice = (
+  article: Article,
+  language: string
+) => {
+  if (language === "it") {
+    return article.content.it ? "" : "Non disponibile in italiano"
+  }
+  return article.content.en ? "" : "Not available in English"
 }
 
 export const extractImageLinks = (markdown: string): string[] => {

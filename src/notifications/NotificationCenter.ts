@@ -407,9 +407,8 @@ export class NotificationCenter {
       ) {
         return true
       } else if (
-        settings.status === "undetermined" ||
         settings.ios?.status ===
-          Notifications.IosAuthorizationStatus.NOT_DETERMINED
+        Notifications.IosAuthorizationStatus.NOT_DETERMINED
       ) {
         const permission = await Notifications.requestPermissionsAsync({
           ios: {

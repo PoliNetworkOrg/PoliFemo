@@ -50,7 +50,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
       navigate("PositionChoice")
     } else {
       const { status } = await Location.requestForegroundPermissionsAsync()
-      if (status !== "granted") {
+      if (status !== Location.PermissionStatus.GRANTED) {
         Alert.alert(
           "Location Service not enabled",
           "Please enable your location services to unlock this feature",

@@ -1,6 +1,6 @@
 import React, { ReactNode, useCallback } from "react"
 import Markdown, { ASTNode } from "react-native-markdown-display"
-import { Pressable } from "react-native"
+import { Pressable, StyleSheet } from "react-native"
 import FitImage from "react-native-fit-image"
 import { RenderImageFunction } from "react-native-markdown-display"
 import { usePalette } from "utils/colors"
@@ -19,7 +19,7 @@ export const MemoizedMarkdown: React.FC<MemoizedMarkdownProps> = React.memo(
   ({ content, onPress }) => {
     const { isLight, background } = usePalette()
 
-    const markdownStyle = {
+    const markdownStyle = StyleSheet.create({
       body: {
         fontSize: 16,
         marginBottom: -8,
@@ -31,7 +31,7 @@ export const MemoizedMarkdown: React.FC<MemoizedMarkdownProps> = React.memo(
       blockquote: {
         backgroundColor: !isLight ? background : "#F7F7F7",
       },
-    }
+    })
     //TODO: How to typecheck this mess without silencing warnings?
     /**
      * Created this function to override the default image renderer of react-native-markdown-display

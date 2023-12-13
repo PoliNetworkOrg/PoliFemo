@@ -1,14 +1,14 @@
-import { FC, useEffect, useRef, useState } from "react"
+import { FC, useContext, useEffect, useRef, useState } from "react"
 import { View, ActivityIndicator, Platform, Pressable } from "react-native"
 import MapView, { Callout, Marker, Region } from "react-native-maps"
 import { PermissionStatus } from "expo-location"
 import { BodyText } from "components/Text"
 import { BuildingItem } from "./DefaultList"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Icon } from "components/Icon"
 import iconMaps from "assets/freeClassrooms/iconMaps.svg"
 import { ErrorMessage } from "components/ErrorMessage"
 import { useTranslation } from "react-i18next"
+import { RoomsSearchDataContext } from "contexts/rooms"
 
 interface MapProps {
   userLatitude: number
@@ -23,7 +23,11 @@ interface MapProps {
  * So far, the initial region is represented by the user coordinates.
  */
 export const Map: FC<MapProps> = props => {
-  const [timer, setTimer] = useState<boolean>(false)
+  const [error, setError] = useState<boolean>(false)
+
+  const { currentRegionMap, setCurrentRegionMap } = useContext(
+    RoomsSearchDataContext
+  )
 
   const [region, setRegion] = useState<Region>({
     latitude: props.userLatitude,
@@ -34,23 +38,32 @@ export const Map: FC<MapProps> = props => {
 
   const map = useRef<MapView>(null)
 
-  useEffect(() => {
-    if (props.userLatitude === undefined && props.userLongitude === undefined) {
-      setTimeout(() => setTimer(true), 20000) //20 sec
-    }
-  }, [])
+  //initialize timer
+  let timer: NodeJS.Timeout
 
   useEffect(() => {
-    AsyncStorage.getItem("lastRegionVisited")
-      .then(regionJSON => {
-        if (regionJSON) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          const tempRegion: Region = JSON.parse(regionJSON)
-          setRegion(tempRegion)
-        }
-      })
-      .catch(err => console.log(err))
-  }, [])
+    if (props.userLatitude === 0 && props.userLongitude === 0) {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        setError(true)
+      }, 10000) //after 10 sec I set the timer to true and I display an error.
+    } else {
+      clearTimeout(timer)
+
+      if (currentRegionMap.latitude !== 0 && currentRegionMap.longitude !== 0) {
+        //set region saved in the context
+        setRegion(currentRegionMap)
+      } else {
+        //set current region
+        setRegion({
+          latitude: props.userLatitude,
+          longitude: props.userLongitude,
+          latitudeDelta: 0.002,
+          longitudeDelta: 0.002,
+        })
+      }
+    }
+  }, [props.userLatitude])
 
   const { t } = useTranslation("freeClass")
 
@@ -61,8 +74,8 @@ export const Map: FC<MapProps> = props => {
         paddingBottom: 130,
       }}
     >
-      {props.userLatitude === undefined || props.userLongitude === undefined ? (
-        props.locationStatus !== PermissionStatus.GRANTED || timer === true ? (
+      {props.userLatitude === 0 || props.userLongitude === 0 ? (
+        props.locationStatus !== PermissionStatus.GRANTED || error === true ? (
           <ErrorMessage message={t("mapError")} />
         ) : (
           <ActivityIndicator
@@ -76,11 +89,7 @@ export const Map: FC<MapProps> = props => {
           style={{ marginTop: 23, width: "100%", height: "100%" }}
           region={region}
           onRegionChangeComplete={region => {
-            setRegion(region)
-            AsyncStorage.setItem(
-              "lastRegionVisited",
-              JSON.stringify(region)
-            ).catch(err => console.log(err))
+            setCurrentRegionMap(region)
           }}
           showsUserLocation={true}
           mapPadding={{
@@ -110,10 +119,6 @@ export const Map: FC<MapProps> = props => {
                   longitudeDelta: 0.002,
                 }
                 setRegion(region)
-                AsyncStorage.setItem(
-                  "lastRegionVisited",
-                  JSON.stringify(region)
-                ).catch(err => console.log(err))
               }}
             >
               <Icon source={iconMaps} scale={0.5} />

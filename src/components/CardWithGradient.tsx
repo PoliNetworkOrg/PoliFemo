@@ -37,6 +37,10 @@ export interface CardWithGradientProps {
    * optional, used for "In Evidenza" card
    */
   articleTitle?: string
+  /**
+   * Optional footer to show additional information
+   */
+  footer?: string
 }
 
 /**
@@ -98,19 +102,48 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
             style={{
               flex: 1,
               margin: closerToCorner ? 9 : 17,
-              justifyContent: "flex-start",
+              justifyContent: "space-between",
             }}
           >
-            <CardTitle style={{ lineHeight: 19 }}>{props.title}</CardTitle>
-            {props.articleTitle && (
-              <CardTitle
+            <View>
+              <CardTitle style={{ lineHeight: 19 }}>{props.title}</CardTitle>
+              {props.articleTitle && (
+                <CardTitle
+                  style={{
+                    lineHeight: 19,
+                    fontWeight: "500",
+                  }}
+                >
+                  {props.articleTitle}
+                </CardTitle>
+              )}
+            </View>
+            {props.footer && (
+              <View
                 style={{
-                  lineHeight: 19,
-                  fontWeight: "500",
+                  flexWrap: "wrap-reverse",
                 }}
               >
-                {props.articleTitle}
-              </CardTitle>
+                <View
+                  style={{
+                    backgroundColor: props.imageURL
+                      ? "rgba(255, 181, 68, 0.8)"
+                      : "rgba(255, 181, 68, 0.6)",
+                    paddingHorizontal: 8,
+                    paddingVertical: 3,
+                    borderRadius: 8,
+                  }}
+                >
+                  <CardTitle
+                    style={{
+                      fontSize: 13,
+                      fontWeight: "300",
+                    }}
+                  >
+                    {props.footer}
+                  </CardTitle>
+                </View>
+              </View>
             )}
           </View>
         </LinearGradient>

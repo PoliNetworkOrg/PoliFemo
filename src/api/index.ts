@@ -1,11 +1,12 @@
 import { articles } from "./collections/articles"
 import { auth } from "./collections/auth"
 import { events } from "./collections/event"
+import { gradingbook } from "./collections/gradingbook"
 import { groups } from "./collections/groups"
-import { user } from "./collections/user"
 import { rooms } from "./collections/rooms"
+import { user } from "./collections/user"
 import { ApiCollection } from "./useApiCall"
-export { RetryType, AuthType, RequestOptions } from "./HttpClient"
+export { AuthType, RequestOptions, RetryType } from "./HttpClient"
 
 /**
  * This object groups together all collections of endpoints.
@@ -31,4 +32,5 @@ export const api = {
   groups,
   rooms,
   user,
+  gradingbook,
 } satisfies Record<string, ApiCollection>
