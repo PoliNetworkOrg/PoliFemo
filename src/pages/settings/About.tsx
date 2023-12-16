@@ -114,7 +114,7 @@ export const About: SettingsStackScreen<"About"> = () => {
       <Divider />
       <SettingTile
         title={"Contributors"}
-        subtitle={"List of contributors"}
+        subtitle={"" + t("settings_contributorsSubTitle")}
         callback={() => navigate("Contributors")}
       />
       <SettingTile
