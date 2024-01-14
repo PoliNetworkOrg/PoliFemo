@@ -22,3 +22,4 @@ build/
 
 # please, please use yarn instead of npm
 package-lock.json.yarn/cache/**
+.yarn/**
