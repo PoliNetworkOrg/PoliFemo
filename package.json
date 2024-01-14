@@ -114,5 +114,6 @@
     "@react-navigation/core": "~6.2.2",
     "@expo/config-plugins": "~6.0.0"
   },
-  "private": true
+  "private": true,
+  "packageManager": "yarn@1.22.1"
 }
