@@ -21,4 +21,4 @@ build/
 .vs/
 
 # please, please use yarn instead of npm
-package-lock.json
+package-lock.json.yarn/cache/**
