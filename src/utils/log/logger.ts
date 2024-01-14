@@ -21,7 +21,7 @@ function getStackTrace(): string[] {
 
 export const logState: LogItem[] = []
 
-function isString(value: any): boolean {
+function isString(value: any | undefined | null): boolean {
   return typeof value === "string"
 }
 
