@@ -19,7 +19,7 @@ function getStackTrace(): string[] {
   }
 }
 
-export const logValues: LogItem[] = []
+export const logState: LogItem[] = []
 
 function isString(value: any): boolean {
   return typeof value === "string"
@@ -42,21 +42,22 @@ export function logger_warn(o: any) {
 }
 
 function logger_main({ o, l }: { o: any; l: LogLevelsKeys }) {
+  let n: LogItem
   if (isString(o)) {
-    const n: LogItem = {
+    n = {
       date: new Date(),
       level: l,
       msg: o,
       stack: getStackTrace(),
     }
-    logValues.push(n)
   } else {
-    const n: LogItem = {
+    n = {
       date: new Date(),
       level: l,
       object: o,
       stack: getStackTrace(),
     }
-    logValues.push(n)
   }
+
+  logState.push(n)
 }
