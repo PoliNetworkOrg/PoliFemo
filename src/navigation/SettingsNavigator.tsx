@@ -10,7 +10,7 @@ import { SettingsPage } from "pages/settings/Settings"
 import { About } from "pages/settings/About"
 import { Licenses } from "pages/settings/Licenses"
 import { Privacy } from "pages/settings/Privacy"
-import { Log } from "pages/settings/Log"
+import { Log } from "pages/settings/Log/Log"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const SettingsStackNavigator =
