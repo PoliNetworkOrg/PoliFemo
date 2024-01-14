@@ -7,7 +7,7 @@ import {
 } from "notifications/NotificationTypes"
 import { Event } from "api/collections/event"
 import * as Notifications from "expo-notifications"
-import { logger_debug } from "./log/logger"
+import { loggerDebug } from "./log/logger"
 export interface MinutesBeforeOptions {
   deadline?: number
   exam?: number
@@ -152,7 +152,7 @@ export const extractAllEvents = (events: Event[]) => {
 export const debugSchedule = async () => {
   const notifs = await Notifications.getAllScheduledNotificationsAsync()
   notifs.forEach(notif => {
-    logger_debug(notif.content.title + " " + notif.identifier)
+    loggerDebug(notif.content.title + " " + notif.identifier)
   })
 }
 

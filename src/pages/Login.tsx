@@ -8,7 +8,7 @@ import { api } from "api"
 import { HttpClient } from "api/HttpClient"
 import { PolimiToken, PoliNetworkToken } from "contexts/login"
 import { NavBar } from "components/NavBar"
-import { logger_debug, logger_err } from "utils/log/logger"
+import { loggerDebug, loggerErr } from "utils/log/logger"
 
 // TODO: HANDLE ERRORS, this will break as soon as something goes wrong
 // the flow should be probably stopped when something goes wrong and the user should be prompted
@@ -79,14 +79,14 @@ export const Login: RootStackScreen<"Login"> = () => {
   const [polimiToken, setPolimiToken] = useState<PolimiToken | undefined>()
 
   useEffect(() => {
-    logger_debug(`Login stage: ${LoginStage[loginStage]}`)
+    loggerDebug(`Login stage: ${LoginStage[loginStage]}`)
   }, [loginStage])
 
   useEffect(() => {
     // when both tokens are locally set, we are done!
     // the tokens should get registered in the api wrapper to be used in calls
     if (poliNetworkToken && polimiToken) {
-      logger_debug("Login completed! Registering tokens...")
+      loggerDebug("Login completed! Registering tokens...")
       void client.setTokens({ poliNetworkToken, polimiToken }).then(() => {
         setTimeout(() => {
           navigation.goBack()
@@ -137,7 +137,7 @@ export const Login: RootStackScreen<"Login"> = () => {
               setPoliNetworkToken(JSON.parse(data))
               setCurrentURL(magicTokenUrl)
             } catch (e) {
-              logger_err({ msg: "error while parsing!!", url, data })
+              loggerErr({ msg: "error while parsing!!", url, data })
             }
           }
         }}

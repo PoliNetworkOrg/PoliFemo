@@ -9,7 +9,7 @@ import {
 } from "contexts/newsPreferences"
 import { NewsBottomSheet } from "./NewsBottomSheet"
 import { newsTagsPatterns, CardsPattern } from "utils/cardsPatterns"
-import { logger_err } from "utils/log/logger"
+import { loggerErr } from "utils/log/logger"
 
 /**
  * Bottom sheet in the home page to access the news.
@@ -40,7 +40,7 @@ export const NewsManager = () => {
             tempArticles[tag.name] = article
           })
           .catch(err => {
-            logger_err(err)
+            loggerErr(err)
           })
       )
     }
@@ -56,7 +56,7 @@ export const NewsManager = () => {
       setTags(responseTags)
       setLastArticles(responseArticles)
     }
-    fetchData().catch(err => logger_err(err))
+    fetchData().catch(err => loggerErr(err))
   }, [])
 
   // Function that calculates heights and columns of tag cards using hardcoded patterns.

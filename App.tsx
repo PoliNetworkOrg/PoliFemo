@@ -25,7 +25,7 @@ import { navigationRef } from "navigation/NavigationTypes"
 // eslint-disable-next-line unused-imports/no-unused-imports
 import "./src/locales/i18n"
 import { useLoadI18n } from "./src/locales/i18n"
-import { logger_debug, logger_err } from "utils/log/logger"
+import { loggerDebug, loggerErr } from "utils/log/logger"
 
 const client = HttpClient.getInstance()
 
@@ -48,7 +48,7 @@ export default function App() {
         if (settingsJSON) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const parsedSettings: Settings = JSON.parse(settingsJSON)
-          logger_debug("loaded theme: " + parsedSettings.theme)
+          loggerDebug("loaded theme: " + parsedSettings.theme)
           setSettings(parsedSettings)
         }
       } catch (e) {
@@ -68,9 +68,9 @@ export default function App() {
       firstRender.current = false
     } else {
       AsyncStorage.setItem("settings", JSON.stringify(settings)).catch(err =>
-        logger_err(err)
+        loggerErr(err)
       )
-      logger_debug("Set theme " + settings.theme)
+      loggerDebug("Set theme " + settings.theme)
     }
   }, [settings])
   const [fontsLoaded] = useFonts({
@@ -133,8 +133,8 @@ export default function App() {
     if (settingsReady && fontsLoaded && tokensLoaded && i18nInilitalized) {
       void hideAsync().then(async () => {
         if (loginState.loggedIn) {
-          logger_debug(await api.user.getPoliNetworkMe())
-          logger_debug(await api.user.getPolimiUserInfo())
+          loggerDebug(await api.user.getPoliNetworkMe())
+          loggerDebug(await api.user.getPolimiUserInfo())
         }
       })
     }

@@ -11,7 +11,7 @@ import { ListPage } from "components/PageLayout"
 import { ToggleSwitch } from "components/ToggleSwitch"
 import { getArticleParams, getDifferentLanguageNotice } from "utils/articles"
 import { useCurrentLanguage } from "utils/language"
-import { logger_err } from "utils/log/logger"
+import { loggerErr } from "utils/log/logger"
 
 const MAX_ARTICLES_PER_REQUEST = 8
 
@@ -53,7 +53,7 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
         setArticles(response)
       }
     } catch (error) {
-      logger_err(error)
+      loggerErr(error)
     }
   }
 

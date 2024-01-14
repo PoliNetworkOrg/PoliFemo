@@ -10,7 +10,7 @@ import { PolimiToken, PoliNetworkToken, Tokens } from "contexts/login"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { wait } from "utils/functions"
 import { Alert } from "react-native"
-import { logger_debug } from "utils/log/logger"
+import { loggerDebug } from "utils/log/logger"
 
 /*Docs used to make this:
 Singleton:
@@ -133,7 +133,7 @@ export class HttpClient extends EventEmitter {
 
   private constructor(baseUrlPoliNetwork: string, baseUrlPolimi: string) {
     super()
-    logger_debug("HttpClient constructor called")
+    loggerDebug("HttpClient constructor called")
     this.poliNetworkInstance = axios.create({
       baseURL: baseUrlPoliNetwork,
       timeout: 30000,
@@ -207,21 +207,21 @@ export class HttpClient extends EventEmitter {
 
     if (response?.status === 500) {
       if (config.retryType === RetryType.RETRY_INDEFINETELY) {
-        logger_debug("Retrying until request is successful")
+        loggerDebug("Retrying until request is successful")
         await wait(config.waitingTime)
         return instance(config)
       } else if (config.retryType === RetryType.RETRY_N_TIMES) {
         const retryCount = (config.retryCount ?? 0) + 1
         if (retryCount <= config.maxRetries) {
-          logger_debug(`Try number ${retryCount}/${config.maxRetries}`)
+          loggerDebug(`Try number ${retryCount}/${config.maxRetries}`)
           await wait(config.waitingTime)
           return instance({ ...config, retryCount })
         }
       } else {
-        logger_debug("You selected NO_RETRY!")
+        loggerDebug("You selected NO_RETRY!")
         throw error
       }
-      logger_debug("Maximum numbers of retries reached!")
+      loggerDebug("Maximum numbers of retries reached!")
       throw error
     } else if (response?.status === 401) {
       if (config.authType === AuthType.POLIMI) {
@@ -333,9 +333,9 @@ export class HttpClient extends EventEmitter {
    * @returns true if the token was refreshed, false otherwise
    */
   async refreshPolimiToken() {
-    logger_debug("Refreshing polimi token")
+    loggerDebug("Refreshing polimi token")
     if (!this.polimiToken || !this.poliNetworkToken) {
-      logger_debug("Tokens went missing while trying to refresh Polimi token")
+      loggerDebug("Tokens went missing while trying to refresh Polimi token")
       return false
     }
 
@@ -346,7 +346,7 @@ export class HttpClient extends EventEmitter {
         retryType: RetryType.RETRY_N_TIMES,
       })
       if (typeof response.data.accessToken === "string") {
-        logger_debug("Refreshed polimi token")
+        loggerDebug("Refreshed polimi token")
 
         this.polimiToken = response.data
         const tokens: Tokens = {
@@ -369,9 +369,9 @@ export class HttpClient extends EventEmitter {
   }
 
   async refreshPoliNetworkToken() {
-    logger_debug("Refreshing polinetwork token")
+    loggerDebug("Refreshing polinetwork token")
     if (!this.polimiToken || !this.poliNetworkToken) {
-      logger_debug(
+      loggerDebug(
         "Tokens went missing while trying to refresh PoliNetwork token"
       )
       return false
@@ -390,7 +390,7 @@ export class HttpClient extends EventEmitter {
         }
       )
       if (typeof response.data.access_token === "string") {
-        logger_debug("Refreshed polinetwork token")
+        loggerDebug("Refreshed polinetwork token")
 
         this.poliNetworkToken = response.data
 
@@ -422,13 +422,13 @@ export class HttpClient extends EventEmitter {
     if (tokens) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const parsedTokens: Tokens = JSON.parse(tokens)
-      logger_debug("Loaded tokens from local storage")
+      loggerDebug("Loaded tokens from local storage")
       this.polimiToken = parsedTokens.polimiToken
       this.poliNetworkToken = parsedTokens.poliNetworkToken
       this.emit("login")
       this.emit("login_event", true)
     } else {
-      logger_debug("No tokens found in local storage")
+      loggerDebug("No tokens found in local storage")
     }
   }
   /**
@@ -444,13 +444,13 @@ export class HttpClient extends EventEmitter {
 
     // save the tokens in local storage
     await AsyncStorage.setItem("api:tokens", JSON.stringify(tokens))
-    logger_debug("Saved tokens in local storage")
+    loggerDebug("Saved tokens in local storage")
   }
   /**
    * remove the tokens from storage, essentially log out
    */
   async destroyTokens() {
-    logger_debug("Destroying tokens, logging out")
+    loggerDebug("Destroying tokens, logging out")
 
     this.polimiToken = undefined
     this.poliNetworkToken = undefined

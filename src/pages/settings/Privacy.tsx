@@ -13,7 +13,7 @@ import { Description } from "components/Settings/Description"
 import { useTranslation } from "react-i18next"
 import { ScrollPage } from "components/PageLayout"
 import { ModalPicker } from "components/ModalPicker"
-import { logger_err } from "utils/log/logger"
+import { loggerErr } from "utils/log/logger"
 
 const client = HttpClient.getInstance()
 
@@ -108,7 +108,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
                 void Sharing.shareAsync(uri)
               } catch (e) {
                 Alert.alert(t("settings_export_error"), e + "")
-                logger_err(e)
+                loggerErr(e)
               } finally {
                 setLoadingExport(false)
               }
@@ -145,7 +145,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
                         navigate("Home")
                       } catch (e) {
                         Alert.alert(t("settings_deleted_error"), e + "")
-                        logger_err(e)
+                        loggerErr(e)
                       }
                     },
                   },
@@ -195,7 +195,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
             )
           } catch (e) {
             Alert.alert("Errore durante l'aggiornamento", e + "")
-            logger_err(e)
+            loggerErr(e)
           }
         }}
       />

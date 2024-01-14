@@ -2,6 +2,7 @@ import { ValidAcronym } from "utils/rooms"
 import { AuthType, HttpClient, RequestOptions } from "../HttpClient"
 import { mapAxiosRequest } from "../mapAxiosRequest"
 import { ApiCollection } from "../useApiCall"
+import { loggerDebug } from "utils/log/logger"
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface Room {
@@ -56,7 +57,7 @@ export const rooms = {
    * Retrieves available rooms from PoliNetwork server in a given time range.
    */
   getFreeRoomsDay(params: { date: string }, options?: RequestOptions) {
-    logger_debug("requesting free rooms for date", params.date)
+    loggerDebug({ msg: "requesting free rooms for date", date: params.date })
     const request = client.callPoliNetwork<{
       free_rooms: Record<ValidAcronym, Room[]>
     }>({

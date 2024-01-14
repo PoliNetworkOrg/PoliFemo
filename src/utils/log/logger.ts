@@ -3,7 +3,7 @@ import { LogLevelsKeys } from "./LogLevels"
 export type LogItem = {
   date: Date
   level: LogLevelsKeys
-  object?: any
+  object?: any | undefined | null
   msg?: string
   stack: string[]
 }
@@ -25,23 +25,23 @@ function isString(value: any): boolean {
   return typeof value === "string"
 }
 
-export function logger_info(o: any) {
-  logger_main({ o, l: "info" })
+export function loggerInfo(o: any | undefined | null) {
+  loggerMain({ o, l: "info" })
 }
 
-export function logger_err(o: any) {
-  logger_main({ o, l: "error" })
+export function loggerErr(o: any | undefined | null) {
+  loggerMain({ o, l: "error" })
 }
 
-export function logger_debug(o: any) {
-  logger_main({ o, l: "debug" })
+export function loggerDebug(o: any | undefined | null) {
+  loggerMain({ o, l: "debug" })
 }
 
-export function logger_warn(o: any) {
-  logger_main({ o, l: "warn" })
+export function loggerWarn(o: any | undefined | null) {
+  loggerMain({ o, l: "warn" })
 }
 
-function logger_main({ o, l }: { o: any; l: LogLevelsKeys }) {
+function loggerMain({ o, l }: { o: any | undefined | null; l: LogLevelsKeys }) {
   let n: LogItem
   if (isString(o)) {
     n = {

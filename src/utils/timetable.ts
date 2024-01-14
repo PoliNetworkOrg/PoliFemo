@@ -4,7 +4,7 @@ import { Event } from "api/collections/event"
 import * as FileSystem from "expo-file-system"
 import { EventType } from "./events"
 import { EventEmitter } from "events"
-import { logger_debug, logger_err } from "./log/logger"
+import { loggerDebug, loggerErr } from "./log/logger"
 
 /**
  * A more systematic approach for managing margins, change here, change everywhere.
@@ -520,8 +520,8 @@ export class TimetableDeducer extends EventEmitter {
         void this._deduceTimetableFromEvents()
       }
     } catch (err) {
-      logger_err(err)
-      logger_debug("First time opening timetable page")
+      loggerErr(err)
+      loggerDebug("First time opening timetable page")
       void this._deduceTimetableFromEvents()
     }
   }
@@ -536,8 +536,8 @@ export class TimetableDeducer extends EventEmitter {
 
       return true
     } catch (err) {
-      logger_err(err)
-      logger_debug("Error storing timetable")
+      loggerErr(err)
+      loggerDebug("Error storing timetable")
       return false
     }
   }
@@ -554,8 +554,8 @@ export class TimetableDeducer extends EventEmitter {
 
       return true
     } catch (err) {
-      logger_err(err)
-      logger_debug("Error storing subjects")
+      loggerErr(err)
+      loggerDebug("Error storing subjects")
       return false
     }
   }
@@ -681,7 +681,7 @@ export class TimetableDeducer extends EventEmitter {
 
       void this._writeSubjectsToStorage(subjects)
     } catch (err) {
-      logger_err(err)
+      loggerErr(err)
     }
   }
 

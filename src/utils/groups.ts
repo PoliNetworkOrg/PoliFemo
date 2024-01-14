@@ -2,7 +2,7 @@ import { Group } from "api/collections/groups"
 import whatsapp from "assets/groups/whatsapp.svg"
 import facebook from "assets/groups/facebook.svg"
 import telegram from "assets/groups/telegram.svg"
-import { logger_err } from "./log/logger"
+import { loggerErr } from "./log/logger"
 
 export interface Filters {
   year?: string
@@ -30,7 +30,7 @@ export function orderByMostRecentYear(groups: Group[]) {
       }
     } while (hasChanged === true)
   } catch (error) {
-    logger_err(error)
+    loggerErr(error)
   }
   return groups
 }

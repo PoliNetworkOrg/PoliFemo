@@ -35,7 +35,7 @@ export const ItemLog = ({
       <ScrollView>
         {logState[stateNav].stack.map((x, y) => {
           return (
-            <View style={{ padding: 5 }}>
+            <View style={{ padding: 5 }} key={y}>
               <Text>{x}</Text>
             </View>
           )
