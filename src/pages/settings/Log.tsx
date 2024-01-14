@@ -1,12 +1,15 @@
-import { SettingsStackScreen } from "navigation/NavigationTypes"
+import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { Pressable, ScrollView, View } from "react-native"
 import { Text, Title } from "components/Text"
 import { logState, logger_debug } from "utils/log/logger"
 import { Button } from "components/Button"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
+import { useState } from "react"
 
-function renderValues() {
+const logItemView: number = -1
+
+function renderValues(setter: (x: number) => void) {
   const { backgroundSecondary, background } = usePalette()
   return logState.map((value, index) => (
     <View
@@ -19,7 +22,7 @@ function renderValues() {
     >
       <Pressable
         onPress={() => {
-          console.log({ index })
+          setter(index)
         }}
       >
         <View
@@ -41,8 +44,9 @@ function renderValues() {
   ))
 }
 
-export const Log: SettingsStackScreen<"Log"> = () => {
+const LogList = ({ setter }: { setter: (x: number) => void }) => {
   const { homeBackground } = usePalette()
+  const { navigate } = useNavigation()
   return (
     <View
       style={{
@@ -62,12 +66,21 @@ export const Log: SettingsStackScreen<"Log"> = () => {
           paddingHorizontal: 16, // Add padding to the sides
         }}
       >
-        <Title style={{ width: "50%" }}>Log</Title>
+        <Title style={{ width: "30%" }}>Log</Title>
         <Button
-          style={{ width: "50%" }}
+          style={{ width: "30%" }}
           text="Export log"
           onPress={() => {
             logger_debug("Exported log")
+          }}
+        ></Button>
+        <Button
+          style={{ width: "30%" }}
+          text="Clear log"
+          onPress={() => {
+            logger_debug("Clear log")
+            logState.length = 0
+            navigate("Settings")
           }}
         ></Button>
       </View>
@@ -78,7 +91,7 @@ export const Log: SettingsStackScreen<"Log"> = () => {
           paddingTop: 20,
         }}
       >
-        <ScrollView>{renderValues()}</ScrollView>
+        <ScrollView>{renderValues(setter)}</ScrollView>
         <View
           style={{
             padding: 20,
@@ -87,6 +100,104 @@ export const Log: SettingsStackScreen<"Log"> = () => {
       </View>
 
       <NavBar />
+    </View>
+  )
+}
+
+const ItemLog = ({
+  setter,
+  stateNav,
+}: {
+  setter: (x: number) => void
+  stateNav: number
+}) => {
+  return (
+    <View style={{ paddingBottom: 150, paddingTop: 50 }}>
+      <View style={{ padding: 10 }}>
+        <Button
+          text="Go back"
+          onPress={() => {
+            setter(-1)
+          }}
+        />
+      </View>
+
+      <View style={{ padding: 10 }}>
+        <Text>{logState[stateNav].date.toString()}</Text>
+        <Text>{logState[stateNav].level.toString()}</Text>
+        {logState[stateNav].msg && (
+          <Text>{logState[stateNav].msg?.toString()}</Text>
+        )}
+        {logState[stateNav].object && (
+          <Text>{JSON.stringify(logState[stateNav].object)}</Text>
+        )}
+      </View>
+
+      <ScrollView>
+        {logState[stateNav].stack.map((x, y) => {
+          return (
+            <View style={{ padding: 5 }}>
+              <Text>{x}</Text>
+            </View>
+          )
+        })}
+      </ScrollView>
+    </View>
+  )
+}
+
+export const Log: SettingsStackScreen<"Log"> = () => {
+  const [stateNav, setStateNav] = useState(logItemView)
+  const setter = (x: number) => {
+    setStateNav(x)
+  }
+  const { homeBackground } = usePalette()
+  const { navigate } = useNavigation()
+
+  return (
+    <View style={{ flex: 1, paddingTop: 0, backgroundColor: homeBackground }}>
+      {stateNav < 0 ? (
+        logState.length > 0 ? (
+          <LogList setter={setter} />
+        ) : (
+          <View
+            style={{
+              paddingTop: 100,
+              alignContent: "center",
+              alignItems: "center",
+              alignSelf: "center",
+            }}
+          >
+            <View
+              style={{
+                padding: 30,
+                alignContent: "center",
+                alignItems: "center",
+                alignSelf: "center",
+              }}
+            >
+              <Text>No logs.</Text>
+              <View
+                style={{
+                  padding: 30,
+                  alignContent: "center",
+                  alignItems: "center",
+                  alignSelf: "center",
+                }}
+              >
+                <Button
+                  text="Go back"
+                  onPress={() => {
+                    navigate("Settings")
+                  }}
+                ></Button>
+              </View>
+            </View>
+          </View>
+        )
+      ) : (
+        <ItemLog setter={setter} stateNav={stateNav}></ItemLog>
+      )}
     </View>
   )
 }
