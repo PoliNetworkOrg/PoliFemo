@@ -1,10 +1,22 @@
 import { LogLevelsKeys } from "./LogLevels"
 
-type LogItem = {
+export type LogItem = {
   date: Date
   level: LogLevelsKeys
   object?: any
   msg?: string
+  stack: string[]
+}
+
+function getStackTrace(): string[] {
+  try {
+    throw new Error()
+  } catch (error) {
+    if (error instanceof Error) {
+      return (error.stack ?? "").split("\n").slice(1)
+    }
+    return []
+  }
 }
 
 export const logValues: LogItem[] = []
@@ -31,10 +43,20 @@ export function logger_warn(o: any) {
 
 function logger_main({ o, l }: { o: any; l: LogLevelsKeys }) {
   if (isString(o)) {
-    const n: LogItem = { date: new Date(), level: l, msg: o }
+    const n: LogItem = {
+      date: new Date(),
+      level: l,
+      msg: o,
+      stack: getStackTrace(),
+    }
     logValues.push(n)
   } else {
-    const n: LogItem = { date: new Date(), level: l, object: o }
+    const n: LogItem = {
+      date: new Date(),
+      level: l,
+      object: o,
+      stack: getStackTrace(),
+    }
     logValues.push(n)
   }
 }
