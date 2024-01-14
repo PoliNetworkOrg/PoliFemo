@@ -8,6 +8,7 @@ import { useState, useEffect } from "react"
 import { notificationEventEmitter } from "./NotificationEventEmitter"
 import { NotificationCenter } from "./NotificationCenter"
 import { NotificationStorage, ValidChannelId } from "./NotificationTypes"
+import { logger_debug } from "utils/log/logger"
 
 const notificationCenter = NotificationCenter.getInstance()
 

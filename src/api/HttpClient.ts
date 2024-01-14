@@ -10,6 +10,7 @@ import { PolimiToken, PoliNetworkToken, Tokens } from "contexts/login"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { wait } from "utils/functions"
 import { Alert } from "react-native"
+import { logger_debug } from "utils/log/logger"
 
 /*Docs used to make this:
 Singleton:

@@ -12,7 +12,7 @@ import { useApiCall } from "api/useApiCall"
 import { api } from "api"
 import { TimeTableContext } from "contexts/timeTable"
 import { Region } from "react-native-maps"
-import { logger_err } from "utils/log/logger"
+import { logger_debug, logger_err } from "utils/log/logger"
 
 /**
  * The Main Container.

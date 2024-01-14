@@ -4,7 +4,7 @@ import { Event } from "api/collections/event"
 import * as FileSystem from "expo-file-system"
 import { EventType } from "./events"
 import { EventEmitter } from "events"
-import { logger_err } from "./log/logger"
+import { logger_debug, logger_err } from "./log/logger"
 
 /**
  * A more systematic approach for managing margins, change here, change everywhere.

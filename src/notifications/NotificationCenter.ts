@@ -20,7 +20,7 @@ import {
 import { notificationEventEmitter } from "./NotificationEventEmitter"
 import { navigationRef } from "navigation/NavigationTypes"
 import uuid from "react-native-uuid"
-import { logger_err } from "utils/log/logger"
+import { logger_debug, logger_err } from "utils/log/logger"
 
 export class NotificationCenter {
   private static classInstance?: NotificationCenter

@@ -7,6 +7,7 @@ import {
 } from "notifications/NotificationTypes"
 import { Event } from "api/collections/event"
 import * as Notifications from "expo-notifications"
+import { logger_debug } from "./log/logger"
 export interface MinutesBeforeOptions {
   deadline?: number
   exam?: number
