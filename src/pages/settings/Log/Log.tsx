@@ -1,17 +1,15 @@
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { View } from "react-native"
 import { Text } from "components/Text"
-import { logState } from "utils/log/logger"
+import { logState } from "utils/log/logState"
 import { Button } from "components/Button"
 import { usePalette } from "utils/colors"
 import { useState } from "react"
 import { LogList } from "./LogList"
 import { ItemLog } from "./ItemLog"
 
-const logItemView = -1
-
 export const Log: SettingsStackScreen<"Log"> = () => {
-  const [stateNav, setStateNav] = useState(logItemView)
+  const [stateNav, setStateNav] = useState(-1)
   const setter = (x: number) => {
     setStateNav(x)
   }

@@ -1,25 +1,7 @@
+import { LogItem } from "./LogItem"
 import { LogLevelsKeys } from "./LogLevels"
-
-export type LogItem = {
-  date: Date
-  level: LogLevelsKeys
-  object?: any | undefined | null
-  msg?: string
-  stack: string[]
-}
-
-function getStackTrace(): string[] {
-  try {
-    throw new Error()
-  } catch (error) {
-    if (error instanceof Error) {
-      return (error.stack ?? "").split("\n").slice(1)
-    }
-    return []
-  }
-}
-
-export const logState: LogItem[] = []
+import { getStackTrace } from "./getStackTrace"
+import { logState } from "./logState"
 
 function isString(value: any | undefined | null): boolean {
   return typeof value === "string"
@@ -43,19 +25,20 @@ export function loggerWarn(o: any | undefined | null) {
 
 function loggerMain({ o, l }: { o: any | undefined | null; l: LogLevelsKeys }) {
   let n: LogItem
+  const stack = getStackTrace()
   if (isString(o)) {
     n = {
       date: new Date(),
       level: l,
       msg: o,
-      stack: getStackTrace(),
+      stack: stack,
     }
   } else {
     n = {
       date: new Date(),
       level: l,
       object: o,
-      stack: getStackTrace(),
+      stack: stack,
     }
   }
 

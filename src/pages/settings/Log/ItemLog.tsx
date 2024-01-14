@@ -1,6 +1,6 @@
 import { ScrollView, View } from "react-native"
 import { Text } from "components/Text"
-import { logState } from "utils/log/logger"
+import { logState } from "utils/log/logState"
 import { Button } from "components/Button"
 
 export const ItemLog = ({

@@ -1,6 +1,6 @@
 import { Pressable, View } from "react-native"
 import { Text } from "components/Text"
-import { logState } from "utils/log/logger"
+import { logState } from "utils/log/logState"
 import { usePalette } from "utils/colors"
 
 export function renderItemsForList(setter: (x: number) => void) {
