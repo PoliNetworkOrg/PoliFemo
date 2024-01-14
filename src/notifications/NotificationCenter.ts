@@ -20,6 +20,7 @@ import {
 import { notificationEventEmitter } from "./NotificationEventEmitter"
 import { navigationRef } from "navigation/NavigationTypes"
 import uuid from "react-native-uuid"
+import { logger_err } from "utils/log/logger"
 
 export class NotificationCenter {
   private static classInstance?: NotificationCenter
@@ -105,7 +106,7 @@ export class NotificationCenter {
         importance: AndroidImportance.MAX,
       })
     } catch (err) {
-      console.log(err)
+      logger_err(err)
     }
   }
 
@@ -120,14 +121,14 @@ export class NotificationCenter {
    */
   private _initializeNotificationListeners = () => {
     Notifications.addNotificationReceivedListener(notification => {
-      console.log(
+      logger_debug(
         "received notification: " + notification.request.content.title
       )
       //if storeOnSchedule is set to false, store now. (more intended for push notifications...)
       //by default storeOnSchedule is true for every notification scheduled by the device
       // TODO : might need changing if push notifications will be implemented
       if (notification.request.content.data.storeOnSchedule === false) {
-        console.log("Notification received with storeOnSchedule set to false")
+        logger_debug("Notification received with storeOnSchedule set to false")
         const newNotificationList = this._notifications
         if (newNotificationList) {
           newNotificationList.push({
@@ -195,8 +196,8 @@ export class NotificationCenter {
       ) as NotificationStorage[]
       this._notifications = notifications
     } catch (err) {
-      console.log(err)
-      console.log("Error reading notifications")
+      logger_err(err)
+      logger_debug("Error reading notifications")
       this._notifications = []
     }
   }
@@ -220,8 +221,8 @@ export class NotificationCenter {
 
       return true
     } catch (err) {
-      console.log(err)
-      console.log("Error storing notifications")
+      logger_err(err)
+      logger_debug("Error storing notifications")
       return false
     }
   }
@@ -241,7 +242,7 @@ export class NotificationCenter {
 
       this._activeChannels = notificationsChannels
     } catch (err) {
-      console.log(err)
+      logger_err(err)
     }
   }
 
@@ -263,7 +264,7 @@ export class NotificationCenter {
 
       return true
     } catch (err) {
-      console.log(err)
+      logger_err(err)
       return false
     }
   }
@@ -363,7 +364,7 @@ export class NotificationCenter {
             trigger: trigger,
             identifier: oldIdentifier,
           })
-          console.log("scheduled notification of identifier: " + identifier)
+          logger_debug("scheduled notification of identifier: " + identifier)
         }
         if (!identifier) {
           identifier = uuid.v4().toString()
@@ -392,7 +393,7 @@ export class NotificationCenter {
       }
     } catch (err) {
       //something went wrong (?)
-      console.log(err)
+      logger_err(err)
       return undefined
     }
   }
@@ -426,8 +427,8 @@ export class NotificationCenter {
       }
       return false
     } catch (err) {
-      console.log("problem in requesting permissions")
-      console.log(err)
+      logger_debug("problem in requesting permissions")
+      logger_err(err)
       return false
     }
   }
@@ -691,7 +692,7 @@ export class NotificationCenter {
 
       this._markNotificationsStorageAsDumped(dumpedNotificationsIdentifiers)
     } catch (error) {
-      console.log(error)
+      logger_err(error)
     }
   }
 
@@ -755,7 +756,7 @@ export class NotificationCenter {
 
       this._restoreDumpedNotificationsStorage(restoredNotificationIdentifiers)
     } catch (error) {
-      console.log(error)
+      logger_err(error)
     }
   }
 

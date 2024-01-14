@@ -12,6 +12,7 @@ import { useApiCall } from "api/useApiCall"
 import { api } from "api"
 import { TimeTableContext } from "contexts/timeTable"
 import { Region } from "react-native-maps"
+import { logger_err } from "utils/log/logger"
 
 /**
  * The Main Container.
@@ -62,26 +63,26 @@ export const MainContainer: FC = () => {
   }
 
   useEffect(() => {
-    console.log("Loading tags preferences from storage")
+    logger_debug("Loading tags preferences from storage")
     AsyncStorage.getItem("newstags:preferences")
       .then(preferencesJSON => {
         if (preferencesJSON) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const data: Record<string, Preference> = JSON.parse(preferencesJSON)
-          console.log(data)
+          logger_debug(data)
           setPreferences(data)
         }
       })
-      .catch(err => console.log(err))
+      .catch(err => logger_err(err))
   }, [])
 
   useEffect(() => {
-    console.log("Saving tags preferences to storage")
-    console.log(preferences)
+    logger_debug("Saving tags preferences to storage")
+    logger_debug(preferences)
     AsyncStorage.setItem(
       "newstags:preferences",
       JSON.stringify(preferences)
-    ).catch(err => console.log(err))
+    ).catch(err => logger_err(err))
   }, [preferences])
 
   return (
@@ -121,10 +122,10 @@ export const MainContainer: FC = () => {
       </RoomsSearchDataContext.Provider>
       <Tray
         onDownloads={() => {
-          console.log("downloads")
+          logger_debug("downloads")
         }}
         onNotifications={() => {
-          console.log("notifications")
+          logger_debug("notifications")
           navigate("MainNav", {
             screen: "Notifications",
           })

@@ -19,6 +19,7 @@ import groups from "assets/menu/whatsapp.svg"
 import { Modal } from "components/Modal"
 import { useTranslation } from "react-i18next"
 import { useOutsideClick } from "utils/outsideClick"
+import { logger_err } from "utils/log/logger"
 
 type ButtonState = ButtonInterface & { shown: boolean }
 
@@ -126,7 +127,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
           )
         }
       })
-      .catch(err => console.log(err))
+      .catch(err => logger_err(err))
   }, [])
 
   useEffect(() => {
@@ -138,7 +139,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
     AsyncStorage.setItem(
       "menu:icons",
       JSON.stringify(icons.filter(i => i.shown).map(i => i.type))
-    ).catch(err => console.log(err))
+    ).catch(err => logger_err(err))
   }, [icons])
 
   // divide iconsToAdd in triplets

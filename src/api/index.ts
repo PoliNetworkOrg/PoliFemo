@@ -19,7 +19,7 @@ export { AuthType, RequestOptions, RetryType } from "./HttpClient"
  *               const tags: Tag[] = response
  *               //do something
  *           })
- *           .catch(err => console.log(err))
+ *           .catch(err => logger_err(err))
  * ```
  *
  * Check {@link RequestOptions} for additional request parameters

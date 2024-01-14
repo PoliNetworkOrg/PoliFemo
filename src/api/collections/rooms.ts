@@ -56,7 +56,7 @@ export const rooms = {
    * Retrieves available rooms from PoliNetwork server in a given time range.
    */
   getFreeRoomsDay(params: { date: string }, options?: RequestOptions) {
-    console.log("requesting free rooms for date", params.date)
+    logger_debug("requesting free rooms for date", params.date)
     const request = client.callPoliNetwork<{
       free_rooms: Record<ValidAcronym, Room[]>
     }>({

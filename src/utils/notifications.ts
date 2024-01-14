@@ -151,7 +151,7 @@ export const extractAllEvents = (events: Event[]) => {
 export const debugSchedule = async () => {
   const notifs = await Notifications.getAllScheduledNotificationsAsync()
   notifs.forEach(notif => {
-    console.log(notif.content.title + " " + notif.identifier)
+    logger_debug(notif.content.title + " " + notif.identifier)
   })
 }
 

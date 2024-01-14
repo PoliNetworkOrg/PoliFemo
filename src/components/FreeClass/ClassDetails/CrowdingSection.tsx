@@ -11,6 +11,7 @@ import { LoginContext } from "contexts/login"
 import { useNavigation } from "@react-navigation/native"
 import { useTranslation } from "react-i18next"
 import { useApiCall } from "api/useApiCall"
+import { logger_err } from "utils/log/logger"
 
 const contentPadding = 20
 
@@ -54,7 +55,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
         }
       )
     } catch (err) {
-      console.log(err)
+      logger_err(err)
     }
   }
   return (

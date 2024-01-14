@@ -12,6 +12,7 @@ import {
   CampusItem,
   BuildingItem,
 } from "components/FreeClass/DefaultList"
+import { logger_err } from "./log/logger"
 
 export function extractRoom(val: string) {
   if (val.toLowerCase().includes("corridoio")) {
@@ -162,7 +163,7 @@ export function getStartEndDate(searchDate: Date, occupancies: Occupancies) {
       }
     })
   } catch (err) {
-    console.log(err)
+    logger_err(err)
   }
   if (startTime) {
     const hourStart = parseInt(startTime.substring(0, 2))

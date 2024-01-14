@@ -30,7 +30,7 @@ export function useNotificationStorage(
 
   useEffect(() => {
     function loadNotifications() {
-      console.log("loading notifications " + channelId)
+      logger_debug("loading notifications " + channelId)
       const notifications =
         notificationCenter.getNotificationsOfCategory(channelId)
       setNotifications(notifications)

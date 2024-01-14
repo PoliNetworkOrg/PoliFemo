@@ -13,6 +13,7 @@ import { Icon } from "components/Icon"
 import { AdaptiveShadowView } from "components/BoxShadow"
 import { useTranslation } from "react-i18next"
 import { EmptyListMessage } from "components/EmptyListMessage"
+import { logger_err } from "utils/log/logger"
 
 const { width } = Dimensions.get("window")
 
@@ -91,7 +92,7 @@ export const FreeClassList: FC<FreeClassListProps> = props => {
               occupancyRate: item.occupancy_rate,
             })
           } catch (err) {
-            console.log(err)
+            logger_err(err)
           }
         }
 

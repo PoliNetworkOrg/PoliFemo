@@ -10,6 +10,7 @@ import { RoomsSearchDataContext } from "contexts/rooms"
 import { EmptyListMessage } from "components/EmptyListMessage"
 import { useTranslation } from "react-i18next"
 import { PageWrap } from "components/PageLayout"
+import { logger_err } from "utils/log/logger"
 
 /**
  * In this page the user can select the building.
@@ -61,7 +62,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
       }
     } catch (error) {
       setError(true)
-      console.log(error)
+      logger_err(error)
     }
   }
 
