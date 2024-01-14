@@ -108,6 +108,14 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
             navigate("Privacy")
           }}
         />
+        <SettingTile
+          title="Log"
+          subtitle={"Log"}
+          icon={settingsIcons.log}
+          callback={() => {
+            navigate("Log")
+          }}
+        />
         {loggedIn && (
           <>
             <Divider />

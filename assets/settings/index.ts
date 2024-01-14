@@ -4,6 +4,7 @@ import modify from "./modify.svg"
 import privacy from "./privacy.svg"
 import disconnect from "./disconnect.svg"
 import notifiche from "./notifiche.svg"
+import log from "./log.svg"
 
 export const settingsIconList = [
   "notifiche",
@@ -11,6 +12,7 @@ export const settingsIconList = [
   "modify",
   "help",
   "disconnect",
+  "log",
 ] as const
 
 export type SettingIconNames = (typeof settingsIconList)[number]
@@ -27,4 +29,5 @@ export const settingsIcons: Record<SettingIconNames, number> = {
   modify,
   help,
   disconnect,
+  log,
 }
