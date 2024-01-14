@@ -1,11 +1,14 @@
 import { SettingsStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { Pressable, ScrollView, View } from "react-native"
 import { Text, Title } from "components/Text"
-import { logState, logger_debug } from "utils/log/logger"
+import { logState, logger_debug, logger_err } from "utils/log/logger"
 import { Button } from "components/Button"
 import { usePalette } from "utils/colors"
 import { NavBar } from "components/NavBar"
 import { useState } from "react"
+import * as FileSystem from "expo-file-system"
+import * as Sharing from "expo-sharing"
+import { Alert, Linking } from "react-native"
 
 const logItemView: number = -1
 
@@ -72,6 +75,25 @@ const LogList = ({ setter }: { setter: (x: number) => void }) => {
           text="Export log"
           onPress={() => {
             logger_debug("Exported log")
+
+            const f = async () => {
+              try {
+                const d = new Date()
+                const s_date =
+                  d.getFullYear() + "_" + d.getMonth() + "_" + d.getDay()
+                const uri =
+                  FileSystem.cacheDirectory + "polifemo_log_" + s_date + ".json"
+                await FileSystem.writeAsStringAsync(
+                  uri,
+                  JSON.stringify(logState, null, 2)
+                )
+                void Sharing.shareAsync(uri)
+              } catch (e) {
+                logger_err(e)
+              } finally {
+              }
+            }
+            f()
           }}
         ></Button>
         <Button
