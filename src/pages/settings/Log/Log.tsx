@@ -8,7 +8,7 @@ import { useState } from "react"
 import { LogList } from "./LogList"
 import { ItemLog } from "./ItemLog"
 
-const logItemView: number = -1
+const logItemView = -1
 
 export const Log: SettingsStackScreen<"Log"> = () => {
   const [stateNav, setStateNav] = useState(logItemView)
@@ -54,13 +54,13 @@ export const Log: SettingsStackScreen<"Log"> = () => {
                   onPress={() => {
                     navigate("Settings")
                   }}
-                ></Button>
+                />
               </View>
             </View>
           </View>
         )
       ) : (
-        <ItemLog setter={setter} stateNav={stateNav}></ItemLog>
+        <ItemLog setter={setter} stateNav={stateNav} />
       )}
     </View>
   )

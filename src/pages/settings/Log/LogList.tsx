@@ -57,7 +57,7 @@ export const LogList = ({ setter }: { setter: (x: number) => void }) => {
             }
             f()
           }}
-        ></Button>
+        />
         <Button
           style={{ width: "30%" }}
           text="Clear log"
@@ -66,7 +66,7 @@ export const LogList = ({ setter }: { setter: (x: number) => void }) => {
             logState.length = 0
             navigate("Settings")
           }}
-        ></Button>
+        />
       </View>
 
       <View
@@ -80,7 +80,7 @@ export const LogList = ({ setter }: { setter: (x: number) => void }) => {
           style={{
             padding: 20,
           }}
-        ></View>
+        />
       </View>
 
       <NavBar />
