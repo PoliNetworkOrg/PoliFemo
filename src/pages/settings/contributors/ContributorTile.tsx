@@ -1,51 +1,43 @@
 import { BodyText } from "components/Text"
 import { FC } from "react"
-import { Dimensions, Linking, Pressable, View } from "react-native"
+import { Linking, Pressable } from "react-native"
 import { palette } from "utils/colors"
 
+/* eslint-disable @typescript-eslint/naming-convention */
 export interface Contributor {
   login: string
   name: string
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   avatar_url: string
   profile?: string
   contributions: string[]
 }
-
-const { width } = Dimensions.get("window")
+/* eslint-enable @typescript-eslint/naming-convention */
 
 export const ContributorTile: FC<Contributor> = props => {
   return (
     <Pressable
       style={{
-        width: width - 65,
-        height: 93,
+        padding: 12,
         backgroundColor: palette.lighter,
-        marginBottom: 34,
-        borderRadius: 16,
+        marginBottom: 12,
+        borderRadius: 8,
         justifyContent: "center",
+        alignItems: "center",
       }}
       onPress={() =>
         props.profile ? Linking.openURL(props.profile) : undefined
       }
     >
-      <View
+      <BodyText
         style={{
-          flexDirection: "row",
-          width: width - 65,
-          justifyContent: "center",
+          fontWeight: "500",
+          fontSize: 20,
+          color: "white",
+          textAlign: "center",
         }}
       >
-        <BodyText
-          style={{
-            fontWeight: "500",
-            fontSize: 20,
-            color: "white",
-          }}
-        >
-          {props.name}
-        </BodyText>
-      </View>
+        {props.name}
+      </BodyText>
     </Pressable>
   )
 }

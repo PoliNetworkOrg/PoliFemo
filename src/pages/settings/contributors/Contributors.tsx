@@ -1,11 +1,10 @@
-import { BoxShadowView } from "components/BoxShadow"
-import { NavBar } from "components/NavBar"
-import { BodyText, Text } from "components/Text"
+import { Title } from "components/Text"
 import { SettingsStackScreen } from "navigation/NavigationTypes"
-import { SectionList, View } from "react-native"
+import { SectionList } from "react-native"
 import { palette, usePalette } from "utils/colors"
 import contributors from "./contributors.json"
 import { ContributorTile } from "./ContributorTile"
+import { PageWrap } from "components/PageLayout"
 
 enum ContributionType {
   MANAGEMENT = "projectManagement",
@@ -14,7 +13,7 @@ enum ContributionType {
 }
 
 export const Contributors: SettingsStackScreen<"Contributors"> = () => {
-  const { homeBackground, isLight, primary, background } = usePalette()
+  const { isLight } = usePalette()
 
   const managementContributors = contributors.filter(
     c => c.contributions[0] === ContributionType.MANAGEMENT
@@ -26,6 +25,12 @@ export const Contributors: SettingsStackScreen<"Contributors"> = () => {
   const designContributors = contributors.filter(
     c => c.contributions[0] === ContributionType.DESIGN
   )
+  // const otherContributors = contributors.filter(
+  //   c =>
+  //     c.contributions[0] !== ContributionType.DESIGN &&
+  //     c.contributions[0] !== ContributionType.CODE &&
+  //     c.contributions[0] !== ContributionType.MANAGEMENT
+  // )
 
   const sections = [
     {
@@ -40,86 +45,46 @@ export const Contributors: SettingsStackScreen<"Contributors"> = () => {
       title: "Design",
       data: designContributors,
     },
+    // {
+    //   title: "Others",
+    //   data: otherContributors,
+    // },
   ]
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: homeBackground,
-      }}
-    >
-      <View
-        style={{
-          position: "absolute",
-          top: 42,
-          left: 26,
-          zIndex: 6,
-        }}
-      >
-        <Text
-          style={{
-            color: isLight ? "#fff" : primary,
-            fontSize: 24,
-            fontWeight: "900",
-          }}
-        >
-          Contributors
-        </Text>
-      </View>
-      <BoxShadowView
-        shadow={{
-          color: isLight ? palette.primary : "#000",
-          offset: { y: -8 },
-          opacity: isLight ? 0.1 : 0.45,
-          blur: isLight ? 19 : 32,
-        }}
-        style={{
-          flex: 1,
-          marginTop: 86,
-        }}
+    <PageWrap upperTitle="Contributors">
+      <SectionList
+        sections={sections}
+        keyExtractor={(item, index) => `${item.name}-${index}`}
+        stickySectionHeadersEnabled={false}
         contentContainerStyle={{
-          backgroundColor: background,
-          borderTopLeftRadius: 30,
-          borderTopRightRadius: 30,
-          overflow: "hidden",
+          paddingBottom: 120,
+          paddingTop: 30,
+          paddingHorizontal: 28,
         }}
-      >
-        <SectionList
-          sections={sections}
-          keyExtractor={(item, index) => `${item.name}-${index}`}
-          stickySectionHeadersEnabled={false}
-          contentContainerStyle={{
-            alignItems: "center",
-            justifyContent: "center",
-            paddingBottom: 120,
-            paddingTop: 30,
-          }}
-          renderSectionHeader={({ section: { title } }) => (
-            <BodyText
-              style={{
-                marginBottom: 20,
-                fontSize: 30,
-                fontWeight: "500",
-                color: isLight ? palette.primary : palette.accent,
-              }}
-            >
-              {title}
-            </BodyText>
-          )}
-          renderItem={({ item, index, section }) => (
-            <ContributorTile
-              login={item.login}
-              name={item.name}
-              avatar_url={item.avatar_url}
-              profile={item.profile}
-              contributions={item.contributions}
-              key={"contributor-" + section + " -" + index}
-            />
-          )}
-        />
-      </BoxShadowView>
-      <NavBar />
-    </View>
+        renderSectionHeader={({ section: { title } }) => (
+          <Title
+            style={{
+              marginBottom: 12,
+              fontSize: 24,
+              fontWeight: "500",
+              color: isLight ? palette.primary : palette.accent,
+            }}
+          >
+            {title}
+          </Title>
+        )}
+        renderItem={({ item, index, section }) => (
+          <ContributorTile
+            login={item.login}
+            name={item.name}
+            avatar_url={item.avatar_url}
+            profile={item.profile}
+            contributions={item.contributions}
+            key={"contributor-" + section + " -" + index}
+          />
+        )}
+      />
+    </PageWrap>
   )
 }
