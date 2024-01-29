@@ -16,7 +16,8 @@
     "type-check": "tsc --noEmit",
     "prune-branches": "node scripts/prune-branches.js",
     "generate-licenses": "node scripts/generate-licenses.js",
-    "add-contributor": "node scripts/create-contributor.js"
+    "add-contributor": "node scripts/create-contributor.js",
+    "update-contributors": "node scripts/update-contributors.js"
   },
   "dependencies": {
     "@ant-design/icons-react-native": "^2.3.2",
