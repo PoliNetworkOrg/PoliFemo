@@ -1,7 +1,7 @@
 [
   {
     "login": "Tammura",
-    "name": "Ahmed",
+    "name": "Ahmed Tamer Fathy Amer",
     "avatar_url": "https://avatars.githubusercontent.com/u/72708024?v=4",
     "profile": "https://github.com/Tammura",
     "contributions": [
@@ -32,7 +32,7 @@
   },
   {
     "login": "SugoGangotti",
-    "name": "SugoGangotti",
+    "name": "Giacomo Marra",
     "avatar_url": "https://avatars.githubusercontent.com/u/101225498?v=4",
     "profile": "https://github.com/SugoGangotti",
     "contributions": [
@@ -41,7 +41,7 @@
   },
   {
     "login": "DiegoZaff",
-    "name": "Diego",
+    "name": "Diego Zafferani",
     "avatar_url": "https://avatars.githubusercontent.com/u/43524162?v=4",
     "profile": "https://github.com/DiegoZaff",
     "contributions": [
@@ -88,7 +88,7 @@
   },
   {
     "login": "pontig",
-    "name": "pontig",
+    "name": "Elia Pontiggia",
     "avatar_url": "https://avatars.githubusercontent.com/u/59708804?v=4",
     "profile": "https://github.com/pontig",
     "contributions": [
@@ -106,7 +106,7 @@
   },
   {
     "login": "Elylo15",
-    "name": "Elylo",
+    "name": "Elisabetta Lollino",
     "avatar_url": "https://avatars.githubusercontent.com/u/58746092?v=4",
     "profile": "https://github.com/Elylo15",
     "contributions": [
@@ -115,7 +115,7 @@
   },
   {
     "login": "Eliaxie",
-    "name": "Eliaxie",
+    "name": "Elia Maggioni",
     "avatar_url": "https://avatars.githubusercontent.com/u/27226791?v=4",
     "profile": "https://github.com/Eliaxie",
     "contributions": [
@@ -124,7 +124,7 @@
   },
   {
     "login": "stignarnia",
-    "name": "stignarnia",
+    "name": "Diego Aldarese",
     "avatar_url": "https://avatars.githubusercontent.com/u/80171209?v=4",
     "profile": "https://github.com/stignarnia",
     "contributions": [
@@ -204,14 +204,6 @@
     "avatar_url": "https://www.gravatar.com/avatar",
     "contributions": [
       "design"
-    ]
-  },
-  {
-    "login": "",
-    "name": "Luca Cerioli",
-    "avatar_url": "https://www.gravatar.com/avatar",
-    "contributions": [
-      "code"
     ]
   }
 ]
