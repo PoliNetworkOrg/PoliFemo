@@ -6,11 +6,17 @@ import { Pressable, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { StyleSheet } from "react-native"
 import { CalendarList } from "react-native-calendars"
-import { useContext, useEffect, useMemo, useRef, useState } from "react"
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import {
   CalendarPeriod,
   CalendarSingletonWrapper as CalendarManager,
-  dayComponentCustom,
   daysOfWeekLetters,
   CalendarBottomSheetStatus,
   CalendarEvent,
@@ -18,7 +24,8 @@ import {
   monthsEn,
   CalendarEventStatus,
 } from "utils/calendar"
-import { MarkedDates } from "react-native-calendars/src/types"
+import { DayComponentCustom } from "components/Calendar/DayComponentCustom"
+import { DateData, MarkedDates } from "react-native-calendars/src/types"
 import { Text } from "components/Text"
 import { Icon } from "components/Icon"
 import calendarIcon from "assets/calendar/calendar.svg"
@@ -33,6 +40,7 @@ import { CalendarDailyEvents } from "components/Calendar/CalendarDailyEvents"
 import { SingleMonth } from "components/Calendar/SingleMonth"
 import { ScrollView } from "react-native-gesture-handler"
 import { useCurrentLanguage } from "utils/language"
+import { DayProps } from "react-native-calendars/src/calendar/day"
 
 export const CalendarPage: MainStackScreen<"Calendar"> = () => {
   const { homeBackground, background, dotColor, isLight } = usePalette()
@@ -79,75 +87,6 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
   const navigation = useNavigation()
 
   const calendarObj = useRef<CalendarManager | undefined>()
-
-  const calendarMemoized = useMemo<JSX.Element>(() => {
-    return (
-      <CalendarList
-        firstDay={1}
-        pagingEnabled={true}
-        staticHeader={true}
-        scrollEnabled={true}
-        scrollsToTop={false}
-        initialNumToRender={10}
-        pastScrollRange={12}
-        futureScrollRange={12}
-        horizontal={true}
-        theme={{
-          calendarBackground: "transparent",
-          selectedDayTextColor: "orange",
-          todayTextColor: "yellow",
-          dayTextColor: "#fff",
-          dotStyle: { width: 6, height: 6, borderRadius: 3 },
-          dotColor: dotColor,
-          stylesheet: {
-            day: {
-              period: { isLight: isLight },
-            },
-          },
-        }}
-        onDayPress={day => {
-          const date = new Date(day.dateString)
-          const now = new Date()
-
-          //set hours and minutes of date to now
-          date.setHours(now.getHours())
-          date.setMinutes(now.getMinutes())
-
-          setSelectedDay(date.toISOString())
-
-          setBottomSheetStatus(CalendarBottomSheetStatus.DAILY_EVENTS)
-        }}
-        style={{
-          marginTop: 176,
-          height: 270,
-          backgroundColor: "transparent",
-        }}
-        markedDates={{
-          ...markedDates,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          "2023-07-15": {
-            marked: true,
-            startingDay: true,
-            endingDay: true,
-            color: "orange",
-          },
-        }}
-        customHeaderTitle={undefined}
-        hideExtraDays={true}
-        renderHeader={() => null}
-        renderArrow={() => null}
-        showSixWeeks={true}
-        hideDayNames={true}
-        markingType="period"
-        current={visibleDay}
-        onMonthChange={date => {
-          setMonth(date.month - 1)
-          setYear(date.year)
-        }}
-        dayComponent={dayComponentCustom}
-      />
-    )
-  }, [markedDates, visibleDay, isLight])
 
   // I thought memoizing would improve performance, but it appears to be still very slow!!
   const scrollMonths = useMemo<JSX.Element>(() => {
@@ -345,6 +284,10 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
     }
   }, [matricola])
 
+  const DCC = useCallback<
+    (props: DayProps & { date?: DateData }) => JSX.Element
+  >(props => <DayComponentCustom height={26} {...props} />, [])
+
   return (
     <View style={[{ backgroundColor: homeBackground }, styles.container]}>
       <View
@@ -426,7 +369,66 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
       </View>
       {bottomSheetStatus != CalendarBottomSheetStatus.ALL_MONTHS && (
         <>
-          {calendarMemoized}
+          <CalendarList
+            firstDay={1}
+            pagingEnabled={true}
+            staticHeader={true}
+            scrollEnabled={true}
+            scrollsToTop={false}
+            initialNumToRender={10}
+            pastScrollRange={12}
+            futureScrollRange={12}
+            horizontal={true}
+            theme={{
+              calendarBackground: "transparent",
+              selectedDayTextColor: "orange",
+              todayTextColor: "yellow",
+              dayTextColor: "#fff",
+              dotStyle: { width: 6, height: 6, borderRadius: 3 },
+              dotColor: dotColor,
+              stylesheet: {
+                day: {
+                  period: { isLight: isLight },
+                },
+              },
+            }}
+            onDayPress={day => {
+              const date = new Date(day.dateString)
+              const now = new Date()
+
+              //set hours and minutes of date to now
+              date.setHours(now.getHours())
+              date.setMinutes(now.getMinutes())
+              setSelectedDay(date.toISOString())
+              setBottomSheetStatus(CalendarBottomSheetStatus.DAILY_EVENTS)
+            }}
+            style={{
+              marginTop: 176,
+              height: 270,
+              backgroundColor: "transparent",
+            }}
+            markedDates={{
+              ...markedDates,
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              "2023-07-15": {
+                marked: true,
+                startingDay: true,
+                endingDay: true,
+                color: "orange",
+              },
+            }}
+            renderHeader={() => null}
+            hideExtraDays={true}
+            showSixWeeks={true}
+            hideDayNames={true}
+            markingType="period"
+            current={visibleDay}
+            onMonthChange={date => {
+              setMonth(date.month - 1)
+              setYear(date.year)
+            }}
+            dayComponent={DCC}
+          />
           <BoxShadowView
             shadow={{
               color: "#000",

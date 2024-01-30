@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { DateData, MarkedDates } from "react-native-calendars/src/types"
-import * as FileSystem from "expo-file-system"
+import { MarkedDates } from "react-native-calendars/src/types"
 import { EventEmitter } from "events"
-import { ComponentType, useEffect, useMemo, useState } from "react"
-import { TouchableOpacity, View, ViewStyle } from "react-native"
-import { DayProps } from "react-native-calendars/src/calendar/day"
-import { Text } from "components/Text"
-import { Canvas, Path, Skia } from "@shopify/react-native-skia"
 import { palette } from "./colors"
 import boomSvg from "assets/calendar/emoticons/boom.svg"
 import brokenHeartSvg from "assets/calendar/emoticons/broken_heart.svg"
@@ -164,26 +158,11 @@ const calendarPeriods: CalendarPeriod[] = [
   },
   {
     dates: [
-      {
-        start: "2023-10-04",
-        end: "2023-10-05",
-      },
-      {
-        start: "2023-12-19",
-        end: "2023-12-19",
-      },
-      {
-        start: "2023-12-21",
-        end: "2023-12-21",
-      },
-      {
-        start: "2024-04-09",
-        end: "2024-04-10",
-      },
-      {
-        start: "2024-07-16",
-        end: "2024-07-17",
-      },
+      { start: "2023-10-04", end: "2023-10-05" },
+      { start: "2023-12-19", end: "2023-12-19" },
+      { start: "2023-12-21", end: "2023-12-21" },
+      { start: "2024-04-09", end: "2024-04-10" },
+      { start: "2024-07-16", end: "2024-07-17" },
     ],
     title: "Lauree Magistrali",
     titleEn: "Master's degree",
@@ -400,69 +379,67 @@ export class CalendarSingletonWrapper
   }
 
   private _readCaledarPolimiSync = async () => {
-    try {
-      const calendarPolimiSyncJSON = await FileSystem.readAsStringAsync(
-        FileSystem.documentDirectory + "calendar_polimi_sync.json"
-      )
-      const calendarPolimiSync = JSON.parse(
-        calendarPolimiSyncJSON
-      ) as CalendarPolimiSyncObj
-      this._calendarPolimiSync = calendarPolimiSync
-    } catch (err) {
-      console.log(err)
-      console.log("Error reading calendarPolimiSync")
-      this._calendarPolimiSync = undefined
-    }
+    // try {
+    //   const calendarPolimiSyncJSON = await FileSystem.readAsStringAsync(
+    //     FileSystem.documentDirectory + "calendar_polimi_sync.json"
+    //   )
+    //   const calendarPolimiSync = JSON.parse(
+    //     calendarPolimiSyncJSON
+    //   ) as CalendarPolimiSyncObj
+    //   this._calendarPolimiSync = calendarPolimiSync
+    // } catch (err) {
+    //   console.log(err)
+    //   console.log("Error reading calendarPolimiSync")
+    //   this._calendarPolimiSync = undefined
+    // }
   }
 
   private _writeCalendarPolimiSync = async (
     calendarPolimiSync: CalendarPolimiSyncObj
-  ): Promise<boolean> => {
-    const calendarPolimiSyncJSON = JSON.stringify(calendarPolimiSync)
-    try {
-      this._calendarPolimiSync = calendarPolimiSync
-      await FileSystem.writeAsStringAsync(
-        FileSystem.documentDirectory + "calendar_polimi_sync.json",
-        calendarPolimiSyncJSON
-      )
-
-      return true
-    } catch (err) {
-      console.log(err)
-      console.log("Error storing calendarPolimiSync ")
-      return false
-    }
+  ): Promise<void> => {
+    // const calendarPolimiSyncJSON = JSON.stringify(calendarPolimiSync)
+    // try {
+    //   this._calendarPolimiSync = calendarPolimiSync
+    //   await FileSystem.writeAsStringAsync(
+    //     FileSystem.documentDirectory + "calendar_polimi_sync.json",
+    //     calendarPolimiSyncJSON
+    //   )
+    //   return true
+    // } catch (err) {
+    //   console.log(err)
+    //   console.log("Error storing calendarPolimiSync ")
+    //   return false
+    // }
   }
 
   private _readEvents = async () => {
-    try {
-      const calendarEventsJSON = await FileSystem.readAsStringAsync(
-        FileSystem.documentDirectory + "calendar_events.json"
-      )
-      const calendarEvents = JSON.parse(calendarEventsJSON) as CalendarEvent[]
-      this._calendarEvents = calendarEvents
-
-      this.emit("calendarEventsChanged")
-    } catch (err) {
-      console.log(err)
-      console.log("Error reading calendarEvents")
-    }
+    // try {
+    //   const calendarEventsJSON = await FileSystem.readAsStringAsync(
+    //     FileSystem.documentDirectory + "calendar_events.json"
+    //   )
+    //   const calendarEvents = JSON.parse(calendarEventsJSON) as CalendarEvent[]
+    //   this._calendarEvents = calendarEvents
+    //   this.emit("calendarEventsChanged")
+    // } catch (err) {
+    //   console.log(err)
+    //   console.log("Error reading calendarEvents")
+    // }
   }
 
-  private _writeEvents = async (events: CalendarEvent[]): Promise<boolean> => {
-    const calendarEventsJSON = JSON.stringify(events)
-    try {
-      this._calendarEvents = events
-      await FileSystem.writeAsStringAsync(
-        FileSystem.documentDirectory + "calendar_events.json",
-        calendarEventsJSON
-      )
-      return true
-    } catch (err) {
-      console.log(err)
-      console.log("Error storing calendar events")
-      return false
-    }
+  private _writeEvents = async (events: CalendarEvent[]): Promise<void> => {
+    // const calendarEventsJSON = JSON.stringify(events)
+    // try {
+    //   this._calendarEvents = events
+    //   await FileSystem.writeAsStringAsync(
+    //     FileSystem.documentDirectory + "calendar_events.json",
+    //     calendarEventsJSON
+    //   )
+    //   return true
+    // } catch (err) {
+    //   console.log(err)
+    //   console.log("Error storing calendar events")
+    //   return false
+    // }
   }
 
   private _applyPeriods() {
@@ -696,335 +673,6 @@ export const monthsAcronymsEn = [
   "Nov",
   "Dec",
 ]
-
-const FILLER_HEIGHT = 26
-const FILLER_HEIGHT_ALL_MONTHS = 22
-
-export const dayComponentCustom: ComponentType<
-  DayProps & {
-    date?: DateData | undefined
-  }
-> = props => {
-  const {
-    theme,
-    marking,
-    date,
-    onPress,
-    onLongPress,
-    state,
-    /*  
-    accessibilityLabel,
-    testID, */
-    children,
-  } = props
-
-  const dateData = dateToDateData(date)
-
-  const [isMarked, setIsMarked] = useState(marking?.marked ?? false)
-
-  useEffect(() => {
-    setIsMarked(marking?.marked ?? false)
-  }, [marking])
-
-  const fillerStyles = useMemo(() => {
-    const leftFillerStyle: ViewStyle = { flex: 1 }
-    const rightFillerStyle: ViewStyle = { flex: 1 }
-    let globalfiller: ViewStyle = {}
-
-    const start = marking?.startingDay
-    const end = marking?.endingDay
-
-    if (start && !end) {
-      rightFillerStyle.borderBottomColor = marking?.color
-      rightFillerStyle.borderBottomWidth = 2
-      rightFillerStyle.borderTopColor = marking?.color
-      rightFillerStyle.borderTopWidth = 2
-    } else if (end && !start) {
-      leftFillerStyle.borderBottomColor = marking?.color
-      leftFillerStyle.borderBottomWidth = 2
-      leftFillerStyle.borderTopColor = marking?.color
-      leftFillerStyle.borderTopWidth = 2
-    } else if (marking?.color && !start && !end) {
-      globalfiller = {
-        borderBottomColor: marking?.color,
-        borderBottomWidth: 2,
-        borderTopColor: marking?.color,
-        borderTopWidth: 2,
-      }
-    }
-    return { leftFillerStyle, rightFillerStyle, globalfiller }
-  }, [marking])
-
-  const path = useMemo(() => {
-    let startAngle
-    let sweepAngle
-
-    if ((marking?.startingDay && marking.endingDay) || state == "today") {
-      startAngle = 90
-      sweepAngle = 360
-    } else if (marking?.startingDay) {
-      startAngle = 90
-      sweepAngle = 180
-    } else if (marking?.endingDay) {
-      startAngle = 270
-      sweepAngle = 180
-    } else {
-      return undefined
-    }
-
-    const path = Skia.Path.Make()
-    path.moveTo(19, 1)
-    //this looks kinda random
-    path.addArc(
-      { height: FILLER_HEIGHT - 2, width: 30, y: 1, x: 4 },
-      startAngle,
-      sweepAngle
-    )
-
-    return path
-  }, [marking, state])
-
-  return (
-    <TouchableOpacity
-      style={{ alignSelf: "stretch" }}
-      onPress={
-        onPress
-          ? () => {
-              onPress(dateData)
-            }
-          : undefined
-      }
-      onLongPress={onLongPress ? () => onLongPress(dateData) : undefined}
-    >
-      <View
-        style={{
-          alignItems: "center",
-          alignSelf: "stretch",
-          marginLeft: -1,
-        }}
-      >
-        <View
-          style={[
-            {
-              position: "absolute",
-              height: FILLER_HEIGHT,
-              flexDirection: "row",
-              left: 0,
-              right: 0,
-            },
-            fillerStyles.globalfiller,
-          ]}
-        >
-          <View style={fillerStyles.leftFillerStyle} />
-
-          <View style={fillerStyles.rightFillerStyle} />
-        </View>
-        {path && (
-          <Canvas
-            style={{
-              width: 38,
-              height: FILLER_HEIGHT,
-              position: "absolute",
-              zIndex: 10,
-            }}
-          >
-            <Path
-              path={path}
-              color={state !== "today" ? marking?.color : "#fff"}
-              strokeWidth={2}
-              fillType={undefined}
-              style="stroke"
-            />
-          </Canvas>
-        )}
-        <View
-          style={{
-            borderRadius: 17,
-            width: 38,
-            height: FILLER_HEIGHT,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 12,
-              fontWeight: "900",
-              color: "#fff",
-            }}
-            allowFontScaling={false}
-          >
-            {String(children)}
-          </Text>
-          <View style={{ position: "absolute", top: 7, right: 7 }}>
-            {isMarked && (
-              <View
-                style={{
-                  backgroundColor: theme?.dotColor,
-                  width: 6,
-                  height: 6,
-                  borderRadius: 3,
-                }}
-              />
-            )}
-          </View>
-        </View>
-      </View>
-    </TouchableOpacity>
-  )
-}
-
-export const dayComponentAllMonthPage: ComponentType<
-  DayProps & {
-    date?: DateData | undefined
-  }
-> = props => {
-  const { marking, state, children } = props
-
-  const fillerStyles = useMemo(() => {
-    const leftFillerStyle: ViewStyle = { flex: 1 }
-    const rightFillerStyle: ViewStyle = { flex: 1 }
-    let globalfiller: ViewStyle = {}
-
-    const start = marking?.startingDay
-    const end = marking?.endingDay
-
-    if (start && !end) {
-      rightFillerStyle.borderBottomColor = marking?.color
-      rightFillerStyle.borderBottomWidth = 2
-      rightFillerStyle.borderTopColor = marking?.color
-      rightFillerStyle.borderTopWidth = 2
-    } else if (end && !start) {
-      leftFillerStyle.borderBottomColor = marking?.color
-      leftFillerStyle.borderBottomWidth = 2
-      leftFillerStyle.borderTopColor = marking?.color
-      leftFillerStyle.borderTopWidth = 2
-    } else if (marking?.color && !start && !end) {
-      globalfiller = {
-        borderBottomColor: marking?.color,
-        borderBottomWidth: 2,
-        borderTopColor: marking?.color,
-        borderTopWidth: 2,
-      }
-    }
-    return { leftFillerStyle, rightFillerStyle, globalfiller }
-  }, [marking])
-
-  const path = useMemo(() => {
-    let startAngle
-    let sweepAngle
-
-    if (marking?.startingDay && marking.endingDay) {
-      startAngle = 90
-      sweepAngle = 360
-    } else if (marking?.startingDay) {
-      startAngle = 90
-      sweepAngle = 180
-    } else if (marking?.endingDay) {
-      startAngle = 270
-      sweepAngle = 180
-    } else {
-      return undefined
-    }
-
-    const path = Skia.Path.Make()
-    path.moveTo(19, 1)
-    //this looks kinda random
-    path.addArc(
-      { height: FILLER_HEIGHT_ALL_MONTHS - 2, width: 19, y: 1, x: 4 },
-      startAngle,
-      sweepAngle
-    )
-
-    return path
-  }, [marking, state])
-
-  return (
-    <View
-      style={{
-        alignItems: "center",
-        alignSelf: "stretch",
-        marginLeft: -1,
-      }}
-    >
-      <View
-        style={[
-          {
-            position: "absolute",
-            height: FILLER_HEIGHT_ALL_MONTHS,
-            flexDirection: "row",
-            left: 0,
-            right: 0,
-          },
-          fillerStyles.globalfiller,
-        ]}
-      >
-        <View style={fillerStyles.leftFillerStyle} />
-
-        <View style={fillerStyles.rightFillerStyle} />
-      </View>
-      {path && (
-        <Canvas
-          style={{
-            width: 28,
-            height: FILLER_HEIGHT_ALL_MONTHS,
-            position: "absolute",
-            zIndex: 10,
-          }}
-        >
-          <Path
-            path={path}
-            color={marking?.color}
-            strokeWidth={2}
-            fillType={undefined}
-            style="stroke"
-          />
-        </Canvas>
-      )}
-      <View
-        style={{
-          borderRadius: 17,
-          width: 38,
-          height: FILLER_HEIGHT_ALL_MONTHS,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 12,
-            fontWeight: "900",
-            color: palette.primary,
-          }}
-          allowFontScaling={false}
-        >
-          {String(children)}
-        </Text>
-      </View>
-    </View>
-  )
-}
-
-const dateToDateData = (
-  date: (string & DateData) | undefined
-): DateData | undefined => {
-  if (date) {
-    if (typeof date === "string") {
-      const d = new Date(date)
-
-      return {
-        day: d.getDate(),
-        month: d.getMonth() + 1,
-        year: d.getFullYear(),
-        dateString: d.toISOString().substring(0, 10),
-        timestamp: d.getTime(),
-      }
-    } else {
-      return date
-    }
-  }
-  return undefined
-}
 
 export const daysOfWeekLetters = ["L", "M", "M", "G", "V", "S", "D"]
 

@@ -1,16 +1,15 @@
-import { FC } from "react"
+import { FC, useCallback } from "react"
 import { View, ViewStyle } from "react-native"
 import { Calendar } from "react-native-calendars"
 import { useCurrentLanguage } from "utils/language"
-import {
-  monthsIt,
-  monthsEn,
-  daysOfWeekLetters,
-  dayComponentAllMonthPage,
-} from "utils/calendar"
+import { monthsIt, monthsEn, daysOfWeekLetters } from "utils/calendar"
 import { usePalette } from "utils/colors"
 import { Text } from "components/Text"
-import { MarkedDates } from "react-native-calendars/src/types"
+import { DateData, MarkedDates } from "react-native-calendars/src/types"
+import { DayComponentCustom } from "./DayComponentCustom"
+import { DayProps } from "react-native-calendars/src/calendar/day"
+
+const DAY_HEIGHT = 22
 
 interface SingleMonthProps {
   month: number
@@ -24,12 +23,15 @@ export const SingleMonth: FC<SingleMonthProps> = props => {
 
   const lan = useCurrentLanguage()
 
+  const DCC = useCallback<
+    (props: DayProps & { date?: DateData }) => JSX.Element
+  >(props => <DayComponentCustom height={DAY_HEIGHT} {...props} dark />, [])
+
   return (
     <View
       style={{
         backgroundColor: "#fff",
         borderRadius: 16,
-        height: 204,
       }}
     >
       <View style={{ marginHorizontal: 12, marginTop: 6 }}>
@@ -74,6 +76,7 @@ export const SingleMonth: FC<SingleMonthProps> = props => {
         />
       </View>
       <Calendar
+        style={{ minHeight: DAY_HEIGHT * 7 }}
         firstDay={1}
         theme={{
           calendarBackground: "transparent",
@@ -96,7 +99,7 @@ export const SingleMonth: FC<SingleMonthProps> = props => {
         headerStyle={{ display: "none" }}
         markingType="period"
         markedDates={props.markedDates}
-        dayComponent={dayComponentAllMonthPage}
+        dayComponent={DCC}
       />
     </View>
   )
