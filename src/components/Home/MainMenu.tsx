@@ -69,7 +69,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
       type: ButtonType.MARKS,
       title: "menu_marks",
       icon: marks,
-      onClick: () => navigate("Error404"),
+      onClick: () => navigate("Exams"),
     },
     {
       type: ButtonType.GRADING_BOOK,

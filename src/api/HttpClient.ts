@@ -42,6 +42,7 @@ export enum AuthType {
   NONE,
   POLIMI,
   POLINETWORK,
+  POLIMI_EXAMS,
 }
 
 export enum RetryType {
@@ -109,9 +110,21 @@ export class HttpClient extends EventEmitter {
 
   readonly polimiInstance: AxiosInstance
   readonly poliNetworkInstance: AxiosInstance
+  readonly polimiExamsInstance: AxiosInstance
   readonly generalInstance: AxiosInstance
 
   private polimiToken?: PolimiToken
+
+  public readPolimiAppTokenForExamsTokenRetrieval() {
+    return this.polimiToken
+  }
+
+  private polimiExamsToken?: PolimiToken
+
+  public readPolimiExamsToken() {
+    return this.polimiToken
+  }
+
   private poliNetworkToken?: PoliNetworkToken
 
   // TODO: await for token to refresh before sending multiple requests
@@ -123,14 +136,19 @@ export class HttpClient extends EventEmitter {
     if (!this.classInstance) {
       this.classInstance = new HttpClient(
         "https://api.polinetwork.org/staging/",
-        "https://polimiapp.polimi.it/polimi_app"
+        "https://polimiapp.polimi.it/polimi_app",
+        "https://www22.dmz.polimi.it/iae"
       )
     }
 
     return this.classInstance
   }
 
-  private constructor(baseUrlPoliNetwork: string, baseUrlPolimi: string) {
+  private constructor(
+    baseUrlPoliNetwork: string,
+    baseUrlPolimi: string,
+    baseUrlPolimiExams: string
+  ) {
     super()
     console.log("HttpClient constructor called")
     this.poliNetworkInstance = axios.create({
@@ -139,6 +157,10 @@ export class HttpClient extends EventEmitter {
     })
     this.polimiInstance = axios.create({
       baseURL: baseUrlPolimi,
+      timeout: 30000,
+    })
+    this.polimiExamsInstance = axios.create({
+      baseURL: baseUrlPolimiExams,
       timeout: 30000,
     })
     this.generalInstance = axios.create({
@@ -166,6 +188,11 @@ export class HttpClient extends EventEmitter {
       val => this._handleResponse(val),
       err => this._handleError(err as AxiosError, this.generalInstance)
     )
+    this.polimiExamsInstance.interceptors.request.use(this._handleRequest)
+    this.polimiExamsInstance.interceptors.response.use(
+      val => this._handleResponse(val),
+      err => this._handleError(err as AxiosError, this.polimiExamsInstance)
+    )
   }
 
   private _handleRequest = (config: InternalAxiosRequestConfig) => {
@@ -179,6 +206,13 @@ export class HttpClient extends EventEmitter {
       config.headers[
         "Authorization"
       ] = `Bearer ${this.poliNetworkToken.access_token}`
+    } else if (
+      config.authType === AuthType.POLIMI_EXAMS &&
+      this.polimiExamsToken
+    ) {
+      config.headers[
+        "Authorization"
+      ] = `Bearer ${this.polimiExamsToken.accessToken}`
     }
     return config
   }
@@ -283,7 +317,38 @@ export class HttpClient extends EventEmitter {
 
           throw error
         }
+      } else if (config.authType === AuthType.POLIMI_EXAMS) {
+        const success = await this.refreshPolimiExamsToken()
+        if (success) {
+          return instance(config)
+        } else {
+          console.warn("Error: could not refresh Polimi Exams token")
+          console.warn("Error:")
+          console.warn(error)
+          console.warn("Call config:")
+          console.warn(JSON.stringify(config))
+          Alert.alert(
+            "An error has occurred while refreshing Polimi exams token",
+            `The call to ${
+              config.url ?? "undefined"
+            } failed, is the token invalid?\n\nThis is a debug option, if you think this is an error, please report it and try again later, otherwise you can logout`,
+            [
+              {
+                text: "Cancel",
+                style: "cancel",
+              },
+              {
+                text: "Logout",
+                onPress: () => {
+                  void this.destroyExamToken()
+                },
+              },
+            ]
+          )
+          throw error
+        }
       }
+
       throw error
     }
     throw error
@@ -306,6 +371,20 @@ export class HttpClient extends EventEmitter {
   ): CancellableApiRequest<T> {
     const controller = new AbortController()
     const request = this.poliNetworkInstance.request<T>({
+      ...options,
+      signal: controller.signal,
+    }) as CancellableApiRequest<T>
+    request.cancel = r => controller.abort(r)
+    // TODO: handle cache ?
+    request.cachedResponse = null
+    return request
+  }
+
+  callPolimiExams<T = void>(
+    options: AxiosRequestConfig
+  ): CancellableApiRequest<T> {
+    const controller = new AbortController()
+    const request = this.polimiExamsInstance.request<T>({
       ...options,
       signal: controller.signal,
     }) as CancellableApiRequest<T>
@@ -362,6 +441,46 @@ export class HttpClient extends EventEmitter {
       return false
     } catch (e) {
       console.warn("Error refreshing polimi token")
+      console.warn(e)
+      return false
+    }
+  }
+
+  // ! not tested
+  async refreshPolimiExamsToken() {
+    console.log("Refreshing polimi exams token")
+    if (!this.polimiExamsToken) {
+      console.log(
+        "Token went missing while trying to refresh Polimi exams token"
+      )
+      return false
+    }
+
+    const url =
+      "/rest/jaf/oauth/token/refresh/" + this.polimiExamsToken?.refreshToken
+    try {
+      const response = await this.polimiExamsInstance.get<PolimiToken>(url, {
+        retryType: RetryType.RETRY_N_TIMES,
+      })
+      if (typeof response.data.accessToken === "string") {
+        console.log("Refreshed polimi token")
+
+        this.polimiExamsToken = response.data
+
+        // ? maybe don't store exams token
+        await AsyncStorage.setItem(
+          "api:token_exams",
+          JSON.stringify(this.polimiExamsToken)
+        )
+
+        return true
+      }
+      console.warn("Invalid response refreshing polimi exams token")
+      console.warn(response.status)
+      console.warn(response.data)
+      return false
+    } catch (e) {
+      console.warn("Error refreshing polimi exams token")
       console.warn(e)
       return false
     }
@@ -429,7 +548,19 @@ export class HttpClient extends EventEmitter {
     } else {
       console.log("No tokens found in local storage")
     }
+
+    const tokenExams = await AsyncStorage.getItem("api:token_exams")
+    if (tokenExams) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const parsedToken: PolimiToken = JSON.parse(tokenExams)
+      console.log("Loaded token from local storage")
+      this.polimiExamsToken = parsedToken
+      this.emit("exam_token_deleted")
+    } else {
+      console.log("No exam token found in local storage")
+    }
   }
+
   /**
    * set the tokens and save them to storage
    * @param tokens both the polinetwork and polimi tokens
@@ -445,6 +576,15 @@ export class HttpClient extends EventEmitter {
     await AsyncStorage.setItem("api:tokens", JSON.stringify(tokens))
     console.log("Saved tokens in local storage")
   }
+
+  async setExamsToken(token: PolimiToken) {
+    this.polimiExamsToken = token
+
+    // save the tokens in local storage
+    await AsyncStorage.setItem("api:token_exams", JSON.stringify(token))
+    console.log("Saved exam token in local storage")
+  }
+
   /**
    * remove the tokens from storage, essentially log out
    */
@@ -459,5 +599,23 @@ export class HttpClient extends EventEmitter {
 
     // remove the tokens from local storage
     await AsyncStorage.removeItem("api:tokens")
+
+    void this.destroyExamToken()
+  }
+
+  /**
+   * remove the exam token from storage, might be useful to keep
+   * this method separate from `destroyTokens` if we want just to delete
+   * this specific token
+   */
+  async destroyExamToken() {
+    console.log("Destroying polimi exam token")
+
+    this.polimiExamsToken = undefined
+
+    this.emit("exam_token_deleted")
+
+    // remove the tokens from local storage
+    await AsyncStorage.removeItem("api:token_exams")
   }
 }
