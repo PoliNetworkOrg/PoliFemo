@@ -6,40 +6,29 @@ jobs:
   publish:
     name: Publish via EAS updates
     runs-on: ubuntu-20.04
-    # only run if expo token is set
     env:
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
     steps:
       - uses: actions/checkout@v2
+        if: ${{ env.EXPO_TOKEN != '' }}
       - uses: actions/setup-node@v2
+        if: ${{ env.EXPO_TOKEN != '' }}
         with:
           node-version: 16
           cache: "yarn"
 
       - name: Setup Expo
         uses: expo/expo-github-action@v7
+        if: ${{ env.EXPO_TOKEN != '' }}
         with:
           expo-version: latest
           eas-version: latest
           token: ${{ env.EXPO_TOKEN }}
 
       - run: yarn install --immutable
+        if: ${{ env.EXPO_TOKEN != '' }}
 
-      - name: Check if Dependabot triggered this action
-        run: |
-          if [ "${{ github.actor }}" = "dependabot[bot]" ]; then
-            echo "Dependabot triggered this action. Skipping..."
-            exit 0
-          fi
-        shell: bash
-
-      - name: Check if PR is from a fork
-        run: |
-          if [[ "${{ github.event.pull_request.head.repo.fork }}" == "true" ]]; then
-            echo "PR is from a fork, skipping the workflow"
-            exit 78  # This exit code will skip the workflow
-          fi
-        shell: bash
-      
       - name: Publish via EAS updates
+        # only if token is set
+        if: ${{ env.EXPO_TOKEN != '' }}
         run: eas update --auto
