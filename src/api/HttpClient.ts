@@ -103,6 +103,11 @@ export declare interface HttpClient {
    * fired when tokens get destroyed and user logs out
    */
   on(event: "logout", listener: () => void): this
+
+  /**
+   * fired when the exam token is deleted
+   */
+  on(event: "exam_token_deleted", listener: () => void): this
 }
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class HttpClient extends EventEmitter {
@@ -122,7 +127,7 @@ export class HttpClient extends EventEmitter {
   private polimiExamsToken?: PolimiToken
 
   public readPolimiExamsToken() {
-    return this.polimiToken
+    return this.polimiExamsToken
   }
 
   private poliNetworkToken?: PoliNetworkToken

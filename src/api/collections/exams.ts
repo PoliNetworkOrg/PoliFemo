@@ -4,7 +4,7 @@ import { mapAxiosRequest } from "api/mapAxiosRequest"
 
 const client = HttpClient.getInstance()
 
-interface Exam {
+export interface Exam {
   c_appello: number
   d_app: string
   ora_ok: string
