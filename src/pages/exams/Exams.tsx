@@ -193,7 +193,6 @@ export const Exams: MainStackScreen<"Exams"> = () => {
                   </View>
                 </AdaptiveShadowView>
                 {teachings?.[i].appelliEsame?.map(exam => {
-                  console.log(exam.d_app)
                   const dateExam = new Date(exam.d_app)
 
                   const day = dateExam.getDate()
