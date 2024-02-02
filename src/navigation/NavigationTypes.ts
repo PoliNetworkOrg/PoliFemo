@@ -89,6 +89,7 @@ export type MainStackNavigatorParams = {
   NotificationDetails: { notification: NotificationStorage; category?: string }
   GradingBook: undefined
   Exams: undefined
+  Results: undefined
 }
 
 export type SettingsStackNavigatorParams = {
