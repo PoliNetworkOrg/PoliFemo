@@ -30,18 +30,41 @@ export const monthsAcronymsEN = [
   "DEC",
 ]
 
+export enum ExamStatusType {
+  ISCRITTO,
+  ISCRIZIONI_APERTE,
+  ISCRIZIONI_CHIUSE,
+  ESITO_DISPONIBILE,
+  IN_ATTESA_DI_ESITO,
+}
+
 export const getExamStatus = (
   exam: Exam
-): { desc: string; isHighlighted: boolean } => {
+): { type: ExamStatusType; isHighlighted: boolean } => {
   if (exam.inAttesaDiEsito) {
-    return { desc: "In attesa di esito", isHighlighted: false }
+    return { type: ExamStatusType.IN_ATTESA_DI_ESITO, isHighlighted: false }
   } else if (exam.hasIscrizioneConEsito) {
-    return { desc: "Esito disponibile", isHighlighted: false }
+    return { type: ExamStatusType.ESITO_DISPONIBILE, isHighlighted: false }
   } else if (exam.hasIscrizioniAttive) {
-    return { desc: "Iscritto", isHighlighted: true }
-  } else if (!exam.iscrizioniAperte) {
-    return { desc: "Iscrizioni chiuse", isHighlighted: false }
+    return { type: ExamStatusType.ISCRITTO, isHighlighted: true }
+  } else if (exam.iscrizioniAperte) {
+    return { type: ExamStatusType.ISCRIZIONI_APERTE, isHighlighted: false }
   } else {
-    return { desc: "Iscrizioni aperte", isHighlighted: false }
+    return { type: ExamStatusType.ISCRIZIONI_CHIUSE, isHighlighted: false }
+  }
+}
+
+export const getExamStatusDescription = (type: ExamStatusType, lan: string) => {
+  switch (type) {
+    case ExamStatusType.ISCRITTO:
+      return lan === "it" ? "Iscritto" : "Enrolled"
+    case ExamStatusType.ISCRIZIONI_APERTE:
+      return lan === "it" ? "Iscrizioni aperte" : "Open for enrollment"
+    case ExamStatusType.ISCRIZIONI_CHIUSE:
+      return lan === "it" ? "Iscrizioni chiuse" : "Enrollment closed"
+    case ExamStatusType.ESITO_DISPONIBILE:
+      return lan === "it" ? "Esito disponibile" : "Result available"
+    case ExamStatusType.IN_ATTESA_DI_ESITO:
+      return lan === "it" ? "In attesa di esito" : "Waiting for result"
   }
 }

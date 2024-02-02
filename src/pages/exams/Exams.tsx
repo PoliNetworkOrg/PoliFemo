@@ -14,7 +14,13 @@ import { Pressable, ScrollView, View } from "react-native"
 import { Icon } from "components/Icon"
 import arrowRightSvg from "assets/exams/arrow_right.svg"
 import { palette } from "utils/colors"
-import { getExamStatus, monthsAcronymsEN, monthsAcronymsIT } from "utils/exams"
+import {
+  ExamStatusType,
+  getExamStatus,
+  getExamStatusDescription,
+  monthsAcronymsEN,
+  monthsAcronymsIT,
+} from "utils/exams"
 import { useCurrentLanguage } from "utils/language"
 
 /* let searchTimeout: NodeJS.Timeout
@@ -212,40 +218,119 @@ export const Exams: MainStackScreen<"Exams"> = () => {
                       key={exam.c_appello}
                       style={{
                         flex: 1,
-                        flexDirection: "row",
-                        justifyContent: "space-between",
+                        flexDirection: "column",
                         marginBottom: 16,
                       }}
                     >
-                      <BodyText
+                      <View
                         style={{
-                          marginLeft: 16,
-                          color: "#fff",
-                          fontSize: 14,
-                          fontWeight: "300",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          alignItems: "center",
                         }}
                       >
                         <BodyText
                           style={{
-                            fontWeight: "900",
+                            marginLeft: 16,
                             color: "#fff",
                             fontSize: 14,
+                            fontWeight: "300",
                           }}
                         >
-                          {day}
-                        </BodyText>{" "}
-                        {month} {year}
-                      </BodyText>
-                      <BodyText
-                        style={{
-                          marginRight: 16,
-                          color: status.isHighlighted ? palette.accent : "#fff",
-                          fontSize: 12,
-                          fontWeight: "900",
-                        }}
-                      >
-                        {status.desc.toUpperCase()}
-                      </BodyText>
+                          <BodyText
+                            style={{
+                              fontWeight: "900",
+                              color: "#fff",
+                              fontSize: 14,
+                            }}
+                          >
+                            {day}
+                          </BodyText>{" "}
+                          {month} {year}
+                        </BodyText>
+                        <BodyText
+                          style={{
+                            marginRight: 16,
+                            color: status.isHighlighted
+                              ? palette.accent
+                              : "#fff",
+                            fontSize: 12,
+                            fontWeight: "900",
+                          }}
+                        >
+                          {getExamStatusDescription(
+                            status.type,
+                            lan
+                          ).toUpperCase()}
+                        </BodyText>
+                      </View>
+                      {status.type === ExamStatusType.ISCRITTO && (
+                        <Pressable
+                          onPress={() => {
+                            console.log("press")
+                          }}
+                        >
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              flex: 1,
+                              marginHorizontal: 18,
+                              marginTop: 4,
+                            }}
+                          >
+                            <View
+                              style={{
+                                width: 1.5,
+                                backgroundColor: "#fff",
+                                marginRight: 8,
+                              }}
+                            />
+                            <View
+                              style={{
+                                flexDirection: "column",
+                                paddingVertical: 2,
+                              }}
+                            >
+                              <BodyText
+                                style={{
+                                  color: "#fff",
+                                  fontSize: 11,
+                                  fontWeight: "900",
+                                }}
+                              >
+                                {"ORA :"}{" "}
+                                <BodyText
+                                  style={{
+                                    color: "#fff",
+                                    fontSize: 11,
+                                    fontWeight: "300",
+                                  }}
+                                >
+                                  {exam.xh_appello}
+                                </BodyText>
+                              </BodyText>
+                              <BodyText
+                                style={{
+                                  color: "#fff",
+                                  fontSize: 11,
+                                  fontWeight: "900",
+                                }}
+                              >
+                                {"AULA :"}{" "}
+                                <BodyText
+                                  style={{
+                                    color: "#fff",
+                                    fontSize: 11,
+                                    fontWeight: "300",
+                                  }}
+                                >
+                                  {exam.xaula}
+                                </BodyText>
+                              </BodyText>
+                            </View>
+                          </View>
+                        </Pressable>
+                      )}
                     </View>
                   )
                 })}
