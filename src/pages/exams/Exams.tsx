@@ -169,36 +169,48 @@ export const Exams: MainStackScreen<"Exams"> = () => {
                   }}
                   shadow={{ offset: { y: 4 }, opacity: 0.25, blur: 4 }}
                 >
-                  <View
+                  <Pressable
                     style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
+                      flex: 1,
+                      flexDirection: "column",
                       alignItems: "center",
-                      paddingHorizontal: 16,
+                    }}
+                    onPress={() => {
+                      navigate("TeachingDetails", { teaching })
                     }}
                   >
-                    <BodyText
+                    <View
                       style={{
-                        fontWeight: "900",
-                        color: "white",
-                        fontSize: 16,
                         flex: 1,
-                      }}
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                    >
-                      {teachings?.[i].xdescrizione}
-                    </BodyText>
-                    <Pressable
-                      style={{
-                        width: 40,
                         flexDirection: "row",
-                        justifyContent: "flex-end",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        paddingHorizontal: 16,
                       }}
                     >
-                      <Icon source={arrowRightSvg} scale={1.2} />
-                    </Pressable>
-                  </View>
+                      <BodyText
+                        style={{
+                          fontWeight: "900",
+                          color: "white",
+                          fontSize: 16,
+                          flex: 1,
+                        }}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {teachings?.[i].xdescrizione}
+                      </BodyText>
+                      <Pressable
+                        style={{
+                          width: 40,
+                          flexDirection: "row",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <Icon source={arrowRightSvg} scale={1.2} />
+                      </Pressable>
+                    </View>
+                  </Pressable>
                 </AdaptiveShadowView>
                 {teachings?.[i].appelliEsame?.map(exam => {
                   const dateExam = new Date(exam.d_app)

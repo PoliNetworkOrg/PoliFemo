@@ -23,6 +23,7 @@ import {
 } from "@react-navigation/native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { Article } from "api/collections/articles"
+import { Teaching } from "api/collections/exams"
 import { Occupancies } from "api/collections/rooms"
 import {
   BuildingItem,
@@ -90,6 +91,7 @@ export type MainStackNavigatorParams = {
   GradingBook: undefined
   Exams: undefined
   Results: undefined
+  TeachingDetails: { teaching: Teaching }
 }
 
 export type SettingsStackNavigatorParams = {
