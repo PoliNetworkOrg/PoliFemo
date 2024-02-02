@@ -1,4 +1,4 @@
-import { MainStackScreen } from "navigation/NavigationTypes"
+import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 
 import { BodyText } from "components/Text"
 
@@ -33,6 +33,8 @@ export const Exams: MainStackScreen<"Exams"> = () => {
   /* const { t } = useTranslation("exams") */
 
   const lan = useCurrentLanguage()
+
+  const { navigate } = useNavigation()
 
   const [stage, setStage] = useState(ExamsStage.START)
   const [currentURL, setCurrentURL] = useState<string | undefined>(undefined)
@@ -253,7 +255,7 @@ export const Exams: MainStackScreen<"Exams"> = () => {
           )}
         </ScrollView>
       ) : stage === ExamsStage.ERROR_NOT_LOGGED_IN ? (
-        <BodyText>Error logged in</BodyText>
+        <BodyText onPress={() => navigate("Results")}>Error logged in</BodyText>
       ) : stage === ExamsStage.START ? (
         <BodyText>Start</BodyText>
       ) : null}
