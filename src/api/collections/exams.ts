@@ -51,7 +51,7 @@ export interface Exam {
     xverbStatoDesc: string | null
     xrisposta: unknown // ?
     rifiutabile: boolean
-  }
+  } | null
   oggiBeforeAppello: boolean
   iscrizioniAperteConRiserva: boolean
   hasIscrizioniAttive: boolean
