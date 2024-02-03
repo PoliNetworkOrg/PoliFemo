@@ -200,15 +200,8 @@ export const Exams: MainStackScreen<"Exams"> = () => {
                       >
                         {teachings?.[i].xdescrizione}
                       </BodyText>
-                      <Pressable
-                        style={{
-                          width: 40,
-                          flexDirection: "row",
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        <Icon source={arrowRightSvg} scale={1.2} />
-                      </Pressable>
+
+                      <Icon source={arrowRightSvg} scale={1.2} />
                     </View>
                   </Pressable>
                 </AdaptiveShadowView>

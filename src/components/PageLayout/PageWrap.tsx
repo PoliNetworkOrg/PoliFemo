@@ -24,6 +24,8 @@ export interface PageWrapProps {
    */
   sideTitleElement?: React.ReactNode
 
+  fontSizeTitle?: number
+
   children: React.ReactNode
 }
 
@@ -65,7 +67,13 @@ export const PageWrap: FC<PageWrapProps> = props => {
         {props.title && (
           <View style={styles.titleWrapper}>
             {typeof props.title === "string" ? (
-              <Title>{props.title}</Title>
+              <Title
+                style={
+                  props.fontSizeTitle ? { fontSize: props.fontSizeTitle } : {}
+                }
+              >
+                {props.title}
+              </Title>
             ) : (
               <Title>
                 <Title style={{ fontFamily: "Roboto_300Light" }}>

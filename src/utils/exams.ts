@@ -1,4 +1,4 @@
-import { Exam } from "api/collections/exams"
+import { Exam, Teaching } from "api/collections/exams"
 
 export const monthsAcronymsIT = [
   "GEN",
@@ -67,4 +67,55 @@ export const getExamStatusDescription = (type: ExamStatusType, lan: string) => {
     case ExamStatusType.IN_ATTESA_DI_ESITO:
       return lan === "it" ? "In attesa di esito" : "Waiting for result"
   }
+}
+
+const ordinalNumbersIT = [
+  "primo",
+  "secondo",
+  "terzo",
+  "quarto",
+  "quinto",
+  "sesto",
+  "settimo",
+  "ottavo",
+  "nono",
+  "decimo",
+]
+
+const ordinalNumbersEN = [
+  "first",
+  "second",
+  "third",
+  "fourth",
+  "fifth",
+  "sixth",
+  "seventh",
+  "eighth",
+  "ninth",
+  "tenth",
+]
+
+export const getExamAcademicYearDescription = (
+  teaching: Teaching,
+  lan: string
+) => {
+  const aa = teaching.aa_classe
+  const aaNextYear = (parseInt(aa) + 1).toString()
+
+  const ordinalNumberYear =
+    lan === "it"
+      ? ordinalNumbersIT[teaching.ac_freq - 1]
+      : ordinalNumbersEN[teaching.ac_freq - 1]
+
+  const ordinalNumberSemester =
+    teaching.semestre_freq === "1" ? "primo" : "secondo"
+
+  return `A.A ${aa}/${aaNextYear}, ${ordinalNumberYear} anno, ${ordinalNumberSemester} semestre`
+}
+
+export const toPascalCase = (str: string) => {
+  return str
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ")
 }
