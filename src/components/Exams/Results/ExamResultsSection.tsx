@@ -21,14 +21,25 @@ export const ExamResultsSection: FC<ExamResultsSectionProps> = props => {
       <View>
         {props.exams.map(exam => {
           const dateExam = new Date(exam.d_app)
-
           const day = dateExam.getDate()
-
           const month = monthsAcronymsIT[dateExam.getMonth()]
-
           const year = dateExam.getFullYear()
-
           const status = getExamStatus(exam)
+
+          let dateRefuse, dayRefuse, monthRefuse, yearRefuse
+
+          if (exam.iscrizioneAttiva?.verb_esito === "RF") {
+            dateRefuse = exam.iscrizioneAttiva.verb_data_rifiuto
+              ? new Date(exam.iscrizioneAttiva.verb_data_rifiuto)
+              : undefined
+
+            if (dateRefuse) {
+              dayRefuse = dateRefuse.getDate()
+              monthRefuse = monthsAcronymsIT[dateRefuse.getMonth()]
+              yearRefuse = dateRefuse.getFullYear()
+            }
+          }
+
           return (
             <View
               key={exam.c_appello}
@@ -61,7 +72,7 @@ export const ExamResultsSection: FC<ExamResultsSectionProps> = props => {
                     {day}
                   </BodyText>{" "}
                   {month} {year}
-                  {"-ESAME"}
+                  {" - ESAME"}
                 </BodyText>
               </View>
 
@@ -157,7 +168,11 @@ export const ExamResultsSection: FC<ExamResultsSectionProps> = props => {
                         }}
                       >
                         {"RIFIUTATO IL " +
-                          exam.iscrizioneAttiva.verb_data_rifiuto}
+                          dayRefuse +
+                          " " +
+                          monthRefuse +
+                          " " +
+                          yearRefuse}
                       </BodyText>
                     </View>
                   ) : undefined}
