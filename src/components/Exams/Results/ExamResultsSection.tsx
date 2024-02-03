@@ -1,4 +1,4 @@
-import { Exam } from "api/collections/exams"
+import { Teaching } from "api/collections/exams"
 import { FC } from "react"
 import { ExamSection } from "../ExamSection"
 import {
@@ -9,17 +9,26 @@ import {
 import { View } from "react-native"
 import { BodyText } from "components/Text"
 import { palette } from "utils/colors"
+import { useNavigation } from "navigation/NavigationTypes"
 
 export interface ExamResultsSectionProps {
-  examName: string
-  exams: Exam[]
+  teaching: Teaching
 }
 
 export const ExamResultsSection: FC<ExamResultsSectionProps> = props => {
+  const { navigate } = useNavigation()
+
+  const exams = props.teaching.appelliEsame
+
+  const teachingName = props.teaching.xdescrizione
+
   return (
-    <ExamSection title={props.examName}>
+    <ExamSection
+      title={teachingName}
+      onPress={() => navigate("ResultDetails", { teaching: props.teaching })}
+    >
       <View>
-        {props.exams.map(exam => {
+        {exams.map(exam => {
           const dateExam = new Date(exam.d_app)
           const day = dateExam.getDate()
           const month = monthsAcronymsIT[dateExam.getMonth()]

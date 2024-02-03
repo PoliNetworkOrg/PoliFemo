@@ -8,6 +8,7 @@ import arrowRightSvg from "assets/exams/arrow_right.svg"
 
 export interface ExamSectionProps {
   title: string
+  onPress: () => void
   children: React.ReactNode
 }
 
@@ -61,6 +62,7 @@ export const ExamSection: FC<ExamSectionProps> = props => {
               flexDirection: "row",
               justifyContent: "flex-end",
             }}
+            onPress={props.onPress}
           >
             <Icon source={arrowRightSvg} scale={1.2} />
           </Pressable>

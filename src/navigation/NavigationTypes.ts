@@ -92,6 +92,7 @@ export type MainStackNavigatorParams = {
   Exams: undefined
   Results: undefined
   TeachingDetails: { teaching: Teaching }
+  ResultDetails: { teaching: Teaching }
 }
 
 export type SettingsStackNavigatorParams = {

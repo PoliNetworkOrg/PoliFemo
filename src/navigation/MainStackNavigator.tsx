@@ -17,6 +17,7 @@ import { Groups } from "pages/Groups"
 import { Home } from "pages/Home"
 import { TimeTable } from "pages/TimeTable"
 import { Exams } from "pages/exams/Exams"
+import { ResultDetails } from "pages/exams/ResultDetails"
 import { Results } from "pages/exams/Results"
 import { TeachingDetails } from "pages/exams/TeachingDetails"
 import { Article } from "pages/news/ArticleDetails"
@@ -118,6 +119,10 @@ export const MainStack: FC = () => {
       <MainStackNavigator.Screen
         name="TeachingDetails"
         component={TeachingDetails}
+      />
+      <MainStackNavigator.Screen
+        name="ResultDetails"
+        component={ResultDetails}
       />
     </MainStackNavigator.Navigator>
   )

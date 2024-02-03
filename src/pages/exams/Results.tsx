@@ -240,8 +240,7 @@ export const Results: MainStackScreen<"Results"> = () => {
           teaching.appelliEsame.length === 0 ? null : (
             <ExamResultsSection
               key={teaching.c_insegn_piano}
-              examName={teachings?.[i].xdescrizione}
-              exams={teachings?.[i].appelliEsame}
+              teaching={teachings?.[i]}
             />
           )
         )}
