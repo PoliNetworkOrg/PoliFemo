@@ -20,12 +20,20 @@ export const ExamDetailsUpperDescriptor: FC<
   return (
     <>
       <BodyText
-        style={{ fontSize: 16, fontWeight: "700", color: palette.variant3 }}
+        style={{
+          fontSize: 16,
+          fontWeight: "700",
+          color: isLight ? palette.variant3 : "#FFFFFF",
+        }}
       >
         COD. {teaching.c_classe_m}
       </BodyText>
       <BodyText
-        style={{ fontSize: 14, fontWeight: "400", color: palette.variant3 }}
+        style={{
+          fontSize: 14,
+          fontWeight: "400",
+          color: isLight ? palette.variant3 : "#FFFFFF",
+        }}
       >
         {getExamAcademicYearDescription(teaching, lan)}
       </BodyText>
@@ -34,14 +42,18 @@ export const ExamDetailsUpperDescriptor: FC<
         style={{
           fontSize: 16,
           fontWeight: "700",
-          color: palette.variant3,
+          color: isLight ? palette.variant3 : "#FFFFFF",
           marginTop: 8,
         }}
       >
         Docenti responsabili
       </BodyText>
       <BodyText
-        style={{ fontSize: 14, fontWeight: "400", color: palette.variant3 }}
+        style={{
+          fontSize: 14,
+          fontWeight: "400",
+          color: isLight ? palette.variant3 : "#FFFFFF",
+        }}
       >
         {toPascalCase(teaching.docente_esame)}
       </BodyText>
