@@ -49,6 +49,8 @@ export const Exams: MainStackScreen<"Exams"> = () => {
 
   const [teachings, setTeachings] = useState<Teaching[] | undefined>(undefined)
 
+  const [examsWithGradeCount, setExamsWithGradeCount] = useState(0)
+
   const polimiExamsToken = client.readPolimiExamsToken()
 
   // compose start url for redirect flow
@@ -100,6 +102,21 @@ export const Exams: MainStackScreen<"Exams"> = () => {
     }
   }, [stage])
 
+  useEffect(() => {
+    // count number of exams with grade
+    let count = 0
+    if (teachings) {
+      teachings.forEach(teaching => {
+        teaching.appelliEsame.forEach(exam => {
+          if (getExamStatus(exam).type == ExamStatusType.ESITO_DISPONIBILE) {
+            count++
+          }
+        })
+      })
+    }
+    setExamsWithGradeCount(count)
+  }, [teachings])
+
   const webview = useRef<WebView>(null)
   return (
     <PageWrap title={"Exams"}>
@@ -144,6 +161,65 @@ export const Exams: MainStackScreen<"Exams"> = () => {
           }}
           bounces={false}
         >
+          {teachings && (
+            <Pressable
+              onPress={() => {
+                navigate("Results")
+              }}
+            >
+              <View
+                style={{
+                  backgroundColor: palette.primary,
+                  borderRadius: 16,
+                  height: 52,
+                  marginHorizontal: 16,
+                  marginBottom: 16,
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <View style={{ flex: 1 }} />
+                <BodyText
+                  style={{
+                    color: "#fff",
+                    fontWeight: "900",
+                    fontSize: 16,
+                  }}
+                >
+                  ESITI
+                </BodyText>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <View
+                    style={{
+                      height: 28,
+                      width: 28,
+                      borderRadius: 14,
+                      backgroundColor: palette.accent,
+                      marginRight: 16,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <BodyText
+                      style={{
+                        fontSize: 16,
+                        fontWeight: "900",
+                        color: palette.primary,
+                      }}
+                    >
+                      {examsWithGradeCount}
+                    </BodyText>
+                  </View>
+                </View>
+              </View>
+            </Pressable>
+          )}
           {teachings?.map((teaching, i) =>
             teaching.appelliEsame.length === 0 ? null : (
               <View
