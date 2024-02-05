@@ -120,3 +120,14 @@ export const toPascalCase = (str: string) => {
     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(" ")
 }
+
+export const getDateExamString = (date: string, lan: string) => {
+  const d = new Date(date)
+  const day = d.getDate()
+  const month =
+    lan === "it"
+      ? monthsAcronymsIT[d.getMonth()]
+      : monthsAcronymsEN[d.getMonth()]
+  const year = d.getFullYear()
+  return `${day} ${month} ${year}`
+}

@@ -1,34 +1,24 @@
-import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
-
+import { MainStackScreen } from "navigation/NavigationTypes"
 import { BodyText } from "components/Text"
-
 import { PageWrap } from "components/PageLayout"
-
-import { useCurrentLanguage } from "utils/language"
-import { ScrollView, View } from "react-native"
+import { ScrollView } from "react-native"
 import { usePalette } from "utils/colors"
-import {
-  ExamStatusType,
-  getExamStatus,
-  monthsAcronymsEN,
-  monthsAcronymsIT,
-} from "utils/exams"
+import { ExamStatusType, getExamStatus } from "utils/exams"
 import { Exam } from "api/collections/exams"
 import { useEffect, useState } from "react"
-import { Icon } from "components/Icon"
-import arrowRightSvg from "assets/exams/arrow_right.svg"
 import { ExamDetailsUpperDescriptor } from "components/Exams/ExamDetailsUpperDescriptor"
+import { ExamBox } from "components/Exams/TeachingDetails/ExamBox"
 
 export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
   /* const { t } = useTranslation("exams") */
 
   const teaching = props.route.params.teaching
 
-  const lan = useCurrentLanguage()
+  /* const lan = useCurrentLanguage() */
 
   const { palette } = usePalette()
 
-  const { navigate } = useNavigation()
+  /* const { navigate } = useNavigation() */
 
   const [examsPendingGrade, setExamsPendingGrade] = useState<
     Exam[] | undefined
@@ -101,56 +91,81 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
               In attesa di esito
             </BodyText>
             {examsPendingGrade?.map(exam => {
-              const dateExam = new Date(exam.d_app)
-
-              const day = dateExam.getDate()
-
-              const month =
-                lan === "it"
-                  ? monthsAcronymsIT[dateExam.getMonth()]
-                  : monthsAcronymsEN[dateExam.getMonth()]
-
-              const year = dateExam.getFullYear()
               return (
-                <View
+                <ExamBox
                   key={exam.c_domanda}
-                  style={{
-                    flex: 1,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginTop: 8,
-                    backgroundColor: palette.primary,
-                    borderRadius: 16,
-                    paddingVertical: 12,
-                  }}
-                >
-                  <BodyText
-                    style={{
-                      marginLeft: 16,
-                      color: "#fff",
-                      fontSize: 14,
-                      fontWeight: "300",
-                    }}
-                  >
-                    <BodyText
-                      style={{
-                        fontWeight: "900",
-                        color: "#fff",
-                        fontSize: 14,
-                      }}
-                    >
-                      {day}
-                    </BodyText>{" "}
-                    {month} {year} - {exam.descTipoAppello}
-                  </BodyText>
-
-                  <Icon
-                    source={arrowRightSvg}
-                    scale={1.2}
-                    style={{ marginRight: 16 }}
-                  />
-                </View>
+                  exam={exam}
+                  type={ExamStatusType.IN_ATTESA_DI_ESITO}
+                />
+              )
+            })}
+          </>
+        )}
+        {examsEnrolled && examsEnrolled.length > 0 && (
+          <>
+            <BodyText
+              style={{
+                fontSize: 20,
+                fontWeight: "900",
+                color: palette.primary,
+                marginTop: 32,
+              }}
+            >
+              Iscrizioni effettuate
+            </BodyText>
+            {examsEnrolled?.map(exam => {
+              return (
+                <ExamBox
+                  key={exam.c_domanda}
+                  exam={exam}
+                  type={ExamStatusType.ISCRITTO}
+                />
+              )
+            })}
+          </>
+        )}
+        {examsNotEnrolled && examsNotEnrolled.length > 0 && (
+          <>
+            <BodyText
+              style={{
+                fontSize: 20,
+                fontWeight: "900",
+                color: palette.primary,
+                marginTop: 32,
+              }}
+            >
+              Puoi iscriverti a
+            </BodyText>
+            {examsNotEnrolled?.map(exam => {
+              return (
+                <ExamBox
+                  key={exam.c_domanda}
+                  exam={exam}
+                  type={ExamStatusType.ISCRIZIONI_APERTE}
+                />
+              )
+            })}
+          </>
+        )}
+        {examsWithGrade && examsWithGrade.length > 0 && (
+          <>
+            <BodyText
+              style={{
+                fontSize: 20,
+                fontWeight: "900",
+                color: palette.primary,
+                marginTop: 32,
+              }}
+            >
+              Esiti disponibili
+            </BodyText>
+            {examsWithGrade?.map(exam => {
+              return (
+                <ExamBox
+                  key={exam.c_domanda}
+                  exam={exam}
+                  type={ExamStatusType.ESITO_DISPONIBILE}
+                />
               )
             })}
           </>

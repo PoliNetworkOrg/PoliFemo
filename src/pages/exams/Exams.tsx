@@ -22,6 +22,7 @@ import {
   monthsAcronymsIT,
 } from "utils/exams"
 import { useCurrentLanguage } from "utils/language"
+import { ExamInfoWhiteLine } from "components/Exams/ExamInfoWhiteLine"
 
 /* let searchTimeout: NodeJS.Timeout
 const deltaTime = 200 //ms */
@@ -346,71 +347,8 @@ export const Exams: MainStackScreen<"Exams"> = () => {
                         </BodyText>
                       </View>
                       {status.type === ExamStatusType.ISCRITTO && (
-                        <Pressable
-                          onPress={() => {
-                            console.log("press")
-                          }}
-                        >
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              flex: 1,
-                              marginHorizontal: 18,
-                              marginTop: 4,
-                            }}
-                          >
-                            <View
-                              style={{
-                                width: 1.5,
-                                backgroundColor: "#fff",
-                                marginRight: 8,
-                              }}
-                            />
-                            <View
-                              style={{
-                                flexDirection: "column",
-                                paddingVertical: 2,
-                              }}
-                            >
-                              <BodyText
-                                style={{
-                                  color: "#fff",
-                                  fontSize: 11,
-                                  fontWeight: "900",
-                                }}
-                              >
-                                {"ORA :"}{" "}
-                                <BodyText
-                                  style={{
-                                    color: "#fff",
-                                    fontSize: 11,
-                                    fontWeight: "300",
-                                  }}
-                                >
-                                  {exam.xh_appello}
-                                </BodyText>
-                              </BodyText>
-                              <BodyText
-                                style={{
-                                  color: "#fff",
-                                  fontSize: 11,
-                                  fontWeight: "900",
-                                }}
-                              >
-                                {"AULA :"}{" "}
-                                <BodyText
-                                  style={{
-                                    color: "#fff",
-                                    fontSize: 11,
-                                    fontWeight: "300",
-                                  }}
-                                >
-                                  {exam.xaula}
-                                </BodyText>
-                              </BodyText>
-                            </View>
-                          </View>
-                        </Pressable>
+                        // ! add onPress
+                        <ExamInfoWhiteLine exam={exam} type={status.type} />
                       )}
                     </View>
                   )
