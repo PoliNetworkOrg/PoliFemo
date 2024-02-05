@@ -80,7 +80,13 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
   return (
     <PageWrap title={teaching.xdescrizione} fontSizeTitle={28}>
       <ScrollView contentContainerStyle={{ marginHorizontal: 32 }}>
-        <ExamDetailsUpperDescriptor teaching={teaching} />
+        <ExamDetailsUpperDescriptor
+          teachingCode={teaching.c_classe_m}
+          teacher={teaching.docente_esame}
+          academicYear={teaching.ac_freq}
+          currentYear={teaching.aa_classe}
+          semester={teaching.semestre_freq}
+        />
 
         {examsPendingGrade && examsPendingGrade.length > 0 && (
           <>

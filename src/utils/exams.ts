@@ -1,4 +1,4 @@
-import { Exam, Teaching } from "api/collections/exams"
+import { Exam } from "api/collections/exams"
 
 export const monthsAcronymsIT = [
   "GEN",
@@ -96,19 +96,20 @@ const ordinalNumbersEN = [
 ]
 
 export const getExamAcademicYearDescription = (
-  teaching: Teaching,
+  currentYear: string,
+  academicYear: number,
+  semester: string,
   lan: string
 ) => {
-  const aa = teaching.aa_classe
+  const aa = currentYear
   const aaNextYear = (parseInt(aa) + 1).toString()
 
   const ordinalNumberYear =
     lan === "it"
-      ? ordinalNumbersIT[teaching.ac_freq - 1]
-      : ordinalNumbersEN[teaching.ac_freq - 1]
+      ? ordinalNumbersIT[academicYear - 1]
+      : ordinalNumbersEN[academicYear - 1]
 
-  const ordinalNumberSemester =
-    teaching.semestre_freq === "1" ? "primo" : "secondo"
+  const ordinalNumberSemester = semester === "1" ? "primo" : "secondo"
 
   return `A.A ${aa}/${aaNextYear}, ${ordinalNumberYear} anno, ${ordinalNumberSemester} semestre`
 }

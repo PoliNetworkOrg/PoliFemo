@@ -1,18 +1,21 @@
 import { FC } from "react"
 import { BodyText } from "components/Text"
 import { usePalette } from "utils/colors"
-import { Teaching } from "api/collections/exams"
 import { getExamAcademicYearDescription, toPascalCase } from "utils/exams"
 import { useCurrentLanguage } from "utils/language"
 
 export interface ExamDetailsUpperDescriptorProps {
-  teaching: Teaching
+  teachingCode: number
+  teacher: string
+  currentYear: string
+  academicYear: number
+  semester: string
 }
 
 export const ExamDetailsUpperDescriptor: FC<
   ExamDetailsUpperDescriptorProps
 > = props => {
-  const teaching = props.teaching
+  const { teachingCode, teacher, currentYear, academicYear, semester } = props
 
   const { isLight, palette } = usePalette()
 
@@ -26,7 +29,7 @@ export const ExamDetailsUpperDescriptor: FC<
           color: isLight ? palette.variant3 : "#FFFFFF",
         }}
       >
-        COD. {teaching.c_classe_m}
+        COD. {teachingCode}
       </BodyText>
       <BodyText
         style={{
@@ -35,7 +38,12 @@ export const ExamDetailsUpperDescriptor: FC<
           color: isLight ? palette.variant3 : "#FFFFFF",
         }}
       >
-        {getExamAcademicYearDescription(teaching, lan)}
+        {getExamAcademicYearDescription(
+          currentYear,
+          academicYear,
+          semester,
+          lan
+        )}
       </BodyText>
 
       <BodyText
@@ -55,7 +63,7 @@ export const ExamDetailsUpperDescriptor: FC<
           color: isLight ? palette.variant3 : "#FFFFFF",
         }}
       >
-        {toPascalCase(teaching.docente_esame)}
+        {toPascalCase(teacher)}
       </BodyText>
     </>
   )
