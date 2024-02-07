@@ -1,7 +1,7 @@
 import { BoxShadowView } from "components/BoxShadow"
 import { NavBar } from "components/NavBar"
 import { FC } from "react"
-import { View, StyleSheet } from "react-native"
+import { View, StyleSheet, TextStyle } from "react-native"
 import { Text, Title } from "components/Text"
 import { usePalette } from "utils/colors"
 
@@ -25,6 +25,8 @@ export interface PageWrapProps {
   sideTitleElement?: React.ReactNode
 
   fontSizeTitle?: number
+
+  titleStyle?: TextStyle
 
   children: React.ReactNode
 }
@@ -65,7 +67,7 @@ export const PageWrap: FC<PageWrapProps> = props => {
         ]}
       >
         {props.title && (
-          <View style={styles.titleWrapper}>
+          <View style={[styles.titleWrapper, props.titleStyle]}>
             {typeof props.title === "string" ? (
               <Title
                 style={

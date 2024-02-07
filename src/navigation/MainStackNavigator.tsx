@@ -16,6 +16,7 @@ import { GradingBook } from "pages/GradingBook"
 import { Groups } from "pages/Groups"
 import { Home } from "pages/Home"
 import { TimeTable } from "pages/TimeTable"
+import { ExamDetails } from "pages/exams/ExamDetails"
 import { Exams } from "pages/exams/Exams"
 import { ResultDetails } from "pages/exams/ResultDetails"
 import { Results } from "pages/exams/Results"
@@ -124,6 +125,7 @@ export const MainStack: FC = () => {
         name="ResultDetails"
         component={ResultDetails}
       />
+      <MainStackNavigator.Screen name="ExamDetails" component={ExamDetails} />
     </MainStackNavigator.Navigator>
   )
 }

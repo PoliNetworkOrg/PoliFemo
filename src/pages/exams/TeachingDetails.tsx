@@ -1,13 +1,14 @@
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { BodyText } from "components/Text"
 import { PageWrap } from "components/PageLayout"
-import { ScrollView } from "react-native"
+import { ScrollView, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { ExamStatusType, getExamStatus } from "utils/exams"
 import { Exam } from "api/collections/exams"
 import { useEffect, useState } from "react"
 import { ExamDetailsUpperDescriptor } from "components/Exams/ExamDetailsUpperDescriptor"
 import { ExamBox } from "components/Exams/TeachingDetails/ExamBox"
+import { useNavigation } from "navigation/NavigationTypes"
 
 export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
   /* const { t } = useTranslation("exams") */
@@ -18,7 +19,7 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
 
   const { palette } = usePalette()
 
-  /* const { navigate } = useNavigation() */
+  const { navigate } = useNavigation()
 
   const [examsPendingGrade, setExamsPendingGrade] = useState<
     Exam[] | undefined
@@ -77,7 +78,7 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
           currentYear={teaching.aa_classe}
           semester={teaching.semestre_freq}
         />
-
+        <View style={{ height: 16 }} />
         {examsPendingGrade && examsPendingGrade.length > 0 && (
           <>
             <BodyText
@@ -85,7 +86,7 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
                 fontSize: 20,
                 fontWeight: "900",
                 color: palette.primary,
-                marginTop: 32,
+                marginTop: 16,
               }}
             >
               In attesa di esito
@@ -96,6 +97,10 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
                   key={exam.c_domanda}
                   exam={exam}
                   type={ExamStatusType.IN_ATTESA_DI_ESITO}
+                  onPress={() => {
+                    // ! change to pass only exam
+                    navigate("ResultDetails", { teaching: teaching })
+                  }}
                 />
               )
             })}
@@ -108,7 +113,7 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
                 fontSize: 20,
                 fontWeight: "900",
                 color: palette.primary,
-                marginTop: 32,
+                marginTop: 16,
               }}
             >
               Iscrizioni effettuate
@@ -119,6 +124,12 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
                   key={exam.c_domanda}
                   exam={exam}
                   type={ExamStatusType.ISCRITTO}
+                  onPress={() => {
+                    navigate("ExamDetails", {
+                      teaching: teaching,
+                      codeAppello: exam.c_appello,
+                    })
+                  }}
                 />
               )
             })}
@@ -131,7 +142,7 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
                 fontSize: 20,
                 fontWeight: "900",
                 color: palette.primary,
-                marginTop: 32,
+                marginTop: 16,
               }}
             >
               Puoi iscriverti a
@@ -154,7 +165,7 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
                 fontSize: 20,
                 fontWeight: "900",
                 color: palette.primary,
-                marginTop: 32,
+                marginTop: 16,
               }}
             >
               Esiti disponibili

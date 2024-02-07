@@ -13,7 +13,7 @@ export interface ExamInfoWhiteLineProps {
 }
 
 export const ExamInfoWhiteLine: FC<ExamInfoWhiteLineProps> = props => {
-  const { exam, type } = props
+  const { exam, type, onPress } = props
 
   /* const { isLight, palette } = usePalette() */
 
@@ -21,7 +21,7 @@ export const ExamInfoWhiteLine: FC<ExamInfoWhiteLineProps> = props => {
 
   return type === ExamStatusType.IN_ATTESA_DI_ESITO ||
     type === ExamStatusType.ESITO_DISPONIBILE ? null : (
-    <Pressable onPress={props.onPress}>
+    <Pressable onPress={onPress} disabled={onPress ? false : true}>
       <View
         style={{
           flexDirection: "row",
