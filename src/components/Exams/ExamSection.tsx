@@ -63,6 +63,7 @@ export const ExamSection: FC<ExamSectionProps> = props => {
               justifyContent: "flex-end",
             }}
             onPress={props.onPress}
+            hitSlop={10}
           >
             <Icon source={arrowRightSvg} scale={1.2} />
           </Pressable>

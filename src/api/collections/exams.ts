@@ -81,6 +81,16 @@ export interface Teaching {
   xdescrizione: string
 }
 
+export interface ReducedTeachingExam {
+  teachingName: string
+  teachingCode: number
+  teacher: string
+  academicYear: number
+  currentYear: string
+  semester: string
+  result: Exam
+}
+
 interface TeachingResponseData {
   MESSAGES: unknown[] // ?
   INSEGN: Teaching[]

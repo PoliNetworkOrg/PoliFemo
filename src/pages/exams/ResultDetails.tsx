@@ -1,19 +1,51 @@
 import { Divider } from "components/Divider"
 import { ExamDetailsUpperDescriptor } from "components/Exams/ExamDetailsUpperDescriptor"
+import { PolifemoMessage } from "components/FeedbackPolifemo/PolifemoMessage"
 import { PageWrap } from "components/PageLayout"
 import { BodyText } from "components/Text"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import { usePalette } from "utils/colors"
-//import polifemoIcon from "assets/polifemo/empty.svg"
-
-//import { PolifemoMessage } from "components/FeedbackPolifemo/PolifemoMessage"
+import polifemoIcon from "assets/polifemo/empty.svg"
+import {
+  getExamStatus,
+  getExamStatusDescription,
+  monthsAcronymsIT,
+} from "utils/exams"
 
 export const ResultDetails: MainStackScreen<"ResultDetails"> = props => {
-  const teaching = props.route.params.teaching
+  const {
+    teacher,
+    teachingCode,
+    teachingName,
+    currentYear,
+    semester,
+    academicYear,
+    result,
+  } = props.route.params.resultExam
 
   const { palette, isLight } = usePalette()
+
+  const dateExam = new Date(result.d_app)
+  const day = dateExam.getDate()
+  const month = monthsAcronymsIT[dateExam.getMonth()]
+  const year = dateExam.getFullYear()
+  const status = getExamStatus(result)
+
+  let dateRefuse, dayRefuse, monthRefuse, yearRefuse
+
+  if (result.iscrizioneAttiva?.verb_esito === "RF") {
+    dateRefuse = result.iscrizioneAttiva.verb_data_rifiuto
+      ? new Date(result.iscrizioneAttiva.verb_data_rifiuto)
+      : undefined
+
+    if (dateRefuse) {
+      dayRefuse = dateRefuse.getDate()
+      monthRefuse = monthsAcronymsIT[dateRefuse.getMonth()]
+      yearRefuse = dateRefuse.getFullYear()
+    }
+  }
 
   return (
     <PageWrap title={"Esito"}>
@@ -26,11 +58,11 @@ export const ResultDetails: MainStackScreen<"ResultDetails"> = props => {
             marginBottom: 10,
           }}
         >
-          {teaching.xdescrizione}
+          {teachingName}
         </BodyText>
         <BodyText
           style={{
-            color: "#fff",
+            color: isLight ? palette.variant3 : "#FFFFFF",
             fontSize: 18,
             fontWeight: "300",
             marginBottom: 10,
@@ -39,83 +71,134 @@ export const ResultDetails: MainStackScreen<"ResultDetails"> = props => {
           <BodyText
             style={{
               fontWeight: "900",
-              color: "#fff",
+              color: isLight ? palette.variant3 : "#FFFFFF",
               fontSize: 18,
             }}
           >
-            {19}
+            {day}
           </BodyText>{" "}
-          {"GEN"} {"2024"}
+          {month} {year}
           {" - ESAME"}
         </BodyText>
         <ExamDetailsUpperDescriptor
-          teachingCode={teaching.c_classe_m}
-          teacher={teaching.docente_esame}
-          academicYear={teaching.ac_freq}
-          currentYear={teaching.aa_classe}
-          semester={teaching.semestre_freq}
+          teachingCode={teachingCode}
+          teacher={teacher}
+          academicYear={academicYear}
+          currentYear={currentYear}
+          semester={semester}
         />
-        {/*<PolifemoMessage
-          title="In attesa di esito"
-          subTitle="Polifemo è dispiaciuto"
-          icon={polifemoIcon}
-          styleTitle={{
-            color: isLight ? palette.variant3 : "#FFFFFF",
-            fontWeight: "600",
-          }}
-          styleSubTitle={{
-            color: isLight ? palette.variant3 : "#FFFFFF",
-            fontSize: 14,
-          }}
-        />*/}
-        <View style={{ marginTop: 40 }}>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
+        {result.inAttesaDiEsito ? (
+          <PolifemoMessage
+            title="In attesa di esito"
+            subTitle="Polifemo è dispiaciuto"
+            icon={polifemoIcon}
+            styleTitle={{
+              color: isLight ? palette.variant3 : "#FFFFFF",
+              fontWeight: "600",
             }}
-          >
-            <BodyText style={{ fontSize: 24, fontWeight: "900" }}>
-              Status
-            </BodyText>
-            <BodyText style={{ fontSize: 20, fontWeight: "300" }}>
-              pubblicato
-            </BodyText>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginTop: 30,
+            styleSubTitle={{
+              color: isLight ? palette.variant3 : "#FFFFFF",
+              fontSize: 14,
             }}
-          >
-            <BodyText style={{ fontSize: 24, fontWeight: "900" }}>
-              Esito
-            </BodyText>
-            <BodyText style={{ fontSize: 20, fontWeight: "700" }}>24</BodyText>
-          </View>
-          <View
-            style={{
-              marginTop: 20,
-              backgroundColor: palette.accent,
-              marginLeft: 50,
-              marginRight: 50,
-              padding: 5,
-              borderRadius: 16,
-            }}
-          >
-            <BodyText
-              style={{ textAlign: "center", fontSize: 14, fontWeight: "900" }}
+          />
+        ) : (
+          <View style={{ marginTop: 40 }}>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
             >
-              RIFIUTATO IL 24 GEN 2024
-            </BodyText>
+              <BodyText
+                style={{
+                  fontSize: 24,
+                  fontWeight: "900",
+                  color: isLight ? palette.variant3 : "#FFFFFF",
+                }}
+              >
+                Status
+              </BodyText>
+              <BodyText
+                style={{
+                  fontSize: 20,
+                  fontWeight: "300",
+                  color: isLight ? palette.variant3 : "#FFFFFF",
+                }}
+              >
+                {getExamStatusDescription(status.type, "it").toUpperCase()}
+              </BodyText>
+            </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginTop: 30,
+              }}
+            >
+              <BodyText
+                style={{
+                  fontSize: 24,
+                  fontWeight: "900",
+                  color: isLight ? palette.variant3 : "#FFFFFF",
+                }}
+              >
+                Esito
+              </BodyText>
+              <BodyText
+                style={{
+                  fontSize: 20,
+                  fontWeight: "700",
+                  color: isLight ? palette.variant3 : "#FFFFFF",
+                }}
+              >
+                {result.iscrizioneAttiva?.verb_esito === "RF"
+                  ? result.iscrizioneAttiva?.verb_esito_rifiuto
+                  : result.iscrizioneAttiva?.xverbEsito}
+              </BodyText>
+            </View>
+            {result.iscrizioneAttiva?.verb_esito === "RF" ? (
+              <View
+                style={{
+                  marginTop: 20,
+                  backgroundColor: palette.accent,
+                  marginLeft: 50,
+                  marginRight: 50,
+                  padding: 5,
+                  borderRadius: 16,
+                }}
+              >
+                <BodyText
+                  style={{
+                    textAlign: "center",
+                    fontSize: 14,
+                    fontWeight: "900",
+                    color: isLight ? palette.variant3 : "#FFFFFF",
+                  }}
+                >
+                  RIFIUTATO IL {dayRefuse} {monthRefuse} {yearRefuse}
+                </BodyText>
+              </View>
+            ) : undefined}
+            <Divider style={{ marginTop: 20, marginBottom: 20 }} />
+            {result.iscrizioneAttiva?.hasCorrezioni ? (
+              <View>
+                <BodyText
+                  style={{
+                    fontWeight: "900",
+                    color: isLight ? palette.variant3 : "#FFFFFF",
+                    fontSize: 18,
+                  }}
+                >
+                  Correzioni
+                </BodyText>
+              </View>
+            ) : undefined}
           </View>
-          <Divider style={{ marginTop: 20 }} />
-        </View>
+        )}
       </ScrollView>
     </PageWrap>
   )

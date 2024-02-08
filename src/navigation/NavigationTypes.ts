@@ -23,7 +23,7 @@ import {
 } from "@react-navigation/native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { Article } from "api/collections/articles"
-import { Teaching } from "api/collections/exams"
+import { ReducedTeachingExam, Teaching } from "api/collections/exams"
 import { Occupancies } from "api/collections/rooms"
 import {
   BuildingItem,
@@ -92,7 +92,7 @@ export type MainStackNavigatorParams = {
   Exams: undefined
   Results: undefined
   TeachingDetails: { teaching: Teaching }
-  ResultDetails: { teaching: Teaching }
+  ResultDetails: { resultExam: ReducedTeachingExam }
   ExamDetails: { teaching: Teaching; codeAppello: number }
 }
 
