@@ -99,7 +99,17 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
                   type={ExamStatusType.IN_ATTESA_DI_ESITO}
                   onPress={() => {
                     // ! change to pass only exam
-                    navigate("ResultDetails", { teaching: teaching })
+                    navigate("ResultDetails", {
+                      resultExam: {
+                        teachingName: teaching.xdescrizione,
+                        teachingCode: teaching.c_classe_m,
+                        teacher: teaching.docente_esame,
+                        currentYear: teaching.aa_classe,
+                        academicYear: teaching.ac_freq,
+                        semester: teaching.semestre_freq,
+                        result: teaching.appelliEsame[0],
+                      },
+                    })
                   }}
                 />
               )
