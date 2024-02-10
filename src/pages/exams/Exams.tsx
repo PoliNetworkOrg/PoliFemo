@@ -36,12 +36,12 @@ enum ExamsStage {
 
 const client = HttpClient.getInstance()
 
-export const Exams: MainStackScreen<"Exams"> = () => {
+export const Exams: MainStackScreen<"Exams"> = props => {
   /* const { t } = useTranslation("exams") */
 
   const lan = useCurrentLanguage()
 
-  const { navigate } = useNavigation()
+  const navigation = useNavigation()
 
   const [stage, setStage] = useState(ExamsStage.START)
   const [currentURL, setCurrentURL] = useState<string | undefined>(undefined)
@@ -73,20 +73,20 @@ export const Exams: MainStackScreen<"Exams"> = () => {
     }
   }, [])
 
-  useEffect(() => {
-    async function getTeachings() {
-      const teachings = await api.exams.getTeachings()
+  async function getTeachings() {
+    console.log("get teachings")
+    const teachings = await api.exams.getTeachings()
 
-      teachings.forEach(teaching => {
-        teaching.appelliEsame.sort((a, b) => {
-          const dateA = new Date(a.d_app)
-          const dateB = new Date(b.d_app)
-          return dateA.getTime() - dateB.getTime()
-        })
+    teachings.forEach(teaching => {
+      teaching.appelliEsame.sort((a, b) => {
+        const dateA = new Date(a.d_app)
+        const dateB = new Date(b.d_app)
+        return dateA.getTime() - dateB.getTime()
       })
+    })
 
-      // ? should we sort teachings according to some criteria?
-      /* teachings.sort((a, b) => {
+    // ? should we sort teachings according to some criteria?
+    /* teachings.sort((a, b) => {
         if (a.appelliEsame.length === 0) return 1
         if (b.appelliEsame.length === 0) return -1
 
@@ -95,13 +95,35 @@ export const Exams: MainStackScreen<"Exams"> = () => {
         return dateA.getTime() - dateB.getTime()
       }) */
 
-      setTeachings(teachings)
-    }
+    setTeachings(teachings)
+  }
 
+  const updateTeachings = () => {
+    if (
+      props.route.params?.updateTeachings === true &&
+      stage === ExamsStage.TOKEN_RETRIEVED
+    ) {
+      setTeachings(undefined)
+      void getTeachings()
+      navigation.setParams({ updateTeachings: false })
+    }
+  }
+
+  useEffect(() => {
     if (stage === ExamsStage.TOKEN_RETRIEVED) {
       void getTeachings()
     }
   }, [stage])
+
+  // when the user navigates back to the exams page, update the teachings
+  // if updateTeachings flag is set to true
+  useEffect(() => {
+    navigation.addListener("focus", updateTeachings)
+
+    return () => {
+      navigation.removeListener("focus", updateTeachings)
+    }
+  }, [props.route.params?.updateTeachings])
 
   useEffect(() => {
     // count number of exams with grade
@@ -165,7 +187,7 @@ export const Exams: MainStackScreen<"Exams"> = () => {
           {teachings && (
             <Pressable
               onPress={() => {
-                navigate("Results")
+                navigation.navigate("Results")
               }}
             >
               <View
@@ -253,7 +275,9 @@ export const Exams: MainStackScreen<"Exams"> = () => {
                       alignItems: "center",
                     }}
                     onPress={() => {
-                      navigate("TeachingDetails", { teaching })
+                      navigation.navigate("TeachingDetails", {
+                        teaching,
+                      })
                     }}
                   >
                     <View
@@ -358,7 +382,9 @@ export const Exams: MainStackScreen<"Exams"> = () => {
           )}
         </ScrollView>
       ) : stage === ExamsStage.ERROR_NOT_LOGGED_IN ? (
-        <BodyText onPress={() => navigate("Results")}>Error logged in</BodyText>
+        <BodyText onPress={() => navigation.navigate("Results")}>
+          Error logged in
+        </BodyText>
       ) : stage === ExamsStage.START ? (
         <BodyText>Start</BodyText>
       ) : null}

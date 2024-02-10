@@ -89,11 +89,14 @@ export type MainStackNavigatorParams = {
   }
   NotificationDetails: { notification: NotificationStorage; category?: string }
   GradingBook: undefined
-  Exams: undefined
+  Exams: { updateTeachings?: boolean }
   Results: undefined
   TeachingDetails: { teaching: Teaching }
   ResultDetails: { resultExam: ReducedTeachingExam }
-  ExamDetails: { teaching: Teaching; codeAppello: number }
+  ExamDetails: {
+    teaching: Teaching
+    codeAppello: number
+  }
 }
 
 export type SettingsStackNavigatorParams = {

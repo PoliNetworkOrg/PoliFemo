@@ -1,4 +1,4 @@
-import { MainStackScreen } from "navigation/NavigationTypes"
+import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { BodyText, Title } from "components/Text"
 import { PageWrap } from "components/PageLayout"
 import { Pressable, ScrollView, View } from "react-native"
@@ -8,6 +8,18 @@ import { ExamDetailsUpperDescriptor } from "components/Exams/ExamDetailsUpperDes
 import { useCurrentLanguage } from "utils/language"
 import { Icon } from "components/Icon"
 import dangerousIcon from "assets/exams/dangerous_cancel.svg"
+import { Modal } from "components/Modal"
+import { useEffect, useState } from "react"
+import { LoadingIndicator } from "components/LoadingIndicator"
+import { wait } from "utils/functions"
+import checkIcon from "assets/exams/check.svg"
+
+enum Status {
+  START,
+  WAITING_RESPONSE,
+  SUCCESS,
+  ERROR,
+}
 
 export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
   /* const { t } = useTranslation("exams") */
@@ -21,6 +33,18 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
   const lan = useCurrentLanguage()
 
   const { palette } = usePalette()
+
+  const [isModalVisible, setIsModalVisible] = useState(false)
+
+  const [status, setStatus] = useState<Status>(Status.START)
+
+  const navigation = useNavigation()
+
+  useEffect(() => {
+    if (status === Status.SUCCESS) {
+      navigation.navigate("Exams", { updateTeachings: true })
+    }
+  }, [status])
 
   return (
     <PageWrap
@@ -175,7 +199,11 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
             >
               {exam.numIscrittiAppello} persone iscritte
             </BodyText>
-            <Pressable onPress={undefined}>
+            <Pressable
+              onPress={() => {
+                setIsModalVisible(true)
+              }}
+            >
               <View
                 style={{
                   marginTop: 24,
@@ -219,6 +247,105 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
           </>
         )}
       </ScrollView>
+      <Modal
+        isShowing={isModalVisible}
+        onClose={() => {
+          // dont allow to close the modal if the status is not waiting response or success
+          if (status != Status.WAITING_RESPONSE && status != Status.SUCCESS) {
+            setIsModalVisible(false)
+            void wait(200).then(() => setStatus(Status.START))
+          }
+        }}
+        title={
+          exam?.iscrizioneAttiva
+            ? "Sicuro/a di voler cancellare l'iscrizione all'esame?"
+            : "Iscriviti all'esame"
+        }
+        subTitleStyle={{
+          fontWeight: "900",
+          marginTop: 58,
+          marginVertical: 0,
+        }}
+        centerText={true}
+        buttons={[
+          {
+            text: "Annulla",
+            light: true,
+            style: {
+              alignSelf: "center",
+              minWidth: 120,
+              marginTop: 16,
+              marginBottom: 10,
+              marginLeft: 16,
+            },
+            onPress: () => {
+              setIsModalVisible(false)
+              void wait(200).then(() => setStatus(Status.START))
+            },
+          },
+          {
+            text: "Conferma",
+            light: false,
+            style: {
+              alignSelf: "center",
+              minWidth: 120,
+              marginTop: 16,
+              marginRight: 16,
+              marginBottom: 10,
+            },
+            onPress: () => {
+              if (exam?.iscrizioneAttiva) {
+                console.log("cancella")
+                setStatus(Status.WAITING_RESPONSE)
+                void wait(1000).then(() => {
+                  setStatus(Status.ERROR)
+                })
+              } else {
+                console.log("iscrivi")
+                setStatus(Status.WAITING_RESPONSE)
+                void wait(1000).then(() => {
+                  setStatus(Status.SUCCESS)
+                  setIsModalVisible(false)
+                })
+              }
+            },
+          },
+        ]}
+      >
+        {status === Status.WAITING_RESPONSE ? (
+          <View style={{ justifyContent: "center", marginVertical: 16 }}>
+            <LoadingIndicator />
+          </View>
+        ) : status === Status.SUCCESS ? (
+          <Icon
+            source={checkIcon}
+            style={{ alignSelf: "center", marginTop: 20 }}
+          />
+        ) : status === Status.ERROR ? (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 24,
+            }}
+          >
+            <BodyText
+              style={{
+                fontSize: 20,
+                color: palette.primary,
+                fontWeight: "700",
+              }}
+            >
+              Errore
+            </BodyText>
+          </View>
+        ) : (
+          <Icon
+            source={dangerousIcon}
+            style={{ alignSelf: "center", marginTop: 20 }}
+          />
+        )}
+      </Modal>
     </PageWrap>
   )
 }
