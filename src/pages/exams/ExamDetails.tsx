@@ -32,7 +32,7 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
 
   const lan = useCurrentLanguage()
 
-  const { palette } = usePalette()
+  const { isLight, palette } = usePalette()
 
   const [isModalVisible, setIsModalVisible] = useState(false)
 
@@ -153,7 +153,7 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
               <BodyText
                 style={{
                   fontSize: 20,
-                  color: palette.primary,
+                  color: isLight ? palette.primary : "#fff",
                   fontWeight: "900",
                 }}
               >
@@ -162,7 +162,7 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
               <BodyText
                 style={{
                   fontSize: 16,
-                  color: palette.primary,
+                  color: isLight ? palette.primary : "#fff",
                   fontWeight: "300",
                 }}
               >
@@ -174,7 +174,7 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
               <BodyText
                 style={{
                   fontSize: 20,
-                  color: palette.primary,
+                  color: isLight ? palette.primary : "#fff",
                   fontWeight: "900",
                 }}
               >
@@ -183,7 +183,7 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
               <BodyText
                 style={{
                   fontSize: 16,
-                  color: palette.primary,
+                  color: isLight ? palette.primary : "#fff",
                   fontWeight: "300",
                 }}
               >
@@ -193,7 +193,7 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
             <BodyText
               style={{
                 fontSize: 16,
-                color: palette.primary,
+                color: isLight ? palette.primary : "#fff",
                 fontWeight: "300",
               }}
             >
@@ -207,7 +207,7 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
               <View
                 style={{
                   marginTop: 24,
-                  backgroundColor: palette.primary,
+                  backgroundColor: isLight ? palette.primary : palette.lighter,
                   height: 64,
                   borderRadius: 16,
                   flex: 1,
@@ -332,7 +332,7 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
             <BodyText
               style={{
                 fontSize: 20,
-                color: palette.primary,
+                color: isLight ? palette.primary : "#fff",
                 fontWeight: "700",
               }}
             >

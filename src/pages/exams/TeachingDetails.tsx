@@ -17,8 +17,6 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
 
   /* const lan = useCurrentLanguage() */
 
-  const { palette } = usePalette()
-
   const { navigate } = useNavigation()
 
   const [examsPendingGrade, setExamsPendingGrade] = useState<
@@ -36,6 +34,8 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
   const [examsNotEnrolled, setExamsNotEnrolled] = useState<Exam[] | undefined>(
     undefined
   )
+
+  const { isLight, palette } = usePalette()
 
   useEffect(() => {
     const examsPendingGradeTemp: Exam[] = []
@@ -85,7 +85,7 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
               style={{
                 fontSize: 20,
                 fontWeight: "900",
-                color: palette.primary,
+                color: isLight ? palette.primary : "#fff",
                 marginTop: 16,
               }}
             >
@@ -122,7 +122,7 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
               style={{
                 fontSize: 20,
                 fontWeight: "900",
-                color: palette.primary,
+                color: isLight ? palette.primary : "#fff",
                 marginTop: 16,
               }}
             >
@@ -151,7 +151,7 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
               style={{
                 fontSize: 20,
                 fontWeight: "900",
-                color: palette.primary,
+                color: isLight ? palette.primary : "#fff",
                 marginTop: 16,
               }}
             >
@@ -174,7 +174,7 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
               style={{
                 fontSize: 20,
                 fontWeight: "900",
-                color: palette.primary,
+                color: isLight ? palette.primary : "#fff",
                 marginTop: 16,
               }}
             >
@@ -186,6 +186,19 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
                   key={exam.c_domanda}
                   exam={exam}
                   type={ExamStatusType.ESITO_DISPONIBILE}
+                  onPress={() => {
+                    navigate("ResultDetails", {
+                      resultExam: {
+                        teachingName: teaching.xdescrizione,
+                        teachingCode: teaching.c_classe_m,
+                        teacher: teaching.docente_esame,
+                        currentYear: teaching.aa_classe,
+                        academicYear: teaching.ac_freq,
+                        semester: teaching.semestre_freq,
+                        result: teaching.appelliEsame[0],
+                      },
+                    })
+                  }}
                 />
               )
             })}

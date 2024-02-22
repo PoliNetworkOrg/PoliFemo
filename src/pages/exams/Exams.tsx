@@ -13,7 +13,7 @@ import { AdaptiveShadowView } from "components/BoxShadow"
 import { Pressable, ScrollView, View } from "react-native"
 import { Icon } from "components/Icon"
 import arrowRightSvg from "assets/exams/arrow_right.svg"
-import { palette } from "utils/colors"
+import { usePalette } from "utils/colors"
 import {
   ExamStatusType,
   getExamStatus,
@@ -53,6 +53,8 @@ export const Exams: MainStackScreen<"Exams"> = props => {
   const [examsWithGradeCount, setExamsWithGradeCount] = useState(0)
 
   const polimiExamsToken = client.readPolimiExamsToken()
+
+  const { palette } = usePalette()
 
   // compose start url for redirect flow
   useEffect(() => {
