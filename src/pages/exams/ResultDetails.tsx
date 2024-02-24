@@ -4,7 +4,7 @@ import { PolifemoMessage } from "components/FeedbackPolifemo/PolifemoMessage"
 import { PageWrap } from "components/PageLayout"
 import { BodyText } from "components/Text"
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { View } from "react-native"
+import { Pressable, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import { usePalette } from "utils/colors"
 import polifemoIcon from "assets/polifemo/empty.svg"
@@ -15,6 +15,9 @@ import {
 } from "utils/exams"
 import { Icon } from "components/Icon"
 import downloadIcon from "assets/exams/download.svg"
+import { api } from "api"
+import { useEffect, useState } from "react"
+import { Correction } from "api/collections/exams"
 
 export const ResultDetails: MainStackScreen<"ResultDetails"> = props => {
   const {
@@ -35,6 +38,10 @@ export const ResultDetails: MainStackScreen<"ResultDetails"> = props => {
   const year = dateExam.getFullYear()
   const status = getExamStatus(result)
 
+  const [correction, setCorrection] = useState<Correction | undefined>(
+    undefined
+  )
+
   let dateRefuse, dayRefuse, monthRefuse, yearRefuse
 
   if (result.iscrizioneAttiva?.verb_esito === "RF") {
@@ -46,6 +53,33 @@ export const ResultDetails: MainStackScreen<"ResultDetails"> = props => {
       dayRefuse = dateRefuse.getDate()
       monthRefuse = monthsAcronymsIT[dateRefuse.getMonth()]
       yearRefuse = dateRefuse.getFullYear()
+    }
+  }
+
+  useEffect(() => {
+    const fetchCorrection = async () => {
+      if (result.iscrizioneAttiva?.hasCorrezioni) {
+        try {
+          const correction = await api.exams.getCorrection(result.c_appello)
+          setCorrection(correction)
+        } catch (error) {
+          console.error("Error getting correction:", error)
+        }
+      }
+    }
+    void fetchCorrection()
+  }, [])
+
+  const downloadFileCorrection = async () => {
+    try {
+      if (correction) {
+        const fileCorrection = await api.exams.downloadFile(
+          correction.id_doc_compito
+        )
+      }
+    } catch (error) {
+      // Handle any errors that occur during the fetch or download process
+      console.error("Error downloading file:", error)
     }
   }
 
@@ -214,10 +248,12 @@ export const ResultDetails: MainStackScreen<"ResultDetails"> = props => {
                   >
                     1000000_MARIOROSSI.pdf
                   </BodyText>
-                  <Icon
-                    source={downloadIcon}
-                    color={!isLight ? "white" : undefined}
-                  />
+                  <Pressable onPress={downloadFileCorrection}>
+                    <Icon
+                      source={downloadIcon}
+                      color={!isLight ? "white" : undefined}
+                    />
+                  </Pressable>
                 </View>
               </View>
             ) : undefined}

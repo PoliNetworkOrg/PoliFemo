@@ -91,6 +91,12 @@ export interface ReducedTeachingExam {
   result: Exam
 }
 
+export interface Correction {
+  ed_compito_id: number
+  id_doc_compito: number
+  nome_doc_compito: string
+}
+
 interface TeachingResponseData {
   MESSAGES: unknown[] // ?
   INSEGN: Teaching[]
@@ -106,5 +112,25 @@ export const exams = {
       ...options,
     })
     return mapAxiosRequest(request, response => response.INSEGN)
+  },
+  getCorrection(c_appello: number, options?: RequestOptions) {
+    const url = `/rest/v1/prove/correzioni/${c_appello}`
+    const request = client.callPolimiExams<Correction>({
+      url,
+      method: "GET",
+      authType: AuthType.POLIMI_EXAMS,
+      ...options,
+    })
+    return mapAxiosRequest(request, response => response)
+  },
+  downloadFile(id_doc_compito: number, options?: RequestOptions) {
+    const url = `/rest/v1/prove/correzione/${id_doc_compito}`
+    const request = client.callPolimiExams<string>({
+      url,
+      method: "GET",
+      authType: AuthType.POLIMI_EXAMS,
+      ...options,
+    })
+    return mapAxiosRequest(request, response => response)
   },
 }
