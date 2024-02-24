@@ -13,6 +13,8 @@ import {
   getExamStatusDescription,
   monthsAcronymsIT,
 } from "utils/exams"
+import { Icon } from "components/Icon"
+import downloadIcon from "assets/exams/download.svg"
 
 export const ResultDetails: MainStackScreen<"ResultDetails"> = props => {
   const {
@@ -185,7 +187,7 @@ export const ResultDetails: MainStackScreen<"ResultDetails"> = props => {
             ) : undefined}
             <Divider style={{ marginTop: 20, marginBottom: 20 }} />
             {result.iscrizioneAttiva?.hasCorrezioni ? (
-              <View>
+              <View style={{ display: "flex", flexDirection: "column" }}>
                 <BodyText
                   style={{
                     fontWeight: "900",
@@ -195,6 +197,28 @@ export const ResultDetails: MainStackScreen<"ResultDetails"> = props => {
                 >
                   Correzioni
                 </BodyText>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginTop: 10,
+                  }}
+                >
+                  <BodyText
+                    style={{
+                      fontWeight: "300",
+                      color: isLight ? palette.variant3 : "#FFFFFF",
+                      fontSize: 16,
+                    }}
+                  >
+                    1000000_MARIOROSSI.pdf
+                  </BodyText>
+                  <Icon
+                    source={downloadIcon}
+                    color={!isLight ? "white" : undefined}
+                  />
+                </View>
               </View>
             ) : undefined}
           </View>
