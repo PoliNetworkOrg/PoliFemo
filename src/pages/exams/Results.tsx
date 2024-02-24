@@ -84,6 +84,69 @@ export const Results: MainStackScreen<"Results"> = () => {
           xnoteAppello: [],
           iscrizioniAperte: false,
         },
+        {
+          c_appello: 820919,
+          d_app: "2024-01-27T08:30:00.000+0100",
+          ora_ok: "S",
+          t_appello: "E",
+          d_apertura: "2023-11-27T00:00:00.000+0100",
+          d_chiusura: "2024-01-10T00:00:00.000+0100",
+          d_inizio_sessione: "2024-01-08T00:00:00.000+0100",
+          d_fine_sessione: "2024-02-17T00:00:00.000+0100",
+          domanda_valida: "N",
+          c_domanda: 0,
+          domanda_ateneo_valida: "N",
+          c_domanda_ateneo: null,
+          numIscrittiAppello: 152,
+          risposteDomanda: null,
+          risposteDomandaAteneo: null,
+          descTipoAppello: "Esame",
+          xaula:
+            "Cognomi da P a Scianna in aula  T.1.1, da Sciaranna a Z in T.1.2",
+          xvisibil_appello_listainsegnamenti: true,
+          hasIscrizioneConEsito: true,
+          hasQuestionarioObblig: true,
+          appelloConDomanda: false,
+          iscrizioneAttiva: {
+            c_iscriz: 9880998,
+            c_risposta: null,
+            c_risposta_ateneo: null,
+            n_protocollo: 451697,
+            show_prove_distanza: "N",
+            verb_id_valutazione: 7061242,
+            verb_esito: "RF",
+            verb_stato: "P",
+            verb_positivo: "N",
+            verb_esito_number: null,
+            verb_data_fine_pubblicazione: "2024-01-26T12:00:00.000+0100",
+            verb_messaggio:
+              '<p>Gentile studente, <br /><br />Le comunico che ho pubblicato gli esiti relativi all\'insegnamento 052510 - Ingegneria del software, A.A. 2023, Esame del 15/01/2024.<br /><br />La fase di pubblicazione si chiuder&agrave; in data 26/01/2024 12:00, dopodich&eacute; proceder&ograve; con il consolidamento degli esiti e la conseguente verbalizzazione.</p>\r\n<p>Per gli studenti di Laurea Magistrale con esame "Ingegneria del Software B", a meno di rifiuto del voto da parte vostra, al termine della fase di pubblicazione rettificher&ograve; il risultato segnandovi "assenti" in attesa del completamento del progetto.&nbsp;<br /><br />Pu&ograve; visualizzare la versione scannerizzata e commentata del suo compito accedendo ai servizi online (per ogni zona evidenziata c\'&egrave; un breve commento, se non riuscisse a visualizzarlo provi a scaricare il pdf e ad aprirlo con un diverso viewer).</p>\r\n<p>Se avesse necessit&agrave; di ulteriori chiarimenti venga <strong>Gioved&igrave; 25/1 alle ore 8.45 in aula Beta</strong>, al piano terra dell\'edificio 24, in via Golgi 40.<br /><br />Cordiali Saluti Prof. Cugola Gianpaolo Saverio<br /><br /><strong>Attenzione:</strong> messaggio automatico, non rispondere a questa mail.<br /><br /><br /></p>',
+            verb_mail_docente: "gianpaolo.cugola@polimi.it",
+            verb_data_rifiuto: "2024-01-24T00:52:43.000+0100",
+            verb_esito_rifiuto: "30",
+            verb_msg_sospeso: null,
+            verb_comunicazione_id: null,
+            xrisposta_ateneo: null,
+            hasCorrezioni: true,
+            xverbEsito: "RIFIUTATO",
+            hasEsito: true,
+            xverbStatoDesc: "PUBBLICATO",
+            xrisposta: null,
+            rifiutabile: false,
+          },
+          oggiBeforeAppello: false,
+          iscrizioniAperteConRiserva: false,
+          hasIscrizioniAttive: true,
+          appelloConDomandaAteneo: false,
+          prenotazioneAppelloStraordinario: false,
+          appelloStraordinario: false,
+          xh_appello: "08:30",
+          xdomanda: "",
+          xdomanda_ateneo: null,
+          inAttesaDiEsito: false,
+          xnoteAppello: [],
+          iscrizioniAperte: false,
+        },
       ],
       xdescrizione: "INGEGNERIA DEL SOFTWARE",
     },
@@ -174,21 +237,21 @@ export const Results: MainStackScreen<"Results"> = () => {
         }}
         bounces={false}
       >
-        {teachings?.map((teaching, i) =>
-          teaching.appelliEsame.length === 0 ? null : (
+        {teachings?.map(teaching =>
+          teaching.appelliEsame.map((result, j) => (
             <ExamResultsSection
-              key={teaching.c_insegn_piano}
+              key={`${teaching.c_insegn_piano}_${j}`}
               resultExam={{
-                teachingName: teachings?.[i].xdescrizione,
-                teachingCode: teachings?.[i].c_classe_m,
-                teacher: teachings?.[i].docente_esame,
-                currentYear: teachings?.[i].aa_classe,
-                academicYear: teachings?.[i].ac_freq,
-                semester: teachings?.[i].semestre_freq,
-                result: teachings?.[i].appelliEsame[0],
+                teachingName: teaching.xdescrizione,
+                teachingCode: teaching.c_classe_m,
+                teacher: teaching.docente_esame,
+                currentYear: teaching.aa_classe,
+                academicYear: teaching.ac_freq,
+                semester: teaching.semestre_freq,
+                result: result,
               }}
             />
-          )
+          ))
         )}
       </ScrollView>
     </PageWrap>
