@@ -1,5 +1,5 @@
 import { FC, useEffect, useMemo, useState } from "react"
-import { TouchableOpacity, View, ViewStyle } from "react-native"
+import { TouchableOpacity, View } from "react-native"
 import { DayProps } from "react-native-calendars/src/calendar/day"
 import { Text } from "components/Text"
 import { Canvas, Path, Skia } from "@shopify/react-native-skia"
@@ -30,102 +30,55 @@ export const DayComponentCustom: FC<
     setIsMarked(marking?.marked ?? false)
   }, [marking?.marked])
 
-  const fillerStyles = useMemo(() => {
-    const leftFillerStyle: ViewStyle = { flex: 1 }
-    const rightFillerStyle: ViewStyle = { flex: 1 }
-    let globalfiller: ViewStyle = {}
-
-    if (start && !end) {
-      rightFillerStyle.borderBottomColor = color
-      rightFillerStyle.borderBottomWidth = 2
-      rightFillerStyle.borderTopColor = color
-      rightFillerStyle.borderTopWidth = 2
-    } else if (end && !start) {
-      leftFillerStyle.borderBottomColor = color
-      leftFillerStyle.borderBottomWidth = 2
-      leftFillerStyle.borderTopColor = color
-      leftFillerStyle.borderTopWidth = 2
-    } else if (color && !start && !end) {
-      globalfiller = {
-        borderBottomColor: color,
-        borderBottomWidth: 2,
-        borderTopColor: color,
-        borderTopWidth: 2,
-      }
-    }
-    return { leftFillerStyle, rightFillerStyle, globalfiller }
-  }, [start, end, color])
-
   const path = useMemo(() => {
-    let startAngle: number | undefined
-    let sweepAngle: number | undefined
-
-    if ((start && end) || state == "today") {
-      startAngle = 90
-      sweepAngle = 360
-    } else if (start) {
-      startAngle = 90
-      sweepAngle = 180
-    } else if (end) {
-      startAngle = 270
-      sweepAngle = 180
-    } else {
-      return undefined
-    }
-
     const path = Skia.Path.Make()
-    // path.moveTo(18, 1)
-    //this looks kinda random
-    path.addArc(
-      { height: height - 2, width: height - 2, y: 1, x: 1 },
-      startAngle,
-      sweepAngle
-    )
-
+    if ((start && end) || state == "today") {
+      path.addArc(
+        { height: height, width: height, y: 0, x: height * 1.5 },
+        90,
+        360
+      )
+    } else if (start) {
+      path.addRect({ height: height, width: height * 2, y: 0, x: height * 2 })
+      path.addArc(
+        { height: height, width: height, y: 0, x: height * 1.5 },
+        90,
+        180
+      )
+    } else if (end) {
+      path.addRect({ height: height, width: height * 2, y: 0, x: 0 })
+      path.addArc(
+        { height: height, width: height, y: 0, x: height * 1.5 },
+        270,
+        180
+      )
+    } else {
+      path.addRect({ height: height, width: height * 4, y: 0, x: 0 })
+    }
     return path
   }, [start, end, state])
 
   return (
     <TouchableOpacity
-      style={{ alignSelf: "stretch" }}
+      style={{ alignSelf: "stretch", overflow: "hidden" }}
       onPress={() => onPress?.(date)}
       onLongPress={() => onLongPress?.(date)}
     >
       <View style={{ alignItems: "center", alignSelf: "stretch" }}>
-        <View
-          style={[
-            {
-              position: "absolute",
-              height: height,
-              flexDirection: "row",
-              left: 0,
-              right: 0,
-            },
-            fillerStyles.globalfiller,
-          ]}
+        <Canvas
+          style={{
+            width: height * 4, // just to be sure, doesn't matter
+            height: height,
+            position: "absolute",
+          }}
         >
-          <View style={fillerStyles.leftFillerStyle} />
-          <View style={fillerStyles.rightFillerStyle} />
-        </View>
-        {path && (
-          <Canvas
-            style={{
-              width: height,
-              height: height,
-              position: "absolute",
-              zIndex: 5,
-            }}
-          >
-            <Path
-              path={path}
-              color={
-                state !== "today" ? color : dark ? palette.primary : "#fff"
-              }
-              strokeWidth={2}
-              style="stroke"
-            />
-          </Canvas>
-        )}
+          <Path
+            path={path}
+            color={state !== "today" ? color : dark ? palette.primary : "#fff"}
+            strokeWidth={2}
+            style="fill"
+          />
+        </Canvas>
         <View
           style={{
             borderRadius: 17,
@@ -151,7 +104,7 @@ export const DayComponentCustom: FC<
               style={{
                 position: "absolute",
                 top: 0,
-                right: 0,
+                // right: 0,
                 backgroundColor: theme?.dotColor,
                 width: 5,
                 height: 5,
