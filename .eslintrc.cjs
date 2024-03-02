@@ -84,7 +84,8 @@ module.exports = {
       },
       {
         selector: "import",
-        format: null,
+        format: ["camelCase", "PascalCase", "UPPER_CASE", "snake_case"],
+        leadingUnderscore: "allow",
       },
     ],
 
