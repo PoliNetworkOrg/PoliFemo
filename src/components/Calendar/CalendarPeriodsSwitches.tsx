@@ -70,7 +70,7 @@ export const CalendarPeriodsSwitches: FC<
             </View>
             <ToggleSwitch
               color={period.color}
-              value={period.shown}
+              value={false}
               onValueChange={value => props.onSwitchChange(value, period.title)}
             />
           </View>
