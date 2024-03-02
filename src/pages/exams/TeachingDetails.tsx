@@ -94,11 +94,10 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
             {examsPendingGrade?.map(exam => {
               return (
                 <ExamBox
-                  key={exam.c_domanda}
+                  key={exam.c_appello}
                   exam={exam}
                   type={ExamStatusType.IN_ATTESA_DI_ESITO}
                   onPress={() => {
-                    // ! change to pass only exam
                     navigate("ResultDetails", {
                       resultExam: {
                         teachingName: teaching.xdescrizione,
@@ -131,7 +130,7 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
             {examsEnrolled?.map(exam => {
               return (
                 <ExamBox
-                  key={exam.c_domanda}
+                  key={exam.c_appello}
                   exam={exam}
                   type={ExamStatusType.ISCRITTO}
                   onPress={() => {
@@ -160,9 +159,15 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
             {examsNotEnrolled?.map(exam => {
               return (
                 <ExamBox
-                  key={exam.c_domanda}
+                  key={exam.c_appello}
                   exam={exam}
                   type={ExamStatusType.ISCRIZIONI_APERTE}
+                  onPress={() => {
+                    navigate("ExamDetails", {
+                      teaching: teaching,
+                      codeAppello: exam.c_appello,
+                    })
+                  }}
                 />
               )
             })}
@@ -183,7 +188,7 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
             {examsWithGrade?.map(exam => {
               return (
                 <ExamBox
-                  key={exam.c_domanda}
+                  key={exam.c_appello}
                   exam={exam}
                   type={ExamStatusType.ESITO_DISPONIBILE}
                   onPress={() => {

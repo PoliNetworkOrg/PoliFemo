@@ -8,7 +8,8 @@ import { Pressable, View } from "react-native"
 import { Icon } from "components/Icon"
 import arrowRightSvg from "assets/exams/arrow_right.svg"
 import { ExamInfoWhiteLine } from "../ExamInfoWhiteLine"
-
+/* import { ExamResultGradeStatus } from "../Results/ExamResultGradeStatus"
+ */
 export interface ExamBoxProps {
   exam: Exam
   type: ExamStatusType
@@ -80,19 +81,12 @@ export const ExamBox: FC<ExamBoxProps> = props => {
 
         <ExamInfoWhiteLine exam={exam} type={type} />
 
-        {type === ExamStatusType.ESITO_DISPONIBILE && (
-          <BodyText
-            style={{
-              color: "#fff",
-              fontSize: 11,
-              fontWeight: "900",
-              marginLeft: 16,
-              marginTop: 4,
-            }}
-          >
-            CHANGE
-          </BodyText>
-        )}
+        {/* {type === ExamStatusType.ESITO_DISPONIBILE && (
+          <>
+            <View style={{ height: 16 }} />
+            <ExamResultGradeStatus iscrizioneAttiva={exam.iscrizioneAttiva} />
+          </>
+        )} */}
       </View>
     </Pressable>
   )

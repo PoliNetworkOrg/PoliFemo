@@ -90,7 +90,7 @@ export type MainStackNavigatorParams = {
   NotificationDetails: { notification: NotificationStorage; category?: string }
   GradingBook: undefined
   Exams: { updateTeachings?: boolean }
-  Results: undefined
+  Results: { teachings: Teaching[] }
   TeachingDetails: { teaching: Teaching }
   ResultDetails: { resultExam: ReducedTeachingExam }
   ExamDetails: {

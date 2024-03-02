@@ -8,7 +8,7 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { HttpClient } from "api/HttpClient"
 import { LoginContext } from "contexts/login"
 import { api } from "api"
-import { Teaching } from "api/collections/exams"
+import { Teaching, fakeTeachings } from "api/collections/exams"
 import { AdaptiveShadowView } from "components/BoxShadow"
 import { Pressable, ScrollView, View } from "react-native"
 import { Icon } from "components/Icon"
@@ -43,7 +43,8 @@ export const Exams: MainStackScreen<"Exams"> = props => {
 
   const navigation = useNavigation()
 
-  const [stage, setStage] = useState(ExamsStage.START)
+  // ! set to TOKEN RETRIEVED for debug
+  const [stage, setStage] = useState(ExamsStage.TOKEN_RETRIEVED)
   const [currentURL, setCurrentURL] = useState<string | undefined>(undefined)
   const polimiAppToken = client.readPolimiAppTokenForExamsTokenRetrieval()
   const { loggedIn, userInfo } = useContext(LoginContext)
@@ -77,7 +78,10 @@ export const Exams: MainStackScreen<"Exams"> = props => {
 
   async function getTeachings() {
     console.log("get teachings")
-    const teachings = await api.exams.getTeachings()
+
+    // ! uncomment when debug is done
+    /* const teachings = await api.exams.getTeachings() */
+    const teachings = await fakeTeachings()
 
     teachings.forEach(teaching => {
       teaching.appelliEsame.sort((a, b) => {
@@ -189,7 +193,7 @@ export const Exams: MainStackScreen<"Exams"> = props => {
           {teachings && (
             <Pressable
               onPress={() => {
-                navigation.navigate("Results")
+                navigation.navigate("Results", { teachings: teachings })
               }}
             >
               <View
@@ -384,7 +388,11 @@ export const Exams: MainStackScreen<"Exams"> = props => {
           )}
         </ScrollView>
       ) : stage === ExamsStage.ERROR_NOT_LOGGED_IN ? (
-        <BodyText onPress={() => navigation.navigate("Results")}>
+        <BodyText
+          onPress={() =>
+            navigation.navigate("Results", { teachings: teachings ?? [] })
+          }
+        >
           Error logged in
         </BodyText>
       ) : stage === ExamsStage.START ? (

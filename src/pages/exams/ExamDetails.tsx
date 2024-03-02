@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { BodyText, Title } from "components/Text"
 import { PageWrap } from "components/PageLayout"
@@ -13,6 +14,7 @@ import { useEffect, useState } from "react"
 import { LoadingIndicator } from "components/LoadingIndicator"
 import { wait } from "utils/functions"
 import checkIcon from "assets/exams/check.svg"
+import { RetryType, api } from "api"
 
 enum Status {
   START,
@@ -212,7 +214,9 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
                   borderRadius: 16,
                   flex: 1,
                   flexDirection: "row",
-                  justifyContent: "space-between",
+                  justifyContent: exam.iscrizioneAttiva
+                    ? "space-between"
+                    : "center",
                   alignItems: "center",
                   paddingHorizontal: 24,
                 }}
@@ -293,20 +297,43 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
               marginRight: 16,
               marginBottom: 10,
             },
-            onPress: () => {
+            onPress: async () => {
               if (exam?.iscrizioneAttiva) {
                 console.log("cancella")
                 setStatus(Status.WAITING_RESPONSE)
-                void wait(1000).then(() => {
+
+                try {
+                  await api.exams.unenrollExam(exam.iscrizioneAttiva.c_iscriz, {
+                    maxRetries: 3,
+                    retryType: RetryType.RETRY_N_TIMES,
+                  })
+                  setStatus(Status.SUCCESS)
+                } catch (e) {
+                  console.log("errore", e)
                   setStatus(Status.ERROR)
-                })
+                }
               } else {
                 console.log("iscrivi")
                 setStatus(Status.WAITING_RESPONSE)
-                void wait(1000).then(() => {
+                if (!exam?.c_appello) {
+                  setStatus(Status.ERROR)
+                  return
+                }
+
+                try {
+                  await api.exams.enrollExam(
+                    {
+                      c_insegn_piano: teaching.c_insegn_piano,
+                      c_appello: exam.c_appello,
+                      aa_classe: teaching.aa_freq,
+                    },
+                    { maxRetries: 3, retryType: RetryType.RETRY_N_TIMES }
+                  )
                   setStatus(Status.SUCCESS)
-                  setIsModalVisible(false)
-                })
+                } catch (e) {
+                  console.log("errore", e)
+                  setStatus(Status.ERROR)
+                }
               }
             },
           },
@@ -339,11 +366,13 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
               Errore
             </BodyText>
           </View>
-        ) : (
+        ) : exam?.iscrizioneAttiva ? (
           <Icon
             source={dangerousIcon}
             style={{ alignSelf: "center", marginTop: 20 }}
           />
+        ) : (
+          <View style={{ height: 60 }} />
         )}
       </Modal>
     </PageWrap>
