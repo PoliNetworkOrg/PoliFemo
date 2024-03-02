@@ -177,70 +177,74 @@ const calendarPeriods: CalendarPeriod[] = [
 ]
 
 export function addMarkForEvents(
-  events: Event[] | null,
-  markedDates: MarkedDates = {}
+  markedDates: MarkedDates,
+  events: Event[] | null
 ): MarkedDates {
   if (events) {
     events.forEach(event => {
       const start = event.date_start.substring(0, 10)
-      const md = markedDates[start]
-      if (md) md.marked = true
-      else markedDates[start] = { marked: true }
+      markedDates[start] = {
+        ...markedDates[start],
+        marked: true,
+      }
     })
   }
 
   return markedDates
 }
 
-export function generateMarkedDatesFromPeriods(
+export function addMarkForPeriods(
+  markedDates: MarkedDates,
   periodFilters: number[]
 ): MarkedDates {
-  const markedDates: MarkedDates = {}
   calendarPeriods
     .filter((_, i) => !periodFilters.includes(i))
     .forEach(period =>
       period.dates.forEach(date => {
+        if (!date.start || !date.end) return
         let tmpDate: string
         let tmpDateObj: Date
         let tmpDateEndObj: Date
 
-        if (date.start && date.end) {
-          if (date.start === date.end) {
-            markedDates[date.start] = {
-              color: period.color,
-              startingDay: true,
-              endingDay: true,
-            }
-          } else {
-            tmpDate = date.start
-            tmpDateObj = new Date(tmpDate)
-            tmpDateEndObj = new Date(date.end)
+        if (date.start === date.end) {
+          markedDates[date.start] = {
+            ...markedDates[date.start],
+            color: period.color,
+            startingDay: true,
+            endingDay: true,
+          }
+        } else {
+          tmpDate = date.start
+          tmpDateObj = new Date(tmpDate)
+          tmpDateEndObj = new Date(date.end)
 
-            //add first day
+          //add first day
+          markedDates[tmpDate] = {
+            ...markedDates[tmpDate],
+            color: period.color,
+            startingDay: true,
+          }
+
+          const res = getNextDayFormattedDate(tmpDateObj)
+          tmpDate = res.dateString
+          tmpDateObj = res.dateObj
+
+          while (tmpDateObj.getTime() < tmpDateEndObj.getTime()) {
+            //add day in the middle
             markedDates[tmpDate] = {
+              ...markedDates[tmpDate],
               color: period.color,
-              startingDay: true,
             }
-
             const res = getNextDayFormattedDate(tmpDateObj)
             tmpDate = res.dateString
             tmpDateObj = res.dateObj
+          }
 
-            while (tmpDateObj.getTime() < tmpDateEndObj.getTime()) {
-              //add day in the middle
-              markedDates[tmpDate] = {
-                color: period.color,
-              }
-              const res = getNextDayFormattedDate(tmpDateObj)
-              tmpDate = res.dateString
-              tmpDateObj = res.dateObj
-            }
-
-            //add last day
-            markedDates[tmpDate] = {
-              color: period.color,
-              endingDay: true,
-            }
+          //add last day
+          markedDates[tmpDate] = {
+            ...markedDates[tmpDate],
+            color: period.color,
+            endingDay: true,
           }
         }
       })
