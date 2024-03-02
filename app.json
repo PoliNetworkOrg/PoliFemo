@@ -53,7 +53,8 @@
         }
       ],
       "expo-localization"
-    ]
+    ],
+    "sdkVersion": "49.0.0"
   },
   "name": "polifemo"
 }

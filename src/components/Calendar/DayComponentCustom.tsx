@@ -6,8 +6,6 @@ import { Canvas, Path, Skia } from "@shopify/react-native-skia"
 import { DateData } from "react-native-calendars"
 import { palette } from "utils/colors"
 
-let count = 0
-
 export const DayComponentCustom: FC<
   DayProps & { date?: DateData; height: number; dark?: boolean }
 > = ({
@@ -21,9 +19,6 @@ export const DayComponentCustom: FC<
   height,
   dark,
 }) => {
-  useEffect(() => {
-    console.log("rendered", count++)
-  }, [])
   const [isMarked, setIsMarked] = useState(marking?.marked ?? false)
 
   const start = marking?.startingDay ?? false

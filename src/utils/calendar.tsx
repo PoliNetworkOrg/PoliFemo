@@ -46,7 +46,6 @@ export interface CalendarPeriod {
   titleEn?: string
   subtitle?: string
   color: string
-  shown: boolean
 }
 
 export interface CalendarEvent {
@@ -103,7 +102,6 @@ const calendarPeriods: CalendarPeriod[] = [
     titleEn: "Holidays",
     subtitle: "1/08 - 24/08",
     color: palette.goldish,
-    shown: true,
   },
   {
     dates: [
@@ -131,7 +129,6 @@ const calendarPeriods: CalendarPeriod[] = [
     titleEn: "Profit exams",
     subtitle: "23/08 - 31/08",
     color: purpleBerry,
-    shown: true,
   },
   {
     dates: [
@@ -143,7 +140,6 @@ const calendarPeriods: CalendarPeriod[] = [
     title: "Prove in Itinere",
     titleEn: "Midterm exams",
     color: "#F29999",
-    shown: true,
   },
   {
     dates: [
@@ -154,7 +150,6 @@ const calendarPeriods: CalendarPeriod[] = [
     title: "Lauree 1° Livello",
     titleEn: "Bachelor's degree",
     color: "#F28C52",
-    shown: true,
   },
   {
     dates: [
@@ -167,7 +162,6 @@ const calendarPeriods: CalendarPeriod[] = [
     title: "Lauree Magistrali",
     titleEn: "Master's degree",
     color: "#96CEAD",
-    shown: true,
   },
   {
     dates: [
@@ -179,9 +173,80 @@ const calendarPeriods: CalendarPeriod[] = [
     title: "Festività",
     titleEn: "Festivities",
     color: "#F29999",
-    shown: true,
   },
 ]
+
+export function addMarkForEvents(
+  events: Event[] | null,
+  markedDates: MarkedDates = {}
+): MarkedDates {
+  if (events) {
+    events.forEach(event => {
+      const start = event.date_start.substring(0, 10)
+      const md = markedDates[start]
+      if (md) md.marked = true
+      else markedDates[start] = { marked: true }
+    })
+  }
+
+  return markedDates
+}
+
+export function generateMarkedDatesFromPeriods(
+  periodFilters: number[]
+): MarkedDates {
+  const markedDates: MarkedDates = {}
+  calendarPeriods
+    .filter((_, i) => !periodFilters.includes(i))
+    .forEach(period =>
+      period.dates.forEach(date => {
+        let tmpDate: string
+        let tmpDateObj: Date
+        let tmpDateEndObj: Date
+
+        if (date.start && date.end) {
+          if (date.start === date.end) {
+            markedDates[date.start] = {
+              color: period.color,
+              startingDay: true,
+              endingDay: true,
+            }
+          } else {
+            tmpDate = date.start
+            tmpDateObj = new Date(tmpDate)
+            tmpDateEndObj = new Date(date.end)
+
+            //add first day
+            markedDates[tmpDate] = {
+              color: period.color,
+              startingDay: true,
+            }
+
+            const res = getNextDayFormattedDate(tmpDateObj)
+            tmpDate = res.dateString
+            tmpDateObj = res.dateObj
+
+            while (tmpDateObj.getTime() < tmpDateEndObj.getTime()) {
+              //add day in the middle
+              markedDates[tmpDate] = {
+                color: period.color,
+              }
+              const res = getNextDayFormattedDate(tmpDateObj)
+              tmpDate = res.dateString
+              tmpDateObj = res.dateObj
+            }
+
+            //add last day
+            markedDates[tmpDate] = {
+              color: period.color,
+              endingDay: true,
+            }
+          }
+        }
+      })
+    )
+  return markedDates
+}
 
 export declare interface CalendarSingletonWrapperInterface {
   on(event: "calendarPeriodsChanged", listener: () => void): this
@@ -448,7 +513,6 @@ export class CalendarSingletonWrapper
     const periods = this._hidePeriods ? [] : this._calendarPeriods
 
     periods?.forEach(period => {
-      if (!period.shown) return
       period.dates.forEach(date => {
         const periodTmp: MarkedDates = {}
         let tmpDate: string
@@ -508,7 +572,6 @@ export class CalendarSingletonWrapper
     const periods = this._calendarPeriods ?? []
     for (let i = 0; i < periods.length; i++) {
       if (periods[i].title === title) {
-        periods[i].shown = val
         break
       }
     }
