@@ -1,24 +1,18 @@
 import { FC } from "react"
-import { View, ScrollView, StyleSheet, Pressable } from "react-native"
-import {
-  CalendarEvent,
-  formatCalendarEventDay,
-  getSourceEmoticon,
-} from "utils/calendar"
+import { View, StyleSheet, Pressable } from "react-native"
+import { formatCalendarEventDay, getSourceEmoticon } from "utils/calendar"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
 import { Icon } from "components/Icon"
 import { Divider } from "components/Divider"
-import deleteSvg from "assets/modal/delete.svg"
 import { useTranslation } from "react-i18next"
+import { Event } from "api/collections/event"
 
 interface CalendarMonthlyEventsProps {
-  events: CalendarEvent[]
+  events: Event[]
   month: string
   year: number
   lan: string
-  onDeleteEvent: (id: string) => void
-  onSelectedEvent: (event: CalendarEvent) => void
 }
 
 export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
@@ -29,13 +23,7 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
   const { t } = useTranslation("calendar")
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        paddingHorizontal: 24,
-        paddingTop: 24,
-      }}
-      style={{ marginBottom: 90 }}
-    >
+    <View style={{ marginBottom: 90 }}>
       <Text
         style={[
           styles.monthTitle,
@@ -73,8 +61,10 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
       {events.map(event => {
         return (
           <Pressable
-            key={event.id}
-            onPress={() => props.onSelectedEvent(event)}
+            key={event.event_id}
+            onPress={() => {
+              // TODO: on press
+            }}
           >
             <View
               style={{
@@ -92,7 +82,7 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
               }}
             >
               <View style={{ marginHorizontal: 12, marginTop: 12 }}>
-                <Icon source={getSourceEmoticon(event.mood)} />
+                <Icon source={getSourceEmoticon("broken_heart")} />
               </View>
 
               <View
@@ -118,18 +108,8 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
                     ]}
                     numberOfLines={1}
                   >
-                    {lan === "it" ? event.title : event.titleEn ?? event.title}
+                    {lan === "it" ? event.title.it : event.title.en}
                   </Text>
-                  {(event.isPolimiEvent == undefined ||
-                    event.isPolimiEvent == false) && (
-                    <Pressable onPress={() => props.onDeleteEvent(event.id)}>
-                      <Icon
-                        source={deleteSvg}
-                        scale={0.8}
-                        color={isLight ? undefined : "#fff"}
-                      />
-                    </Pressable>
-                  )}
                 </View>
 
                 <Text
@@ -151,14 +131,14 @@ export const CalendarMonthlyEvents: FC<CalendarMonthlyEventsProps> = props => {
                   ]}
                   numberOfLines={1}
                 >
-                  {event.notes ?? t("addNotes")}
+                  {t("addNotes")}
                 </Text>
               </View>
             </View>
           </Pressable>
         )
       })}
-    </ScrollView>
+    </View>
   )
 }
 

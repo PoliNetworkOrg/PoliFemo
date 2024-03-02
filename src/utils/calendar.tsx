@@ -783,8 +783,8 @@ const daysOfWeekEn = [
   "Sunday",
 ]
 
-export const formatCalendarEventDay = (event: CalendarEvent, lan: string) => {
-  const date = new Date(event.start)
+export const formatCalendarEventDay = (event: Event, lan: string) => {
+  const date = new Date(event.date_start)
 
   const day = date.getDate()
 

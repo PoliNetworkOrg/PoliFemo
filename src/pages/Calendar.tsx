@@ -2,7 +2,7 @@ import { MainStackScreen } from "navigation/NavigationTypes"
 /* import { useTranslation } from "react-i18next" */
 import { NavBar } from "components/NavBar"
 import { Pressable, View } from "react-native"
-import { usePalette } from "utils/colors"
+import { palette, usePalette } from "utils/colors"
 import { StyleSheet } from "react-native"
 import { CalendarList } from "react-native-calendars"
 import { useCallback, useContext, useMemo, useState } from "react"
@@ -22,15 +22,24 @@ import { LoginContext } from "contexts/login"
 import { DayProps } from "react-native-calendars/src/calendar/day"
 import { useApiCall } from "api/useApiCall"
 import { api } from "api"
+import { CalendarBottomSheet } from "components/Calendar/CalendarBottomSheet"
 
 export const CalendarPage: MainStackScreen<"Calendar"> = () => {
-  const { homeBackground, background, dotColor, isLight } = usePalette()
+  const { homeBackground, dotColor, isLight } = usePalette()
 
   const { userInfo } = useContext(LoginContext)
   const { matricola } = userInfo?.careers?.[0] ?? {}
 
-  const [month, setMonth] = useState<number>(new Date().getMonth())
-  const [year, setYear] = useState<number>(new Date().getFullYear())
+  const [monthDateData, setMonthDateData] = useState<DateData>({
+    day: new Date().getDate(),
+    timestamp: Date.now(),
+    dateString: new Date().toISOString().slice(0, 10),
+    month: new Date().getMonth() + 1,
+    year: new Date().getFullYear(),
+  })
+  const [selectedDay, setSelectedDay] = useState<string>(
+    new Date().toISOString().slice(0, 10)
+  )
 
   const [events] = useApiCall(
     api.events.getEvents,
@@ -259,7 +268,6 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           top: 120,
           height: 40,
           width: "100%",
-          zIndex: 2,
           paddingHorizontal: 28,
         }}
       >
@@ -342,7 +350,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           todayTextColor: "yellow",
           dayTextColor: "#fff",
           dotStyle: { width: 6, height: 6, borderRadius: 3 },
-          dotColor: dotColor,
+          dotColor: palette.accent,
           stylesheet: {
             day: {
               period: { isLight: isLight },
@@ -350,7 +358,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
           },
         }}
         onDayPress={day => {
-          // setVisibleDay(day.dateString)
+          setSelectedDay(day.dateString)
         }}
         style={{
           marginTop: 176,
@@ -363,12 +371,15 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
         hideExtraDays={true}
         showSixWeeks={true}
         hideDayNames={true}
+        current={selectedDay}
         markingType="period"
-        onMonthChange={date => {
-          setMonth(date.month - 1)
-          setYear(date.year)
-        }}
+        onMonthChange={date => setMonthDateData(date)}
         dayComponent={DCC}
+      />
+
+      <CalendarBottomSheet
+        events={events}
+        currentMonthDateData={monthDateData}
       />
 
       <NavBar
