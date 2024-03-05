@@ -9,14 +9,16 @@ import { default as gradingBookEN } from "./jsons/en/gradingBook.json"
 import homeEN from "./jsons/en/home.json"
 import notificationsEN from "./jsons/en/notifications.json"
 import settingsEN from "./jsons/en/settings.json"
-import timetableEN from "./jsons/en/timetable.json"
 import commonIT from "./jsons/it/common.json"
 import FreeClassIT from "./jsons/it/freeClass.json"
 import { default as gradingBookIT } from "./jsons/it/gradingBook.json"
 import homeIT from "./jsons/it/home.json"
 import notificationsIT from "./jsons/it/notifications.json"
 import settingsIT from "./jsons/it/settings.json"
+import calendarIT from "./jsons/it/calendar.json"
+import calendarEN from "./jsons/en/calendar.json"
 import timetableIT from "./jsons/it/timetable.json"
+import timetableEN from "./jsons/en/timetable.json"
 
 async function initializeI18n() {
   await i18n.use(initReactI18next).init({
@@ -27,6 +29,7 @@ async function initializeI18n() {
         freeClass: FreeClassIT,
         settings: settingsIT,
         notifications: notificationsIT,
+        calendar: calendarIT,
         timetable: timetableIT,
         gradingBook: gradingBookIT,
       },
@@ -36,6 +39,7 @@ async function initializeI18n() {
         freeClass: FreeClassEN,
         settings: settingsEN,
         notifications: notificationsEN,
+        calendar: calendarEN,
         timetable: timetableEN,
         gradingBook: gradingBookEN,
       },
@@ -50,6 +54,7 @@ async function initializeI18n() {
       "freeClass",
       "settings",
       "notifications",
+      "calendar",
       "timetable",
     ],
     interpolation: {

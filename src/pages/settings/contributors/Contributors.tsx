@@ -15,6 +15,7 @@ enum ContributionType {
 export const Contributors: SettingsStackScreen<"Contributors"> = () => {
   const { isLight } = usePalette()
 
+  /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
   const managementContributors = contributors.filter(
     c => c.contributions[0] === ContributionType.MANAGEMENT
   )
@@ -81,7 +82,7 @@ export const Contributors: SettingsStackScreen<"Contributors"> = () => {
             avatar_url={item.avatar_url}
             profile={item.profile}
             contributions={item.contributions}
-            key={"contributor-" + section + " -" + index}
+            key={"contributor-" + section.title + " -" + index}
           />
         )}
       />

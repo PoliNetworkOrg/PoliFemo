@@ -20,6 +20,7 @@ import {
 import { notificationEventEmitter } from "./NotificationEventEmitter"
 import { navigationRef } from "navigation/NavigationTypes"
 import uuid from "react-native-uuid"
+import { CalendarEvent } from "utils/calendar"
 
 export class NotificationCenter {
   private static classInstance?: NotificationCenter
@@ -104,6 +105,10 @@ export class NotificationCenter {
         name: "upload",
         importance: AndroidImportance.MAX,
       })
+      await Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: AndroidImportance.MAX,
+      })
     } catch (err) {
       console.log(err)
     }
@@ -125,9 +130,15 @@ export class NotificationCenter {
       )
       //if storeOnSchedule is set to false, store now. (more intended for push notifications...)
       //by default storeOnSchedule is true for every notification scheduled by the device
+      //we also check if dontStore is set to true, because we don't want to store calendar notifications
       // TODO : might need changing if push notifications will be implemented
-      if (notification.request.content.data.storeOnSchedule === false) {
-        console.log("Notification received with storeOnSchedule set to false")
+      // TODO: maybe unify storeOnSchedule and dontStore with enum
+      if (
+        notification.request.content.data.storeOnSchedule === false &&
+        !notification.request.content.data.dontStore
+      ) {
+        console.log("Notification recieved and needs storing")
+        //Notification received with storeOnSchedule set to false and dontStore set to false or undefined
         const newNotificationList = this._notifications
         if (newNotificationList) {
           newNotificationList.push({
@@ -576,8 +587,7 @@ export class NotificationCenter {
         !isRead &&
         (!isRelevantAt ||
           new Date(isRelevantAt).getTime() < new Date().getTime()) &&
-        (!channelId ||
-          (channelId && channelId === notifications[i].content.data?.channelId))
+        (!channelId || channelId === notifications[i].content.data?.channelId)
       ) {
         count++
       }
@@ -776,5 +786,35 @@ export class NotificationCenter {
     if (hasArrayChanged) {
       void this._writeToStorage(this._notifications)
     }
+  }
+
+  // this notification wont be shown in the notification center page, because channelId is default.
+  // this will only appear in the status bar when the notification is received
+  public scheduledNotificationFromCalendarEvent = async (
+    event: CalendarEvent
+  ) => {
+    if (event.reminder === undefined) return
+
+    const notificationContent: NotificationCustomContentInput = {
+      title: event.title,
+      data: {
+        eventId: event.id,
+        content: "Notifica dal calendario",
+        object: event.title,
+        sender: "Centro Notifiche",
+        storeOnSchedule: false,
+        dontStore: true,
+      },
+    }
+
+    const notificationTrigger = {
+      date: new Date(event.reminder),
+      channelId: "default",
+    }
+
+    await this.sendScheduledNotification(
+      notificationContent,
+      notificationTrigger
+    )
   }
 }

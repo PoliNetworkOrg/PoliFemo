@@ -82,6 +82,11 @@ module.exports = {
         selector: "enumMember",
         format: ["UPPER_CASE"],
       },
+      {
+        selector: "import",
+        format: ["camelCase", "PascalCase", "UPPER_CASE", "snake_case"],
+        leadingUnderscore: "allow",
+      },
     ],
 
     "@typescript-eslint/restrict-plus-operands": "off",

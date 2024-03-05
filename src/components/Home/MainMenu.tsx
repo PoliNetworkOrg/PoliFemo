@@ -33,7 +33,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
       type: ButtonType.CALENDAR,
       title: "menu_calendar",
       icon: calendar,
-      onClick: () => navigate("Error404"),
+      onClick: () => navigate("Calendar"),
     },
     {
       type: ButtonType.TIMETABLE,
