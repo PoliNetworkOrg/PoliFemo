@@ -10,7 +10,7 @@ const offset = 79
  * reference and the shadows get all fucky if you keep re-rendering them
  */
 export const CalendarBottomSheetHandle: FC = () => {
-  const { background, isLight, palette } = usePalette()
+  const { background } = usePalette()
 
   return (
     <View

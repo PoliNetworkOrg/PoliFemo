@@ -5,7 +5,7 @@ import { Pressable, View } from "react-native"
 import { palette, usePalette } from "utils/colors"
 import { StyleSheet } from "react-native"
 import { CalendarList } from "react-native-calendars"
-import { useCallback, useContext, useMemo, useState } from "react"
+import { useContext, useMemo, useState } from "react"
 import {
   daysOfWeekLetters,
   addMarkForEvents,
@@ -19,13 +19,12 @@ import calendarIcon from "assets/calendar/calendar.svg"
 import capeIcon from "assets/calendar/cape_calendar.svg"
 import userIcon from "assets/calendar/user_calendar.svg"
 import { LoginContext } from "contexts/login"
-import { DayProps } from "react-native-calendars/src/calendar/day"
 import { useApiCall } from "api/useApiCall"
 import { api } from "api"
 import { CalendarBottomSheet } from "components/Calendar/CalendarBottomSheet"
 
 export const CalendarPage: MainStackScreen<"Calendar"> = () => {
-  const { homeBackground, dotColor, isLight } = usePalette()
+  const { homeBackground, isLight } = usePalette()
 
   const { userInfo } = useContext(LoginContext)
   const { matricola } = userInfo?.careers?.[0] ?? {}
@@ -256,10 +255,6 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
   //   }
   // }, [matricola])
 
-  const DCC = useCallback<
-    (props: DayProps & { date?: DateData }) => JSX.Element
-  >(props => <DayComponentCustom height={26} {...props} />, [])
-
   return (
     <View style={[{ backgroundColor: homeBackground }, styles.container]}>
       <View
@@ -340,7 +335,6 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
         staticHeader={true}
         scrollEnabled={true}
         scrollsToTop={false}
-        initialNumToRender={10}
         pastScrollRange={12}
         futureScrollRange={12}
         horizontal={true}
@@ -374,7 +368,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
         current={selectedDay}
         markingType="period"
         onMonthChange={date => setMonthDateData(date)}
-        dayComponent={DCC}
+        dayComponent={DayComponentCustom}
       />
 
       <CalendarBottomSheet

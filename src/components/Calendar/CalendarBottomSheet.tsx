@@ -14,7 +14,7 @@ export interface CalendarBottomSheetProps {
 }
 
 const distanceFromTop = {
-  closed: 426,
+  closed: 516,
   opened: 106,
 }
 
