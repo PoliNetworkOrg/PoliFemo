@@ -14,7 +14,7 @@ export const Title: FC<TextProps> = props => {
       {...props}
       style={[
         {
-          fontFamily: "Roboto_900Black",
+          fontFamily: "Poppins_900Black",
           fontSize: 42,
           color: primary,
         },

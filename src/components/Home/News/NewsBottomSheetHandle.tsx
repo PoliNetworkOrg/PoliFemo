@@ -39,7 +39,7 @@ export const NewsBottomSheetHandle: FC = () => {
             },
           ]}
         />
-        <Title style={{ fontFamily: "Roboto_700Bold", fontSize: 48 }}>
+        <Title style={{ fontFamily: "Poppins_700Bold", fontSize: 48 }}>
           News
         </Title>
       </View>

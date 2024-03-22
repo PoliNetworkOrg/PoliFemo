@@ -4,13 +4,13 @@ import { NavigationContainer } from "@react-navigation/native"
 import { hideAsync } from "expo-splash-screen"
 import { useFonts } from "@expo-google-fonts/roboto"
 import {
-  Roboto_300Light,
-  Roboto_400Regular,
-  Roboto_500Medium,
-  Roboto_500Medium_Italic,
-  Roboto_700Bold,
-  Roboto_900Black,
-} from "@expo-google-fonts/roboto"
+  Poppins_300Light,
+  Poppins_400Regular,
+  Poppins_500Medium,
+  Poppins_500Medium_Italic,
+  Poppins_700Bold,
+  Poppins_900Black,
+} from "@expo-google-fonts/poppins"
 import { AppContainer } from "./src/AppContainer"
 import { OutsideClickProvider } from "utils/outsideClick"
 import { api } from "api"
@@ -73,12 +73,12 @@ export default function App() {
     }
   }, [settings])
   const [fontsLoaded] = useFonts({
-    Roboto_300Light,
-    Roboto_400Regular,
-    Roboto_500Medium,
-    Roboto_500Medium_Italic,
-    Roboto_700Bold,
-    Roboto_900Black,
+    Poppins_300Light,
+    Poppins_400Regular,
+    Poppins_500Medium,
+    Poppins_500Medium_Italic,
+    Poppins_700Bold,
+    Poppins_900Black,
   })
   const tokensLoaded = useLoadTokens()
 

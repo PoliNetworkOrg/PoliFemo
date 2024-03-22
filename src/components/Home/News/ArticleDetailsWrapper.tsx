@@ -113,7 +113,7 @@ export const ArticleDetailsWrapper: FC<{
             <Title
               style={{
                 fontSize: 42,
-                fontFamily: "Roboto_900Black",
+                fontFamily: "Poppins_900Black",
                 color: articleTitle,
               }}
             >

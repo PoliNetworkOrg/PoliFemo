@@ -14,7 +14,7 @@ export const Subtitle: FC<TextProps> = props => {
       {...props}
       style={[
         {
-          fontFamily: "Roboto_500Medium_Italic",
+          fontFamily: "Poppins_500Medium_Italic",
           fontSize: 24,
           color: primary,
           marginTop: -8,

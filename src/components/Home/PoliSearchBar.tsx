@@ -88,7 +88,7 @@ export const PoliSearchBar: FC<{
           paddingLeft: 18,
           color: bodyText,
           flex: 1,
-          fontFamily: "Roboto_400Regular",
+          fontFamily: "Poppins_400Regular",
         }}
         ref={inputText}
         autoCorrect={true}

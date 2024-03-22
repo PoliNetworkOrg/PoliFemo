@@ -5,14 +5,14 @@ import { usePalette } from "utils/colors"
 
 const fontweights: Record<string, string> = {
   /* eslint-disable @typescript-eslint/naming-convention */
-  "900": "Roboto_900Black",
-  bold: "Roboto_700Bold",
-  "700": "Roboto_700Bold",
-  "600": "Roboto_700Bold",
-  "500": "Roboto_500Medium",
-  normal: "Roboto_400Regular",
-  "400": "Roboto_400Regular",
-  "300": "Roboto_300Light",
+  "900": "Poppins_900Black",
+  bold: "Poppins_700Bold",
+  "700": "Poppins_700Bold",
+  "600": "Poppins_700Bold",
+  "500": "Poppins_500Medium",
+  normal: "Poppins_400Regular",
+  "400": "Poppins_400Regular",
+  "300": "Poppins_300Light",
   /* eslint-enable @typescript-eslint/naming-convention */
 }
 
@@ -32,7 +32,7 @@ export const BodyText: FC<TextProps> = props => {
       {...props}
       style={[
         {
-          fontFamily: fontweights[fontWeight] ?? "Roboto_400Regular",
+          fontFamily: fontweights[fontWeight] ?? "Poppins_400Regular",
           fontSize: 16,
           color: bodyText,
         },

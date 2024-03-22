@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@ant-design/icons-react-native": "^2.3.2",
+    "@expo-google-fonts/poppins": "^0.2.3",
     "@expo-google-fonts/roboto": "^0.2.2",
     "@expo/config-plugins": "~7.2.2",
     "@expo/webpack-config": "^19.0.0",

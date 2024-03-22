@@ -68,7 +68,7 @@ export const PageWrap: FC<PageWrapProps> = props => {
               <Title>{props.title}</Title>
             ) : (
               <Title>
-                <Title style={{ fontFamily: "Roboto_300Light" }}>
+                <Title style={{ fontFamily: "Poppins_300Light" }}>
                   {props.title[0] + " "}
                 </Title>
                 {props.title[1]}
