@@ -122,6 +122,9 @@ export const MainContainer: FC = () => {
       <Tray
         onDownloads={() => {
           console.log("downloads")
+          navigate("MainNav", {
+            screen: "Materials",
+          })
         }}
         onNotifications={() => {
           console.log("notifications")
