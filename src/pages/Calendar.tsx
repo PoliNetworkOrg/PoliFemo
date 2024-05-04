@@ -12,6 +12,7 @@ import {
   addMarkForPeriods,
   addMarkForSelectedDate,
 } from "utils/calendar"
+import { formatDateOnlyString } from "utils/functions"
 import { DayComponentCustom } from "components/Calendar/DayComponentCustom"
 import { DateData, MarkedDates } from "react-native-calendars/src/types"
 import { Text } from "components/Text"
@@ -33,19 +34,17 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
   const [monthDateData, setMonthDateData] = useState<DateData>({
     day: new Date().getDate(),
     timestamp: Date.now(),
-    dateString: new Date().toISOString().slice(0, 10),
+    dateString: formatDateOnlyString(),
     month: new Date().getMonth() + 1,
     year: new Date().getFullYear(),
   })
-  const [selectedDay, setSelectedDay] = useState<string>(
-    new Date().toISOString().slice(0, 10)
-  )
+  const [selectedDay, setSelectedDay] = useState<string>(formatDateOnlyString())
 
   const [events] = useApiCall(
     api.events.getEvents,
     {
       matricola: matricola ?? "",
-      startDate: new Date(2024, 2, 1).toISOString().substring(0, 10),
+      startDate: formatDateOnlyString(new Date(monthDateData.timestamp)),
       nEvents: 1000,
     },
     [matricola],

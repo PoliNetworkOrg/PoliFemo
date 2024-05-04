@@ -23,6 +23,7 @@ import starEyesSvg from "assets/calendar/emoticons/star_eyes.svg"
 import { api } from "api"
 import { Event } from "api/collections/event"
 import { NotificationCenter } from "notifications/NotificationCenter"
+import { formatDateOnlyString } from "./functions"
 
 export const purpleBerry = "rgba(98, 96, 166, 1)"
 
@@ -421,7 +422,7 @@ export class CalendarSingletonWrapper
 
     const events: Event[] = await api.events.getEvents({
       matricola: this._matricola,
-      startDate: new Date().toISOString().substring(0, 10),
+      startDate: formatDateOnlyString(),
       nEvents: 20,
     })
 

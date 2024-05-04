@@ -3,6 +3,7 @@ import { View, ViewStyle } from "react-native"
 import { Calendar } from "react-native-calendars"
 import { useCurrentLanguage } from "utils/language"
 import { monthsIt, monthsEn, daysOfWeekLetters } from "utils/calendar"
+import { formatDateOnlyString } from "utils/functions"
 import { usePalette } from "utils/colors"
 import { Text } from "components/Text"
 import { DateData, MarkedDates } from "react-native-calendars/src/types"
@@ -25,7 +26,7 @@ export const SingleMonth: FC<SingleMonthProps> = props => {
 
   const DCC = useCallback<
     (props: DayProps & { date?: DateData }) => JSX.Element
-  >(props => <DayComponentCustom height={DAY_HEIGHT} {...props} dark />, [])
+  >(props => <DayComponentCustom {...props} />, [])
 
   return (
     <View
@@ -85,9 +86,7 @@ export const SingleMonth: FC<SingleMonthProps> = props => {
           dayTextColor: "#fff",
           weekVerticalMargin: 2,
         }}
-        initialDate={new Date(props.year, props.month, 2)
-          .toISOString()
-          .slice(0, 10)}
+        initialDate={formatDateOnlyString(new Date(props.year, props.month, 2))}
         disableMonthChange={true}
         customHeaderTitle={undefined}
         hideExtraDays={true}

@@ -58,3 +58,13 @@ export function capitalize(str: string, notCapitalize = 0): string {
   }
   return arr.join(" ")
 }
+
+/**
+ * Formats a date to a string with format YYYY-MM-DD
+ * @param date The date to be formatted, if not provided the current date is used
+ * @returns string with format YYYY-MM-DD
+ */
+export function formatDateOnlyString(date?: Date): string {
+  if (!date) date = new Date()
+  return date.toISOString().split("T")[0]
+}
