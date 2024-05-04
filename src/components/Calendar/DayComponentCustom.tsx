@@ -4,6 +4,7 @@ import { DayProps } from "react-native-calendars/src/calendar/day"
 import { Text } from "components/Text"
 import { Canvas, Path, Skia } from "@shopify/react-native-skia"
 import { DateData } from "react-native-calendars"
+import { palette } from "utils/colors"
 
 const height = 30
 
@@ -17,25 +18,32 @@ export const DayComponentCustom: FC<DayProps & { date?: DateData }> = memo(
     state,
     children,
   }) {
+    const isToday = state === "today"
+    const isSelected = marking?.selected ?? false
+    const isInsidePeriod = marking?.color !== undefined // if inside period, color is defined
     const start = marking?.startingDay ?? false
     const end = marking?.endingDay ?? false
     const color = marking?.color ?? "transparent"
 
     const path = useMemo(() => {
       const path = Skia.Path.Make()
-      if ((start && end) || state == "today") {
+      if ((start && end) || isToday || !isInsidePeriod) {
+        // still a circle if today or not inside period
         path.addArc({ height, width: height, y: 0, x: height * 1.5 }, 90, 360)
       } else if (start) {
+        // only start, draw half circle
         path.addRect({ height, width: height * 2, y: 0, x: height * 2 })
         path.addArc({ height, width: height, y: 0, x: height * 1.5 }, 90, 180)
       } else if (end) {
+        // only end, draw half circle
         path.addRect({ height, width: height * 2, y: 0, x: 0 })
         path.addArc({ height, width: height, y: 0, x: height * 1.5 }, 270, 180)
       } else {
+        // inside period, draw rectangle
         path.addRect({ height, width: height * 4, y: 0, x: 0 })
       }
       return path
-    }, [start, end, state])
+    }, [start, end, isToday, isInsidePeriod])
 
     return (
       <TouchableOpacity
@@ -60,7 +68,7 @@ export const DayComponentCustom: FC<DayProps & { date?: DateData }> = memo(
           >
             <Path
               path={path}
-              color={state !== "today" ? color : "#fff"}
+              color={isSelected ? "#fff" : color}
               strokeWidth={2}
               style="fill"
             />
@@ -76,7 +84,15 @@ export const DayComponentCustom: FC<DayProps & { date?: DateData }> = memo(
             }}
           >
             <Text
-              style={{ fontSize: 16, fontWeight: "500", color: "#fff" }}
+              style={{
+                fontSize: 16,
+                fontWeight: "500",
+                color: isToday
+                  ? palette.accent
+                  : isSelected
+                  ? palette.primary
+                  : "#fff",
+              }}
               allowFontScaling={false}
             >
               {String(children)}

@@ -176,6 +176,17 @@ const calendarPeriods: CalendarPeriod[] = [
   },
 ]
 
+export function addMarkForSelectedDate(
+  markedDates: MarkedDates,
+  date: string
+): MarkedDates {
+  markedDates[date] = {
+    ...markedDates[date],
+    selected: true,
+  }
+  return markedDates
+}
+
 export function addMarkForEvents(
   markedDates: MarkedDates,
   events: Event[] | null

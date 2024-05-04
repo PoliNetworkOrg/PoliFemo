@@ -10,6 +10,7 @@ import {
   daysOfWeekLetters,
   addMarkForEvents,
   addMarkForPeriods,
+  addMarkForSelectedDate,
 } from "utils/calendar"
 import { DayComponentCustom } from "components/Calendar/DayComponentCustom"
 import { DateData, MarkedDates } from "react-native-calendars/src/types"
@@ -54,10 +55,11 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
 
   const markedDates = useMemo<MarkedDates>(() => {
     let markedDates = {}
+    markedDates = addMarkForSelectedDate(markedDates, selectedDay)
     markedDates = addMarkForEvents(markedDates, events)
     markedDates = addMarkForPeriods(markedDates, [])
     return markedDates
-  }, [events])
+  }, [selectedDay, events])
 
   // I thought memoizing would improve performance, but it appears to be still very slow!!
   // const scrollMonths = useMemo<JSX.Element>(() => {
@@ -351,9 +353,7 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
             },
           },
         }}
-        onDayPress={day => {
-          setSelectedDay(day.dateString)
-        }}
+        onDayPress={day => setSelectedDay(day.dateString)}
         style={{
           marginTop: 176,
           height: 270,
@@ -365,7 +365,6 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
         hideExtraDays={true}
         showSixWeeks={true}
         hideDayNames={true}
-        current={selectedDay}
         markingType="period"
         onMonthChange={date => setMonthDateData(date)}
         dayComponent={DayComponentCustom}
