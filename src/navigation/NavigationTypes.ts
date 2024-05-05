@@ -92,6 +92,7 @@ export type MainStackNavigatorParams = {
   Materials: undefined
   WebeepCourses: undefined
   WebeepCourseDetails: { course: MockCourse }
+  WebeepLogin: undefined
 }
 
 export type SettingsStackNavigatorParams = {

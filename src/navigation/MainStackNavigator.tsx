@@ -19,6 +19,7 @@ import { TimeTable } from "pages/TimeTable"
 import { MaterialsPage } from "pages/materials/Materials"
 import { WebeepCourseDetails } from "pages/materials/WebeepCourseDetails"
 import { WebeepCourses } from "pages/materials/WebeepCourses"
+import { WebeepLogin } from "pages/materials/WebeepLogin"
 import { Article } from "pages/news/ArticleDetails"
 import { ArticlesList } from "pages/news/ArticlesList"
 import { OtherCategories } from "pages/news/OtherCategories"
@@ -122,6 +123,7 @@ export const MainStack: FC = () => {
         name="WebeepCourseDetails"
         component={WebeepCourseDetails}
       />
+      <MainStackNavigator.Screen name="WebeepLogin" component={WebeepLogin} />
     </MainStackNavigator.Navigator>
   )
 }

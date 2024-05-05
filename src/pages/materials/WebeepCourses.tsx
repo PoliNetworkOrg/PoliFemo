@@ -7,6 +7,7 @@ import { usePalette } from "utils/colors"
 import { BodyText } from "components/Text"
 import { mockCourses } from "api/moodle"
 import { CardWithGradient } from "components/CardWithGradient"
+import { StackActions } from "@react-navigation/native"
 
 /**
  * Materials Page
@@ -14,7 +15,7 @@ import { CardWithGradient } from "components/CardWithGradient"
 export const WebeepCourses: MainStackScreen<"WebeepCourses"> = () => {
   const { palette } = usePalette()
 
-  const { navigate } = useNavigation()
+  const navigation = useNavigation()
 
   return (
     <>
@@ -33,6 +34,9 @@ export const WebeepCourses: MainStackScreen<"WebeepCourses"> = () => {
             <Icon source={webeepsvg} scale={0.35} />
           </View>
         }
+        overrideBackBehaviour={() => {
+          navigation.dispatch(StackActions.pop(2))
+        }}
       >
         <View
           style={{
@@ -60,7 +64,9 @@ export const WebeepCourses: MainStackScreen<"WebeepCourses"> = () => {
                 title={course.item.name}
                 imageURL={course.item?.image}
                 onClick={() => {
-                  navigate("WebeepCourseDetails", { course: course.item })
+                  navigation.navigate("WebeepCourseDetails", {
+                    course: course.item,
+                  })
                 }}
                 style={{
                   height: 150,

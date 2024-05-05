@@ -24,6 +24,8 @@ export interface PageWrapProps {
    */
   sideTitleElement?: React.ReactNode
 
+  overrideBackBehaviour?: () => void
+
   children: React.ReactNode
 }
 
@@ -83,7 +85,7 @@ export const PageWrap: FC<PageWrapProps> = props => {
 
         {props.children}
       </BoxShadowView>
-      <NavBar />
+      <NavBar overrideBackBehavior={props.overrideBackBehaviour} />
     </View>
   )
 }
