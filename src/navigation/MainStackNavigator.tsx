@@ -17,6 +17,8 @@ import { Groups } from "pages/Groups"
 import { Home } from "pages/Home"
 import { TimeTable } from "pages/TimeTable"
 import { MaterialsPage } from "pages/materials/Materials"
+import { WebeepCourseDetails } from "pages/materials/WebeepCourseDetails"
+import { WebeepCourses } from "pages/materials/WebeepCourses"
 import { Article } from "pages/news/ArticleDetails"
 import { ArticlesList } from "pages/news/ArticlesList"
 import { OtherCategories } from "pages/news/OtherCategories"
@@ -112,6 +114,14 @@ export const MainStack: FC = () => {
       />
       <MainStackNavigator.Screen name="GradingBook" component={GradingBook} />
       <MainStackNavigator.Screen name="Materials" component={MaterialsPage} />
+      <MainStackNavigator.Screen
+        name="WebeepCourses"
+        component={WebeepCourses}
+      />
+      <MainStackNavigator.Screen
+        name="WebeepCourseDetails"
+        component={WebeepCourseDetails}
+      />
     </MainStackNavigator.Navigator>
   )
 }

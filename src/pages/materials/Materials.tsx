@@ -1,6 +1,6 @@
 import { PageWrap } from "components/PageLayout"
-import { MainStackScreen } from "navigation/NavigationTypes"
-import { View } from "react-native"
+import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
+import { Pressable, View } from "react-native"
 import webeepsvg from "assets/materials/webeep.svg"
 import gitlabsvg from "assets/materials/gitlab.svg"
 import { Icon } from "components/Icon"
@@ -12,6 +12,7 @@ import { BodyText } from "components/Text"
  */
 export const MaterialsPage: MainStackScreen<"Materials"> = () => {
   const { palette } = usePalette()
+  const { navigate } = useNavigation()
 
   return (
     <>
@@ -24,26 +25,33 @@ export const MaterialsPage: MainStackScreen<"Materials"> = () => {
             marginBottom: 120,
           }}
         >
-          <View
-            style={{
-              flex: 1,
-              marginVertical: 16,
-              backgroundColor: palette.primary,
-              borderRadius: 16,
-              alignItems: "center",
-              justifyContent: "center",
+          <Pressable
+            style={{ flex: 1 }}
+            onPress={() => {
+              navigate("WebeepCourses")
             }}
           >
             <View
               style={{
-                backgroundColor: "white",
-                padding: 16,
+                flex: 1,
+                marginVertical: 16,
+                backgroundColor: palette.primary,
                 borderRadius: 16,
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <Icon source={webeepsvg} />
+              <View
+                style={{
+                  backgroundColor: "white",
+                  padding: 16,
+                  borderRadius: 16,
+                }}
+              >
+                <Icon source={webeepsvg} />
+              </View>
             </View>
-          </View>
+          </Pressable>
           <View
             style={{
               flex: 1,

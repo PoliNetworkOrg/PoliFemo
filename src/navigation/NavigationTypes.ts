@@ -24,6 +24,7 @@ import {
 import { StackScreenProps } from "@react-navigation/stack"
 import { Article } from "api/collections/articles"
 import { Occupancies } from "api/collections/rooms"
+import { MockCourse } from "api/moodle"
 import {
   BuildingItem,
   CampusItem,
@@ -89,6 +90,8 @@ export type MainStackNavigatorParams = {
   NotificationDetails: { notification: NotificationStorage; category?: string }
   GradingBook: undefined
   Materials: undefined
+  WebeepCourses: undefined
+  WebeepCourseDetails: { course: MockCourse }
 }
 
 export type SettingsStackNavigatorParams = {
