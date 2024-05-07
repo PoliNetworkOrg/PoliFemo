@@ -1,7 +1,6 @@
 import { FC } from "react"
 import { View, ScrollView, StyleSheet, Pressable } from "react-native"
 import {
-  CalendarEvent,
   CalendarEventStatus,
   formatHoursFromDate,
   getBackColorFromEventStatus,
@@ -9,7 +8,6 @@ import {
   getTextFromEventStatus,
   monthsEn,
   monthsIt,
-  shiftedEventStatus,
 } from "utils/calendar"
 import { Text } from "components/Text"
 import { usePalette } from "utils/colors"
@@ -19,18 +17,19 @@ import tickSvg from "assets/freeClassrooms/tick.svg"
 import { DottedLine } from "./DottedLine"
 import { CalendarButton } from "./Button"
 import { useTranslation } from "react-i18next"
+import { Event } from "api/collections/event"
 
 interface CalendarDailyEventsProps {
-  events: CalendarEvent[]
+  events: Event[]
 
   dayString: string
-  lan: string
   onChangeStatusEvent: (id: string, status: CalendarEventStatus) => void
   goToAddEvent: () => void
 }
 
 export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
-  const { events, lan, dayString } = props
+  const { events, dayString } = props
+  const { t, i18n } = useTranslation("calendar")
 
   const date = new Date(dayString)
 
@@ -38,13 +37,12 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
 
   const monthNumber = date.getMonth()
 
-  const month = lan === "it" ? monthsIt[monthNumber] : monthsEn[monthNumber]
+  const month =
+    i18n.language == "it" ? monthsIt[monthNumber] : monthsEn[monthNumber]
 
   const year = date.getFullYear()
 
   const { isLight, homeBackground, palette } = usePalette()
-
-  const { t } = useTranslation("calendar")
 
   return (
     <ScrollView
@@ -84,13 +82,13 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
       {events.map((event, index) => {
         return (
           <Pressable
-            key={event.id}
-            onPress={() =>
-              props.onChangeStatusEvent(
-                event.id,
-                shiftedEventStatus(event.status)
-              )
-            }
+            key={event.event_id}
+            onPress={() => {
+              // props.onChangeStatusEvent(
+              //   event.event_id,
+              //   shiftedEventStatus(event.status)
+              // )
+            }}
           >
             <View style={{ flexDirection: "column", alignItems: "flex-end" }}>
               <View
@@ -107,7 +105,7 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
                     marginTop: 12,
                   }}
                 >
-                  <Icon scale={0.8} source={getSourceEmoticon(event.mood)} />
+                  <Icon scale={0.8} source={getSourceEmoticon("boom")} />
                 </View>
 
                 <View
@@ -132,9 +130,7 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
                         { color: isLight ? homeBackground : "#fff" },
                       ]}
                     >
-                      {lan === "it"
-                        ? event.title
-                        : event.titleEn ?? event.title}
+                      {i18n.language === "it" ? event.title.it : event.title.en}
                     </Text>
                     <Text
                       style={[
@@ -142,9 +138,9 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
                         { color: isLight ? homeBackground : "#fff" },
                       ]}
                     >
-                      {formatHoursFromDate(event.start)}
-                      {event.polimiEventFields?.room?.acronym_dn
-                        ? ` | ${event.polimiEventFields?.room?.acronym_dn}`
+                      {formatHoursFromDate(event.date_start)}
+                      {event.room?.acronym_dn
+                        ? ` | ${event.room?.acronym_dn}`
                         : ""}
                     </Text>
                   </View>
@@ -159,7 +155,7 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
                       alignItems: "center",
                       flexDirection: "row",
                       backgroundColor: getBackColorFromEventStatus(
-                        event.status,
+                        CalendarEventStatus.INITIAL,
                         isLight
                       ),
                     }}
@@ -170,11 +166,14 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
                         { color: isLight ? "#fff" : palette.darker },
                       ]}
                     >
-                      {getTextFromEventStatus(event.status, lan)}
+                      {getTextFromEventStatus(
+                        CalendarEventStatus.INITIAL,
+                        i18n.language
+                      )}
                     </Text>
                   </View>
 
-                  {event.status == CalendarEventStatus.INITIAL ? (
+                  {event == event ? (
                     <View
                       style={{
                         width: 40,
@@ -183,7 +182,7 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
                         backgroundColor: isLight ? "#F2F2F2" : "#D7D9E2",
                       }}
                     />
-                  ) : event.status === CalendarEventStatus.PROGRESS ? (
+                  ) : event == event ? (
                     <View
                       style={{
                         width: 40,

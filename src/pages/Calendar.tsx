@@ -45,9 +45,12 @@ export const CalendarPage: MainStackScreen<"Calendar"> = () => {
     {
       matricola: matricola ?? "",
       startDate: formatDateOnlyString(new Date(monthDateData.timestamp)),
+      endDate: formatDateOnlyString(
+        new Date(monthDateData.timestamp + 31 * 24 * 60 * 60 * 1000)
+      ),
       nEvents: 1000,
     },
-    [matricola],
+    [matricola, monthDateData],
     {},
     matricola === undefined
   )

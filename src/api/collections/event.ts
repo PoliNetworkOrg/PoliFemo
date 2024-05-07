@@ -102,7 +102,12 @@ const client = HttpClient.getInstance()
 
 export const events = {
   getEvents(
-    params: { matricola: string; startDate: string; nEvents: number },
+    params: {
+      matricola: string
+      startDate: string
+      nEvents: number
+      endDate?: string
+    },
     options?: RequestOptions
   ) {
     const url = "/agenda/api/me/" + params.matricola + "/events"
@@ -110,7 +115,11 @@ export const events = {
       url,
       method: "GET",
       authType: AuthType.POLIMI,
-      params: { start_date: params.startDate, n_events: params.nEvents },
+      params: {
+        start_date: params.startDate,
+        n_events: params.nEvents,
+        end_date: params.endDate,
+      },
       ...options,
     })
     return mapAxiosRequest(request, response => response)
