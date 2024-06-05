@@ -9,12 +9,12 @@ jobs:
     env:
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         if: ${{ env.EXPO_TOKEN != '' }}
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         if: ${{ env.EXPO_TOKEN != '' }}
         with:
-          node-version: 16
+          node-version: 20
           cache: "yarn"
 
       - name: Setup Expo
