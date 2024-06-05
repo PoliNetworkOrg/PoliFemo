@@ -40,7 +40,7 @@ export const OtherCategories: MainStackScreen<"OtherCategories"> = props => {
   }
 
   const nonFavTags = tags.filter(
-    tag => preferences[tag.name] === Preference.UNFAVOURITE
+    tag => preferences[tag.name] === Preference.UNFAVOURITE,
   )
   if (
     nonFavTags.length === 0 &&

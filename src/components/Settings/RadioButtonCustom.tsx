@@ -39,11 +39,11 @@ export const RadioButtonCustom: FC<RadioButtonCustomProps> = props => {
   const { isLight } = usePalette()
 
   const { current: borderAnim } = React.useRef<Animated.Value>(
-    new Animated.Value(2)
+    new Animated.Value(2),
   )
 
   const { current: radioAnim } = React.useRef<Animated.Value>(
-    new Animated.Value(1)
+    new Animated.Value(1),
   )
 
   const isFirstRendering = React.useRef<boolean>(true)

@@ -43,11 +43,11 @@ export const LectureInfo: FC<LectureInfoProps> = props => {
       matricola: matricola ?? "",
       eventId: props.lectureEvent.event_id,
     },
-    [props.lectureEvent.event_id, matricola, loggedIn]
+    [props.lectureEvent.event_id, matricola, loggedIn],
   )
 
   const [updatedColor, setUpdatedColor] = useState(
-    props.lectureEvent.lectureColor
+    props.lectureEvent.lectureColor,
   )
 
   const styles = useMemo(
@@ -63,7 +63,7 @@ export const LectureInfo: FC<LectureInfoProps> = props => {
           paddingBottom: 16,
         },
       }),
-    [iconHighContrast]
+    [iconHighContrast],
   )
 
   const lectureName =
@@ -96,7 +96,7 @@ export const LectureInfo: FC<LectureInfoProps> = props => {
           color={updatedColor}
           onPress={() => {
             const color = props.deducer?.changeColor(
-              props.lectureEvent.title.it
+              props.lectureEvent.title.it,
             )
 
             setUpdatedColor(color ?? props.lectureEvent.lectureColor)
@@ -112,13 +112,13 @@ export const LectureInfo: FC<LectureInfoProps> = props => {
           {getTimeIntervalFormattedString(
             props.lectureEvent.date_start,
             props.lectureEvent.date_end,
-            lan
+            lan,
           )}
         </BodyText>
         <BodyText style={styles.bolder}>
           {getLectureRoomFormattedString(
             props.lectureEvent.room?.acronym_dn,
-            lan
+            lan,
           )}
         </BodyText>
         <BodyText style={styles.lighter}>

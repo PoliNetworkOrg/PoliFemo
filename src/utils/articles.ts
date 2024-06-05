@@ -14,7 +14,7 @@ export const getArticleParams = (article: Article, language: string) => {
 
 export const getDifferentLanguageNotice = (
   article: Article,
-  language: string
+  language: string,
 ) => {
   if (language === "it") {
     return article.content.it ? "" : "Non disponibile in italiano"

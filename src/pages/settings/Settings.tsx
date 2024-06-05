@@ -46,7 +46,7 @@ export const SettingsPage: SettingsStackScreen<"Settings"> = () => {
     career ?? {
       matricola: "N/A",
       type: "Nessuna Carriera",
-    }
+    },
   )
 
   //control theme selector modal's visibility

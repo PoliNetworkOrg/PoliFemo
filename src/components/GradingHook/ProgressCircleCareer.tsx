@@ -1,16 +1,14 @@
-import {
-  Canvas,
-  Circle,
-  Group,
-  Path,
-  Skia,
-  runTiming,
-  useComputedValue,
-  useValue,
-} from "@shopify/react-native-skia"
+import { Canvas, Circle, Group, Path, Skia } from "@shopify/react-native-skia"
 import { Text } from "components/Text"
 import { FC, useEffect, useMemo, useState } from "react"
-import { Easing, Extrapolate, interpolate } from "react-native-reanimated"
+import {
+  Easing,
+  Extrapolate,
+  interpolate,
+  useDerivedValue,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated"
 import { useTranslation } from "react-i18next"
 import { StyleSheet, View } from "react-native"
 import { GradingBookCareerInfoProps } from "./GradingBookCareerInfo"
@@ -52,7 +50,7 @@ const generatePath = (width: number, stroke: number, progress: number) => {
     },
     270,
     angle,
-    true
+    true,
   )
   return path
 }
@@ -75,10 +73,10 @@ export const ProgressCircleCareer: FC<ProgressCircleCareerProps> = ({
   const degreeGrade = `${((+average * 11) / 3).toFixed(2)}`
 
   // animation value used to fill the circle
-  const anim = useValue(0) // starts empty
+  const anim = useSharedValue(0) // starts empty
   useEffect(() => {
     // This runs the smooth fill animation for the circle
-    runTiming(anim, 1, {
+    withTiming(anim.value, {
       duration: 1000,
       easing: Easing.bezierFn(0.31, 0.63, 0.46, 0.98), // this is smooth enough
     })
@@ -86,18 +84,18 @@ export const ProgressCircleCareer: FC<ProgressCircleCareerProps> = ({
 
   // compose the circle paths, interpolating the animation value to the actual
   // progress
-  const path1 = useComputedValue(() => {
-    const progress = interpolate(anim.current, [0, 1], [0, examsPercentage])
+  const path1 = useDerivedValue(() => {
+    const progress = interpolate(anim.value, [0, 1], [0, examsPercentage])
     return generatePath(CIRCLE_WIDTH_1, CIRLCE_STROKE_1, progress)
   }, [anim, cfuPercentage])
 
-  const path2 = useComputedValue(() => {
-    const progress = interpolate(anim.current, [0, 1], [0, totalCfuPercentage])
+  const path2 = useDerivedValue(() => {
+    const progress = interpolate(anim.value, [0, 1], [0, totalCfuPercentage])
     return generatePath(CIRCLE_WIDTH_2, CIRLCE_STROKE_2, progress)
   }, [anim, examsPercentage])
 
-  const path3 = useComputedValue(() => {
-    const progress = interpolate(anim.current, [0, 1], [0, cfuPercentage])
+  const path3 = useDerivedValue(() => {
+    const progress = interpolate(anim.value, [0, 1], [0, cfuPercentage])
     return generatePath(FULL_WIDTH, CIRLCE_STROKE_3, progress)
   }, [anim, examsPercentage])
 
@@ -133,7 +131,7 @@ export const ProgressCircleCareer: FC<ProgressCircleCareerProps> = ({
           color: isLight ? palette.primary : "#ffffff",
         },
       }),
-    [isLight]
+    [isLight],
   )
 
   return (

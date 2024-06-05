@@ -102,7 +102,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
                 const uri = FileSystem.cacheDirectory + "polinetwork_data.json"
                 await FileSystem.writeAsStringAsync(
                   uri,
-                  JSON.stringify(data, null, 2)
+                  JSON.stringify(data, null, 2),
                 )
                 void Sharing.shareAsync(uri)
               } catch (e) {
@@ -138,7 +138,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
                         await api.user.deletePoliNetworkMe()
                         Alert.alert(
                           t("settings_deleted"),
-                          "" + t("settings_deleted_message")
+                          "" + t("settings_deleted_message"),
                         )
                         void client.destroyTokens()
                         navigate("Home")
@@ -148,7 +148,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
                       }
                     },
                   },
-                ]
+                ],
               )
             }}
           />
@@ -190,7 +190,7 @@ export const Privacy: SettingsStackScreen<"Privacy"> = () => {
             setShowingAutodeleteModal(false)
             Alert.alert(
               "Impostazioni aggiornate",
-              `Nuovo periodo di inattività per la cancellazione automatica dei dati impostato a ${value} giorni`
+              `Nuovo periodo di inattività per la cancellazione automatica dei dati impostato a ${value} giorni`,
             )
           } catch (e) {
             Alert.alert("Errore durante l'aggiornamento", e + "")

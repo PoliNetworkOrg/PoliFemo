@@ -61,11 +61,11 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
   }
 
   const showButtonToOtherTags = Object.values(preferences).some(
-    p => p === Preference.UNFAVOURITE
+    p => p === Preference.UNFAVOURITE,
   )
 
   const favTags = props.tags.filter(
-    tag => preferences[tag.name] !== Preference.UNFAVOURITE
+    tag => preferences[tag.name] !== Preference.UNFAVOURITE,
   )
 
   useEffect(() => {
@@ -93,7 +93,7 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
       () => {
         setIsNewsClosed(true)
         return !isNewsClosed
-      }
+      },
     )
 
     return () => {
@@ -156,7 +156,7 @@ export const NewsBottomSheet: FC<NewsBottomSheetProps> = props => {
             }
             footer={getDifferentLanguageNotice(
               props.highlightedArticle,
-              language
+              language,
             )}
           />
         )}

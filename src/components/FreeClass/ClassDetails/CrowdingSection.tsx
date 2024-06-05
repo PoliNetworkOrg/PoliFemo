@@ -40,7 +40,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
     {
       roomId: props.roomId,
     },
-    [props.roomId]
+    [props.roomId],
   )
   const occupancyRate = occInfo?.occupancy_rate ?? 3
 
@@ -51,7 +51,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
         {
           retryType: RetryType.RETRY_N_TIMES,
           maxRetries: 3,
-        }
+        },
       )
     } catch (err) {
       console.log(err)
@@ -94,7 +94,7 @@ export const CrowdingSection: FC<CrowdingSectionProps> = props => {
                   { text: "Indietro" },
                   { text: "Login", onPress: () => navigate("Login" as never) },
                 ],
-                { cancelable: true }
+                { cancelable: true },
               )
             }
           }}

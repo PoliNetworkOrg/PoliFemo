@@ -22,7 +22,7 @@ export const BuildingChoice: MainStackScreen<"BuildingChoice"> = props => {
   const [error, setError] = useState<boolean>(false)
 
   const { rooms, date, setDate, isRoomsSearching } = useContext(
-    RoomsSearchDataContext
+    RoomsSearchDataContext,
   )
 
   const findAvailableBuildings = () => {

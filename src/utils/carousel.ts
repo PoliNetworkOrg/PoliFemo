@@ -43,7 +43,7 @@ export function formatTitle(title: string) {
     .map(item =>
       item.length > 3
         ? item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
-        : item.toLowerCase()
+        : item.toLowerCase(),
     )
     .join(" ")
 }

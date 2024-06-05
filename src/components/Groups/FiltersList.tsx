@@ -19,7 +19,7 @@ interface ModalItemList {
 const year = new Date().getFullYear()
 const years = Array.from(
   new Array(5),
-  (_, index) => year - index - 1 + "/" + (year - index)
+  (_, index) => year - index - 1 + "/" + (year - index),
 )
 const yearsList: ModalItemList = {
   itemsToShow: years.map(value => {
@@ -37,7 +37,7 @@ export const FiltersList: FC<FiltersProps> = props => {
   const [modalItems, setModalItems] = useState<ModalItemList>(yearsList)
   //currently selected item inside modal
   const [selectedItem, setSelectedItem] = useState<string | undefined>(
-    undefined
+    undefined,
   )
 
   //reset state on "reset"

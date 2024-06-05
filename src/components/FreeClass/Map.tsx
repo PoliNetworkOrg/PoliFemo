@@ -26,7 +26,7 @@ export const Map: FC<MapProps> = props => {
   const [error, setError] = useState<boolean>(false)
 
   const { currentRegionMap, setCurrentRegionMap } = useContext(
-    RoomsSearchDataContext
+    RoomsSearchDataContext,
   )
 
   const [region, setRegion] = useState<Region>({
@@ -142,7 +142,7 @@ export const Map: FC<MapProps> = props => {
                         latitudeDelta: 0.002,
                         longitudeDelta: 0.002,
                       },
-                      1000
+                      1000,
                     )
                   }
                 }}

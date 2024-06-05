@@ -58,9 +58,9 @@ export const MenuButton: FC<{
     animatedValue.value = withRepeat(
       withSequence(
         withTiming(1, { duration: 100 + (Math.random() * 40 - 20) }),
-        withTiming(-1, { duration: 100 + (Math.random() * 40 - 20) })
+        withTiming(-1, { duration: 100 + (Math.random() * 40 - 20) }),
       ),
-      -1
+      -1,
     )
   }, [animatedValue])
 

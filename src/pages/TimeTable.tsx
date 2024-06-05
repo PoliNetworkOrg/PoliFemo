@@ -68,7 +68,7 @@ export const TimeTable: MainStackScreen<"TimeTable"> = () => {
   const { matricola } = userInfo?.careers?.[0] ?? {}
 
   const [formattedTable, setFormattedTimetable] = useState<FormattedTable>(
-    getFormattedTable([])
+    getFormattedTable([]),
   )
 
   const [subjects, setSubjects] = useState<Subjects>({})
@@ -103,7 +103,7 @@ export const TimeTable: MainStackScreen<"TimeTable"> = () => {
     return () => {
       deducer?.current?.removeListener(
         "timetable_retrieved",
-        handleTimeTableEvent
+        handleTimeTableEvent,
       )
     }
   }, [matricola, loggedIn])
@@ -120,7 +120,7 @@ export const TimeTable: MainStackScreen<"TimeTable"> = () => {
   useFocusEffect(
     useCallback(() => {
       return () => bottomSheetRef.current?.close()
-    }, [])
+    }, []),
   )
 
   const animValue = useSharedValue(-1)
@@ -130,7 +130,7 @@ export const TimeTable: MainStackScreen<"TimeTable"> = () => {
         extrapolateLeft: Extrapolate.CLAMP,
         extrapolateRight: Extrapolate.CLAMP,
       }),
-    [animValue]
+    [animValue],
   )
 
   const updateSubjects = (newSubjects: Subjects) => {
@@ -144,7 +144,7 @@ export const TimeTable: MainStackScreen<"TimeTable"> = () => {
       getMarginDays(formattedTable),
       getMarginDaysCollapsed(formattedTable),
     ],
-    [formattedTable]
+    [formattedTable],
   )
 
   return (

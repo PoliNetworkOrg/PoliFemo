@@ -67,7 +67,7 @@ export const CardWithGradient: FC<CardWithGradientProps> = props => {
       // expo images, on github it's marked as fixed but it's not fucking fixed
       const bh = (props.blurhash || "LEHLh[WB2yk8pyoJadR*.7kCMdnj").replace(
         /\?/g,
-        "="
+        "=",
       )
       setBlurhash(bh)
     })

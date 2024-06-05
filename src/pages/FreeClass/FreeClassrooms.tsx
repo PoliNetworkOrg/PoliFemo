@@ -36,7 +36,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
   const { palette } = usePalette()
 
   const { rooms, date, isRoomsSearching, setDate } = useContext(
-    RoomsSearchDataContext
+    RoomsSearchDataContext,
   )
 
   //rooms filtered
@@ -55,7 +55,7 @@ export const FreeClassrooms: MainStackScreen<"FreeClassrooms"> = () => {
           "Location Service not enabled",
           "Please enable your location services to unlock this feature",
           [{ text: "OK" }],
-          { cancelable: false }
+          { cancelable: false },
         )
       } else {
         setGeolocation(true)
