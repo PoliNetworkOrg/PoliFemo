@@ -3,7 +3,8 @@ import { Text } from "components/Text"
 import { FC, useEffect, useMemo, useState } from "react"
 import {
   Easing,
-  Extrapolate,
+  Extrapolation,
+  SharedValue,
   interpolate,
   useDerivedValue,
   useSharedValue,
@@ -33,26 +34,42 @@ export interface ProgressCircleCareerProps extends GradingBookCareerInfoProps {
 
 /**
  * Generates the Skia path for a circle given full diameter, stroke width,
- * and progress value.
+ * and animation shared value, capping the interpolation to a stop value.
  */
-const generatePath = (width: number, stroke: number, progress: number) => {
-  // the angle is the progress value mapped from 0 to 360, with a small give
-  // to avoid weird artifacts
-  const angle = interpolate(progress, [0, 1], [0.1, 359.99], Extrapolate.CLAMP)
-  const path = Skia.Path.Make()
-  // this computes the circle arc path to the correct angle given the progress
-  path.arcToOval(
-    {
-      height: width - stroke,
-      width: width - stroke,
-      x: (FULL_WIDTH - width + stroke) / 2,
-      y: (FULL_WIDTH - width + stroke) / 2,
-    },
-    270,
-    angle,
-    true,
-  )
-  return path
+function useDerivedPath(
+  animation: SharedValue<number>,
+  stop: number,
+  width: number,
+  stroke: number,
+) {
+  // useDerivedValue cannot itself call any synchronous functions, since its
+  // argument is executed in a worklet. This is why everything is written plainly
+  // here and this whole thing is wrapped in a custom hook.
+  return useDerivedValue(() => {
+    const progress = interpolate(animation.value, [0, 1], [0, stop])
+    // the angle is the progress value mapped from 0 to 360, with a small give
+    // to avoid weird artifacts
+    const angle = interpolate(
+      progress,
+      [0, 1],
+      [0.1, 359.99],
+      Extrapolation.CLAMP,
+    )
+    const path = Skia.Path.Make()
+    // this computes the circle arc path to the correct angle given the progress
+    path.arcToOval(
+      {
+        height: width - stroke,
+        width: width - stroke,
+        x: (FULL_WIDTH - width + stroke) / 2,
+        y: (FULL_WIDTH - width + stroke) / 2,
+      },
+      270,
+      angle,
+      true,
+    )
+    return path
+  })
 }
 
 export const ProgressCircleCareer: FC<ProgressCircleCareerProps> = ({
@@ -76,28 +93,27 @@ export const ProgressCircleCareer: FC<ProgressCircleCareerProps> = ({
   const anim = useSharedValue(0) // starts empty
   useEffect(() => {
     // This runs the smooth fill animation for the circle
-    withTiming(anim.value, {
+    anim.value = withTiming(1, {
       duration: 1000,
       easing: Easing.bezierFn(0.31, 0.63, 0.46, 0.98), // this is smooth enough
     })
-  }, [anim])
+  }, [])
 
   // compose the circle paths, interpolating the animation value to the actual
   // progress
-  const path1 = useDerivedValue(() => {
-    const progress = interpolate(anim.value, [0, 1], [0, examsPercentage])
-    return generatePath(CIRCLE_WIDTH_1, CIRLCE_STROKE_1, progress)
-  }, [anim, cfuPercentage])
-
-  const path2 = useDerivedValue(() => {
-    const progress = interpolate(anim.value, [0, 1], [0, totalCfuPercentage])
-    return generatePath(CIRCLE_WIDTH_2, CIRLCE_STROKE_2, progress)
-  }, [anim, examsPercentage])
-
-  const path3 = useDerivedValue(() => {
-    const progress = interpolate(anim.value, [0, 1], [0, cfuPercentage])
-    return generatePath(FULL_WIDTH, CIRLCE_STROKE_3, progress)
-  }, [anim, examsPercentage])
+  const path1 = useDerivedPath(
+    anim,
+    examsPercentage,
+    CIRCLE_WIDTH_1,
+    CIRLCE_STROKE_1,
+  )
+  const path2 = useDerivedPath(
+    anim,
+    totalCfuPercentage,
+    CIRCLE_WIDTH_2,
+    CIRLCE_STROKE_2,
+  )
+  const path3 = useDerivedPath(anim, cfuPercentage, FULL_WIDTH, CIRLCE_STROKE_3)
 
   // components styles
   const styles = useMemo(
