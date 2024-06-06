@@ -5200,10 +5200,10 @@ eslint-plugin-react@^7.34.2:
     semver "^6.3.1"
     string.prototype.matchall "^4.0.11"
 
-eslint-plugin-unused-imports@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-unused-imports/-/eslint-plugin-unused-imports-2.0.0.tgz#d8db8c4d0cfa0637a8b51ce3fd7d1b6bc3f08520"
-  integrity sha512-3APeS/tQlTrFa167ThtP0Zm0vctjr4M44HMpeg1P4bK6wItarumq0Ma82xorMKdFsWpphQBlRPzw/pxiVELX1A==
+eslint-plugin-unused-imports@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-unused-imports/-/eslint-plugin-unused-imports-4.0.0.tgz#93f3a7ee6088221e4a1d7127866e05d5917a9f65"
+  integrity sha512-mzM+y2B7XYpQryVa1usT+Y/BdNAtAZiXzwpSyDCboFoJN/LZRN67TNvQxKtuTK/Aplya3sLNQforiubzPPaIcQ==
   dependencies:
     eslint-rule-composer "^0.3.0"
 

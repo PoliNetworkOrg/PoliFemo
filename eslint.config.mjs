@@ -1,5 +1,7 @@
 import eslint from "@eslint/js"
 import tseslint from "typescript-eslint"
+import unusedImports from "eslint-plugin-unused-imports"
+
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
 import reactRecommended from "eslint-plugin-react/configs/recommended.js"
 import reactJSXRuntime from "eslint-plugin-react/configs/jsx-runtime.js"
@@ -11,6 +13,7 @@ export default tseslint.config(
   reactJSXRuntime,
   ...tseslint.configs.recommended,
   {
+    plugins: { "unused-imports": unusedImports },
     ignores: [
       "eslint.config.mjs",
       "babel.config.js",
@@ -44,16 +47,16 @@ export default tseslint.config(
 
       "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/unbound-method": "off",
-      // "unused-imports/no-unused-imports": "error",
-      // "unused-imports/no-unused-vars": [
-      //   "warn",
-      //   {
-      //     vars: "all",
-      //     varsIgnorePattern: "^_",
-      //     args: "after-used",
-      //     argsIgnorePattern: "^_",
-      //   },
-      // ],
+      "unused-imports/no-unused-imports": "warn",
+      "unused-imports/no-unused-vars": [
+        "warn",
+        {
+          vars: "all",
+          varsIgnorePattern: "^_",
+          args: "after-used",
+          argsIgnorePattern: "^_",
+        },
+      ],
 
       "@typescript-eslint/naming-convention": [
         "error",
