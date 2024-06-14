@@ -372,7 +372,7 @@ export const Exams: MainStackScreen<"Exams"> = props => {
                         >
                           {getExamStatusDescription(
                             status.type,
-                            lan
+                            lan,
                           ).toUpperCase()}
                         </BodyText>
                       </View>
@@ -384,7 +384,7 @@ export const Exams: MainStackScreen<"Exams"> = props => {
                   )
                 })}
               </View>
-            )
+            ),
           )}
         </ScrollView>
       ) : stage === ExamsStage.ERROR_NOT_LOGGED_IN ? (

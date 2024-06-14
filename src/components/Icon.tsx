@@ -49,7 +49,7 @@ export const Icon: FC<IconProps> = props => {
     if (!color) return null
     const p = Skia.Paint()
     p.setColorFilter(
-      Skia.ColorFilter.MakeBlend(Skia.Color(color), BlendMode.SrcIn)
+      Skia.ColorFilter.MakeBlend(Skia.Color(color), BlendMode.SrcIn),
     )
     return p
   }, [color])

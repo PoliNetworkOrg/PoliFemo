@@ -29,7 +29,7 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
   const teaching = props.route.params.teaching
 
   const exam = teaching.appelliEsame.find(
-    exam => exam.c_appello == props.route.params.codeAppello
+    exam => exam.c_appello == props.route.params.codeAppello,
   )
 
   const lan = useCurrentLanguage()
@@ -327,7 +327,7 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
                       c_appello: exam.c_appello,
                       aa_classe: teaching.aa_freq,
                     },
-                    { maxRetries: 3, retryType: RetryType.RETRY_N_TIMES }
+                    { maxRetries: 3, retryType: RetryType.RETRY_N_TIMES },
                   )
                   setStatus(Status.SUCCESS)
                 } catch (e) {

@@ -49,14 +49,13 @@ export const MemoizedMarkdown: React.FC<MemoizedMarkdownProps> = React.memo(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         styles: any,
         allowedImageHandlers: string[],
-        defaultImageHandler: string
+        defaultImageHandler: string,
       ) => {
         const { src, alt } = node.attributes
 
         // we check that the source starts with at least one of the elements in allowedImageHandlers
         const show =
           allowedImageHandlers.filter(value => {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             return src.toLowerCase().startsWith(value.toLowerCase())
           }).length > 0
 
@@ -66,10 +65,9 @@ export const MemoizedMarkdown: React.FC<MemoizedMarkdownProps> = React.memo(
 
         const imageProps = {
           indicator: true,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+
           style: styles._VIEW_SAFE_image,
           source: {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions
             uri: show === true ? src : `${defaultImageHandler}${src}`,
           },
           accessible: false,
@@ -78,7 +76,7 @@ export const MemoizedMarkdown: React.FC<MemoizedMarkdownProps> = React.memo(
 
         if (alt) {
           imageProps.accessible = true
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
           imageProps.accessibilityLabel = alt
         }
 
@@ -87,7 +85,6 @@ export const MemoizedMarkdown: React.FC<MemoizedMarkdownProps> = React.memo(
             key={node.key}
             onPress={() => {
               if (onPress) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 onPress(src)
               }
             }}
@@ -97,7 +94,7 @@ export const MemoizedMarkdown: React.FC<MemoizedMarkdownProps> = React.memo(
           </Pressable>
         )
       },
-      []
+      [],
     )
 
     return (
@@ -105,7 +102,7 @@ export const MemoizedMarkdown: React.FC<MemoizedMarkdownProps> = React.memo(
         {content}
       </Markdown>
     )
-  }
+  },
 )
 
 MemoizedMarkdown.displayName = "MemoizedMarkdown"

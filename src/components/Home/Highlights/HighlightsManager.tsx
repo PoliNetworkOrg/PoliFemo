@@ -29,7 +29,7 @@ export const HighlightsManager: FC = () => {
     },
     [loggedIn],
     {},
-    !loggedIn // only call if logged in
+    !loggedIn, // only call if logged in
   )
   const widgets = extractNextEvents(events ?? [])
 

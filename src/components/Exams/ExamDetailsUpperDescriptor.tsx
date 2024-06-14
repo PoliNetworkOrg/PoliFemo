@@ -42,7 +42,7 @@ export const ExamDetailsUpperDescriptor: FC<
           currentYear,
           academicYear,
           semester,
-          lan
+          lan,
         )}
       </BodyText>
 

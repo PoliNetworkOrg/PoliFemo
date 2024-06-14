@@ -73,7 +73,6 @@ export class NotificationCenter {
    */
   private _inizializeNotificationHandler = () =>
     Notifications.setNotificationHandler({
-      // eslint-disable-next-line @typescript-eslint/require-await
       handleNotification: async () => {
         return {
           shouldShowAlert: true,
@@ -121,7 +120,7 @@ export class NotificationCenter {
   private _initializeNotificationListeners = () => {
     Notifications.addNotificationReceivedListener(notification => {
       console.log(
-        "received notification: " + notification.request.content.title
+        "received notification: " + notification.request.content.title,
       )
       //if storeOnSchedule is set to false, store now. (more intended for push notifications...)
       //by default storeOnSchedule is true for every notification scheduled by the device
@@ -152,7 +151,7 @@ export class NotificationCenter {
         !response.notification.request.content.data.overrideDismissBehaviour
       ) {
         void Notifications.dismissNotificationAsync(
-          response.notification.request.identifier
+          response.notification.request.identifier,
         )
       }
 
@@ -171,7 +170,7 @@ export class NotificationCenter {
               isRelevantAt: undefined,
             },
             category: mapNotificationChannelString(
-              response.notification.request.content.data.channelId
+              response.notification.request.content.data.channelId,
             ),
           },
         })
@@ -188,10 +187,10 @@ export class NotificationCenter {
   private _readFromStorage = async () => {
     try {
       const notificationsJSON = await FileSystem.readAsStringAsync(
-        FileSystem.documentDirectory + "notifications.json"
+        FileSystem.documentDirectory + "notifications.json",
       )
       const notifications = JSON.parse(
-        notificationsJSON
+        notificationsJSON,
       ) as NotificationStorage[]
       this._notifications = notifications
     } catch (err) {
@@ -208,14 +207,14 @@ export class NotificationCenter {
    *
    */
   private _writeToStorage = async (
-    notifications: NotificationStorage[]
+    notifications: NotificationStorage[],
   ): Promise<boolean> => {
     const notificationsJSON = JSON.stringify(notifications)
     try {
       this._notifications = notifications
       await FileSystem.writeAsStringAsync(
         FileSystem.documentDirectory + "notifications.json",
-        notificationsJSON
+        notificationsJSON,
       )
 
       return true
@@ -233,10 +232,10 @@ export class NotificationCenter {
   private _readChannelsFromStorage = async () => {
     try {
       const notificationsChannelsJSON = await FileSystem.readAsStringAsync(
-        FileSystem.documentDirectory + "notifications-channels.json"
+        FileSystem.documentDirectory + "notifications-channels.json",
       )
       const notificationsChannels = JSON.parse(
-        notificationsChannelsJSON
+        notificationsChannelsJSON,
       ) as NotificationsChannels
 
       this._activeChannels = notificationsChannels
@@ -251,14 +250,14 @@ export class NotificationCenter {
    *
    */
   private _writeChannelsToStorage = async (
-    channels: NotificationsChannels
+    channels: NotificationsChannels,
   ): Promise<boolean> => {
     const notificationsChannelsJSON = JSON.stringify(channels)
     try {
       this._activeChannels = channels
       await FileSystem.writeAsStringAsync(
         FileSystem.documentDirectory + "notifications-channels.json",
-        notificationsChannelsJSON
+        notificationsChannelsJSON,
       )
 
       return true
@@ -318,7 +317,7 @@ export class NotificationCenter {
     trigger: NotificationTriggerInput,
     channelId?: ValidChannelId,
     oldIdentifier?: string,
-    allowSchedulingInThePast = true
+    allowSchedulingInThePast = true,
   ) => {
     try {
       const grant = await this._checkPermission()
@@ -491,7 +490,7 @@ export class NotificationCenter {
    */
   public scheduleCarousel = async (
     items: CarouselItem[],
-    minutesBefore?: MinutesBeforeOptions
+    minutesBefore?: MinutesBeforeOptions,
   ) => {
     try {
       const isGrant = await this._checkPermission()
@@ -518,7 +517,7 @@ export class NotificationCenter {
           if (!found) {
             const deltaMilliseconds = getMinutesBeforeInMilliseconds(
               minutesBefore,
-              item.type
+              item.type,
             )
             if (
               (item.type === EventType.DEADLINE ||
@@ -528,7 +527,7 @@ export class NotificationCenter {
               const contentMessage = getContentMessageFromType(
                 item.type,
                 item.date,
-                item.time
+                item.time,
               )
 
               await this.sendScheduledNotification(
@@ -547,7 +546,7 @@ export class NotificationCenter {
                 {
                   date: new Date(item.dateStart.getTime() - deltaMilliseconds),
                   channelId: "comunicazioni",
-                }
+                },
               )
             }
           }
@@ -629,7 +628,7 @@ export class NotificationCenter {
 
   public updateNotificationsChannels = (
     channels: NotificationsChannels,
-    switchVal: boolean
+    switchVal: boolean,
   ) => {
     this._activeChannels = channels
     void this._writeChannelsToStorage(this._activeChannels)
@@ -675,16 +674,16 @@ export class NotificationCenter {
       for (let i = 0; i < scheduledNotifications.length; i++) {
         if (
           !this._isChannelActive(
-            scheduledNotifications[i].content.data.channelId
+            scheduledNotifications[i].content.data.channelId,
           )
         ) {
           //remove from schedule
           await Notifications.cancelScheduledNotificationAsync(
-            scheduledNotifications[i].identifier
+            scheduledNotifications[i].identifier,
           )
 
           dumpedNotificationsIdentifiers.push(
-            scheduledNotifications[i].identifier
+            scheduledNotifications[i].identifier,
           )
         }
       }
@@ -743,7 +742,7 @@ export class NotificationCenter {
               },
               channelId,
               this._notifications[i].identifier,
-              false
+              false,
             )
             if (identifier) {
               //scheduling was successful

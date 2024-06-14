@@ -143,7 +143,7 @@ export const ModalSlider: FC<ModalSliderProps> = props => {
                   })
                   setImageIndex(
                     (imageIndex - 1 + props.imageSources.length) %
-                      props.imageSources.length
+                      props.imageSources.length,
                   )
                 }}
               >

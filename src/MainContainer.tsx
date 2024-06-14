@@ -49,7 +49,7 @@ export const MainContainer: FC = () => {
     },
     [date, isInsideFreeClassrooms],
     {},
-    !isInsideFreeClassrooms // prevent calls when outside FreeClassrooms
+    !isInsideFreeClassrooms, // prevent calls when outside FreeClassrooms
   )
 
   const globalRoomList = globRooms ?? {
@@ -66,7 +66,6 @@ export const MainContainer: FC = () => {
     AsyncStorage.getItem("newstags:preferences")
       .then(preferencesJSON => {
         if (preferencesJSON) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const data: Record<string, Preference> = JSON.parse(preferencesJSON)
           console.log(data)
           setPreferences(data)
@@ -80,7 +79,7 @@ export const MainContainer: FC = () => {
     console.log(preferences)
     AsyncStorage.setItem(
       "newstags:preferences",
-      JSON.stringify(preferences)
+      JSON.stringify(preferences),
     ).catch(err => console.log(err))
   }, [preferences])
 

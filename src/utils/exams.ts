@@ -39,7 +39,7 @@ export enum ExamStatusType {
 }
 
 export const getExamStatus = (
-  exam: Exam
+  exam: Exam,
 ): { type: ExamStatusType; isHighlighted: boolean } => {
   if (exam.inAttesaDiEsito) {
     return { type: ExamStatusType.IN_ATTESA_DI_ESITO, isHighlighted: false }
@@ -99,7 +99,7 @@ export const getExamAcademicYearDescription = (
   currentYear: string,
   academicYear: number,
   semester: string,
-  lan: string
+  lan: string,
 ) => {
   const aa = currentYear
   const aaNextYear = (parseInt(aa) + 1).toString()

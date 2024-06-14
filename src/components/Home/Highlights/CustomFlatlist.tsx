@@ -46,7 +46,7 @@ export const CustomFlatlist: FC<{ dataToShow: CarouselItem[] }> = ({
         setCurrentIndex(changed[0].index)
       }
     },
-    []
+    [],
   )
 
   const { navigate } = useNavigation()

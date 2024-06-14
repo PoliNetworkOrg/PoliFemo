@@ -15,7 +15,7 @@ controller.signal
  */
 export type ApiCall<T = never, D = unknown> = (
   callParams: T,
-  options?: RequestOptions
+  options?: RequestOptions,
 ) => CancellableApiRequest<D, D>
 
 /**
@@ -63,7 +63,7 @@ export function useApiCall<T extends Record<string, unknown>, D>(
   params: T,
   deps: React.DependencyList,
   options?: RequestOptions,
-  preventActualCall = false
+  preventActualCall = false,
 ): [D | null, boolean, Error | null, () => void] {
   // This is a hack to force the useEffect to re-run when the update function is called
   const [updater, setUpdater] = React.useState(0)

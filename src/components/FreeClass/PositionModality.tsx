@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native"
 import { ConstructionType, Room } from "api/collections/rooms"
 import { BodyText } from "components/Text"
 import { RoomsSearchDataContext } from "contexts/rooms"
@@ -13,6 +12,7 @@ import { EmptyListMessage } from "components/EmptyListMessage"
 import { BuildingItem } from "./DefaultList"
 import { FreeClassList } from "./FreeClassList"
 import { Map } from "./Map"
+import { useNavigation } from "navigation/NavigationTypes"
 
 interface PositionModalityProps {
   currentCoords: [number, number]
@@ -66,7 +66,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
           return [...allrooms]
         }
       }, []),
-    [rooms]
+    [rooms],
   )
 
   const tempBuildingStrings: string[] = []
@@ -85,7 +85,7 @@ export const PositionModality: FC<PositionModalityProps> = props => {
 
           if (currentBuilding !== undefined) {
             const indexElement = tempBuildingStrings.indexOf(
-              currentBuildingString
+              currentBuildingString,
             )
 
             if (indexElement === -1) {
@@ -130,8 +130,8 @@ export const PositionModality: FC<PositionModalityProps> = props => {
               status === ButtonType.MAP
                 ? primary
                 : isDark
-                ? palette.primary
-                : palette.lighter,
+                  ? palette.primary
+                  : palette.lighter,
             borderRadius: 22,
             alignItems: "center",
             justifyContent: "center",
@@ -155,8 +155,8 @@ export const PositionModality: FC<PositionModalityProps> = props => {
               status === ButtonType.LIST
                 ? primary
                 : isDark
-                ? palette.primary
-                : palette.lighter,
+                  ? palette.primary
+                  : palette.lighter,
             borderRadius: 22,
             marginLeft: 18,
             alignItems: "center",
@@ -245,12 +245,9 @@ export const PositionModality: FC<PositionModalityProps> = props => {
           locationStatus={props.locationStatus}
           buildingList={allBuildings}
           onPressMarker={(building: BuildingItem) => {
-            navigate(
-              "ClassChoice" as never,
-              {
-                building: building,
-              } as never
-            )
+            navigate("ClassChoice", {
+              building: building,
+            })
           }}
         />
       )}

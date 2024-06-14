@@ -39,7 +39,7 @@ export const ResultDetails: MainStackScreen<"ResultDetails"> = props => {
   const status = getExamStatus(result)
 
   const [correction, setCorrection] = useState<Correction | undefined>(
-    undefined
+    undefined,
   )
 
   let dateRefuse, dayRefuse, monthRefuse, yearRefuse
@@ -74,7 +74,7 @@ export const ResultDetails: MainStackScreen<"ResultDetails"> = props => {
     try {
       if (correction) {
         const fileCorrection = await api.exams.downloadFile(
-          correction.id_doc_compito
+          correction.id_doc_compito,
         )
       }
     } catch (error) {

@@ -1,5 +1,3 @@
-/* eslint-disable quotes */
-/* eslint-disable @typescript-eslint/naming-convention */
 import { PageWrap } from "components/PageLayout"
 import { MainStackScreen } from "navigation/NavigationTypes"
 import { ScrollView } from "react-native"
@@ -31,7 +29,7 @@ export const Results: MainStackScreen<"Results"> = props => {
                 result: result,
               }}
             />
-          ))
+          )),
         )}
       </ScrollView>
     </PageWrap>

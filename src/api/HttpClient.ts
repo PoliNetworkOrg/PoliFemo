@@ -142,7 +142,7 @@ export class HttpClient extends EventEmitter {
       this.classInstance = new HttpClient(
         "https://api.polinetwork.org/staging/",
         "https://polimiapp.polimi.it/polimi_app",
-        "https://www22.dmz.polimi.it/iae"
+        "https://www22.dmz.polimi.it/iae",
       )
     }
 
@@ -152,7 +152,7 @@ export class HttpClient extends EventEmitter {
   private constructor(
     baseUrlPoliNetwork: string,
     baseUrlPolimi: string,
-    baseUrlPolimiExams: string
+    baseUrlPolimiExams: string,
   ) {
     super()
     console.log("HttpClient constructor called")
@@ -181,22 +181,22 @@ export class HttpClient extends EventEmitter {
     this.poliNetworkInstance.interceptors.request.use(this._handleRequest)
     this.poliNetworkInstance.interceptors.response.use(
       val => this._handleResponse(val),
-      err => this._handleError(err as AxiosError, this.poliNetworkInstance)
+      err => this._handleError(err as AxiosError, this.poliNetworkInstance),
     )
     this.polimiInstance.interceptors.request.use(this._handleRequest)
     this.polimiInstance.interceptors.response.use(
       val => this._handleResponse(val),
-      err => this._handleError(err as AxiosError, this.polimiInstance)
+      err => this._handleError(err as AxiosError, this.polimiInstance),
     )
     this.generalInstance.interceptors.request.use(this._handleRequest)
     this.generalInstance.interceptors.response.use(
       val => this._handleResponse(val),
-      err => this._handleError(err as AxiosError, this.generalInstance)
+      err => this._handleError(err as AxiosError, this.generalInstance),
     )
     this.polimiExamsInstance.interceptors.request.use(this._handleRequest)
     this.polimiExamsInstance.interceptors.response.use(
       val => this._handleResponse(val),
-      err => this._handleError(err as AxiosError, this.polimiExamsInstance)
+      err => this._handleError(err as AxiosError, this.polimiExamsInstance),
     )
   }
 
@@ -208,16 +208,14 @@ export class HttpClient extends EventEmitter {
       config.authType === AuthType.POLINETWORK &&
       this.poliNetworkToken
     ) {
-      config.headers[
-        "Authorization"
-      ] = `Bearer ${this.poliNetworkToken.access_token}`
+      config.headers["Authorization"] =
+        `Bearer ${this.poliNetworkToken.access_token}`
     } else if (
       config.authType === AuthType.POLIMI_EXAMS &&
       this.polimiExamsToken
     ) {
-      config.headers[
-        "Authorization"
-      ] = `Bearer ${this.polimiExamsToken.accessToken}`
+      config.headers["Authorization"] =
+        `Bearer ${this.polimiExamsToken.accessToken}`
     }
     return config
   }
@@ -288,7 +286,7 @@ export class HttpClient extends EventEmitter {
                   void this.destroyTokens()
                 },
               },
-            ]
+            ],
           )
           throw error
         }
@@ -317,7 +315,7 @@ export class HttpClient extends EventEmitter {
                   void this.destroyTokens()
                 },
               },
-            ]
+            ],
           )
 
           throw error
@@ -348,7 +346,7 @@ export class HttpClient extends EventEmitter {
                   void this.destroyExamToken()
                 },
               },
-            ]
+            ],
           )
           throw error
         }
@@ -372,7 +370,7 @@ export class HttpClient extends EventEmitter {
   }
 
   callPoliNetwork<T = void>(
-    options: AxiosRequestConfig
+    options: AxiosRequestConfig,
   ): CancellableApiRequest<T> {
     const controller = new AbortController()
     const request = this.poliNetworkInstance.request<T>({
@@ -386,7 +384,7 @@ export class HttpClient extends EventEmitter {
   }
 
   callPolimiExams<T = void>(
-    options: AxiosRequestConfig
+    options: AxiosRequestConfig,
   ): CancellableApiRequest<T> {
     const controller = new AbortController()
     const request = this.polimiExamsInstance.request<T>({
@@ -456,7 +454,7 @@ export class HttpClient extends EventEmitter {
     console.log("Refreshing polimi exams token")
     if (!this.polimiExamsToken) {
       console.log(
-        "Token went missing while trying to refresh Polimi exams token"
+        "Token went missing while trying to refresh Polimi exams token",
       )
       return false
     }
@@ -475,7 +473,7 @@ export class HttpClient extends EventEmitter {
         // ? maybe don't store exams token
         await AsyncStorage.setItem(
           "api:token_exams",
-          JSON.stringify(this.polimiExamsToken)
+          JSON.stringify(this.polimiExamsToken),
         )
 
         return true
@@ -495,7 +493,7 @@ export class HttpClient extends EventEmitter {
     console.log("Refreshing polinetwork token")
     if (!this.polimiToken || !this.poliNetworkToken) {
       console.log(
-        "Tokens went missing while trying to refresh PoliNetwork token"
+        "Tokens went missing while trying to refresh PoliNetwork token",
       )
       return false
     }
@@ -510,7 +508,7 @@ export class HttpClient extends EventEmitter {
           },
           retryType: RetryType.RETRY_N_TIMES,
           maxRetries: 5,
-        }
+        },
       )
       if (typeof response.data.access_token === "string") {
         console.log("Refreshed polinetwork token")
@@ -543,7 +541,6 @@ export class HttpClient extends EventEmitter {
   async loadTokens() {
     const tokens = await AsyncStorage.getItem("api:tokens")
     if (tokens) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const parsedTokens: Tokens = JSON.parse(tokens)
       console.log("Loaded tokens from local storage")
       this.polimiToken = parsedTokens.polimiToken
@@ -556,7 +553,6 @@ export class HttpClient extends EventEmitter {
 
     const tokenExams = await AsyncStorage.getItem("api:token_exams")
     if (tokenExams) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const parsedToken: PolimiToken = JSON.parse(tokenExams)
       console.log("Loaded token from local storage")
       this.polimiExamsToken = parsedToken

@@ -132,7 +132,6 @@ export const Login: RootStackScreen<"Login"> = () => {
 
           if (url.startsWith(polinetworkTargetUrl)) {
             try {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
               setPoliNetworkToken(JSON.parse(data))
               setCurrentURL(magicTokenUrl)
             } catch (e) {
@@ -151,7 +150,7 @@ export const Login: RootStackScreen<"Login"> = () => {
             // when the polinetwork page is reached, hide the webview and extract the token
             setLoginStage(LoginStage.GOT_POLINETWORK_TOKEN)
             webview.current?.injectJavaScript(
-              "window.ReactNativeWebView.postMessage(document.body.innerText)"
+              "window.ReactNativeWebView.postMessage(document.body.innerText)",
             )
           } else if (url.startsWith(polimiTargetUrl)) {
             // when the polimi page is reached, extract the other token from the url

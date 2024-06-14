@@ -4,13 +4,13 @@ import {
   Group,
   Mask,
   SweepGradient,
-  Transforms2d,
-  useClockValue,
-  useComputedValue,
+  Transforms3d,
+  useClock,
   vec,
 } from "@shopify/react-native-skia"
 import { FC } from "react"
 import { StyleProp, View, ViewStyle } from "react-native"
+import { useDerivedValue } from "react-native-reanimated"
 import { usePalette } from "utils/colors"
 
 interface LoadingIndicatorProps {
@@ -23,16 +23,16 @@ interface LoadingIndicatorProps {
 export const LoadingIndicator: FC<LoadingIndicatorProps> = props => {
   const { palette } = usePalette()
 
-  const clock = useClockValue()
-  const spinValue = useComputedValue(() => {
+  const clock = useClock()
+  const spinValue = useDerivedValue(() => {
     const interval = 1000
-    return -(clock.current % interval) / interval
+    return -(clock.value % interval) / interval
   }, [clock])
 
-  const transform = useComputedValue<Transforms2d>(() => {
+  const transform = useDerivedValue<Transforms3d>(() => {
     return [
       {
-        rotate: spinValue.current * Math.PI * 2,
+        rotate: spinValue.value * Math.PI * 2,
       },
     ]
   }, [spinValue])

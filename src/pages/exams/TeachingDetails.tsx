@@ -24,15 +24,15 @@ export const TeachingDetails: MainStackScreen<"TeachingDetails"> = props => {
   >(undefined)
 
   const [examsWithGrade, setExamsWithGrade] = useState<Exam[] | undefined>(
-    undefined
+    undefined,
   )
 
   const [examsEnrolled, setExamsEnrolled] = useState<Exam[] | undefined>(
-    undefined
+    undefined,
   )
 
   const [examsNotEnrolled, setExamsNotEnrolled] = useState<Exam[] | undefined>(
-    undefined
+    undefined,
   )
 
   const { isLight, palette } = usePalette()

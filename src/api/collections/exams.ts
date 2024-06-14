@@ -473,7 +473,7 @@ export const exams = {
   },
   enrollExam(
     info: { c_insegn_piano: string; c_appello: number; aa_classe: string },
-    options?: RequestOptions
+    options?: RequestOptions,
   ) {
     const url = `/rest/v1/iscriz/${info.aa_classe}/${info.c_insegn_piano}/${info.c_appello}?lang=IT`
     const request = client.callPolimiExams<unknown>({

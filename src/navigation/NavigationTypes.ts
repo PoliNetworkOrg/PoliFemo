@@ -104,6 +104,7 @@ export type SettingsStackNavigatorParams = {
   About: undefined
   Licenses: undefined
   Privacy: undefined
+  Contributors: undefined
 }
 
 export type GlobalStackNavigatorParams = RootStackNavigatorParams &
@@ -163,20 +164,16 @@ export type SettingsStackProps<T extends keyof SettingsStackNavigatorParams> =
  * }
  * ```
  */
-export type RootStackScreen<
-  T extends keyof RootStackNavigatorParams,
-  P = Record<string, never>
-> = FC<RootStackProps<T> & P>
+export type RootStackScreen<T extends keyof RootStackNavigatorParams> = FC<
+  RootStackProps<T>
+>
 
-export type MainStackScreen<
-  T extends keyof MainStackNavigatorParams,
-  P = Record<string, never>
-> = FC<MainStackProps<T> & P>
+export type MainStackScreen<T extends keyof MainStackNavigatorParams> = FC<
+  MainStackProps<T>
+>
 
-export type SettingsStackScreen<
-  T extends keyof SettingsStackNavigatorParams,
-  P = Record<string, never>
-> = FC<SettingsStackProps<T> & P>
+export type SettingsStackScreen<T extends keyof SettingsStackNavigatorParams> =
+  FC<SettingsStackProps<T>>
 /**
  * Hook to access the navigation prop of the parent screen anywhere.
  * With correct typings.
