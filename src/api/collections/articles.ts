@@ -84,7 +84,7 @@ export const articles = {
    */
   getFromOffsetByTag(
     params: { tag: string; limit: number; offset: number },
-    options?: RequestOptions
+    options?: RequestOptions,
   ) {
     const request = client.callPoliNetwork<Articles>({
       url: "/v1/articles",

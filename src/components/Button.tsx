@@ -29,8 +29,8 @@ export const Button: FC<ButtonProps> = props => {
               ? palette.lighter
               : palette.darker
             : isLight
-            ? palette.primary
-            : palette.lighter,
+              ? palette.primary
+              : palette.lighter,
           minWidth: 130,
         },
         props.style,

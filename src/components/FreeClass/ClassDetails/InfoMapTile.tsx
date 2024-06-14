@@ -144,7 +144,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
               openAddressOnMap(
                 props.building,
                 latitude.toString(),
-                longitude.toString()
+                longitude.toString(),
               )
             }
           >
@@ -205,7 +205,7 @@ export const InfoMapTile: FC<InfoMapTileProps> = props => {
                     openAddressOnMap(
                       props.building,
                       latitude.toString(),
-                      longitude.toString()
+                      longitude.toString(),
                     )
                   }
                 />

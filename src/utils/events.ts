@@ -14,11 +14,11 @@ export enum EventType {
 export declare interface NewsSheetEventEmitter {
   addListener(
     eventType: "should_close",
-    listener: () => void
+    listener: () => void,
   ): EmitterSubscription
   addListener(
     eventType: "state_change",
-    listener: (open: boolean) => void
+    listener: (open: boolean) => void,
   ): EmitterSubscription
   removeAllListeners(eventType?: "should_close"): void
   removeAllListeners(eventType?: "state_change"): void

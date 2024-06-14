@@ -59,7 +59,7 @@ export const GradingBookCareerInfo: FC<GradingBookCareerInfoProps> = ({
           marginVertical: 8,
         },
       }),
-    [isLight]
+    [isLight],
   )
 
   return (

@@ -122,7 +122,7 @@ export const About: SettingsStackScreen<"About"> = () => {
         subtitle={"" + t("settings_reportSubTitle")}
         callback={() =>
           Linking.openURL(
-            "https://github.com/PoliNetworkOrg/PoliFemo/issues/new/choose"
+            "https://github.com/PoliNetworkOrg/PoliFemo/issues/new/choose",
           )
         }
       />
