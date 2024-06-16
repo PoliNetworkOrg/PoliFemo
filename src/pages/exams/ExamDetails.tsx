@@ -209,11 +209,11 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
                   teaching.warning_esame ===
                   "CHECK_QUESTIONARIO_VALUTAZIONE_DIDATTICA"
                 ) {
-                  const url = await api.exams.linkSalto(
-                    teaching.c_insegn_piano,
-                    teaching.aa_freq,
-                    userInfo?.careers[0].matricola ?? "",
-                  )
+                  const url = await api.exams.linkSalto({
+                    c_insegn: teaching.c_insegn_piano,
+                    aa_freq: teaching.aa_freq,
+                    matricola: userInfo?.careers[0].matricola ?? "",
+                  })
                   Linking.openURL(url)
                 } else setIsModalVisible(true)
               }}

@@ -520,9 +520,7 @@ export const exams = {
   },
 
   linkSalto(
-    c_insegn: string,
-    aa_freq: string,
-    matricola: string,
+    params: { c_insegn: string; aa_freq: string; matricola: string },
     options?: RequestOptions,
   ) {
     const url = "/rest/jaf/public/linksalto"
@@ -536,9 +534,9 @@ export const exams = {
         params: {
           closeWindow: "true",
           tipo_quest: "DI",
-          c_insegn: c_insegn,
-          aa_freq: aa_freq,
-          matricola: matricola,
+          c_insegn: params.c_insegn,
+          aa_freq: params.aa_freq,
+          matricola: params.matricola,
           lang: "IT",
           polij_device_category: "null",
           polij_into_webview: false,
