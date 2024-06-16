@@ -594,14 +594,14 @@ export class HttpClient extends EventEmitter {
 
     this.polimiToken = undefined
     this.poliNetworkToken = undefined
+    this.polimiExamsToken = undefined
 
     this.emit("logout")
     this.emit("login_event", false)
 
     // remove the tokens from local storage
     await AsyncStorage.removeItem("api:tokens")
-
-    void this.destroyExamToken()
+    await this.destroyExamToken()
   }
 
   /**

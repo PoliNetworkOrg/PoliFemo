@@ -475,14 +475,19 @@ export const exams = {
     info: { c_insegn_piano: string; c_appello: number; aa_classe: string },
     options?: RequestOptions,
   ) {
-    const url = `/rest/v1/iscriz/${info.aa_classe}/${info.c_insegn_piano}/${info.c_appello}?lang=IT`
+    const url = `/rest/v1/iscriz/${info.aa_classe}/${info.c_insegn_piano}/${info.c_appello}`
     const request = client.callPolimiExams<unknown>({
       url,
-      method: "GET",
+      method: "POST",
+      data: { cRisposta: null, cRispostaAteneo: null },
       authType: AuthType.POLIMI_EXAMS,
       ...options,
     })
-    return mapAxiosRequest(request, response => response)
+    console.log(url)
+    return mapAxiosRequest(request, response => {
+      console.log(response)
+      return response
+    })
   },
   unenrollExam(c_iscrz: number, options?: RequestOptions) {
     const url = `/rest/v1/iscriz/${c_iscrz}`

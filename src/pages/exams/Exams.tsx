@@ -23,6 +23,8 @@ import {
 } from "utils/exams"
 import { useCurrentLanguage } from "utils/language"
 import { ExamInfoWhiteLine } from "components/Exams/ExamInfoWhiteLine"
+import { LoadingIndicator } from "components/LoadingIndicator"
+import { ErrorMessage } from "components/ErrorMessage"
 
 /* let searchTimeout: NodeJS.Timeout
 const deltaTime = 200 //ms */
@@ -44,21 +46,20 @@ export const Exams: MainStackScreen<"Exams"> = props => {
   const navigation = useNavigation()
 
   // ! set to TOKEN RETRIEVED for debug
-  const [stage, setStage] = useState(ExamsStage.TOKEN_RETRIEVED)
+  const [stage, setStage] = useState(ExamsStage.START)
   const [currentURL, setCurrentURL] = useState<string | undefined>(undefined)
-  const polimiAppToken = client.readPolimiAppTokenForExamsTokenRetrieval()
   const { loggedIn, userInfo } = useContext(LoginContext)
 
   const [teachings, setTeachings] = useState<Teaching[] | undefined>(undefined)
 
   const [examsWithGradeCount, setExamsWithGradeCount] = useState(0)
 
-  const polimiExamsToken = client.readPolimiExamsToken()
-
   const { palette } = usePalette()
 
   // compose start url for redirect flow
   useEffect(() => {
+    const polimiAppToken = client.readPolimiAppTokenForExamsTokenRetrieval()
+    const polimiExamsToken = client.readPolimiExamsToken()
     if (!loggedIn) {
       setStage(ExamsStage.ERROR_NOT_LOGGED_IN)
       return
@@ -74,14 +75,12 @@ export const Exams: MainStackScreen<"Exams"> = props => {
       //in this case prompt user to log in again (?)
       setStage(ExamsStage.ERROR_NOT_LOGGED_IN)
     }
-  }, [])
+  }, [loggedIn])
 
   async function getTeachings() {
-    console.log("get teachings")
-
     // ! uncomment when debug is done
-    /* const teachings = await api.exams.getTeachings() */
-    const teachings = await fakeTeachings()
+    const teachings = await api.exams.getTeachings()
+    // const teachings = await fakeTeachings()
 
     teachings.forEach(teaching => {
       teaching.appelliEsame.sort((a, b) => {
@@ -109,7 +108,6 @@ export const Exams: MainStackScreen<"Exams"> = props => {
       props.route.params?.updateTeachings === true &&
       stage === ExamsStage.TOKEN_RETRIEVED
     ) {
-      setTeachings(undefined)
       void getTeachings()
       navigation.setParams({ updateTeachings: false })
     }
@@ -388,15 +386,11 @@ export const Exams: MainStackScreen<"Exams"> = props => {
           )}
         </ScrollView>
       ) : stage === ExamsStage.ERROR_NOT_LOGGED_IN ? (
-        <BodyText
-          onPress={() =>
-            navigation.navigate("Results", { teachings: teachings ?? [] })
-          }
-        >
-          Error logged in
-        </BodyText>
+        <ErrorMessage
+          message={"Devi effettuare il login per vedere i tuoi appelli"}
+        />
       ) : stage === ExamsStage.START ? (
-        <BodyText>Start</BodyText>
+        <LoadingIndicator />
       ) : null}
     </PageWrap>
   )
