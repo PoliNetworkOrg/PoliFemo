@@ -126,8 +126,8 @@ export class HttpClient extends EventEmitter {
 
   private polimiExamsToken?: PolimiToken
 
-  public readPolimiExamsToken() {
-    return this.polimiExamsToken
+  public hasPolimiExamsToken() {
+    return this.polimiExamsToken !== undefined
   }
 
   private poliNetworkToken?: PoliNetworkToken

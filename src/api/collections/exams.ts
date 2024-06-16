@@ -449,7 +449,26 @@ export const exams = {
       authType: AuthType.POLIMI_EXAMS,
       ...options,
     })
-    return mapAxiosRequest(request, response => response.INSEGN)
+    return mapAxiosRequest(request, response => {
+      const teachings = response.INSEGN
+      teachings.forEach(teaching => {
+        teaching.appelliEsame.sort((a, b) => {
+          const dateA = new Date(a.d_app)
+          const dateB = new Date(b.d_app)
+          return dateA.getTime() - dateB.getTime()
+        })
+      })
+      // ? should we sort teachings according to some criteria?
+      /* teachings.sort((a, b) => {
+          if (a.appelliEsame.length === 0) return 1
+          if (b.appelliEsame.length === 0) return -1
+  
+          const dateA = new Date(a.appelliEsame[0].d_app)
+          const dateB = new Date(b.appelliEsame[0].d_app)
+          return dateA.getTime() - dateB.getTime()
+        }) */
+      return teachings
+    })
   },
   getCorrection(c_appello: number, options?: RequestOptions) {
     const url = `/rest/v1/prove/correzioni/${c_appello}`

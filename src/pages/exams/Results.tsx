@@ -1,37 +1,27 @@
-import { PageWrap } from "components/PageLayout"
+import { ListPage } from "components/PageLayout"
 import { MainStackScreen } from "navigation/NavigationTypes"
-import { ScrollView } from "react-native"
 import { ExamResultsSection } from "components/Exams/Results/ExamResultsSection"
 
 export const Results: MainStackScreen<"Results"> = props => {
   const { teachings } = props.route.params
 
   return (
-    <PageWrap title={"Esiti"}>
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{
-          paddingBottom: 100,
-        }}
-        bounces={false}
-      >
-        {teachings.map(teaching =>
-          teaching.appelliEsame.map((result, j) => (
-            <ExamResultsSection
-              key={`${teaching.c_insegn_piano}_${j}`}
-              resultExam={{
-                teachingName: teaching.xdescrizione,
-                teachingCode: teaching.c_classe_m,
-                teacher: teaching.docente_esame,
-                currentYear: teaching.aa_classe,
-                academicYear: teaching.ac_freq,
-                semester: teaching.semestre_freq,
-                result: result,
-              }}
-            />
-          )),
-        )}
-      </ScrollView>
-    </PageWrap>
+    <ListPage
+      title={"Esiti"}
+      data={teachings.filter(t => t.appelliEsame.length > 0)}
+      renderItem={({ item }) => (
+        <ExamResultsSection
+          resultExam={{
+            teachingName: item.xdescrizione,
+            teachingCode: item.c_classe_m,
+            teacher: item.docente_esame,
+            currentYear: item.aa_classe,
+            academicYear: item.ac_freq,
+            semester: item.semestre_freq,
+            result: item.appelliEsame[0],
+          }}
+        />
+      )}
+    />
   )
 }
