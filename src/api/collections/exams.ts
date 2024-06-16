@@ -518,4 +518,36 @@ export const exams = {
     })
     return mapAxiosRequest(request, response => response)
   },
+
+  linkSalto(
+    c_insegn: string,
+    aa_freq: string,
+    matricola: string,
+    options?: RequestOptions,
+  ) {
+    const url = "/rest/jaf/public/linksalto"
+    const request = client.callPolimiExams<{ jump_url: string }>({
+      url,
+      method: "POST",
+      data: {
+        target_service_id: 735,
+        // TODO: add deep linking
+        return_url: "https://google.com",
+        params: {
+          closeWindow: "true",
+          tipo_quest: "DI",
+          c_insegn: c_insegn,
+          aa_freq: aa_freq,
+          matricola: matricola,
+          lang: "IT",
+          polij_device_category: "null",
+          polij_into_webview: false,
+          polij_style: "light",
+          al_id_srv_chiamante: "2612",
+        },
+      },
+      ...options,
+    })
+    return mapAxiosRequest(request, response => response.jump_url)
+  },
 }

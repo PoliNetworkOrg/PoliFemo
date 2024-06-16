@@ -2,7 +2,7 @@
 import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { BodyText, Title } from "components/Text"
 import { PageWrap } from "components/PageLayout"
-import { Pressable, ScrollView, View } from "react-native"
+import { Linking, Pressable, ScrollView, View } from "react-native"
 import { usePalette } from "utils/colors"
 import { getDateExamString, toPascalCase } from "utils/exams"
 import { ExamDetailsUpperDescriptor } from "components/Exams/ExamDetailsUpperDescriptor"
@@ -10,11 +10,12 @@ import { useCurrentLanguage } from "utils/language"
 import { Icon } from "components/Icon"
 import dangerousIcon from "assets/exams/dangerous_cancel.svg"
 import { Modal } from "components/Modal"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { LoadingIndicator } from "components/LoadingIndicator"
 import { wait } from "utils/functions"
 import checkIcon from "assets/exams/check.svg"
 import { RetryType, api } from "api"
+import { LoginContext } from "contexts/login"
 
 enum Status {
   START,
@@ -38,6 +39,7 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
 
   const [isModalVisible, setIsModalVisible] = useState(false)
 
+  const { userInfo } = useContext(LoginContext)
   const [status, setStatus] = useState<Status>(Status.START)
 
   const navigation = useNavigation()
@@ -202,8 +204,18 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
               {exam.numIscrittiAppello} persone iscritte
             </BodyText>
             <Pressable
-              onPress={() => {
-                setIsModalVisible(true)
+              onPress={async () => {
+                if (
+                  teaching.warning_esame ===
+                  "CHECK_QUESTIONARIO_VALUTAZIONE_DIDATTICA"
+                ) {
+                  const url = await api.exams.linkSalto(
+                    teaching.c_insegn_piano,
+                    teaching.aa_freq,
+                    userInfo?.careers[0].matricola ?? "",
+                  )
+                  Linking.openURL(url)
+                } else setIsModalVisible(true)
               }}
             >
               <View
@@ -224,7 +236,12 @@ export const ExamDetails: MainStackScreen<"ExamDetails"> = props => {
                 <BodyText
                   style={{ fontSize: 18, color: "#fff", fontWeight: "700" }}
                 >
-                  {exam.iscrizioneAttiva ? "CANCELLA ISCRIZIONE" : "ISCRIVITI"}
+                  {teaching.warning_esame ===
+                  "CHECK_QUESTIONARIO_VALUTAZIONE_DIDATTICA"
+                    ? "VAI AL QUESTIONARIO"
+                    : exam.iscrizioneAttiva
+                      ? "CANCELLA ISCRIZIONE"
+                      : "ISCRIVITI"}
                 </BodyText>
                 {exam.iscrizioneAttiva ? (
                   <>
