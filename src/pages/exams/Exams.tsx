@@ -341,8 +341,8 @@ export const Exams: MainStackScreen<"Exams"> = props => {
             if (loading) return
             if (!url) return
             if (url.includes("&code")) {
+              webview.current?.stopLoading() // otherwise the authcode is used up
               const authCode = url.split("&code=")[1]
-              console.log(authCode)
 
               try {
                 const token = await api.auth.getPolimiExamsToken({
@@ -352,7 +352,8 @@ export const Exams: MainStackScreen<"Exams"> = props => {
 
                 setStage(ExamsStage.TOKEN_RETRIEVED)
               } catch (e) {
-                console.log(e)
+                console.warn("An error occured while retrieving Exams token")
+                console.warn(e)
                 setStage(ExamsStage.ERROR_NOT_LOGGED_IN)
               }
             }
