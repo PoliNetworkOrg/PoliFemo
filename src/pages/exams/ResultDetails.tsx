@@ -73,7 +73,7 @@ export const ResultDetails: MainStackScreen<"ResultDetails"> = props => {
   const downloadFileCorrection = async () => {
     try {
       if (correction) {
-        const fileCorrection = await api.exams.downloadFile(
+        const _fileCorrection = await api.exams.downloadFile(
           correction.id_doc_compito,
         )
       }
