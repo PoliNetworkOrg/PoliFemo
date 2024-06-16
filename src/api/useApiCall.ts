@@ -93,7 +93,7 @@ export function useApiCall<T extends Record<string, unknown>, D>(
         setError(null)
       })
       .catch((err: Error) => {
-        if (err.name !== "AbortError") {
+        if (err.name !== "AbortError" && err.name !== "CanceledError") {
           setError(err)
           setLoading(false)
         }
