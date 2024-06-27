@@ -25,15 +25,4 @@ export const auth = {
     })
     return mapAxiosRequest(request, res => res)
   },
-  getPolimiExamsToken(params: { authcode: string }, options?: RequestOptions) {
-    const request = client.callPolimiExams<PolimiToken>({
-      url: `/rest/jaf/oauth/token/get/${params.authcode}`,
-      method: "GET",
-      ...options,
-      headers: {
-        accept: "application/json",
-      },
-    })
-    return mapAxiosRequest(request, res => res)
-  },
 } satisfies ApiCollection

@@ -446,7 +446,7 @@ export const exams = {
     const request = client.callPolimiExams<TeachingResponseData>({
       url,
       method: "GET",
-      authType: AuthType.POLIMI_EXAMS,
+      authType: AuthType.POLIMI,
       ...options,
     })
     return mapAxiosRequest(request, response => {
@@ -475,7 +475,7 @@ export const exams = {
     const request = client.callPolimiExams<Correction>({
       url,
       method: "GET",
-      authType: AuthType.POLIMI_EXAMS,
+      authType: AuthType.POLIMI,
       ...options,
     })
     return mapAxiosRequest(request, response => response)
@@ -485,7 +485,7 @@ export const exams = {
     const request = client.callPolimiExams<string>({
       url,
       method: "GET",
-      authType: AuthType.POLIMI_EXAMS,
+      authType: AuthType.POLIMI,
       ...options,
     })
     return mapAxiosRequest(request, response => response)
@@ -499,7 +499,7 @@ export const exams = {
       url,
       method: "POST",
       data: { cRisposta: null, cRispostaAteneo: null },
-      authType: AuthType.POLIMI_EXAMS,
+      authType: AuthType.POLIMI,
       ...options,
     })
     console.log(url)
@@ -513,7 +513,7 @@ export const exams = {
     const request = client.callPolimiExams<unknown>({
       url,
       method: "DELETE",
-      authType: AuthType.POLIMI_EXAMS,
+      authType: AuthType.POLIMI,
       ...options,
     })
     return mapAxiosRequest(request, response => response)

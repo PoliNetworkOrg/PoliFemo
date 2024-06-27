@@ -3,9 +3,7 @@ import { MainStackScreen, useNavigation } from "navigation/NavigationTypes"
 import { BodyText } from "components/Text"
 
 import { ListPage } from "components/PageLayout"
-import WebView from "react-native-webview"
-import { useContext, useEffect, useRef, useState } from "react"
-import { HttpClient } from "api/HttpClient"
+import { useContext, useEffect, useState } from "react"
 import { LoginContext } from "contexts/login"
 import { api } from "api"
 import { AdaptiveShadowView } from "components/BoxShadow"
@@ -24,65 +22,25 @@ import { useCurrentLanguage } from "utils/language"
 import { ExamInfoWhiteLine } from "components/Exams/ExamInfoWhiteLine"
 import { useApiCall } from "api/useApiCall"
 
-enum ExamsStage {
-  START,
-  TOKEN_FETCHING,
-  TOKEN_RETRIEVED,
-  ERROR_NOT_LOGGED_IN,
-}
-
-const client = HttpClient.getInstance()
-
 export const Exams: MainStackScreen<"Exams"> = props => {
   /* const { t } = useTranslation("exams") */
 
   const lan = useCurrentLanguage()
 
   const navigation = useNavigation()
-
-  // ! set to TOKEN RETRIEVED for debug
-  const [stage, setStage] = useState(
-    client.hasPolimiExamsToken()
-      ? ExamsStage.TOKEN_RETRIEVED
-      : ExamsStage.START,
-  )
-  const [currentURL, setCurrentURL] = useState<string | undefined>(undefined)
-  const { loggedIn, userInfo } = useContext(LoginContext)
+  const { loggedIn } = useContext(LoginContext)
 
   const [examsWithGradeCount, setExamsWithGradeCount] = useState(0)
 
   const { palette } = usePalette()
 
-  // compose start url for redirect flow
-  useEffect(() => {
-    const polimiAppToken = client.readPolimiAppTokenForExamsTokenRetrieval()
-    if (!loggedIn) {
-      setStage(ExamsStage.ERROR_NOT_LOGGED_IN)
-    } else if (client.hasPolimiExamsToken()) {
-      setStage(ExamsStage.TOKEN_RETRIEVED)
-    } else if (polimiAppToken) {
-      const matricola = userInfo?.careers?.[0]?.matricola ?? ""
-      const url = `https://aunicalogin.polimi.it/aunicalogin/getservizioOAuth.xml?lang=IT&al_pj_matricola=${matricola}&polij_style=dark&al_id_srv_chiamante=2428&matricola=${matricola}&id_servizio=2612&returnURL=https%3A%2F%2Fpolimiapp.polimi.it%2Fpolimi_app%2Fapp%2Fexams&access_token=${polimiAppToken.accessToken}`
-      setCurrentURL(url)
-      setStage(ExamsStage.TOKEN_FETCHING)
-    } else {
-      //should never happen, user logged in but polimi app token not found
-      //in this case prompt user to log in again (?)
-      setStage(ExamsStage.ERROR_NOT_LOGGED_IN)
-    }
-  }, [loggedIn])
-
   const [teachings, loading, error, updateTeachings] = useApiCall(
     api.exams.getTeachings,
     {},
-    [stage],
+    [loggedIn],
     {},
-    stage !== ExamsStage.TOKEN_RETRIEVED,
+    !loggedIn,
   )
-
-  useEffect(() => {
-    if (stage === ExamsStage.TOKEN_RETRIEVED) updateTeachings()
-  }, [stage])
 
   // when the user navigates back to the exams page, update the teachings
   // if updateTeachings flag is set to true
@@ -109,257 +67,206 @@ export const Exams: MainStackScreen<"Exams"> = props => {
     setExamsWithGradeCount(count)
   }, [teachings])
 
-  const webview = useRef<WebView>(null)
   return (
-    <>
-      <ListPage
-        title={"Exams"}
-        errorMessage={
-          stage === ExamsStage.ERROR_NOT_LOGGED_IN
-            ? "Devi effettuare il login per vedere i tuoi appelli"
-            : error?.message
-        }
-        emptyMessage="Nessun appello disponibile"
-        loading={
-          (loading && teachings === null) ||
-          stage === ExamsStage.START ||
-          stage === ExamsStage.TOKEN_FETCHING
-        }
-        refreshControl={{
-          refreshing: loading,
-          onRefresh: updateTeachings,
-        }}
-        data={teachings ?? []}
-        headerComponent={
-          <Pressable
-            onPress={() => {
-              navigation.navigate("Results", { teachings: teachings ?? [] })
+    <ListPage
+      title={"Exams"}
+      errorMessage={error?.message}
+      emptyMessage="Nessun appello disponibile"
+      loading={loading && teachings === null}
+      refreshControl={{
+        refreshing: loading,
+        onRefresh: updateTeachings,
+      }}
+      data={teachings ?? []}
+      headerComponent={
+        <Pressable
+          onPress={() => {
+            navigation.navigate("Results", { teachings: teachings ?? [] })
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: palette.primary,
+              borderRadius: 16,
+              height: 52,
+              marginHorizontal: 0,
+              marginBottom: 16,
+              flexDirection: "row",
+              alignItems: "center",
             }}
           >
-            <View
+            <View style={{ flex: 1 }} />
+            <BodyText
               style={{
-                backgroundColor: palette.primary,
-                borderRadius: 16,
-                height: 52,
-                marginHorizontal: 0,
-                marginBottom: 16,
-                flexDirection: "row",
-                alignItems: "center",
+                color: "#fff",
+                fontWeight: "900",
+                fontSize: 16,
               }}
             >
-              <View style={{ flex: 1 }} />
-              <BodyText
-                style={{
-                  color: "#fff",
-                  fontWeight: "900",
-                  fontSize: 16,
-                }}
-              >
-                ESITI
-              </BodyText>
+              ESITI
+            </BodyText>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "flex-end",
+              }}
+            >
               <View
                 style={{
+                  height: 28,
+                  width: 28,
+                  borderRadius: 14,
+                  backgroundColor: palette.accent,
+                  marginRight: 16,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <BodyText
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "900",
+                    color: palette.primary,
+                  }}
+                >
+                  {examsWithGradeCount}
+                </BodyText>
+              </View>
+            </View>
+          </View>
+        </Pressable>
+      }
+      renderItem={({ item }) => {
+        return item.appelliEsame.length === 0 ? null : (
+          <View
+            key={item.c_insegn_piano}
+            style={{
+              alignItems: "stretch",
+              marginBottom: 16,
+              marginHorizontal: 16,
+              borderRadius: 16,
+              backgroundColor: palette.lighter,
+            }}
+          >
+            <AdaptiveShadowView
+              style={{ marginBottom: 16 }}
+              contentContainerStyle={{
+                backgroundColor: palette.primary,
+                height: 52,
+                flex: 1,
+                paddingVertical: 8,
+                flexDirection: "row",
+                alignItems: "center",
+                borderRadius: 16,
+              }}
+              shadow={{ offset: { y: 4 }, opacity: 0.25, blur: 4 }}
+            >
+              <Pressable
+                style={{
                   flex: 1,
-                  flexDirection: "row",
-                  justifyContent: "flex-end",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+                onPress={() => {
+                  navigation.navigate("TeachingDetails", { teaching: item })
                 }}
               >
                 <View
                   style={{
-                    height: 28,
-                    width: 28,
-                    borderRadius: 14,
-                    backgroundColor: palette.accent,
-                    marginRight: 16,
+                    flex: 1,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
                     alignItems: "center",
-                    justifyContent: "center",
+                    paddingHorizontal: 16,
                   }}
                 >
                   <BodyText
                     style={{
-                      fontSize: 16,
                       fontWeight: "900",
-                      color: palette.primary,
+                      color: "white",
+                      fontSize: 16,
+                      flex: 1,
                     }}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
                   >
-                    {examsWithGradeCount}
+                    {item.xdescrizione}
                   </BodyText>
+
+                  <Icon source={arrowRightSvg} scale={1.2} />
                 </View>
-              </View>
-            </View>
-          </Pressable>
-        }
-        renderItem={({ item }) => {
-          return item.appelliEsame.length === 0 ? null : (
-            <View
-              key={item.c_insegn_piano}
-              style={{
-                alignItems: "stretch",
-                marginBottom: 16,
-                marginHorizontal: 16,
-                borderRadius: 16,
-                backgroundColor: palette.lighter,
-              }}
-            >
-              <AdaptiveShadowView
-                style={{ marginBottom: 16 }}
-                contentContainerStyle={{
-                  backgroundColor: palette.primary,
-                  height: 52,
-                  flex: 1,
-                  paddingVertical: 8,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  borderRadius: 16,
-                }}
-                shadow={{ offset: { y: 4 }, opacity: 0.25, blur: 4 }}
-              >
-                <Pressable
+              </Pressable>
+            </AdaptiveShadowView>
+            {item.appelliEsame?.map(exam => {
+              const dateExam = new Date(exam.d_app)
+
+              const day = dateExam.getDate()
+
+              const month =
+                lan === "it"
+                  ? monthsAcronymsIT[dateExam.getMonth()]
+                  : monthsAcronymsEN[dateExam.getMonth()]
+
+              const year = dateExam.getFullYear()
+
+              const status = getExamStatus(exam)
+              return (
+                <View
+                  key={exam.c_appello}
                   style={{
                     flex: 1,
                     flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                  onPress={() => {
-                    navigation.navigate("TeachingDetails", { teaching: item })
+                    marginBottom: 16,
                   }}
                 >
                   <View
                     style={{
-                      flex: 1,
                       flexDirection: "row",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      paddingHorizontal: 16,
                     }}
                   >
                     <BodyText
                       style={{
-                        fontWeight: "900",
-                        color: "white",
-                        fontSize: 16,
-                        flex: 1,
-                      }}
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                    >
-                      {item.xdescrizione}
-                    </BodyText>
-
-                    <Icon source={arrowRightSvg} scale={1.2} />
-                  </View>
-                </Pressable>
-              </AdaptiveShadowView>
-              {item.appelliEsame?.map(exam => {
-                const dateExam = new Date(exam.d_app)
-
-                const day = dateExam.getDate()
-
-                const month =
-                  lan === "it"
-                    ? monthsAcronymsIT[dateExam.getMonth()]
-                    : monthsAcronymsEN[dateExam.getMonth()]
-
-                const year = dateExam.getFullYear()
-
-                const status = getExamStatus(exam)
-                return (
-                  <View
-                    key={exam.c_appello}
-                    style={{
-                      flex: 1,
-                      flexDirection: "column",
-                      marginBottom: 16,
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
+                        marginLeft: 16,
+                        color: "#fff",
+                        fontSize: 14,
+                        fontWeight: "300",
                       }}
                     >
                       <BodyText
                         style={{
-                          marginLeft: 16,
+                          fontWeight: "900",
                           color: "#fff",
                           fontSize: 14,
-                          fontWeight: "300",
                         }}
                       >
-                        <BodyText
-                          style={{
-                            fontWeight: "900",
-                            color: "#fff",
-                            fontSize: 14,
-                          }}
-                        >
-                          {day}
-                        </BodyText>{" "}
-                        {month} {year}
-                      </BodyText>
-                      <BodyText
-                        style={{
-                          marginRight: 16,
-                          color: status.isHighlighted ? palette.accent : "#fff",
-                          fontSize: 12,
-                          fontWeight: "900",
-                        }}
-                      >
-                        {getExamStatusDescription(
-                          status.type,
-                          lan,
-                        ).toUpperCase()}
-                      </BodyText>
-                    </View>
-                    {status.type === ExamStatusType.ISCRITTO && (
-                      // ! add onPress
-                      <ExamInfoWhiteLine exam={exam} type={status.type} />
-                    )}
+                        {day}
+                      </BodyText>{" "}
+                      {month} {year}
+                    </BodyText>
+                    <BodyText
+                      style={{
+                        marginRight: 16,
+                        color: status.isHighlighted ? palette.accent : "#fff",
+                        fontSize: 12,
+                        fontWeight: "900",
+                      }}
+                    >
+                      {getExamStatusDescription(status.type, lan).toUpperCase()}
+                    </BodyText>
                   </View>
-                )
-              })}
-            </View>
-          )
-        }}
-      />
-
-      {/* TOKEN RETRIVAL FLOW */}
-      {stage === ExamsStage.TOKEN_FETCHING && currentURL && (
-        <WebView
-          ref={webview}
-          androidLayerType="software"
-          containerStyle={{
-            flex: 1,
-            position: "absolute", // hide
-          }}
-          originWhitelist={["*"]}
-          source={{ uri: currentURL }}
-          javaScriptEnabled={true}
-          onNavigationStateChange={async ({ url, loading }) => {
-            // intercept the state change in the webview
-            if (loading) return
-            if (!url) return
-            if (url.includes("&code")) {
-              webview.current?.stopLoading() // otherwise the authcode is used up
-              const authCode = url.split("&code=")[1]
-
-              try {
-                const token = await api.auth.getPolimiExamsToken({
-                  authcode: authCode,
-                })
-                void client.setExamsToken(token)
-
-                setStage(ExamsStage.TOKEN_RETRIEVED)
-              } catch (e) {
-                console.warn("An error occured while retrieving Exams token")
-                console.warn(e)
-                setStage(ExamsStage.ERROR_NOT_LOGGED_IN)
-              }
-            }
-          }}
-        />
-      )}
-    </>
+                  {status.type === ExamStatusType.ISCRITTO && (
+                    // ! add onPress
+                    <ExamInfoWhiteLine exam={exam} type={status.type} />
+                  )}
+                </View>
+              )
+            })}
+          </View>
+        )
+      }}
+    />
   )
 }
