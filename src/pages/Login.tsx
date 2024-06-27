@@ -18,7 +18,7 @@ const magicLoginUrl =
   "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=a06b160b-8d5d-4be2-b452-ea3b768998ed&scope=openid%20offline_access&response_type=code&state=10010&redirect_uri=https://api.polinetwork.org/staging/v1/auth/code&login_hint=nome@mail.polimi.it"
 // with a polimi session present, this cascade-redirects to the app page with the authcode attached
 const magicTokenUrl =
-  "https://oauthidp.polimi.it/oauthidp/oauth2/auth?client_id=1057407812&redirect_uri=https%3A%2F%2Fpolimiapp.polimi.it%2Fpolimi_app%2Fapp&scope=openid%20polimi_app%20aule%20policard%20incarichi%20orario%20account%20webmail%20faqappmobile%20rubrica%20richass%20guasti%20prenotazione%20code%20carriera%20alumni%20webeep%20teamwork%20esami&access_type=offline&response_type=code"
+  "https://oauthidp.polimi.it/oauthidp/oauth2/auth?client_id=1057407812&redirect_uri=https%3A%2F%2Fpolimiapp.polimi.it%2Fpolimi_app%2Fapp&scope=openid%20polimi_app%20aule%20policard%20incarichi%20orario%20account%20webmail%20faqappmobile%20rubrica%20richass%20guasti%20prenotazione%20code%20carriera%20alumni%20webeep%20teamwork%20esami%20rich_sing_occup%20incarichidocente%20react_iae%20compila_quest%20multichance_richieste_ausili%20maps%20pianostudente&access_type=offline&response_type=code"
 
 // if this is reached we have reached the polinework access token
 const polinetworkTargetUrl = "https://api.polinetwork.org/staging/v1/auth/code"
