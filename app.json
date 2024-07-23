@@ -31,8 +31,8 @@
       },
       "googleServicesFile": "./config/google-services.json",
       "package": "org.polinetwork.polifemo",
-      "softwareKeyboardLayoutMode": "pan",
-      "useNextNotificationsApi": true
+      "softwareKeyboardLayoutMode": "pan"
+      // "useNextNotificationsApi": true
     },
     "extra": {
       "eas": {
@@ -52,8 +52,8 @@
           }
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "expo-asset"
     ]
-  },
-  "name": "polifemo"
+  }
 }

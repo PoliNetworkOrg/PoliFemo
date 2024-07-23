@@ -47,7 +47,7 @@ interface ModalPickerProps<T> {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function ModalPicker<T>(props: ModalPickerProps<T>) {
   const [selectedValue, setSelectedValue] = React.useState(
-    props.selectedValue ?? props.elements[0].value
+    props.selectedValue ?? props.elements[0].value,
   )
 
   useEffect(() => {

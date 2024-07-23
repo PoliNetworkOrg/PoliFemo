@@ -40,7 +40,7 @@ export const NewsManager = () => {
           })
           .catch(err => {
             console.log(err)
-          })
+          }),
       )
     }
     await Promise.allSettled(promises)
@@ -106,7 +106,7 @@ export const NewsManager = () => {
 
   const getHighlightedArticle = () => {
     const favouriteTags = tags.filter(
-      tag => preferences[tag.name] !== Preference.UNFAVOURITE
+      tag => preferences[tag.name] !== Preference.UNFAVOURITE,
     )
 
     // If there are no favourite tags, choose the highlighted article from all the other tags

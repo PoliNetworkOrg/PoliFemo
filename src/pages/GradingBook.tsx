@@ -28,7 +28,7 @@ export const GradingBook: MainStackScreen<"GradingBook"> = () => {
           color: isLight ? palette.primary : "#ffffff",
         },
       }),
-    [isLight]
+    [isLight],
   )
 
   const { matricola } = userInfo?.careers?.[0] ?? {}
@@ -38,7 +38,7 @@ export const GradingBook: MainStackScreen<"GradingBook"> = () => {
     { matricola: matricola ?? "" },
     [loggedIn],
     {},
-    !loggedIn
+    !loggedIn,
   )
 
   return (

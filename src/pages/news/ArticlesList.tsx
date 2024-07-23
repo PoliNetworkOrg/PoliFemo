@@ -20,13 +20,13 @@ const MAX_ARTICLES_PER_REQUEST = 8
 export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
   const navigation = useNavigation()
   const { preferences, setArticlesPreferences } = useContext(
-    NewsPreferencesContext
+    NewsPreferencesContext,
   )
   const { tagName } = props.route.params
 
   const [articles, setArticles] = useState<Article[]>([])
   const [toggled, setToggled] = useState<boolean>(
-    preferences[tagName] !== Preference.UNFAVOURITE
+    preferences[tagName] !== Preference.UNFAVOURITE,
   )
 
   const [refresh, setRefresh] = useState<boolean>(false)
@@ -42,7 +42,7 @@ export const ArticlesList: MainStackScreen<"ArticlesList"> = props => {
           limit: MAX_ARTICLES_PER_REQUEST,
           offset: offset.current,
         },
-        { retryType: RetryType.NO_RETRY }
+        { retryType: RetryType.NO_RETRY },
       )
       if (keepArticles) {
         // Keep previously downloaded articles

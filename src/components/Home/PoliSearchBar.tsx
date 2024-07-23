@@ -33,7 +33,7 @@ export const PoliSearchBar: FC<{
       "keyboardDidHide",
       () => {
         inputText.current?.blur()
-      }
+      },
     )
 
     return () => {

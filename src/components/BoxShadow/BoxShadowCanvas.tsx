@@ -25,7 +25,7 @@ export interface BoxShadowCanvasProps {
 function createBoxShadowPath(
   width: number,
   height: number,
-  radii: [number, number, number, number]
+  radii: [number, number, number, number],
 ) {
   const path = Skia.Path.Make()
   const [tl, tr, br, bl] = radii
@@ -85,7 +85,7 @@ export const BoxShadowCanvas: FC<BoxShadowCanvasProps> = ({
       <path fill="white" d="${createBoxShadowPath(
         width,
         height,
-        radii
+        radii,
       )}" shape-rendering="crispEdges"/>
     </g>
     <defs>
@@ -99,8 +99,8 @@ export const BoxShadowCanvas: FC<BoxShadowCanvasProps> = ({
         <feGaussianBlur stdDeviation="${shad.blur / 2}"/>
         <feComposite in2="hardAlpha" operator="out"/>
         <feColorMatrix values="0 0 0 0 ${r / 255} 0 0 0 0 ${g / 255} 0 0 0 0 ${
-      b / 255
-    } 0 0 0 ${a * shad.opacity} 0"/>
+          b / 255
+        } 0 0 0 ${a * shad.opacity} 0"/>
         <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_1_3"/>
         <feBlend in="SourceGraphic" in2="effect1_dropShadow_1_3" result="shape"/>
       </filter>

@@ -27,7 +27,7 @@ export const TimetableRow: FC<TimetableRowProps> = props => {
           translateY: interpolate(
             props.animatedValue.value,
             [-1, 0],
-            [props.row.marginTop, props.row.collapsedMarginTop]
+            [props.row.marginTop, props.row.collapsedMarginTop],
           ),
         },
       ],

@@ -94,14 +94,14 @@ export interface NotificationCustomResponse
 
 declare module "expo-notifications" {
   export function addNotificationReceivedListener(
-    listener: (event: NotificationCustom) => void
+    listener: (event: NotificationCustom) => void,
   ): Subscription
   export function addNotificationResponseReceivedListener(
-    listener: (event: NotificationCustomResponse) => void
+    listener: (event: NotificationCustomResponse) => void,
   ): Subscription
   export function setNotificationChannelAsync(
     channelId: ValidChannelId,
-    channel: Notifications.NotificationChannelInput
+    channel: Notifications.NotificationChannelInput,
   ): Promise<Notifications.NotificationChannel | null>
   export function getAllScheduledNotificationsAsync(): Promise<
     NotificationCustomRequest[]

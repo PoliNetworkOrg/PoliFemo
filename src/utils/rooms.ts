@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import BuildingListJSON from "components/FreeClass/buildingCoords.json"
 import {
   ConstructionType,
@@ -52,7 +51,7 @@ function containsLOrT(val: string) {
 export function extractTimeLeft(
   startDate?: Date,
   targetDate?: Date,
-  searchDate?: Date
+  searchDate?: Date,
 ) {
   if (!targetDate || !startDate) {
     return { hoursLeft: undefined, minutesLeft: undefined }
@@ -65,7 +64,7 @@ export function extractTimeLeft(
     const deltaMilliseconds = targetDate.getTime() - searchDate.getTime()
     const hours = Math.floor(deltaMilliseconds / 3.6e6)
     const minutes = Math.floor(
-      (deltaMilliseconds - hours * 60 * 60 * 1000) / 60000
+      (deltaMilliseconds - hours * 60 * 60 * 1000) / 60000,
     )
     const hoursLeft = hours.toString()
     const minutesLeft = minutes.toString()
@@ -80,7 +79,7 @@ export function extractTimeLeft(
     }
     const hours = Math.floor(deltaMilliseconds / 3.6e6)
     const minutes = Math.floor(
-      (deltaMilliseconds - hours * 60 * 60 * 1000) / 60000
+      (deltaMilliseconds - hours * 60 * 60 * 1000) / 60000,
     )
     const hoursLeft = hours.toString()
     const minutesLeft = minutes.toString()
@@ -225,7 +224,7 @@ export function getBuildingCoords(campus?: CampusItem, buildingName?: string) {
 // A slower version of getBuildingCoords but works without knowing campus
 export function getBuildingCoordsWithoutCampus(
   acronyms?: ValidAcronym[],
-  buildingName?: string
+  buildingName?: string,
 ) {
   if (!buildingName) {
     return undefined
@@ -259,7 +258,7 @@ export function getBuildingCoordsWithoutCampus(
 
 export function getBuildingInfo(
   acronym: ValidAcronym,
-  buildingName: string
+  buildingName: string,
 ): BuildingItem | undefined {
   for (const h of BuildingListJSON) {
     if (h.acronym == acronym) {
@@ -362,7 +361,7 @@ export const findTimeLeft = (occupancies: Occupancies, date: Date) => {
 export const isRoomFree = (
   room: Room | RoomSimplified,
   date: Date,
-  mustBeFreeNow?: boolean
+  mustBeFreeNow?: boolean,
 ) => {
   const limitDate = new Date(date)
 

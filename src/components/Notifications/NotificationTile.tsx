@@ -66,7 +66,6 @@ export const NotificationTile: FC<NotificationTileProps> = props => {
             }}
           >
             <Image
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               source={require("../../../assets/polimi_placeholder.jpg")}
               style={{
                 width: 48,

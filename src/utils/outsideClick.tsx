@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, {
   FC,
   useCallback,
@@ -30,20 +29,19 @@ export const outsideClickContext = createContext<{
  */
 function isTapInsideComponent(
   target: GestureResponderEvent["target"],
-  component: React.Component
+  component: React.Component,
 ) {
   // everything below here is fucked beyond repair
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   if (target === component) return true
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const curr = component as any
 
   if (curr._children && curr._children.length) {
     // check all of the children until one is the target
     for (const child of curr._children) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       if (child && isTapInsideComponent(target, child)) return true
     }
   }
@@ -75,7 +73,7 @@ function isTapInsideComponent(
  */
 export function useOutsideClick<T extends React.Component>(
   callback: () => void,
-  listening: boolean
+  listening: boolean,
 ) {
   const ref = useRef<T>(null)
 
@@ -92,7 +90,7 @@ export function useOutsideClick<T extends React.Component>(
       }
       return false
     },
-    [listening]
+    [listening],
   )
 
   const { addListener, removeListener } = useContext(outsideClickContext)
@@ -127,7 +125,7 @@ export const OutsideClickProvider: FC<
         return newListeners
       })
     },
-    []
+    [],
   )
 
   const removeListener = useCallback(
@@ -138,7 +136,7 @@ export const OutsideClickProvider: FC<
         return newListeners
       })
     },
-    []
+    [],
   )
 
   const globalClickEvent: (evt: GestureResponderEvent) => boolean = useCallback(
@@ -149,7 +147,7 @@ export const OutsideClickProvider: FC<
       })
       return result
     },
-    [listeners]
+    [listeners],
   )
 
   return (

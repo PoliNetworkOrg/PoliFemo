@@ -13,7 +13,7 @@ import { PageWrap } from "components/PageLayout"
  */
 export const PositionChoice: MainStackScreen<"PositionChoice"> = () => {
   const [locationStatus, setLocationStatus] = useState<PermissionStatus>(
-    PermissionStatus.GRANTED
+    PermissionStatus.GRANTED,
   )
   const [currentLocation, setCurrentLocation] =
     useState<LocationGeocodedAddress>()

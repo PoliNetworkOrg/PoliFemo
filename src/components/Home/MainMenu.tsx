@@ -95,8 +95,8 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
     defaultIcons.map(icon =>
       icon.type === ButtonType.ADD
         ? { ...icon, shown: false }
-        : { ...icon, shown: true }
-    )
+        : { ...icon, shown: true },
+    ),
   )
 
   const [isModalVisible, setModalVisible] = useState(false)
@@ -116,13 +116,12 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
     AsyncStorage.getItem("menu:icons")
       .then(iconJSON => {
         if (iconJSON) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const showns: ButtonType[] = JSON.parse(iconJSON)
           setIcons(
             icons.map(icon => ({
               ...icon,
               shown: showns.includes(icon.type),
-            }))
+            })),
           )
         }
       })
@@ -137,7 +136,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
     }
     AsyncStorage.setItem(
       "menu:icons",
-      JSON.stringify(icons.filter(i => i.shown).map(i => i.type))
+      JSON.stringify(icons.filter(i => i.shown).map(i => i.type)),
     ).catch(err => console.log(err))
   }, [icons])
 
@@ -190,8 +189,8 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                   onPress={() => {
                     setIcons(
                       icons.map(i =>
-                        i.type === buttonIcon.type ? { ...i, shown: true } : i
-                      )
+                        i.type === buttonIcon.type ? { ...i, shown: true } : i,
+                      ),
                     )
                   }}
                   buttonIcon={buttonIcon}
@@ -211,7 +210,7 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
             i.type === ButtonType.ADD ||
             (filter
               ? i.title.toLowerCase().includes(filter.toLowerCase())
-              : true)
+              : true),
         )
         .map(buttonIcon => (
           <MenuButton
@@ -233,9 +232,9 @@ export const MainMenu: FC<{ filter?: string }> = ({ filter }) => {
                   i.type === ButtonType.ADD && !i.shown
                     ? { ...i, shown: true }
                     : i.type === type
-                    ? { ...i, shown: false }
-                    : i
-                )
+                      ? { ...i, shown: false }
+                      : i,
+                ),
               )
               if (
                 icons.filter(icon => icon.shown && icon.type !== ButtonType.ADD)

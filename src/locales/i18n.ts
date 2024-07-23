@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { getLocales } from "expo-localization"
 import i18n from "i18next"
 import { useEffect, useState } from "react"
@@ -40,7 +39,7 @@ async function initializeI18n() {
         gradingBook: gradingBookEN,
       },
     },
-    lng: getLocales()[0].languageCode,
+    lng: getLocales()[0].languageCode ?? undefined,
     compatibilityJSON: "v3",
     fallbackLng: "en",
     defaultNS: "common",

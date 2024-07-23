@@ -90,7 +90,6 @@ export const MainStack: FC = () => {
           cardStyleInterpolator: ({ current: { progress } }) => {
             return {
               cardStyle: {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 opacity: progress,
               },
             }
@@ -108,7 +107,6 @@ export const MainStack: FC = () => {
           }
 
           if (otherRoute.name === "NotificationsCategory" && showing) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
             return [notification.identifier]
           }
         }}
