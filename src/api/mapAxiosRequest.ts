@@ -12,7 +12,7 @@ import { CancellableApiRequest } from "./HttpClient"
  */
 export function mapAxiosRequest<T, D>(
   request: CancellableApiRequest<T>,
-  mapFunction: (res: T) => D
+  mapFunction: (res: T) => D,
 ): CancellableApiRequest<D, D> {
   const newRequest = new Promise<D>((resolve, reject) => {
     request

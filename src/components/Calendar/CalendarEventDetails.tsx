@@ -35,7 +35,7 @@ export const CalendarEventDetails: FC<CalendarEventDetailsProps> = props => {
       "keyboardDidHide",
       () => {
         inputText.current?.blur()
-      }
+      },
     )
 
     return () => {

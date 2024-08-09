@@ -15,16 +15,15 @@ enum ContributionType {
 export const Contributors: SettingsStackScreen<"Contributors"> = () => {
   const { isLight } = usePalette()
 
-  /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
   const managementContributors = contributors.filter(
-    c => c.contributions[0] === ContributionType.MANAGEMENT
+    c => c.contributions[0] === ContributionType.MANAGEMENT,
   )
 
   const codingContributors = contributors.filter(
-    c => c.contributions[0] === ContributionType.CODE
+    c => c.contributions[0] === ContributionType.CODE,
   )
   const designContributors = contributors.filter(
-    c => c.contributions[0] === ContributionType.DESIGN
+    c => c.contributions[0] === ContributionType.DESIGN,
   )
   // const otherContributors = contributors.filter(
   //   c =>

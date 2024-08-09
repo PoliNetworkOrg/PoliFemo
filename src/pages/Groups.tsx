@@ -33,11 +33,11 @@ export const Groups: MainStackScreen<"Groups"> = () => {
 
   const filteredGroups = useMemo(
     () => applyFilters(groups, filters),
-    [groups, filters]
+    [groups, filters],
   )
   const searchableGroups = useMemo(
     () => searchGroups(filteredGroups, search),
-    [filteredGroups, search]
+    [filteredGroups, search],
   )
 
   const orderedGroups =

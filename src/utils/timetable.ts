@@ -150,7 +150,7 @@ export const getFormattedTable = (events: Event[]): FormattedTable => {
         //check if ith event overlaps with the preceding j-th events
         if (!isOverlap(orderedEvents[j], orderedEvents[i])) {
           const lecturesAlreadyPlaced = newTable[dayOfTheWeek].singleRows.find(
-            val => val.overlapNumber === overlapNumber
+            val => val.overlapNumber === overlapNumber,
           )
           if (lecturesAlreadyPlaced) {
             let isThereSpace = true
@@ -313,7 +313,7 @@ export const getMarginDaysCollapsed = (table: FormattedTable): number[] => {
 export const getTimeIntervalFormattedString = (
   dateStartISO?: string,
   dateEndISO?: string,
-  lan?: string
+  lan?: string,
 ) => {
   if (!dateStartISO || !dateEndISO) {
     return undefined
@@ -470,12 +470,12 @@ export class TimetableDeducer extends EventEmitter {
       this._firstSemesterStartDate = new Date(
         todayYear - 1,
         FIRST_SEMESTER_START_MONTH,
-        FIRST_SEMESTER_START_DAY
+        FIRST_SEMESTER_START_DAY,
       )
       this._secondSemesterStartDate = new Date(
         todayYear,
         SECOND_SEMESTER_START_MONTH,
-        SECOND_SEMESTER_START_DAY
+        SECOND_SEMESTER_START_DAY,
       )
     } else {
       this._isNowFirstSemester = true
@@ -483,12 +483,12 @@ export class TimetableDeducer extends EventEmitter {
       this._firstSemesterStartDate = new Date(
         todayYear,
         FIRST_SEMESTER_START_MONTH,
-        FIRST_SEMESTER_START_DAY
+        FIRST_SEMESTER_START_DAY,
       )
       this._secondSemesterStartDate = new Date(
         todayYear + 1,
         SECOND_SEMESTER_START_MONTH,
-        SECOND_SEMESTER_START_DAY
+        SECOND_SEMESTER_START_DAY,
       )
     }
   }
@@ -496,12 +496,12 @@ export class TimetableDeducer extends EventEmitter {
   private _readFromStorage = async () => {
     try {
       const timetableJSON = await FileSystem.readAsStringAsync(
-        FileSystem.documentDirectory + "timetable.json"
+        FileSystem.documentDirectory + "timetable.json",
       )
       const timetable = JSON.parse(timetableJSON) as Timetable
 
       const subjectsJSON = await FileSystem.readAsStringAsync(
-        FileSystem.documentDirectory + "subjects.json"
+        FileSystem.documentDirectory + "subjects.json",
       )
       const subjects = JSON.parse(subjectsJSON) as Subjects
 
@@ -531,7 +531,7 @@ export class TimetableDeducer extends EventEmitter {
     try {
       await FileSystem.writeAsStringAsync(
         FileSystem.documentDirectory + "timetable.json",
-        timetableJSON
+        timetableJSON,
       )
 
       return true
@@ -543,13 +543,13 @@ export class TimetableDeducer extends EventEmitter {
   }
 
   private _writeSubjectsToStorage = async (
-    subjects: Subjects
+    subjects: Subjects,
   ): Promise<boolean> => {
     const subjectsJSON = JSON.stringify(subjects)
     try {
       await FileSystem.writeAsStringAsync(
         FileSystem.documentDirectory + "subjects.json",
-        subjectsJSON
+        subjectsJSON,
       )
 
       return true
@@ -644,8 +644,8 @@ export class TimetableDeducer extends EventEmitter {
             //11 week range
             new Date(event.date_start).getTime() <=
             new Date(
-              new Date(event.date_start).getTime() + 11 * 24 * 60 * 60 * 1000
-            ).getTime()
+              new Date(event.date_start).getTime() + 11 * 24 * 60 * 60 * 1000,
+            ).getTime(),
         )
         .filter(e => e.event_type.typeId === EventType.LECTURES) //filter only the lectures)
 

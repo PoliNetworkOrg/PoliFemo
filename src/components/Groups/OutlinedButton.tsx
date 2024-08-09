@@ -26,8 +26,8 @@ export const OutlinedButton: FC<OutlinedButtonProps> = props => {
               ? "#8791BD"
               : "#424967"
             : props.isSpecial
-            ? "#fff"
-            : "#8791BD",
+              ? "#fff"
+              : "#8791BD",
           backgroundColor: props.isSelected
             ? isLight
               ? "#424967"

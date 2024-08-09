@@ -34,7 +34,7 @@ export const UserAnonymousTile: FC<UserAnonymousTileProps> = props => {
           >
             <Image
               // ? remember to ask designers for svg format
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
               source={require("assets/settings/user.png")}
               style={{
                 resizeMode: "contain",

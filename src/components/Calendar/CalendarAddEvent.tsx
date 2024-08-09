@@ -59,7 +59,7 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
   const [startDate, setStartDate] = useState<Date>(new Date())
 
   const [endDate, setEndDate] = useState<Date>(
-    get1HourBeforeAfterSameDay(startDate, true)
+    get1HourBeforeAfterSameDay(startDate, true),
   )
 
   const [reminderDate, setReminderDate] = useState<Date | undefined>(undefined)
@@ -73,7 +73,7 @@ export const CalendarAddEvent: FC<CalendarAddEventProps> = props => {
       "keyboardDidHide",
       () => {
         inputText.current?.blur()
-      }
+      },
     )
 
     return () => {

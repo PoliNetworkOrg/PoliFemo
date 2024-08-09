@@ -44,7 +44,7 @@ export const LectureCard: FC<LectureCardProps> = props => {
   const timeRange =
     Math.abs(
       new Date(props.lecture.date_end).getTime() -
-        new Date(props.lecture.date_start).getTime()
+        new Date(props.lecture.date_start).getTime(),
     ) / 3600000
 
   const timeStart = new Date(props.lecture.date_start).getHours() - minHour
@@ -65,21 +65,21 @@ export const LectureCard: FC<LectureCardProps> = props => {
     const collapsedHeight = interpolate(
       selectedAnim.value,
       [0, 1],
-      [LECTURE_HEIGHT_COLLAPSED_NOT_SELECTED, LECTURE_HEIGHT_COLLAPSED]
+      [LECTURE_HEIGHT_COLLAPSED_NOT_SELECTED, LECTURE_HEIGHT_COLLAPSED],
     )
     // the color of the card when it is collapsed
     // changes in case the card is selected
     const collapsedColor = interpolateColor(
       selectedAnim.value,
       [0, 1],
-      [palette.variant1, props.lecture.lectureColor ?? "black"]
+      [palette.variant1, props.lecture.lectureColor ?? "black"],
     )
     // the height of a previous card
     const prevHeight =
       interpolate(
         props.animatedValue.value,
         [-1, 0],
-        [LECTURE_HEIGHT_OPEN, LECTURE_HEIGHT_COLLAPSED_NOT_SELECTED]
+        [LECTURE_HEIGHT_OPEN, LECTURE_HEIGHT_COLLAPSED_NOT_SELECTED],
       ) +
       2 * LECTURE_CONTAINER_PADDING
 
@@ -88,7 +88,7 @@ export const LectureCard: FC<LectureCardProps> = props => {
       height: interpolate(
         props.animatedValue.value,
         [-1, 0],
-        [LECTURE_HEIGHT_OPEN, collapsedHeight]
+        [LECTURE_HEIGHT_OPEN, collapsedHeight],
       ),
       // calculate top offset for each card,
       top:
@@ -99,7 +99,7 @@ export const LectureCard: FC<LectureCardProps> = props => {
       backgroundColor: interpolateColor(
         props.animatedValue.value,
         [-1, 0],
-        [palette.variant1, collapsedColor]
+        [palette.variant1, collapsedColor],
       ),
     }
   }, [selectedAnim, props.animatedValue, props.lecture.lectureColor])
@@ -108,14 +108,14 @@ export const LectureCard: FC<LectureCardProps> = props => {
     () => ({
       opacity: interpolate(props.animatedValue.value, [-0.5, 0], [0, 1]),
     }),
-    [props.animatedValue]
+    [props.animatedValue],
   )
 
   const fullOpacity = useAnimatedStyle(
     () => ({
       opacity: interpolate(props.animatedValue.value, [-1, -0.5], [1, 0]),
     }),
-    [props.animatedValue]
+    [props.animatedValue],
   )
 
   const previewColor = useAnimatedStyle(
@@ -123,10 +123,10 @@ export const LectureCard: FC<LectureCardProps> = props => {
       opacity: interpolate(
         props.animatedValue.value,
         [-1, 0],
-        [1, interpolate(selectedAnim.value, [0, 1], [1, 0])]
+        [1, interpolate(selectedAnim.value, [0, 1], [1, 0])],
       ),
     }),
-    [props.animatedValue, selectedAnim]
+    [props.animatedValue, selectedAnim],
   )
 
   const lectureName =
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   pressable: {
     flex: 1,
     overflow: "hidden",
-    ùborderRadius: 18,
+    borderRadius: 18,
   },
   cardTextContainer: {
     position: "absolute",

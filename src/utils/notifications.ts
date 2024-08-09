@@ -17,7 +17,7 @@ const DELTA_MILLISECONDS = MINUTES_BEFORE_EVENT * 60 * 1000
 
 export const getMinutesBeforeInMilliseconds = (
   minutesOption?: MinutesBeforeOptions,
-  type?: EventType
+  type?: EventType,
 ) => {
   let minutes
   if (type === EventType.DEADLINE) {
@@ -48,7 +48,7 @@ function isDateTriggerInput(input: unknown): input is MyDateTriggerInterface {
 }
 
 function isTimeIntervalTriggerInput(
-  input: unknown
+  input: unknown,
 ): input is { seconds: number } {
   return (
     typeof input === "object" &&
@@ -59,7 +59,7 @@ function isTimeIntervalTriggerInput(
 }
 
 function isWeeklyTriggerInput(
-  input: unknown
+  input: unknown,
 ): input is { weekday: number; hour: number; minute: number } {
   return (
     typeof input === "object" &&
@@ -74,7 +74,7 @@ function isWeeklyTriggerInput(
 }
 
 function isDailyTriggerInput(
-  input: unknown
+  input: unknown,
 ): input is { hour: number; minute: number } {
   return (
     typeof input === "object" &&
@@ -104,7 +104,7 @@ export const calculateDateFromTrigger = (trigger: NotificationTriggerInput) => {
     relevantDate = new Date(
       new Date().getTime() +
         trigger.minute * 60 * 1000 +
-        trigger.hour * 60 * 60 * 1000
+        trigger.hour * 60 * 60 * 1000,
     )
   } else if (isWeeklyTriggerInput(trigger)) {
     const weekDay = trigger.weekday
@@ -117,7 +117,7 @@ export const calculateDateFromTrigger = (trigger: NotificationTriggerInput) => {
       new Date().getTime() +
         trigger.minute * 60 * 1000 +
         trigger.hour * 60 * 60 * 1000 +
-        dayDifference * 24 * 60 * 60 * 1000
+        dayDifference * 24 * 60 * 60 * 1000,
     )
   }
   return relevantDate
@@ -158,7 +158,7 @@ export const debugSchedule = async () => {
 export const getNewChannelsStatuses = (
   currentChannels: NotificationsChannels,
   channel: ValidChannelId,
-  status: boolean
+  status: boolean,
 ) => {
   let newChannels: NotificationsChannels
   if (currentChannels) {
@@ -181,7 +181,7 @@ export const getNewChannelsStatuses = (
 export const getContentMessageFromType = (
   type: EventType,
   date: string,
-  time: string
+  time: string,
 ) => {
   if (type === EventType.DEADLINE) {
     return `la deadline scadrà ${date} alle ${time}`

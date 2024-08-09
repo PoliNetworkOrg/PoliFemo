@@ -16,9 +16,7 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/3279e65d-78fe-4db0-9d4f-368a501f4912"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "googleServicesFile": "./config/GoogleService-Info.plist",
       "supportsTablet": true,
@@ -31,8 +29,8 @@
       },
       "googleServicesFile": "./config/google-services.json",
       "package": "org.polinetwork.polifemo",
-      "softwareKeyboardLayoutMode": "pan",
-      "useNextNotificationsApi": true
+      "softwareKeyboardLayoutMode": "pan"
+      // "useNextNotificationsApi": true
     },
     "extra": {
       "eas": {
@@ -52,9 +50,8 @@
           }
         }
       ],
-      "expo-localization"
-    ],
-    "sdkVersion": "49.0.0"
-  },
-  "name": "polifemo"
+      "expo-localization",
+      "expo-asset"
+    ]
+  }
 }

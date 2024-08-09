@@ -17,7 +17,7 @@ export const ClassChoice: MainStackScreen<"ClassChoice"> = props => {
   const { building } = props.route.params
 
   const { date, setDate, rooms, isRoomsSearching } = useContext(
-    RoomsSearchDataContext
+    RoomsSearchDataContext,
   )
 
   const coords = getBuildingCoords(building.campus, building.fullName)

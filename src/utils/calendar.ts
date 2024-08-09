@@ -179,7 +179,7 @@ const calendarPeriods: CalendarPeriod[] = [
 
 export function addMarkForSelectedDate(
   markedDates: MarkedDates,
-  date: string
+  date: string,
 ): MarkedDates {
   markedDates[date] = {
     ...markedDates[date],
@@ -190,7 +190,7 @@ export function addMarkForSelectedDate(
 
 export function addMarkForEvents(
   markedDates: MarkedDates,
-  events: Event[] | null
+  events: Event[] | null,
 ): MarkedDates {
   if (events) {
     events.forEach(event => {
@@ -207,7 +207,7 @@ export function addMarkForEvents(
 
 export function addMarkForPeriods(
   markedDates: MarkedDates,
-  periodFilters: number[]
+  periodFilters: number[],
 ): MarkedDates {
   calendarPeriods
     .filter((_, i) => !periodFilters.includes(i))
@@ -259,7 +259,7 @@ export function addMarkForPeriods(
             endingDay: true,
           }
         }
-      })
+      }),
     )
   return markedDates
 }
@@ -429,7 +429,7 @@ export class CalendarSingletonWrapper
     events.forEach(event => {
       if (
         !this._calendarEvents.find(
-          calendarEvent => calendarEvent.id === event.event_id.toString()
+          calendarEvent => calendarEvent.id === event.event_id.toString(),
         )
       ) {
         this._calendarEvents.push({
@@ -476,7 +476,7 @@ export class CalendarSingletonWrapper
   }
 
   private _writeCalendarPolimiSync = async (
-    calendarPolimiSync: CalendarPolimiSyncObj
+    calendarPolimiSync: CalendarPolimiSyncObj,
   ): Promise<void> => {
     // const calendarPolimiSyncJSON = JSON.stringify(calendarPolimiSync)
     // try {
@@ -621,7 +621,7 @@ export class CalendarSingletonWrapper
 
     if (event.reminder) {
       void this._notificationCentre.scheduledNotificationFromCalendarEvent(
-        event
+        event,
       )
     }
   }
@@ -643,7 +643,7 @@ export class CalendarSingletonWrapper
 
   private _removeMarkers = (dateString: string) => {
     const isAtLeastOneEvent = this.calendarEvents.find(
-      event => event.start.substring(0, 10) === dateString
+      event => event.start.substring(0, 10) === dateString,
     )
     if (isAtLeastOneEvent) return
 
@@ -684,7 +684,7 @@ export class CalendarSingletonWrapper
 }
 
 const getNextDayFormattedDate = (
-  date: Date
+  date: Date,
 ): { dateString: string; dateObj: Date } => {
   const dateObj = new Date(date.getTime() + 86400000)
 
@@ -937,7 +937,7 @@ export const fromatAddEventDate = (date: Date, lan: string) => {
 
 export const get1HourBeforeAfterSameDay = (
   date: Date,
-  after: boolean
+  after: boolean,
 ): Date => {
   let newDate = date
   if (after) {
@@ -950,7 +950,7 @@ export const get1HourBeforeAfterSameDay = (
         date.getMonth(),
         date.getDate(),
         23,
-        59
+        59,
       )
     }
   } else {
@@ -963,7 +963,7 @@ export const get1HourBeforeAfterSameDay = (
         date.getMonth(),
         date.getDate(),
         0,
-        0
+        0,
       )
     }
   }
@@ -973,7 +973,7 @@ export const get1HourBeforeAfterSameDay = (
 
 export const getBackColorFromEventStatus = (
   status: CalendarEventStatus,
-  isLight: boolean
+  isLight: boolean,
 ): string => {
   switch (status) {
     case CalendarEventStatus.INITIAL:
@@ -987,7 +987,7 @@ export const getBackColorFromEventStatus = (
 
 export const getTextFromEventStatus = (
   status: CalendarEventStatus,
-  lan: string
+  lan: string,
 ): string => {
   switch (status) {
     case CalendarEventStatus.INITIAL:
@@ -1000,7 +1000,7 @@ export const getTextFromEventStatus = (
 }
 
 export const shiftedEventStatus = (
-  status: CalendarEventStatus
+  status: CalendarEventStatus,
 ): CalendarEventStatus => {
   switch (status) {
     case CalendarEventStatus.INITIAL:

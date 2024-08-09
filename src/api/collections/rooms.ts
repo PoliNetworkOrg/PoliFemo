@@ -81,7 +81,7 @@ export const rooms = {
 
   postOccupancyRate(
     params: { roomId: number; rate: number },
-    options?: RequestOptions
+    options?: RequestOptions,
   ) {
     const request = client.callPoliNetwork({
       url: `/v1/rooms/${params.roomId}/occupancy`,

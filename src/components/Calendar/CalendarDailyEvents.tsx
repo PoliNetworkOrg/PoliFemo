@@ -156,7 +156,7 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
                       flexDirection: "row",
                       backgroundColor: getBackColorFromEventStatus(
                         CalendarEventStatus.INITIAL,
-                        isLight
+                        isLight,
                       ),
                     }}
                   >
@@ -168,7 +168,7 @@ export const CalendarDailyEvents: FC<CalendarDailyEventsProps> = props => {
                     >
                       {getTextFromEventStatus(
                         CalendarEventStatus.INITIAL,
-                        i18n.language
+                        i18n.language,
                       )}
                     </Text>
                   </View>

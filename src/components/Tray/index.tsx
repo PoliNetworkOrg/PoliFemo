@@ -19,14 +19,14 @@ export const Tray: FC<{
     state =>
       state.index === 0 &&
       !!state.routes[0].state &&
-      state.routes[0].state?.index !== 0
+      state.routes[0].state?.index !== 0,
   )
 
   const [newsOpen, setNewsOpen] = React.useState(false)
   useEffect(() => {
     const listener = newsSheetEventEmitter.addListener(
       "state_change",
-      (state: boolean) => setNewsOpen(state)
+      (state: boolean) => setNewsOpen(state),
     )
     return () => {
       listener.remove?.()

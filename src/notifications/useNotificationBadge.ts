@@ -6,7 +6,7 @@ import { ValidChannelId } from "./NotificationTypes"
 const notificationCenter = NotificationCenter.getInstance()
 
 export function useNotificationBadge(
-  channelId?: ValidChannelId
+  channelId?: ValidChannelId,
 ): number | undefined {
   const [badge, setBadge] = useState<number | undefined>(undefined)
 
@@ -20,7 +20,7 @@ export function useNotificationBadge(
     void loadBadge()
     const listener = notificationEventEmitter.addListener(
       "badge-change",
-      loadBadge
+      loadBadge,
     )
 
     return () => {

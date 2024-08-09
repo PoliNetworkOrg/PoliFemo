@@ -108,7 +108,7 @@ export const events = {
       nEvents: number
       endDate?: string
     },
-    options?: RequestOptions
+    options?: RequestOptions,
   ) {
     const url = "/agenda/api/me/" + params.matricola + "/events"
     const request = client.callPolimi<Event[]>({
@@ -127,7 +127,7 @@ export const events = {
 
   getLectureDetails(
     params: { matricola: string; eventId: number },
-    options?: RequestOptions
+    options?: RequestOptions,
   ) {
     const url = `/agenda/api/me/${params.matricola}/lectures/${params.eventId}`
     const request = client.callPolimi<LectureDetails>({

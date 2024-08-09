@@ -41,7 +41,7 @@ export const Notifications: MainStackScreen<"Notifications"> = () => {
             const newChannels = getNewChannelsStatuses(
               activeChannels,
               "comunicazioni",
-              val
+              val,
             )
 
             setActiveChannels({ ...newChannels })
@@ -65,7 +65,7 @@ export const Notifications: MainStackScreen<"Notifications"> = () => {
             const newChannels = getNewChannelsStatuses(
               activeChannels,
               "associazioni",
-              val
+              val,
             )
             setActiveChannels({ ...newChannels })
             notificationCenter.updateNotificationsChannels(newChannels, val)
@@ -88,7 +88,7 @@ export const Notifications: MainStackScreen<"Notifications"> = () => {
             const newChannels = getNewChannelsStatuses(
               activeChannels,
               "upload",
-              val
+              val,
             )
             setActiveChannels({ ...newChannels })
             notificationCenter.updateNotificationsChannels(newChannels, val)

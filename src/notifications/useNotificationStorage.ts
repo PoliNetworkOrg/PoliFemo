@@ -24,7 +24,7 @@ export function useNotificationStorage(
       keyof RootStackNavigatorParams,
       undefined
     >
-  >
+  >,
 ): [NotificationStorage[]] {
   const [notifications, setNotifications] = useState<NotificationStorage[]>([])
 
@@ -47,13 +47,13 @@ export function useNotificationStorage(
     //load when item is removed
     const listenerRemove = notificationEventEmitter.addListener(
       "notification-remove",
-      loadNotifications
+      loadNotifications,
     )
 
     //load when item is added
     const listenerAdd = notificationEventEmitter.addListener(
       "notification-add",
-      loadNotifications
+      loadNotifications,
     )
 
     return () => {

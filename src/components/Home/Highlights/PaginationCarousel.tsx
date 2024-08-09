@@ -49,7 +49,7 @@ export const PaginationCarousel: FC<{
             scrollX.value,
             inputRange,
             scaleOutputRange,
-            Extrapolate.CLAMP
+            Extrapolate.CLAMP,
           )
 
           return (
@@ -72,7 +72,7 @@ export const PaginationCarousel: FC<{
                             index * width,
                             (index + 0.5) * width,
                           ],
-                          colorOutputRange
+                          colorOutputRange,
                         )
                       : colorOutputRange[0],
                   transform: [

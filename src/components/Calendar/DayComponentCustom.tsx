@@ -90,8 +90,8 @@ export const DayComponentCustom: FC<DayProps & { date?: DateData }> = memo(
                 color: isToday
                   ? palette.accent
                   : isSelected
-                  ? palette.primary
-                  : "#fff",
+                    ? palette.primary
+                    : "#fff",
               }}
               allowFontScaling={false}
             >
@@ -114,5 +114,5 @@ export const DayComponentCustom: FC<DayProps & { date?: DateData }> = memo(
         )}
       </TouchableOpacity>
     )
-  }
+  },
 )

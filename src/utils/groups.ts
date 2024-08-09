@@ -101,7 +101,7 @@ export function choosePlatformIcon(platform?: string) {
 
 export function applyFilters(
   groups: Group[] | null,
-  filters: Filters
+  filters: Filters,
 ): Group[] {
   let newGroups: Group[] = groups ?? []
   if (filters.year !== undefined) {
