@@ -23,6 +23,7 @@ import {
 } from "@react-navigation/native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { Article } from "api/collections/articles"
+import { ReducedTeachingExam, Teaching } from "api/collections/exams"
 import { Occupancies } from "api/collections/rooms"
 import {
   BuildingItem,
@@ -88,6 +89,14 @@ export type MainStackNavigatorParams = {
   }
   NotificationDetails: { notification: NotificationStorage; category?: string }
   GradingBook: undefined
+  Exams: { updateTeachings?: boolean }
+  Results: { teachings: Teaching[] }
+  TeachingDetails: { teaching: Teaching }
+  ResultDetails: { resultExam: ReducedTeachingExam }
+  ExamDetails: {
+    teaching: Teaching
+    codeAppello: number
+  }
 }
 
 export type SettingsStackNavigatorParams = {
