@@ -61,6 +61,12 @@ export interface NotificationCustomContentInput
      * if it is false, it is stored when it is received.
      */
     storeOnSchedule?: boolean
+
+    /*
+      for calendar Events, we don't want to store the notification in the storage
+     */
+    dontStore?: boolean
+
     /**
      * enable deeplinking to NotificationDetails
      */

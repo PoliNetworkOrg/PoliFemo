@@ -4,6 +4,7 @@ import { Event } from "api/collections/event"
 import * as FileSystem from "expo-file-system"
 import { EventType } from "./events"
 import { EventEmitter } from "events"
+import { formatDateOnlyString } from "./functions"
 
 /**
  * A more systematic approach for managing margins, change here, change everywhere.
@@ -633,7 +634,7 @@ export class TimetableDeducer extends EventEmitter {
 
       const events = await api.events.getEvents({
         matricola: this._matricola ?? "",
-        startDate: startDate.toISOString().substring(0, 10),
+        startDate: formatDateOnlyString(startDate),
         nEvents: 200,
       })
 

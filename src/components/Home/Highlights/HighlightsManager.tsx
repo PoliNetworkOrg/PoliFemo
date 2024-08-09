@@ -7,6 +7,7 @@ import { api } from "api"
 import { NotificationCenter } from "notifications/NotificationCenter"
 import { extractAllEvents } from "utils/notifications"
 import { useApiCall } from "api/useApiCall"
+import { formatDateOnlyString } from "utils/functions"
 
 const notificationCenter = NotificationCenter.getInstance()
 
@@ -19,7 +20,7 @@ export const HighlightsManager: FC = () => {
   const { loggedIn, userInfo } = useContext(LoginContext)
 
   const { matricola } = userInfo?.careers?.[0] ?? {}
-  const startDate = new Date().toISOString().substring(0, 10)
+  const startDate = formatDateOnlyString()
   const [events] = useApiCall(
     api.events.getEvents,
     {

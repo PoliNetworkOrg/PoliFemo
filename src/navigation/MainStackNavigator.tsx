@@ -29,6 +29,7 @@ import { Notifications } from "pages/notifications/Notifications"
 import { NotificationsCategory } from "pages/notifications/NotificationsCategory"
 import { FC } from "react"
 import { createSharedElementStackNavigator } from "react-navigation-shared-element"
+import { CalendarPage } from "pages/Calendar"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const MainStackNavigator =
@@ -112,6 +113,7 @@ export const MainStack: FC = () => {
           }
         }}
       />
+      <MainStackNavigator.Screen name="Calendar" component={CalendarPage} />
       <MainStackNavigator.Screen name="GradingBook" component={GradingBook} />
       <MainStackNavigator.Screen name="Exams" component={Exams} />
       <MainStackNavigator.Screen name="Results" component={Results} />

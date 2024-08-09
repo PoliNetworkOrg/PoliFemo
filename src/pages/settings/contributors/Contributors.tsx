@@ -81,7 +81,7 @@ export const Contributors: SettingsStackScreen<"Contributors"> = () => {
             avatar_url={item.avatar_url}
             profile={item.profile}
             contributions={item.contributions}
-            key={"contributor-" + section + " -" + index}
+            key={"contributor-" + section.title + " -" + index}
           />
         )}
       />
