@@ -8,8 +8,12 @@ import { BodyText } from "components/Text"
 import folderSvg from "assets/materials/folder.svg"
 import fileSvg from "assets/materials/file.svg"
 import longArrowRightSvg from "assets/materials/long_arrow_right.svg"
+import longArrowLeftSvg from "assets/materials/long_arrow_left.svg"
 import downloadsSvg from "assets/tray/downloads.svg"
 import eyeSvg from "assets/materials/eye.svg"
+import { useMemo, useState } from "react"
+import { MockFolder } from "api/moodle"
+import { isFolderInArray } from "utils/materials"
 
 /**
  * Materials Page
@@ -20,6 +24,18 @@ export const WebeepCourseDetails: MainStackScreen<
   const { palette } = usePalette()
 
   const { course } = props.route.params
+
+  const [startingFolder, setStartingFolder] = useState(course.folder)
+
+  const [currentFolder, setCurrentFolder] = useState(course.folder)
+
+  const [historyFolders, setHistoryFolders] = useState<MockFolder[]>([])
+
+  const lastHistoryFolder = useMemo(() => {
+    return historyFolders.length > 0
+      ? historyFolders[historyFolders.length - 1]
+      : null
+  }, [historyFolders])
 
   return (
     <>
@@ -40,9 +56,55 @@ export const WebeepCourseDetails: MainStackScreen<
         }
         contentContainerStyle={{ paddingTop: 16, paddingHorizontal: 32 }}
       >
-        {course.folder.folders.map((folder, index) => (
+        {currentFolder &&
+          lastHistoryFolder &&
+          currentFolder.fullpath != startingFolder.fullpath && (
+            <Pressable
+              style={{
+                backgroundColor: palette.primary,
+                borderRadius: 16,
+                flex: 1,
+                height: 42,
+                flexDirection: "row",
+                alignItems: "center",
+                paddingHorizontal: 16,
+                marginBottom: 8,
+              }}
+              onPress={() => {
+                setCurrentFolder(lastHistoryFolder)
+                historyFolders.pop()
+                setHistoryFolders([...historyFolders])
+              }}
+            >
+              <View style={{ width: 24 }}>
+                <Icon source={folderSvg} />
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <BodyText
+                  style={{
+                    marginLeft: 16,
+                    fontSize: 16,
+                    fontWeight: "500",
+                    color: "white",
+                  }}
+                >
+                  {currentFolder.name}
+                </BodyText>
+                <Icon source={longArrowLeftSvg} />
+              </View>
+            </Pressable>
+          )}
+
+        {currentFolder.folders.map((folder, _) => (
           <Pressable
-            key={index}
+            key={folder.fullpath}
             style={{
               backgroundColor: palette.primary,
               borderRadius: 16,
@@ -54,10 +116,15 @@ export const WebeepCourseDetails: MainStackScreen<
               marginBottom: 8,
             }}
             onPress={() => {
-              // do smth
+              if (!isFolderInArray(folder, historyFolders)) {
+                setHistoryFolders([...historyFolders, currentFolder])
+                setCurrentFolder(folder)
+              }
             }}
           >
-            <Icon source={folderSvg} />
+            <View style={{ width: 24 }}>
+              <Icon source={folderSvg} />
+            </View>
             <View
               style={{
                 flex: 1,
@@ -81,9 +148,9 @@ export const WebeepCourseDetails: MainStackScreen<
           </Pressable>
         ))}
 
-        {course.folder.files.map((file, index) => (
+        {currentFolder.files.map((file, _) => (
           <Pressable
-            key={course.folder.folders.length + index}
+            key={file.fullpath}
             style={{
               backgroundColor: palette.lighter,
               borderRadius: 16,
@@ -98,7 +165,9 @@ export const WebeepCourseDetails: MainStackScreen<
               // do smth
             }}
           >
-            <Icon source={fileSvg} />
+            <View style={{ width: 24 }}>
+              <Icon source={fileSvg} />
+            </View>
             <View
               style={{
                 flex: 1,

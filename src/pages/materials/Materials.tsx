@@ -28,7 +28,8 @@ export const MaterialsPage: MainStackScreen<"Materials"> = () => {
           <Pressable
             style={{ flex: 1 }}
             onPress={() => {
-              navigate("WebeepLogin")
+              // ! change to WebeepLogin
+              navigate("WebeepCourses")
             }}
           >
             <View
